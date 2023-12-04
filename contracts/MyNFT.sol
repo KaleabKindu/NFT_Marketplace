@@ -62,12 +62,12 @@ contract MyNFT is ERC721URIStorage, Ownable {
         uint256 price,
         bool auction,
         uint256 biddingDuration,
-        uint256 royaltyPercentage // Add royaltyPercentage parameter
+        uint256 royaltyPercentage
         ) public payable returns(uint256) {
 
         require(price > 0, 'Price must greater than 0');
         require(msg.value == _listingPrice, 'Listing Payment must be equal to listing price');
-        require(royaltyPercentage <= 10, 'Royalty percentage must be between 0 and 100');
+        require(royaltyPercentage <= 10, 'Royalty percentage must be between 0 and 10');
 
         _tokenIds.increment();
         
@@ -93,7 +93,7 @@ contract MyNFT is ERC721URIStorage, Ownable {
              payable(msg.sender),
              price,
              false,
-             0,
+             auctionId,
              royaltyPercentage
         );
         Products.push(idToProduct[tokenId]);
