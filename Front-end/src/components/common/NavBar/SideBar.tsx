@@ -1,56 +1,96 @@
 import {
-    Drawer,
-    Button,
-    Typography,
-    IconButton,
-    Card,
-    List,
-    ListItem,
-    ListItemPrefix,
-    ListItemSuffix,
-    Chip,
-    Accordion,
-    AccordionHeader,
-    AccordionBody,
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet"
+import {
+  Command,
+  CommandDialog,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  CommandSeparator,
+  CommandShortcut,
+} from "@/components/ui/command"
 
-  } from "@material-tailwind/react";
-  import { useEffect, useState } from 'react'
-  import { RiMenu3Fill } from "react-icons/ri";
-  import { FaUserAlt } from "react-icons/fa";
-  import { MdNotifications } from "react-icons/md";
-  import { TbNetworkOff } from "react-icons/tb";
-  import { MdExplore } from "react-icons/md";
-  import { IoMdClose } from "react-icons/io";
-  import { FaChevronDown } from "react-icons/fa";
-  import { MdDarkMode, MdLightMode } from "react-icons/md";
+
+import { useEffect, useState } from 'react'
+import { RiMenu3Fill } from "react-icons/ri";
+import { FaUserAlt } from "react-icons/fa";
+import { MdNotifications } from "react-icons/md";
+import { TbNetworkOff } from "react-icons/tb";
+import { MdExplore } from "react-icons/md";
+import { IoMdClose } from "react-icons/io";
+import { FaChevronDown } from "react-icons/fa";
+import { MdDarkMode, MdLightMode } from "react-icons/md";
+import { useTheme } from "next-themes";
+import { Button } from '@/components/ui/button';
+import { Avatar } from "../Avatar";
+
+import Link from "next/link";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion"
 
 type Props = {
-    darkMode:boolean,
-    handleToggle:() => void
+
 }
 
-const SideBar = ({ darkMode, handleToggle }: Props) => {
+const SideBar = (props: Props) => {
     const [open, setOpen] = useState(false);
     const [index, setIndex] = useState(0);
-    const openDrawer = () => setOpen(true);
-    const closeDrawer = () => setOpen(false);
-    const handleOpen = (index:number) => index === 0 ? setIndex(1):setIndex(0)
-
+    const { theme, setTheme } = useTheme()
+    const handleToggle = () => {
+      if(theme === 'light'){
+        setTheme('dark')
+      }else{
+        setTheme('light')
+      }
+    }
   return (
     <div className="lg:hidden">
-          <IconButton variant="text" color="blue-gray" onClick={openDrawer}>
-                <RiMenu3Fill size={30} />
-          </IconButton>
-      <Drawer open={open} onClose={closeDrawer} className="p-4 dark:bg-dark-card">
+
+          <Sheet>
+            <SheetTrigger>
+              <RiMenu3Fill size={30} />
+            </SheetTrigger>
+            <SheetContent side={'left'}>
+              <SheetHeader>
+                <SheetTitle>NFT Marketplace</SheetTitle>
+              </SheetHeader>
+              <Command className="mt-8">
+                <CommandList>
+                    <CommandItem >
+                      <MdExplore className="mr-3 h-6 w-6" />
+                      <span>Marketplace</span>
+                    </CommandItem>
+                    <CommandItem>
+                      <MdNotifications className="mr-3 h-6 w-6" />
+                      <span>Notifications</span>
+                    </CommandItem>
+                    <CommandItem>
+                      <FaUserAlt className="mr-3 h-6 w-6" />
+                      <span>Profile</span>
+                    </CommandItem>
+                    <CommandItem>
+                      <TbNetworkOff className="mr-3 h-6 w-6" />
+                      <span>Disconnect</span>
+                    </CommandItem>
+                </CommandList>
+              </Command>
+            </SheetContent>
+          </Sheet>
+
+      {/* <Drawer open={open} onClose={closeDrawer} className="p-4 dark:bg-dark-card">
         <div className="h-[calc(100vh-2rem)] w-full max-w-[20rem]">
-        <div className="flex justify-between mb-2 items-center">
-            <Typography className=" dark:text-dark-text" variant="h5" color="blue-gray">
-                NFT Marketplace
-            </Typography>
-            <IconButton className="dark:text-dark-text" variant="text" color="blue-gray" onClick={closeDrawer}>
-                <IoMdClose size={30} />
-            </IconButton>
-        </div>
         <List className=" dark:text-dark-text">
             <ListItem className="dark:text-dark-text dark:hover:bg-dark-hover-bg">
             <ListItemPrefix>
@@ -114,7 +154,7 @@ const SideBar = ({ darkMode, handleToggle }: Props) => {
             </ListItem>
         </List>
         </div>
-      </Drawer>
+      </Drawer> */}
     </div>
   )
 }
