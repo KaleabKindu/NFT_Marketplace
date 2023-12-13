@@ -8,6 +8,7 @@ import { useTheme } from "next-themes"
 import { Button } from "@/components/ui/button"
 import Container from '../Container'
 import SideBar from './SideBar'
+import Link from 'next/link';
 
 type Props = {}
 
@@ -23,10 +24,10 @@ const NavBar = (props: Props) => {
   return (
     <div className='fixed top-0 w-full z-50'>
       <Container className='flex items-center justify-between border-b'>
-          <div className='flex gap-2 items-center'>
+          <Link href='/' className='flex gap-2 items-center'>
               <Logo/>
               <div className='text-lg lg:text-2xl font-bold'>NFT Marketplace</div>
-          </div>
+          </Link>
           <div className='hidden lg:flex gap-5 lg:gap-16 items-center'>
             <Button variant='ghost' className='rounded-full' size='lg'>Marketplace</Button>
             <Button className='rounded-full' size='lg'>Create</Button>
