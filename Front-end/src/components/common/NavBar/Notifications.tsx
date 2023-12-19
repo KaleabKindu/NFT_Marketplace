@@ -1,5 +1,3 @@
-import { Avatar } from "../Avatar";
-import Link from "next/link";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -10,6 +8,7 @@ import {
   } from "@/components/ui/dropdown-menu"
   
 import { MdNotifications } from "react-icons/md";
+import { Button } from "@/components/ui/button";
 
 
 type Props = {}
@@ -17,8 +16,10 @@ type Props = {}
 const Notifications = (props: Props) => {
   return (
     <DropdownMenu>
-        <DropdownMenuTrigger className="rounded-full">
+        <DropdownMenuTrigger>
+          <Button variant='ghost' className='rounded-full' >
             <MdNotifications size={30}/>
+          </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
             <DropdownMenuLabel>Notifications</DropdownMenuLabel>
@@ -31,25 +32,6 @@ const Notifications = (props: Props) => {
             </DropdownMenuItem>
         </DropdownMenuContent>
     </DropdownMenu>
-    // <Menu >
-    //     <MenuHandler>
-    //         <Button variant="text" className="rounded-full p-3 dark:hover:bg-dark-hover-bg">
-    //             <Badge className='bg-primary'>
-    //                  <MdNotifications className=' dark:text-dark-text' size={30}/>
-    //             </Badge>
-    //         </Button>
-    //     </MenuHandler>
-    //     <MenuList className="dark:bg-dark-card dark:border-dark-border">
-    //             <div className="p-3">
-    //                 <Typography className="dark:text-dark-text" variant="paragraph">
-    //                     Measure action your user...
-    //                 </Typography>
-    //                 <Typography className="dark:text-dark-text" variant="small">
-    //                     4 minutes ago
-    //                 </Typography>
-    //             </div>
-    //     </MenuList>
-    // </Menu>
   )
 }
 

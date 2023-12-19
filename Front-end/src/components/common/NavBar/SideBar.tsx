@@ -1,38 +1,11 @@
 import {
   Sheet,
   SheetContent,
-  SheetDescription,
+  SheetFooter,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet"
-import {
-  Command,
-  CommandDialog,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-  CommandSeparator,
-  CommandShortcut,
-} from "@/components/ui/command"
-
-
-import { useEffect, useState } from 'react'
-import { RiMenu3Fill } from "react-icons/ri";
-import { FaUserAlt } from "react-icons/fa";
-import { MdNotifications } from "react-icons/md";
-import { TbNetworkOff } from "react-icons/tb";
-import { MdExplore } from "react-icons/md";
-import { IoMdClose } from "react-icons/io";
-import { FaChevronDown } from "react-icons/fa";
-import { MdDarkMode, MdLightMode } from "react-icons/md";
-import { useTheme } from "next-themes";
-import { Button } from '@/components/ui/button';
-import { Avatar } from "../Avatar";
-
-import Link from "next/link";
 import {
   Accordion,
   AccordionContent,
@@ -40,13 +13,25 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion"
 
+
+import { useState } from 'react'
+import { RiMenu3Fill } from "react-icons/ri";
+import { FaUserAlt } from "react-icons/fa";
+import { MdLogout } from "react-icons/md";
+import { useTheme } from "next-themes";
+import { Button } from '@/components/ui/button';
+
+import Link from "next/link";
+
+import Logo from "../Logo";
+import { discover, help_center } from "@/data";
+import { MoonStar, SunMoon } from "lucide-react";
+
 type Props = {
 
 }
 
 const SideBar = (props: Props) => {
-    const [open, setOpen] = useState(false);
-    const [index, setIndex] = useState(0);
     const { theme, setTheme } = useTheme()
     const handleToggle = () => {
       if(theme === 'light'){
@@ -64,97 +49,80 @@ const SideBar = (props: Props) => {
             </SheetTrigger>
             <SheetContent side={'left'}>
               <SheetHeader>
-                <SheetTitle>NFT Marketplace</SheetTitle>
+                <div  className="flex gap-3 items-center">
+                  <Logo/>
+                  <SheetTitle>NFT Marketplace</SheetTitle>
+                </div>
               </SheetHeader>
-              <Command className="mt-8">
-                <CommandList>
-                    <CommandItem >
-                      <MdExplore className="mr-3 h-6 w-6" />
-                      <span>Marketplace</span>
-                    </CommandItem>
-                    <CommandItem>
-                      <MdNotifications className="mr-3 h-6 w-6" />
-                      <span>Notifications</span>
-                    </CommandItem>
-                    <CommandItem>
-                      <FaUserAlt className="mr-3 h-6 w-6" />
-                      <span>Profile</span>
-                    </CommandItem>
-                    <CommandItem>
-                      <TbNetworkOff className="mr-3 h-6 w-6" />
-                      <span>Disconnect</span>
-                    </CommandItem>
-                </CommandList>
-              </Command>
+              <Accordion type="single" collapsible className="w-full mt-[1.5rem]">
+                <AccordionItem value="item-1">
+                  <AccordionTrigger>
+                    Discover
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    <div className="flex flex-col gap-3">
+
+                      {
+                        discover.map((option, index) => 
+                          <Button key={index} variant='ghost' className="justify-start px-3">
+                            <Link href={option.route}>
+                              {option.name}
+                            </Link>
+                          </Button>
+                        )
+                      }
+
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+                <AccordionItem value="item-2">
+                  <AccordionTrigger>Help Center</AccordionTrigger>
+                  <AccordionContent>
+                    <div className="flex flex-col gap-3">
+                      {
+                        help_center.map((option, index) => 
+                          <Button key={index} variant='ghost' className="justify-start px-3">
+                            <Link href={option.route}>
+                            {option.name}
+                            </Link>
+                          </Button>
+                        )
+                      }
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+                <AccordionItem value="item-3" className="border-b mb-[2.5rem]">
+                  <AccordionTrigger>Notifications</AccordionTrigger>
+                  <AccordionContent>
+                    <div className="p-3">
+                      <div> Measure action your user...</div>
+                      <div className="text-sm font-medium leading-none">4 minutes ago</div>
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+              <Link href='' className="flex  w-full">
+                <Button variant='ghost' className='w-full gap-3 justify-start items-center px-3'>
+                    <FaUserAlt size={25} /> 
+                    <div>Profile</div>
+                </Button>
+              </Link>
+
+              <div className="flex flex-col gap-3 mt-[40vh]">
+                <Button variant='ghost' className='justify-start gap-3 px-2' onClick={handleToggle}>
+                  {theme === 'dark' ? <SunMoon />:  <MoonStar />}
+                  <div>{theme === 'dark' ? 'Light Mode':  'Dark Mode'}</div>
+                </Button>
+                <Button variant='ghost' className='justify-start gap-3 px-2'>
+                  <MdLogout size={25} />
+                  <div>Disconnect</div>
+                </Button>
+              </div>
+
             </SheetContent>
           </Sheet>
 
-      {/* <Drawer open={open} onClose={closeDrawer} className="p-4 dark:bg-dark-card">
-        <div className="h-[calc(100vh-2rem)] w-full max-w-[20rem]">
-        <List className=" dark:text-dark-text">
-            <ListItem className="dark:text-dark-text dark:hover:bg-dark-hover-bg">
-            <ListItemPrefix>
-                <MdExplore className="h-6 w-6" />
-            </ListItemPrefix>
-            Marketplace
-            </ListItem>
-            <Accordion
-            className="dark:text-dark-text dark:hover:bg-dark-hover-bg" 
-          open={index === 1}
-          icon={
-            
-            <FaChevronDown
-              strokeWidth={2.5}
-              className={`mx-auto h-4 w-4 dark:text-dark-text transition-transform ${index === 1 ? "rotate-180" : ""}`}
-            />
-          }
-        >
-          <ListItem className="dark:text-dark-text dark:hover:bg-dark-hover-bg" selected={index === 1}>
-            <AccordionHeader onClick={() => handleOpen(index)} className="border-b-0 py-0">
-              <ListItemPrefix>
-                <MdNotifications className="h-5 w-5 dark:text-dark-text" />
-              </ListItemPrefix>
-              <Typography color="blue-gray" className="mr-auto font-normal dark:text-dark-text">
-                Notifications
-              </Typography>
-            </AccordionHeader>
-          </ListItem>
-          <AccordionBody>
-            <List>
-                <ListItem>
-            <div className="">
-                <Typography className="dark:text-dark-text" variant="paragraph">
-                    Measure action your user...
-                </Typography>
-                <Typography className="dark:text-dark-text" variant="small">
-                    4 minutes ago
-                </Typography>
-            </div>
-                </ListItem>
-            </List>
-          </AccordionBody>
-            </Accordion>
-            <ListItem className="dark:text-dark-text dark:hover:bg-dark-hover-bg">
-            <ListItemPrefix>
-                <FaUserAlt className="h-6 w-6" />
-            </ListItemPrefix>
-            Profile
-            </ListItem>
-            <ListItem className="dark:text-dark-text dark:hover:bg-dark-hover-bg" onClick={handleToggle}>
-            <ListItemPrefix>
-                {darkMode ? <MdLightMode className='h-6 w-6'/>:  <MdDarkMode className='h-6 w-6'/>}
-            </ListItemPrefix>
-            {darkMode ? 'Light Mode':'Dark Mode'}
-            </ListItem>
-            <ListItem className="dark:text-dark-text dark:hover:bg-dark-hover-bg">
-            <ListItemPrefix>
-                <TbNetworkOff className="h-6 w-6" />
-            </ListItemPrefix>
-            Disconnect
-            </ListItem>
-        </List>
-        </div>
-      </Drawer> */}
+    
     </div>
   )
 }

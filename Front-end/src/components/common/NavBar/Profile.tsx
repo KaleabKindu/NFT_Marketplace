@@ -1,7 +1,7 @@
 import { Avatar } from "../Avatar";
 import Link from "next/link";
 import { FaUserAlt } from "react-icons/fa";
-import { TbNetworkOff } from "react-icons/tb";
+import { MdLogout } from "react-icons/md";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -37,15 +37,15 @@ const Profile = (props: Props) => {
                 </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem className="py-3">
                 <Link href='' className="flex items-center gap-3">
-                    <FaUserAlt size={20} />
+                    <FaUserAlt size={30} />
                     <div>Profile</div>
                  </Link>
             </DropdownMenuItem>
-            <DropdownMenuItem>
+            <DropdownMenuItem className="py-3">
                 <Link href='' className="flex items-center gap-3">
-                    <TbNetworkOff size={20} />
+                    <MdLogout size={30} />
                     <div>Disconnect</div>
                  </Link>
             </DropdownMenuItem>
