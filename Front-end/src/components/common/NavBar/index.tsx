@@ -24,13 +24,10 @@ const NavBar = (props: Props) => {
     }
   }
   return (
-    <div className='fixed top-0 w-full z-50'>
+    <div className='fixed top-0 w-full bg-background  z-50'>
       <Container className='flex items-center justify-between border-b'>
           {/* Left Section */}
-          <Link href='/' className='flex gap-2 items-center'>
-              <Logo/>
-              <div className='text-lg lg:text-2xl font-bold'>NFT Marketplace</div>
-          </Link>
+          <Logo/>
 
           {/* Right Section */}
           <div className='hidden lg:flex gap-5 lg:gap-12 items-center'>

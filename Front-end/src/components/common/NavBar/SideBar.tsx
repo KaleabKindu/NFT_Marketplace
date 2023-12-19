@@ -48,11 +48,10 @@ const SideBar = (props: Props) => {
               <RiMenu3Fill size={30} />
             </SheetTrigger>
             <SheetContent side={'left'}>
-              <SheetHeader>
-                <div  className="flex gap-3 items-center">
+              <SheetHeader>                  
+                <SheetTitle>
                   <Logo/>
-                  <SheetTitle>NFT Marketplace</SheetTitle>
-                </div>
+                </SheetTitle>
               </SheetHeader>
               <Accordion type="single" collapsible className="w-full mt-[1.5rem]">
                 <AccordionItem value="item-1">
