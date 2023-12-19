@@ -73,4 +73,19 @@
   body {
     @apply bg-background text-foreground;
   }
+  ::selection{
+    @apply bg-accent text-accent-foreground
+
+  }
+  ::-webkit-scrollbar{
+    @apply w-[0.5rem]
+  }
+  
+  ::-webkit-scrollbar-track{
+    @apply border-r-0 bg-background mx-1
+  }
+  
+  ::-webkit-scrollbar-thumb{
+    @apply border-r-[1rem] bg-accent w-[0.5rem]
+  }
 }
