@@ -1,7 +1,8 @@
 import { cn } from "@/lib/utils"
+import { ReactNode } from "react"
 
 type Props = {
-    text:string,
+    text:string | ReactNode,
     className?:string
 }
 export function TypographyH1({text, className}:Props) {

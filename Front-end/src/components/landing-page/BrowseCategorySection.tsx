@@ -5,7 +5,7 @@ import {
   CardContent,
   CardFooter,
 } from "@/components/ui/card"
-import { TypographyH2, TypographyH3, TypographyH4, TypographySmall } from '../common/Typography'
+import { TypographyH2, TypographyH4, TypographySmall } from '../common/Typography'
 import Link from 'next/link'
 
 

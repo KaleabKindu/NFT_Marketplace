@@ -15,7 +15,7 @@ const HeroSection = (props: Props) => {
             </Link>
         </div>
         <div className='flex-1'>
-            <Image src='/landing-page/hero-image.png' width={1000} height={501} alt=''/>
+            <Image className='object-cover' src='/landing-page/hero-image.png' width={1000} height={501} alt=''/>
         </div>
         
     </div>
