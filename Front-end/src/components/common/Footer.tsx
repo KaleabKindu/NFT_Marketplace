@@ -12,7 +12,7 @@ type Props = {}
 const Footer = (props: Props) => {
   return (
     <Container>
-        <div className='grid grid-cols-1 lg:grid-cols-4 gap-5 py-5 lg:py-10 border-t'>
+        <div className='grid grid-cols-1 lg:grid-cols-4 gap-5 py-5 lg:py-10 mt-5 lg:mt-10 border-t'>
             {/* First Section */}
             <div className='flex flex-col justify-between max-w-[70%] lg:max-w-full mx-auto'>
                 <Logo/>
