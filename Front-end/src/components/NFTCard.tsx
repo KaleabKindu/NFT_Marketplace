@@ -6,15 +6,25 @@ import { Button } from './ui/button'
 import { FaHeart } from "react-icons/fa";
 import { Badge } from './ui/badge';
 import CountDown from 'count-down-react'
+import { useState } from 'react'
 
 type Props = {}
 
 const NFTCard = (props: Props) => {
-
-const onTick = ({ hours, minutes, seconds }:{hours:number, minutes:number, seconds:number }) => {
+    const [liked, setLiked ] = useState(false)
+    const [ likes, setLikes ] = useState(22)
+    const onTick = ({ hours, minutes, seconds }:{hours:number, minutes:number, seconds:number }) => {
 
     return <>{`${hours}h:${minutes}m:${seconds}s`}</> 
-  };
+    };
+    const handleLikes = () => {
+        setLiked(!liked)
+        if(liked){
+            setLikes(likes - 1)
+        }else{
+            setLikes(likes + 1)
+        }
+    }
   
   return (
     <Card className='self-start p-5 bg-accent max-w-[35rem] w-full'>
@@ -42,10 +52,10 @@ const onTick = ({ hours, minutes, seconds }:{hours:number, minutes:number, secon
                 </div>
             </div>
             <Badge className='flex items-center gap-3 absolute top-5 left-5 ' >
-                <Button variant='ghost' size={'sm'} className='rounded-full h-auto p-2'>
-                    <FaHeart className='text-red-500 p-0' size={20} />
+                <Button variant='ghost' size={'sm'} className='rounded-full h-auto p-2' onClick={handleLikes}>
+                    <FaHeart className={`${liked && 'text-red-500'} p-0`} size={20} />
                 </Button>
-                <TypographySmall text='22'/>
+                <TypographySmall text={likes}/>
             </Badge>
         </div>
     </Card>

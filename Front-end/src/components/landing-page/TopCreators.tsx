@@ -1,9 +1,11 @@
+'use client'
 import Image from 'next/image'
 import { TypographyH2, TypographyH4, TypographyP } from '../common/Typography'
 import { Card } from '../ui/card'
 import { Avatar } from '../common/Avatar'
 import { Button } from '../ui/button'
 import { Badge } from '../ui/badge'
+import { useState } from 'react'
 
 type Props = {}
 
@@ -15,7 +17,7 @@ const TopCreators = (props: Props) => {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 items-center gap-5">
             {
                 Array.from({length:8}).map((_, index) => 
-                    <Creator key={index}/>
+                    <Creator key={index} index={index}/>
                 )
             }
 
@@ -25,8 +27,13 @@ const TopCreators = (props: Props) => {
   )
 }
 
+type CreatorProps = {
+  index:number
+}
 
-const Creator = (props: Props) => {
+const Creator = ({index}: CreatorProps) => {
+  const [ following, setFollowing ] = useState(false)
+
   return (
     <Card className='relative flex flex-col justify-evenly items-center h-[20rem] bg-secondary'>
         <div className='relative overflow-clip w-full h-[55%] '>
@@ -43,9 +50,9 @@ const Creator = (props: Props) => {
                 <TypographyP className='font-semibold' text='34.5ETH'/>
             </div>
           </div>
-          <Button className='text-md rounded-full'>Follow</Button>
+          <Button className='text-md rounded-full' onClick={() => setFollowing(!following)}>{following ? 'Unfollow':'Follow'}</Button>
         </div>
-        <Badge className='absolute top-5 left-5 text-md bg-accent text-accent-foreground'>2</Badge>
+        <Badge className='absolute top-5 left-5 text-md bg-accent text-accent-foreground'>{index + 1}</Badge>
     </Card>
   )
 }
