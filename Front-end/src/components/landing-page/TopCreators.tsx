@@ -1,7 +1,8 @@
-import React from 'react'
-import { TypographyH2, TypographyH3, TypographyH4 } from '../common/Typography'
+import Image from 'next/image'
+import { TypographyH2, TypographyH4, TypographyP } from '../common/Typography'
 import { Card } from '../ui/card'
 import { Avatar } from '../common/Avatar'
+import { Button } from '../ui/button'
 
 type Props = {}
 
@@ -26,12 +27,22 @@ const TopCreators = (props: Props) => {
 
 const Creator = (props: Props) => {
   return (
-    <Card className='flex flex-col justify-evenly items-center p-5 h-[16rem] bg-secondary'>
-        <Avatar className='h-20 w-20'/>
-        <TypographyH3 text='Bruce Banner'/>
-        <div className='flex items-center gap-3'>
-            <TypographyH4 className='text-primary/80' text='Total Sales: '/>
-            <TypographyH4 text='34.5ETH'/>
+    <Card className='flex flex-col justify-evenly items-center h-[20rem] bg-secondary'>
+        <div className='relative overflow-clip w-full h-[55%] '>
+          <Image className='object-cover rounded-t-lg' src='/landing-page/futuristic-blue.jpg' fill alt=''/>
+        </div>
+        <div className='relative z-50 rounded-full bg-secondary -mt-12 p-4'>
+          <Avatar className='h-20 w-20'/>
+        </div>
+        <div className='flex gap-3 items-center justify-around w-full p-3'>
+          <div>
+            <TypographyH4 text='Bruce Banner'/>
+            <div className='flex items-center gap-3'>
+                <TypographyP className='text-primary/80' text='Sales: '/>
+                <TypographyP text='34.5ETH'/>
+            </div>
+          </div>
+          <Button className='text-md rounded-full'>Follow</Button>
         </div>
     </Card>
   )

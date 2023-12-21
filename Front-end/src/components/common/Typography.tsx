@@ -36,7 +36,7 @@ export function TypographyH1({text, className}:Props) {
   }
   export function TypographyP({text, className}:Props) {
     return (
-    <p className={cn("leading-7 [&:not(:first-child)]:mt-6 ", className)}>
+    <p className={cn("leading-7 ", className)}>
         {text}
     </p>
     )

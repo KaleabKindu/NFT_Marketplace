@@ -35,7 +35,7 @@ const onTick = ({ hours, minutes, seconds }:{hours:number, minutes:number, secon
             <div className='absolute rounded-tr-[0.5rem] transform skew-x-[50deg] bottom-0 left-0 py-[0.5rem] w-[80%] ml-[-4.5rem] bg-accent'>
                 <div className='flex flex-col items-start pl-[4.5rem] gap-5 transform skew-x-[-50deg]'>
                     <TypographyH3 className='text-primary/60' text='Clone #12232'/>
-                    <Card className='relative p-3'>
+                    <Card className='relative p-3 bg-primary/5'>
                         <Badge className='absolute -top-3 left-1'>Current Bid</Badge>
                         <TypographyH4 className='text-primary/60' text='0.001245ETH'/>
                     </Card>
