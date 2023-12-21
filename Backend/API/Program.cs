@@ -5,6 +5,10 @@ using Infrustructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Configuration.AddEnvironmentVariables("NFT_MARKET_");
+
+//NFT_MARKET_ConnectionStrings__AppConnectionString
+
 // Add services to the container.
 builder.Services.ConfigureApplicationServices();
 builder.Services.ConfigurePersistenceServices(builder.Configuration);

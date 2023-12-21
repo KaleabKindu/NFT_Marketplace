@@ -1,6 +1,4 @@
 ﻿using Application.Contracts.Presistence;
-using Domain;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,7 +11,7 @@ namespace Persistence
         public static IServiceCollection ConfigurePersistenceServices(this IServiceCollection services, IConfiguration configuration) 
         {
             services.AddDbContext<AppDbContext>(options => options.UseNpgsql(
-                configuration.GetConnectionString("AppConnectionString")));
+                configuration.GetConnectionString("AppConnectionStringRemote")));
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             return services;
         }

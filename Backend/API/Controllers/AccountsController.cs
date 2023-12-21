@@ -15,7 +15,7 @@ namespace API.Controllers
     public class AccountsController : ControllerBase
     {
         private readonly TokenService _tokenService;
-        public readonly UserManager<AppUser> _userManager;
+        private readonly UserManager<AppUser> _userManager;
         public AccountsController(UserManager<AppUser> userManager, TokenService tokenService)
         {
             _userManager = userManager;
@@ -33,7 +33,7 @@ namespace API.Controllers
             if (result) return CreateUser(user);
 
             return BadRequest("Wrong Credentials");
- 
+
         }
 
         [AllowAnonymous]

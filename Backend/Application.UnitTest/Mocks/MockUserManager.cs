@@ -8,7 +8,7 @@ namespace Application.UnitTest.Mocks
     {
         public static  Mock<UserManager<AppUser>> GetUserManager()
         {
-            var Users = new List<AppUser> {
+            var users = new List<AppUser> {
                 new AppUser
                 {
                     Id = Guid.NewGuid().ToString(),
@@ -31,7 +31,7 @@ namespace Application.UnitTest.Mocks
             var userManagerMock = new Mock<UserManager<AppUser>>();
             var user = new AppUser();
             userManagerMock.Setup(u => u.CreateAsync(It.IsAny<AppUser>(), It.IsAny<string>())).ReturnsAsync(IdentityResult.Success);
-            userManagerMock.Setup(u => u.Users).Returns(Users.AsQueryable<AppUser>);
+            userManagerMock.Setup(u => u.Users).Returns(users.AsQueryable<AppUser>);
 
             return userManagerMock;
 
