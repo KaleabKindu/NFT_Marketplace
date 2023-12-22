@@ -1,5 +1,5 @@
 import CollectionDetail from "@/components/collection/CollectionDetail"
-import FilterComponent from "@/components/FilterComponent"
+import SearchFilter from "@/components/collection/SearchFilter"
 import TopCollections from "@/components/collection/TopCollections"
 import CollectionNFTs from "@/components/collection/CollectionNFTs"
 
@@ -9,7 +9,7 @@ const page = (props: Props) => {
   return ( 
     <div className="flex flex-col gap-10">
         <CollectionDetail/>
-        <FilterComponent/>
+        <SearchFilter/>
         <CollectionNFTs/>
         <TopCollections/>
     </div>

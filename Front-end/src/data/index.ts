@@ -1,14 +1,26 @@
+import { Routes } from "@/routes"
+
 export const discover = [
     {
-        name:'Browse',
-        route:'/',
+        name:'Home',
+        route:Routes.HOME,
         protected:false
+    },
+    {
+      name:'NFTs',
+      route:Routes.NFTS,
+      protected:false
     },
     {
         name:'Collections',
-        route:'/',
+        route:Routes.COLLECTIONS,
         protected:false
     },
+    {
+      name:'Users',
+      route:Routes.USERS,
+      protected:false
+  },
 ]
 
 export const help_center = [
@@ -263,8 +275,12 @@ export const provenances = [
 
 export const sort_types = [
   {
-    name:'Date',
-    value:'date'
+    name:'Trending',
+    value:'trending'
+  },
+  {
+    name:'Recently Listed',
+    value:'recently_listed'
   },
   {
     name:'Price Low - High',
@@ -283,12 +299,12 @@ export const sort_types = [
 
 export const sale_types = [
   {
-    name:'On Auction',
+    name:'Live Auction',
     value:'auction'
   },
   {
-    name:'Listed',
-    value:'listed'
+    name:'Buy Now',
+    value:'buy_now'
   },
   {
     name:'Has Offers',

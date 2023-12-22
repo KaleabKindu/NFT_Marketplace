@@ -5,27 +5,29 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
   } from "@/components/ui/dropdown-menu"
-import { Badge } from "./ui/badge"
+import { Badge } from "../ui/badge"
 import { IoWalletOutline, IoChevronDown } from "react-icons/io5";
-import { TypographyP, TypographySmall } from "./common/Typography";
-import { Button } from "./ui/button";
+import { TypographyP, TypographySmall } from "../common/Typography";
+import { Button } from "../ui/button";
 import { IoMdCloseCircle } from "react-icons/io";
 import { Slider } from "@/components/ui/slider"
 import { BiSortAlt2, BiCategory } from "react-icons/bi";
 import { categories, sale_types, sort_types } from "@/data";
-import { Checkbox } from "./ui/checkbox";
+import { Checkbox } from "../ui/checkbox";
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { useState } from "react";
 import { MdOutlineSell } from "react-icons/md";
-import SearchComponent from "./SearchComponent";
+import { cn } from "@/lib/utils";
+import { CiSearch } from "react-icons/ci";
+import { Input } from "../ui/input";
 
 type Props = {}
 
-const FilterComponent = (props: Props) => {
+const SearchFilter = (props: Props) => {
   return (
     <div className="flex flex-col lg:flex-row gap-8 items-center mt-16">
-        <SearchComponent className='flex-1' />
+        <SearchInput className='flex-1' />
         <div className="flex-1 flex flex-wrap justify-center items-center gap-5">
             <PriceFilter/>
             <SaleFilter/>
@@ -36,7 +38,21 @@ const FilterComponent = (props: Props) => {
   )
 }
 
-export default FilterComponent
+export default SearchFilter
+
+type SearchProps = {
+    className?:string
+}
+
+const SearchInput = ({className}: SearchProps) => {
+  return (
+    <div className={cn("relative", className)}>
+        <CiSearch className="absolute top-0 bottom-0 my-auto left-3" size={25}/>
+        <Input type="text" placeholder="Search" className="rounded-full pl-12 pr-4 bg-accent text-accent-foreground focus:border-background/80" />
+    </div>
+
+  )
+}
 
 
 
