@@ -7,23 +7,28 @@
     AccordionTrigger,
   } from "@/components/ui/accordion"
 import NFTCard from "../NFTCard"
+import { ScrollArea } from "@radix-ui/react-scroll-area"
+import { ScrollBar } from "../ui/scroll-area"
 
-  const MoreFromOwner = () => {
+  const MoreFromCreator = () => {
     return (
         <Accordion type="single" collapsible>
         <AccordionItem value="item-1">
-            <AccordionTrigger className="bg-accent text-accent-foreground px-5 rounded-t-md mb-5">More From Owner</AccordionTrigger>
-            <AccordionContent className="">
-            <div className="flex overflow-x-auto gap-5">
+            <AccordionTrigger className="bg-accent text-accent-foreground px-5 rounded-t-md mb-5">More From Creator</AccordionTrigger>
+            <AccordionContent>
+            <ScrollArea>
+              <div className="flex gap-5">
                 {
-                    Array.from({length:8}).map((_, index) => 
-                    <div key={index} className="shrink-0 w-full md:w-[50%] lg:w-[32%]">
-                        <NFTCard/>
-                    </div>
-                    )
-                }
+                      Array.from({length:8}).map((_, index) => 
+                      <div key={index} className="shrink-0 w-full md:w-[50%] lg:w-[25%]">
+                          <NFTCard/>
+                      </div>
+                      )
+                  }
 
-            </div>
+              </div>
+              <ScrollBar className="hidden" orientation="horizontal" />
+            </ScrollArea>
             </AccordionContent>
         </AccordionItem>
     </Accordion>
@@ -31,4 +36,4 @@ import NFTCard from "../NFTCard"
     )
   }
 
-export default MoreFromOwner
+export default MoreFromCreator

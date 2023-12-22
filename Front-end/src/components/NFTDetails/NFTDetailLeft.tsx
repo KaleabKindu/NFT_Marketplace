@@ -31,7 +31,7 @@ const NFTDetailLeft = (props: Props) => {
     <div className='flex-1 flex flex-col gap-10'>
         <div className="relative h-[25rem] lg:h-[50rem]">
             <Image className='object-cover rounded-lg' src='/landing-page/audio-category.jpg' fill alt=''/>
-            <Badge className='flex items-center gap-3 absolute top-5 right-5 ' >
+            <Badge className='flex items-center gap-3 absolute top-5 right-5 bg-background/30 hover:bg-background text-foreground' >
                 <Button variant='ghost' size={'sm'} className='rounded-full h-auto p-2' onClick={handleLikes}>
                     <FaHeart className={`${liked && 'text-red-500'} p-0`} size={20} />
                 </Button>

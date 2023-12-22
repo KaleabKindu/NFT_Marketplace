@@ -1,24 +1,21 @@
 'use client'
 import Image from 'next/image'
 import { Card } from './ui/card'
-import { TypographyH3, TypographyH4, TypographySmall } from './common/Typography'
+import { TypographyH4, TypographySmall } from './common/Typography'
+import { CiImageOn } from "react-icons/ci";
 import { Button } from './ui/button'
 import { FaHeart } from "react-icons/fa";
 import { Badge } from './ui/badge';
-import CountDown from 'count-down-react'
 import { useState } from 'react'
-import { Routes } from '@/routes'
-import Link from 'next/link'
+import Link from 'next/link';
+import { Routes } from '@/routes';
+
 
 type Props = {}
 
 const NFTCard = (props: Props) => {
     const [liked, setLiked ] = useState(false)
     const [ likes, setLikes ] = useState(22)
-    const onTick = ({ hours, minutes, seconds }:{hours:number, minutes:number, seconds:number }) => {
-
-    return <>{`${hours}h:${minutes}m:${seconds}s`}</> 
-    };
     const handleLikes = () => {
         setLiked(!liked)
         if(liked){
@@ -29,40 +26,32 @@ const NFTCard = (props: Props) => {
     }
   
   return (
-    <Card className='self-start p-5 bg-accent max-w-[35rem] w-full'>
-        <Link href={`${Routes.PRODUCT}/${Math.floor(Math.random() * 10000000000)}`}>
-            <div className='relative overflow-clip  h-[30rem]'>
-                <Image className='object-cover rounded-lg' src='/landing-page/audio-category.jpg' fill alt=''/>
-                <div className='absolute rounded-bl-[0.5rem] transform skew-x-[45deg] -top-0 right-0 py-[0.5rem] w-[60%] mr-[-3rem] bg-accent'>
-                    <div className='text-center transform skew-x-[-45deg]'>
-                        <TypographySmall className='text-primary/60' text='Remaining Time'/>
-                        <TypographyH3 
-                            className='text-primary/60' 
-                            text={        
-                            <CountDown
-                                date={Date.now() + 50000000}
-                                renderer={onTick}
-                            />}/>
-                    </div>
-                </div>
-                <div className='absolute rounded-tr-[0.5rem] transform skew-x-[50deg] bottom-0 left-0 py-[0.5rem] w-[80%] ml-[-4.5rem] bg-accent'>
-                    <div className='flex flex-col items-start pl-[4.5rem] gap-5 transform skew-x-[-50deg]'>
-                        <TypographyH3 className='text-primary/60' text='Clone #12232'/>
-                        <Card className='relative p-3 bg-primary/5'>
-                            <Badge className='absolute -top-3 left-1'>Current Bid</Badge>
-                            <TypographyH4 className='text-primary/60' text='0.001245ETH'/>
-                        </Card>
-                    </div>
-                </div>
-                <Badge className='flex items-center gap-3 absolute top-5 left-5 ' >
+    <Link href={`${Routes.PRODUCT}/${Math.floor(Math.random() * 10000000000)}`}>
+        <Card className='md:max-w-[25rem] w-full rounded-3xl group '>
+            <div className='relative  min-h-[20rem] h-full rounded-t-3xl overflow-clip'>
+                <Image className='object-cover rounded-t-3xl group-hover:scale-105' src='/landing-page/audio-category.jpg' fill alt=''/>
+                <Badge className='flex items-center gap-3 absolute top-5 right-5 bg-background/30 hover:bg-background text-foreground' >
                     <Button variant='ghost' size={'sm'} className='rounded-full h-auto p-2' onClick={handleLikes}>
                         <FaHeart className={`${liked && 'text-red-500'} p-0`} size={20} />
                     </Button>
                     <TypographySmall text={likes}/>
                 </Badge>
+                <Badge className='p-2 absolute top-5 left-5 bg-background/30 hover:bg-background text-foreground' >
+                    <CiImageOn size={25} />
+                </Badge>
             </div>
-        </Link>
-    </Card>
+            <div className='flex flex-col gap-5 p-5'>
+                <div className='flex items-center justify-between'>
+                    <TypographyH4 text='Clone #1234'/>
+    
+                </div>
+                <div className='p-3 bg-primary/5'>
+                    <TypographySmall text='Current Bid'/>
+                    <TypographyH4 className='text-primary/60' text='0.001245ETH'/>
+                </div>
+            </div>
+        </Card>
+    </Link>
   )
 }
 

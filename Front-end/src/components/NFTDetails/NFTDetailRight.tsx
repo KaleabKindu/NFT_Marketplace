@@ -73,8 +73,8 @@ const NFTDetailRight = (props: Props) => {
                     <AccordionContent className=""><OffersTable/></AccordionContent>
                 </AccordionItem>
                 <AccordionItem value="item-2">
-                    <AccordionTrigger className="bg-accent text-accent-foreground px-5 rounded-t-md">Listings</AccordionTrigger>
-                    <AccordionContent className=""><ListingsTable/></AccordionContent>
+                    <AccordionTrigger className="bg-accent text-accent-foreground px-5 rounded-t-md">Bids</AccordionTrigger>
+                    <AccordionContent className=""><BidsTable/></AccordionContent>
                 </AccordionItem>
             </Accordion>
         </div>
@@ -94,7 +94,7 @@ import {
     TableHeader,
     TableRow,
   } from "@/components/ui/table"
-import { offers } from '@/data'
+import { bids, offers } from '@/data'
   
   
   export function OffersTable() {
@@ -128,28 +128,28 @@ import { offers } from '@/data'
 
 
 
-  export function ListingsTable() {
+  export function BidsTable() {
     return (
       <Table className='border'>
         <TableHeader>
           <TableRow>
-            <TableHead>Price</TableHead>
-            <TableHead>USD Price</TableHead>
+            <TableHead>Bid</TableHead>
+            <TableHead>Bid in USD</TableHead>
             <TableHead>From</TableHead>
             <TableHead>Date</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {offers.map((offer, index) => (
+          {bids.map((bid, index) => (
             <TableRow key={index}>
-              <TableCell className="font-medium">{`${offer.price} WETH`}</TableCell>
-              <TableCell>{`$${offer.usd_price}`}</TableCell>
+              <TableCell className="font-medium">{`${bid.bid_price} WETH`}</TableCell>
+              <TableCell>{`$${bid.bid_usd_price}`}</TableCell>
               <TableCell>
                 <Link href={''}>
-                    {offer.from}
+                    {bid.from}
                 </Link>
               </TableCell>
-              <TableCell>{offer.date}</TableCell>
+              <TableCell>{bid.date}</TableCell>
             </TableRow>
           ))}
         </TableBody>

@@ -30,7 +30,7 @@ const NavBar = (props: Props) => {
           <Logo/>
 
           {/* Right Section */}
-          <div className='hidden lg:flex gap-5 lg:gap-12 items-center'>
+          <div className='hidden lg:flex gap-5 items-center'>
             {/* Discover Section */}
             <Discover/>
 

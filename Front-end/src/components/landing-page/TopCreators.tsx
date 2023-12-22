@@ -35,9 +35,9 @@ const Creator = ({index}: CreatorProps) => {
   const [ following, setFollowing ] = useState(false)
 
   return (
-    <Card className='relative flex flex-col justify-evenly items-center h-[20rem] bg-secondary'>
+    <Card className='relative flex flex-col justify-evenly items-center h-[20rem] bg-secondary group'>
         <div className='relative overflow-clip w-full h-[55%] '>
-          <Image className='object-cover rounded-t-lg' src='/landing-page/futuristic-blue.jpg' fill alt=''/>
+          <Image className='object-cover rounded-t-lg group-hover:scale-105' src='/landing-page/futuristic-blue.jpg' fill alt=''/>
         </div>
         <div className='relative z-40 rounded-full bg-secondary -mt-12 p-4'>
           <Avatar className='h-20 w-20'/>

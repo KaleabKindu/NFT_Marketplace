@@ -11,9 +11,7 @@ const Layout = ({ children }: Props) => {
   return (
     <>
         <NavBar/>
-        <Container className='pt-[6.5rem]'>
-            {children}
-        </Container>
+        <div className='pt-[5rem]'>{children}</div>
         <Footer/>
     </>
   )

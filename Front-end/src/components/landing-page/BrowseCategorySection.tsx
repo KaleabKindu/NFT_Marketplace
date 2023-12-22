@@ -23,7 +23,7 @@ const BrowseCategorySection = (props: Props) => {
               <CardContent className='relative h-44 p-0'>
                 <Image className=' object-cover rounded-t-lg' src={`/landing-page/${category.image}`} fill alt=''/>
               </CardContent>
-              <CardFooter className='flex flex-col items-start gap-2 px-5 py-2 bg-secondary text-secondary-foreground'>
+              <CardFooter className='flex flex-col items-start gap-2 px-5 py-2 '>
                 <TypographyH4 className='text-primary/80' text={category.name}/>
                 <TypographySmall className='text-primary/50' text={`${category.count} NFTs`}/>
               </CardFooter>

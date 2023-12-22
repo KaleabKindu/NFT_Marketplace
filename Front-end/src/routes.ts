@@ -1,4 +1,6 @@
 // page routes
 export enum Routes {
-    PRODUCT = '/product'
+    PRODUCT = '/product',
+    COLLECTION = '/collection'
+
 }

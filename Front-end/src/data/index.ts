@@ -215,3 +215,83 @@ export const provenances = [
       date:(new Date()).toLocaleDateString()
     },
   ]
+
+  export const bids = [
+    {
+      from: "potts",
+      bid_price: "0.25",
+      bid_usd_price: "250.00",
+      date:(new Date()).toLocaleDateString()
+    },
+    {
+      from: "banner",
+      bid_price: "0.15",
+      bid_usd_price: "150.00",
+      date:(new Date()).toLocaleDateString()
+    },
+    {
+      from: "rogers",
+      bid_price: "0.22",
+      bid_usd_price: "350.00",
+      date:(new Date()).toLocaleDateString()
+    },
+    {
+      from: "romanoff",
+      bid_price: "0.55",
+      bid_usd_price: "450.00",
+      date:(new Date()).toLocaleDateString()
+    },
+    {
+      from: "thanos",
+      bid_price: "0.21",
+      bid_usd_price: "550.00",
+      date:(new Date()).toLocaleDateString()
+    },
+    {
+      from: "odinson",
+      bid_price: "0.75",
+      bid_usd_price: "200.00",
+      date:(new Date()).toLocaleDateString()
+    },
+    {
+      from: "stark",
+      bid_price: "0.05",
+      bid_usd_price: "300.00",
+      date:(new Date()).toLocaleDateString()
+    },
+  ]
+
+export const sort_types = [
+  {
+    name:'Date',
+    value:'date'
+  },
+  {
+    name:'Price Low - High',
+    value:'low_high'
+  },
+  {
+    name:'Price High - Low',
+    value:'high_low'
+  },
+  {
+    name:'Most Favorited',
+    value:'favorited'
+  },
+]
+
+
+export const sale_types = [
+  {
+    name:'On Auction',
+    value:'auction'
+  },
+  {
+    name:'Listed',
+    value:'listed'
+  },
+  {
+    name:'Has Offers',
+    value:'has_offers'
+  },
+]
