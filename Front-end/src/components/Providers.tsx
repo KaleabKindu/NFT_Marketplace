@@ -1,9 +1,10 @@
 'use client'
 
 import { ReactNode } from "react"
-import { ThemeProvider } from './material-tailwind-components'
 import { Provider } from 'react-redux'
 import { store } from '../store'
+import Layout from "./common/Layout"
+import { ThemeProvider } from "./theme-provider"
 
 type Props = {
     children:ReactNode
@@ -12,9 +13,16 @@ type Props = {
 const Providers = ({ children }: Props) => {
   return (
     <Provider store={store}>
-        <ThemeProvider>
-            {children}
-        </ThemeProvider>
+      <ThemeProvider
+        attribute="class"
+        defaultTheme="dark"
+        enableSystem
+        disableTransitionOnChange
+      >
+        <Layout>
+          {children}
+        </Layout>
+      </ThemeProvider>
     </Provider>
   )
 }
