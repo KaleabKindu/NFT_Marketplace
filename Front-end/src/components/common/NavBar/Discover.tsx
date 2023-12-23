@@ -22,7 +22,7 @@ const Discover = (props: Props) => {
             {
                 discover.map((option, index) => 
                 <DropdownMenuItem key={index} className="py-3">
-                    <Link href={option.route}>
+                    <Link href={option.route} className="w-full">
                         {option.name}
                     </Link>
                 </DropdownMenuItem>

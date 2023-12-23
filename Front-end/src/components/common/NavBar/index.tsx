@@ -8,7 +8,6 @@ import { useTheme } from "next-themes"
 import { Button } from "@/components/ui/button"
 import Container from '../Container'
 import SideBar from './SideBar'
-import Link from 'next/link';
 import Discover from './Discover';
 import HelpCenter from './HelpCenter';
 

@@ -2,11 +2,6 @@ import { Routes } from "@/routes"
 
 export const discover = [
     {
-        name:'Home',
-        route:Routes.HOME,
-        protected:false
-    },
-    {
       name:'NFTs',
       route:Routes.NFTS,
       protected:false
@@ -311,3 +306,5 @@ export const sale_types = [
     value:'has_offers'
   },
 ]
+
+export const tabs = ['created', 'owned', 'liked', 'collections', 'followers', 'following']

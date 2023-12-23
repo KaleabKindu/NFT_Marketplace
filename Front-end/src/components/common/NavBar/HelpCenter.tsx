@@ -19,22 +19,22 @@ const HelpCenter = (props: Props) => {
         </DropdownMenuTrigger>
         <DropdownMenuContent>
             <DropdownMenuItem className="py-3">
-                <Link href=''>
+                <Link href='' className="w-full">
                     About Us
                  </Link>
             </DropdownMenuItem>
             <DropdownMenuItem className="py-3">
-                <Link href=''>
+                <Link href='' className="w-full">
                     Contact Us
                  </Link>
             </DropdownMenuItem>
             <DropdownMenuItem className="py-3">
-                <Link href=''>
+                <Link href='' className="w-full">
                     Sign In
                  </Link>
             </DropdownMenuItem>
             <DropdownMenuItem className="py-3">
-                <Link href=''>
+                <Link href='' className="w-full">
                     Sign Up
                  </Link>
             </DropdownMenuItem>

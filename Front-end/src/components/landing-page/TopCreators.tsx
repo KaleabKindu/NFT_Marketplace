@@ -31,7 +31,7 @@ type CreatorProps = {
   index:number
 }
 
-const Creator = ({index}: CreatorProps) => {
+export const Creator = ({index}: CreatorProps) => {
   const [ following, setFollowing ] = useState(false)
 
   return (
