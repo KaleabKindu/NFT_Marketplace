@@ -1,6 +1,7 @@
 ﻿using Application.Features.Categories.Dtos;
 ﻿using Application.Features.Bids.Dtos;
 using Application.Features.Offers.Dtos;
+using Application.Features.Assets.Dtos;
 using AutoMapper;
 using Domain;
 
@@ -36,5 +37,16 @@ namespace Application.Profiles
 
             #endregion
         }
+            #region Assets
+
+            CreateMap<Asset, AssetDto>().ReverseMap();
+            CreateMap<Asset, UpdateAssetDto>().ReverseMap();
+            CreateMap<Asset, CreateAssetDto>().ReverseMap();
+            #endregion Assets
+
+
+        }
+
+
     }
 }
