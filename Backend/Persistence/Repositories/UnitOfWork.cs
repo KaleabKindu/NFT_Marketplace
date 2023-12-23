@@ -10,6 +10,7 @@ namespace Persistence.Repositories
         private readonly AppDbContext _dbContext;
         private readonly IServiceProvider _services;
         private UserManager<AppUser> _usermanager;
+        private IAssetRepository _assetRepository;
         private IBidRepository _bidRepository;
         private IOfferRepository _offerRepository;
         private ICategoryRepository _CategoryRepository;
@@ -53,6 +54,14 @@ namespace Persistence.Repositories
             get {                
                 _CategoryRepository ??= new CategoryRepository(_dbContext);
                 return _CategoryRepository;
+            }
+        }
+
+        public IAssetRepository AssetRepository {
+            get{
+                if (_assetRepository == null)
+                    _assetRepository =  new AssetRepository(_dbContext);
+            return _assetRepository;
             }
         }
 
