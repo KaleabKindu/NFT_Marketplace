@@ -15,6 +15,4 @@ FROM mcr.microsoft.com/dotnet/aspnet:$TAG
 WORKDIR /App
 COPY --from=build-env /App/out .
 
-EXPOSE 80
-
 ENTRYPOINT ["dotnet", "API.dll"]
