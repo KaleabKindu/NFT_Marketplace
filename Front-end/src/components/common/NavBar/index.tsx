@@ -10,6 +10,8 @@ import Container from '../Container'
 import SideBar from './SideBar'
 import Discover from './Discover';
 import HelpCenter from './HelpCenter';
+import Link from 'next/link';
+import { Routes } from '@/routes';
 
 type Props = {}
 
@@ -45,7 +47,9 @@ const NavBar = (props: Props) => {
             </Button>
 
             {/* Create NFT Section*/}
-            <Button className='rounded-full' size='lg'>Create</Button>
+            <Link href={Routes.MINT}>
+              <Button className='rounded-full' size='lg'>Create</Button>
+            </Link>
 
             {/* User Profile Section */}
             <Profile/>

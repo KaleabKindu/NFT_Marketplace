@@ -50,7 +50,7 @@ export const Creator = ({index}: CreatorProps) => {
                 <TypographyP className='font-semibold' text='34.5ETH'/>
             </div>
           </div>
-          <Button className='text-md rounded-full' onClick={() => setFollowing(!following)}>{following ? 'Unfollow':'Follow'}</Button>
+          <Button className='text-md rounded-full' onClick={() => setFollowing(!following)}>{following ? 'Following':'Follow'}</Button>
         </div>
         <Badge className='absolute top-5 left-5 text-md bg-accent text-accent-foreground'>{index + 1}</Badge>
     </Card>

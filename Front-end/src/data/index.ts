@@ -29,16 +29,6 @@ export const help_center = [
         route:'/',
         protected:false
     },
-    {
-        name:'Sign Up',
-        route:'/',
-        protected:false
-    },
-    {
-        name:'Sign In',
-        route:'/',
-        protected:false
-    },
 ]
 
 export const howitworks = [
