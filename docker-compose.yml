@@ -1,20 +1,39 @@
-version: "3.8"
+version: '3.8'
+
+networks:
+  dockerapi-dev:
+    driver: bridge 
 
 services:
-
-  backend-api:
-    build: ./Backend
+  api:
+    image: api:latest
+    depends_on:
+      - "db"
+    build:
+      context: ./Backend
+      dockerfile: Dockerfile
     ports:
-      - "5059:80"
-      - "7087:443"
+      - "8000:80"     
     environment:
-      ASPNETCORE_ENVIRONMENT: Development 
-      ASPNETCORE_HTTPS_PORT: 443 
-      NFT_MARKET_ConnectionStrings__AppConnectionStringRemote: 'User ID=<user>;Password=<password>;Server=<host>;Port=5432;Database=<database>;Integrated Security=true;Pooling=true;'
-
-  # frontend:
-  #   build: ./Front-end
-  #   ports:
-  #     - "3000:3000"
-  #   environment:
-  #     REACT_APP_BACKEND_API_URL: http://backend-api:8000 
+      DB_CONNECTION_STRING: "host=db;port=5432;database=nft;username=nftuser;password=nftuser"
+    networks:
+      - dockerapi-dev  
+  
+  db:
+    image: postgres:latest
+    ports:
+      - "5432"
+    restart: always
+    volumes:
+      - db_volume:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: "nftuser"
+      POSTGRES_PASSWORD: "nftuser"
+      POSTGRES_DB: "nft"
+    networks:
+      - dockerapi-dev
+volumes:
+  db_volume:
+         
+    
+     
