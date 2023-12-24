@@ -49,7 +49,7 @@ const TrendingNFTCard = (props: Props) => {
                         <div className='flex flex-col items-start pl-[4.5rem] gap-5 transform skew-x-[-50deg]'>
                             <TypographyH3 className='text-primary/60' text='Clone #12232'/>
                             <Card className='relative p-3 bg-primary/5'>
-                                <Badge className='absolute -top-3 left-1'>Current Bid</Badge>
+                                <Badge variant={'secondary'} className='absolute -top-3 left-1'>Current Bid</Badge>
                                 <TypographyH4 className='text-primary/60' text='0.001245ETH'/>
                             </Card>
                         </div>

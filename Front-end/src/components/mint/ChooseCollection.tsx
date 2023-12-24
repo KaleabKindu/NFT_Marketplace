@@ -6,6 +6,7 @@ import { ScrollArea, ScrollBar } from "../ui/scroll-area"
 import { IoCheckmarkCircle } from "react-icons/io5";
 import { Button } from "../ui/button";
 import { MdAdd } from "react-icons/md";
+import { cn } from "@/lib/utils";
 type Props = {}
 
 const ChooseCollection = (props: Props) => {
@@ -23,7 +24,7 @@ const ChooseCollection = (props: Props) => {
                             <Avatar className="w-10 h-10"/>
                             {index + 1 === selected && <IoCheckmarkCircle size={30}/>}
                         </div>
-                        <TypographyP text='Crypto Legend Professor'/>
+                        <TypographyP className={cn({"text-foreground":index + 1 === selected})} text='Crypto Legend Professor'/>
                      </Button>
                     )
                 }
