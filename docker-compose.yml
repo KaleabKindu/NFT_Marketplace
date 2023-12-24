@@ -4,8 +4,12 @@ services:
 
   backend-api:
     build: ./Backend
-    # ports:
-    #   - "5999:80"
+    ports:
+      - "5059:80"
+      - "7087:443"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development 
+      ASPNETCORE_HTTPS_PORT: 443 
 
   # frontend:
   #   build: ./Front-end
