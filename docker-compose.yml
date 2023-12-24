@@ -10,6 +10,7 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Development 
       ASPNETCORE_HTTPS_PORT: 443 
+      NFT_MARKET_ConnectionStrings__AppConnectionStringRemote: 'User ID=<user>;Password=<password>;Server=<host>;Port=5432;Database=<database>;Integrated Security=true;Pooling=true;'
 
   # frontend:
   #   build: ./Front-end
