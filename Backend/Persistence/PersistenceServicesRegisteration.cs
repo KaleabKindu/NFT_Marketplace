@@ -1,4 +1,4 @@
-﻿using Application.Contracts.Presistence;
+﻿using Application.Contracts.Persistance;
 using Domain;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
