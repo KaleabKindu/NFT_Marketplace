@@ -1,11 +1,14 @@
 ﻿using Domain;
 using Microsoft.AspNetCore.Identity;
 
-namespace Application.Contracts.Presistence
+namespace Application.Contracts.Persistance
 {
     public interface IUnitOfWork:IDisposable
     {
         UserManager<AppUser> UserManager { get; }
-        Task<int> Save();
+
+        IOfferRepository OfferRepository { get; }
+
+        Task<int> SaveAsync();
     }
 }
