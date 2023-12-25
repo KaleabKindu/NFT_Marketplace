@@ -43,7 +43,7 @@ const SearchFilter = (props: Props) => {
   return (
     <div className="flex flex-col lg:flex-row gap-8 items-center mt-16">
         <SearchInput className='flex-1' />
-        <div className="flex-1 flex flex-wrap justify-center items-center gap-5">
+        <div className="flex-1 flex flex-wrap justify-center items-center gap-3">
             <PriceFilter/>
             <SaleFilter/>
             <CategoryFilter/>
@@ -59,7 +59,7 @@ type SearchProps = {
     className?:string
 }
 
-const SearchInput = ({className}: SearchProps) => {
+export const SearchInput = ({className}: SearchProps) => {
   return (
     <div className={cn("relative", className)}>
         <CiSearch className="absolute top-0 bottom-0 my-auto left-3" size={25}/>
