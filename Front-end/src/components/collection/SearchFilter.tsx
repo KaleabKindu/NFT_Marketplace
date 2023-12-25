@@ -70,7 +70,7 @@ export const SaleFilter = (props: Props) => {
         <DropdownMenuTrigger>
             <Badge className="flex items-center gap-2 py-1 bg-secondary hover:bg-secondary/80 text-secondary-foreground">
                 <MdOutlineSell size={25}/>
-                <TypographySmall text='Sale Type'/>
+                <TypographySmall className='text-foreground' text='Sale Type'/>
                 <Button variant='ghost' size='sm' className="p-0 h-auto rounded-full" onClick={() => setSelectedSaleType([])}>
                     {selectedSaleTypes.length > 0 ? <IoMdCloseCircle size={25} />:<IoChevronDown size={20}/>}
                 </Button>
@@ -107,7 +107,7 @@ export const PriceFilter = (props: Props) => {
           <DropdownMenuTrigger>
             <Badge className="flex items-center gap-2 py-1 bg-secondary hover:bg-secondary/80 text-secondary-foreground">
                 <IoWalletOutline size={25}/>
-                <TypographySmall text='0.01ETH - 10ETH'/>
+                <TypographySmall className='text-foreground' text='0.01ETH - 10ETH'/>
                 <Button variant='ghost' size='sm' className="p-0 h-auto rounded-full">
                     <IoMdCloseCircle size={25} />
                 </Button>
@@ -158,7 +158,7 @@ return (
         <DropdownMenuTrigger>
             <Badge className="flex items-center gap-2 py-1 bg-secondary hover:bg-secondary/80 text-secondary-foreground">
                 <BiCategory size={25}/>
-                <TypographySmall text='Category'/>
+                <TypographySmall className='text-foreground' text='Category'/>
                 <Button variant='ghost' size='sm' className="p-0 h-auto rounded-full" onClick={() => setSelectedCategories([])}>
                     {selectedCategories.length > 0 ? <IoMdCloseCircle size={25} />:<IoChevronDown size={20}/>}
                 </Button>
@@ -206,7 +206,7 @@ return (
     <DropdownMenuTrigger>
         <Badge className="flex items-center gap-2 py-1 bg-secondary hover:bg-secondary/80 text-secondary-foreground">
             <BiSortAlt2 size={25}/>
-            <TypographySmall text={sortBy ? sortBy:'Sort By'}/>
+            <TypographySmall className='text-foreground' text={sortBy ? sortBy:'Sort By'}/>
             <Button 
              variant='ghost'
              size='sm'
