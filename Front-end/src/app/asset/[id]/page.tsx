@@ -1,8 +1,8 @@
-import NFTDetailsLeft from "@/components/NFTDetails/NFTDetailLeft"
-import NFTDetailsRight from "@/components/NFTDetails/NFTDetailRight"
-import NFTProvenance from "@/components/NFTDetails/NFTProvenance"
-import MoreFromCollection from "@/components/NFTDetails/MoreFromCollection"
-import MoreFromCreator from "@/components/NFTDetails/MoreFromCreator"
+import NFTDetailsLeft from "@/components/asset/NFTDetailLeft"
+import NFTDetailsRight from "@/components/asset/NFTDetailRight"
+import NFTProvenance from "@/components/asset/NFTProvenance"
+import MoreFromCollection from "@/components/asset/MoreFromCollection"
+import MoreFromCreator from "@/components/asset/MoreFromCreator"
 type Props = {}
 
 const NFTDetail = (props: Props) => {

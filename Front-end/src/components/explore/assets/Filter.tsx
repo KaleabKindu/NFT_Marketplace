@@ -1,8 +1,8 @@
 'use client'
 import { TbFilterSearch } from "react-icons/tb";
 import { IoChevronDown } from "react-icons/io5";
-import { Button } from '../ui/button'
-import { CategoryFilter, PriceFilter, SaleFilter, SortFilter } from '../collection/SearchFilter'
+import { Button } from '../../ui/button'
+import { CategoryFilter, PriceFilter, SaleFilter, SortFilter, CollectionsFilter, UsersFilter} from '../../collection/SearchFilter'
 import { useState } from 'react'
 import { cn } from "@/lib/utils";
 
@@ -30,6 +30,8 @@ const Filter = (props: Props) => {
           <PriceFilter/>
           <SaleFilter/>
           <CategoryFilter/>
+          <CollectionsFilter/>
+          <UsersFilter/>
           <SortFilter/>
       </div>}
       

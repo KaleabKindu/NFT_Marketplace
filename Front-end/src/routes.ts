@@ -5,6 +5,7 @@ export enum Routes {
     PRODUCT = '/asset',
     COLLECTION = '/collection',
     MINT = '/asset/mint',
+    CONNECT = '/connect',
 
     // Explore
     NFTS = '/explore/assets',

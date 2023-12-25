@@ -1,5 +1,5 @@
 'use client' 
-import NFTCard from "../NFTCard"
+import NFTCard from "../explore/assets/NFTCard"
 type Props = {}
 
 const CollectionNFTs = (props: Props) => {

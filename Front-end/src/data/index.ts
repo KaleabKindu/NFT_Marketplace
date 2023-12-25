@@ -275,10 +275,6 @@ export const sort_types = [
     name:'Price High - Low',
     value:'high_low'
   },
-  {
-    name:'Most Favorited',
-    value:'favorited'
-  },
 ]
 
 
@@ -291,10 +287,46 @@ export const sale_types = [
     name:'Buy Now',
     value:'buy_now'
   },
-  {
-    name:'Has Offers',
-    value:'has_offers'
-  },
 ]
 
 export const tabs = ['created', 'owned', 'liked', 'collections', 'followers', 'following']
+
+
+export const collections = [
+  {
+    id: "1",
+    name: "Collection One",
+    profile_pic:'/collection/collection-pic.png'
+  },
+  {
+    id: "2",
+    name: "Collection Two",
+    profile_pic:'/collection/collection-pic.png'
+  },
+  {
+    id: "3",
+    name: "Collection Three",
+    profile_pic:'/collection/collection-pic.png'
+  },
+
+]
+
+
+export const users = [
+  {
+    id: "1",
+    name: "Tony Stark",
+    profile_pic:'/collection/collection-pic.png'
+  },
+  {
+    id: "2",
+    name: "Bruce Banner",
+    profile_pic:'/collection/collection-pic.png'
+  },
+  {
+    id: "3",
+    name: "Steve Rogers",
+    profile_pic:'/collection/collection-pic.png'
+  },
+
+]

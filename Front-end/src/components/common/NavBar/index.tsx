@@ -50,6 +50,10 @@ const NavBar = (props: Props) => {
             <Link href={Routes.MINT}>
               <Button className='rounded-full' size='lg'>Create</Button>
             </Link>
+            {/* Connect Wallet Section*/}
+            {/* <Link href={Routes.CONNECT}>
+              <Button className='rounded-full' size='lg'>Connect Wallet</Button>
+            </Link> */}
 
             {/* User Profile Section */}
             <Profile/>
