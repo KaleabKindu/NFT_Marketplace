@@ -1,4 +1,4 @@
-import NFTCard from '../NFTCard'
+import NFTCard from './NFTCard'
 
 type Props = {}
 

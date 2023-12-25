@@ -1,11 +1,11 @@
 'use client'
 import Image from 'next/image'
-import { Card } from './ui/card'
-import { TypographyH4, TypographySmall } from './common/Typography'
+import { Card } from '../../ui/card'
+import { TypographyH4, TypographySmall } from '../../common/Typography'
 import { CiImageOn } from "react-icons/ci";
-import { Button } from './ui/button'
+import { Button } from '../../ui/button'
 import { FaHeart } from "react-icons/fa";
-import { Badge } from './ui/badge';
+import { Badge } from '../../ui/badge';
 import { useState } from 'react'
 import Link from 'next/link';
 import { Routes } from '@/routes';

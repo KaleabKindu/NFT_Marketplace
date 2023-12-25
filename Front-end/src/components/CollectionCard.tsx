@@ -29,7 +29,7 @@ const CollectionCard = (props: Props) => {
                 <div className='flex flex-col gap-3'>
                     <TypographyH3 className='text-primary/60' text='Collection #12232'/>
                     <div className='flex items-center gap-5'>
-                        <Avatar/>
+                        <Avatar className='h-8 w-8'/>
                         <TypographySmall text='Tony Stark'/>
                     </div>
                 </div>

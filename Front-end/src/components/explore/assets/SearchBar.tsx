@@ -1,8 +1,8 @@
 import React from 'react'
 import { CiSearch } from 'react-icons/ci'
-import { Input } from '../ui/input'
+import { Input } from '../../ui/input'
 import { cn } from '@/lib/utils'
-import { Button } from '../ui/button'
+import { Button } from '../../ui/button'
 import { MdArrowForward } from 'react-icons/md'
 type Props = {
   className?:string

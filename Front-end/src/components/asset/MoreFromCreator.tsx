@@ -6,7 +6,7 @@
     AccordionItem,
     AccordionTrigger,
   } from "@/components/ui/accordion"
-import NFTCard from "../NFTCard"
+import NFTCard from "../explore/assets/NFTCard"
 import { ScrollArea } from "@radix-ui/react-scroll-area"
 import { ScrollBar } from "../ui/scroll-area"
 
