@@ -1,4 +1,5 @@
 ﻿using Domain;
+using Domain.Offers;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -30,6 +31,7 @@ namespace Persistence
             base.OnModelCreating(modelBuilder);
         }
 
+        public DbSet<Offer> Offers { get; set; }
 
     }
 }

@@ -36,28 +36,6 @@ namespace API.MiddleWares
             {
                 await _next(context);
             }
-            catch(ValidationException ex)
-            {
-                failed = true;
-                context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-                _logger.LogError(ex, ex.Message);
-                response = ResponseObject.FactoryWithError(ex.Message,ex.Details);
-            }
-            catch(NotFoundException ex)
-            {
-                failed = true;
-                context.Response.StatusCode = (int)HttpStatusCode.NotFound;
-                _logger.LogError(ex, ex.Message);
-                response = ResponseObject.Factory(ex.Message);
-
-            }
-            catch(BadRequestException ex)
-            {
-                failed = true;
-                context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-                _logger.LogError(ex, ex.Message);
-                response = ResponseObject.Factory(ex.Message);
-            }
             catch(AppException ex)
             {
                 failed = true;

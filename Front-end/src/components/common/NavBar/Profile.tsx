@@ -1,7 +1,7 @@
 import { Avatar } from "../Avatar";
 import Link from "next/link";
 import { FaUserAlt } from "react-icons/fa";
-import { TbNetworkOff } from "react-icons/tb";
+import { MdLogout } from "react-icons/md";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -10,6 +10,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
   } from "@/components/ui/dropdown-menu"
+import { Routes } from "@/routes";
   
 
 type Props = {}
@@ -31,21 +32,21 @@ const Profile = (props: Props) => {
                             Tony Stark
                         </div>
                         <div className="text-sm font-medium truncate max-w-[10rem]" >
-                            X03849938292020338778343
+                            0x3849938292020338778343
                         </div>
                     </div>
                 </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
-                <Link href='' className="flex items-center gap-3">
-                    <FaUserAlt size={20} />
+            <DropdownMenuItem className="py-3">
+                <Link href={`${Routes.USER}/0x3849938292020338778343`} className="flex items-center gap-3 w-full">
+                    <FaUserAlt size={30} />
                     <div>Profile</div>
                  </Link>
             </DropdownMenuItem>
-            <DropdownMenuItem>
+            <DropdownMenuItem className="py-3">
                 <Link href='' className="flex items-center gap-3">
-                    <TbNetworkOff size={20} />
+                    <MdLogout size={30} />
                     <div>Disconnect</div>
                  </Link>
             </DropdownMenuItem>

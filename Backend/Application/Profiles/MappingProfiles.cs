@@ -1,4 +1,7 @@
-﻿using AutoMapper;
+﻿using Application.Features.Offers.Dtos;
+using AutoMapper;
+using Domain;
+using Domain.Offers;
 
 namespace Application.Profiles
 {
@@ -6,6 +9,11 @@ namespace Application.Profiles
     {
         public MappingProfile()
         {
+            #region offer 
+            CreateMap<Offer, OfferDto>().ReverseMap();
+            CreateMap<CreateOfferDto,Offer>();
+            CreateMap<UpdateOfferDto,Offer>();
+            #endregion
 
         
         }
