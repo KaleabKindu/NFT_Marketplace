@@ -1,5 +1,8 @@
 ﻿using System.Reflection;
+using FluentValidation;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
+using RDP.Application.Common.Behaviors;
 
 
 namespace Application
@@ -11,6 +14,8 @@ namespace Application
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly()));
             services.AddHttpContextAccessor();
+            services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+            services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
             return services;
         }
