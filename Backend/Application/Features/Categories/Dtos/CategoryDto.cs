@@ -1,4 +1,4 @@
-namespace API.Model
+namespace Application.Features.Categories.Dtos
 {
     public class CategoryDtO
     {

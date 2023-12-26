@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using API.Services;
-using API.Model;
+using Application.Features.Categories.Commands;
+using Application.Features.Categories.Dtos;
 
 namespace API.Controllers
 {

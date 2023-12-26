@@ -1,9 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
-using API.Model;
-using API.Services;
+using Application.Features.Categories.Dtos;
 
-namespace API.Services
+namespace Application.Features.Categories.Commands
 {
     public interface ICategoryService
     {
@@ -17,11 +16,11 @@ namespace API.Services
     public class CategoryService : ICategoryService
     {
         private readonly List<CategoryDto> _categories = new List<CategoryDto>();
-        private readonly TokenService _tokenService;
+        // private readonly TokenService _tokenService;
 
-        public CategoryService(TokenService tokenService)
+        public CategoryService()
         {
-            _tokenService = tokenService;
+            // _tokenService = tokenService;
             // Initialize some sample categories (replace with actual data retrieval logic)
             _categories.Add(new CategoryDto { CategoryId = 1, CategoryName = "Category1" });
             _categories.Add(new CategoryDto { CategoryId = 2, CategoryName = "Category2" });
