@@ -1,5 +1,5 @@
 'use client'
-import { TypographyH2, TypographyH3, TypographyP } from '../common/Typography'
+import { TypographyH2, TypographyH3, TypographyH4, TypographyP, TypographySmall } from '../common/Typography'
 import Link from 'next/link'
 import CountDown from 'count-down-react'
 import { Button } from '../ui/button'
@@ -38,9 +38,28 @@ const NFTDetailRight = (props: Props) => {
                     </Link>
                 </div>
             </div>
-            <div className='flex gap-5 items-center'>
-                <div>Art</div>
-                <div>Collection</div>
+            <div className='flex flex-wrap items-center lg:divide-x-2'>
+              <Link href={`${Routes.USER}`} className='flex items-center gap-3 p-5'>
+                <Avatar className='h-12 w-12'/>
+                <div className='flex flex-col'>
+                  <TypographySmall text='Creator'/>
+                  <TypographyH4 text='Anthony Stark'/>
+                </div>
+              </Link>
+              <Link href={`${Routes.USER}`} className='flex items-center gap-3 p-5'>
+                <Avatar className='h-12 w-12'/>
+                <div className='flex flex-col'>
+                  <TypographySmall text='Owner'/>
+                  <TypographyH4 text='Bruce Banner'/>
+                </div>
+              </Link>
+              <Link href={`${Routes.COLLECTION}`} className='flex items-center gap-3 p-5'>
+                <Avatar className='h-12 w-12' src='/collection/collection.png'/>
+                <div className='flex flex-col'>
+                  <TypographySmall text='Collection'/>
+                  <TypographyH4 text='Avengers'/>
+                </div>
+              </Link>
             </div>
             <div className='flex flex-col gap-5 border rounded-md bg-secondary/50'>
                 <div className='flex flex-col gap-5 border-b p-5'>
@@ -95,6 +114,8 @@ import {
     TableRow,
   } from "@/components/ui/table"
 import { bids, offers } from '@/data'
+import { Avatar } from '../common/Avatar'
+import { Routes } from '@/routes'
   
   
   export function OffersTable() {

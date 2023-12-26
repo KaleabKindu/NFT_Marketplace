@@ -1,5 +1,5 @@
 import Image from "next/image"
-import { TypographyH1, TypographyP } from "../common/Typography"
+import { TypographyH2, TypographyP } from "../common/Typography"
 import { TbCopy } from "react-icons/tb";
 import { Button } from "../ui/button";
 import { BsThreeDots } from "react-icons/bs";
@@ -19,7 +19,7 @@ const UserDetail = (props: Props) => {
             <Image className="rounded-3xl object-cover" src='/collection/collection-pic.png' fill alt=''/>
         </div>
         <div className="flex flex-col items-start gap-5">
-            <TypographyH1 text='Anthony Stark'/>
+            <TypographyH2 text='Anthony Stark'/>
             <div className="flex items-center gap-3 rounded-full px-5 py-1 bg-accent hover:bg-accent/80">
                 <TypographyP text='0xASDF3456768798HJHK5768799HGJK'/>
                 <TbCopy size={20}/>

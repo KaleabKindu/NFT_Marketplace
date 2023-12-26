@@ -13,12 +13,7 @@ const Filter = (props: Props) => {
   const [ selected, setSelected ] = useState('all')
   return (
     <div className='flex flex-col gap-5 w-full'>
-      <div className='flex items-center justify-between border-b py-6'>
-        <div className='flex gap-5'>
-          <Button variant={selected === 'all' ? 'default':'ghost'} className='rounded-full' onClick={() => setSelected('all')}>All</Button>
-          <Button variant={selected === 'nft' ? 'default':'ghost'} className='rounded-full' onClick={() => setSelected('nft')}>NFT</Button>
-          <Button variant={selected === 'collection' ? 'default':'ghost'} className='rounded-full' onClick={() => setSelected('collection')}>Collections</Button>
-        </div>
+      <div className='flex items-center justify-end border-b py-6'>
         <Button className="rounded-full" onClick={() => setShowFilter(!showFilter)}>
           <TbFilterSearch className='mr-2' size={25}/>
           Filter
