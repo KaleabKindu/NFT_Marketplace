@@ -1,4 +1,6 @@
-namespace API.Model
+using API.Model;
+
+namespace Application.Features.Categories.Dtos
 {
     public class ItemDTO
     {
