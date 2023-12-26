@@ -1,5 +1,5 @@
 using System;
-using Application.Contracts.Presistence;
+using Application.Contracts.Persistance;
 using Microsoft.EntityFrameworkCore;
 
 namespace Persistence.Repositories
@@ -24,7 +24,7 @@ namespace Persistence.Repositories
             _dbContext.Set<T>().Remove(entity);
         }
 
-        public async Task<bool> Exists(int id)
+        public async Task<bool> Exists(long id)
         {
             var entity = await GetByIdAsync(id);
             return entity != null;
@@ -35,7 +35,7 @@ namespace Persistence.Repositories
             return await _dbContext.Set<T>().ToListAsync();
         }
 
-        public async Task<T> GetByIdAsync(int id)
+        public async Task<T> GetByIdAsync(long id)
         {
             return await _dbContext.Set<T>().FindAsync(id);
         }

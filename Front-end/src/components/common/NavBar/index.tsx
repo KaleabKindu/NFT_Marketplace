@@ -8,9 +8,10 @@ import { useTheme } from "next-themes"
 import { Button } from "@/components/ui/button"
 import Container from '../Container'
 import SideBar from './SideBar'
-import Link from 'next/link';
 import Discover from './Discover';
 import HelpCenter from './HelpCenter';
+import Link from 'next/link';
+import { Routes } from '@/routes';
 
 type Props = {}
 
@@ -30,7 +31,7 @@ const NavBar = (props: Props) => {
           <Logo/>
 
           {/* Right Section */}
-          <div className='hidden lg:flex gap-5 lg:gap-12 items-center'>
+          <div className='hidden lg:flex gap-5 items-center'>
             {/* Discover Section */}
             <Discover/>
 
@@ -46,7 +47,13 @@ const NavBar = (props: Props) => {
             </Button>
 
             {/* Create NFT Section*/}
-            <Button className='rounded-full' size='lg'>Create</Button>
+            <Link href={Routes.MINT}>
+              <Button className='rounded-full' size='lg'>Create</Button>
+            </Link>
+            {/* Connect Wallet Section*/}
+            {/* <Link href={Routes.CONNECT}>
+              <Button className='rounded-full' size='lg'>Connect Wallet</Button>
+            </Link> */}
 
             {/* User Profile Section */}
             <Profile/>

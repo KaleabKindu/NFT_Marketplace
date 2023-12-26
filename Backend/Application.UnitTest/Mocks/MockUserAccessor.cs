@@ -1,7 +1,6 @@
 ﻿using Application.Contracts;
 using Microsoft.AspNetCore.Http;
 using Moq;
-using System.Security.Claims;
 
 namespace Application.UnitTest.Mocks
 {

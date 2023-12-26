@@ -1,4 +1,4 @@
-import NFTCard from "../NFTCard"
+import TrendingNFTCard from "./TrendingNFTCard"
 import { TypographyH2, TypographyH4 } from "../common/Typography"
 
 type Props = {}
@@ -11,7 +11,7 @@ const TrendingNFTSection = (props: Props) => {
         <div className="grid grid-cols-1  md:grid-cols-2 lg:grid-cols-3 items-center gap-5">
             {
                 Array.from({length:6}).map((_, index) => 
-                    <NFTCard key={index}/>
+                    <TrendingNFTCard key={index}/>
                 )
             }
 

@@ -1,5 +1,5 @@
 import CollectionCard from "../CollectionCard"
-import { TypographyH2, TypographyH4 } from "../common/Typography"
+import { TypographyH2 } from "../common/Typography"
 
 type Props = {}
 

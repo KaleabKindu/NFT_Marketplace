@@ -1,4 +1,4 @@
-﻿using Application.Contracts.Presistence;
+﻿using Application.Contracts.Persistance;
 using Moq;
 
 namespace Application.UnitTest.Mocks
@@ -9,14 +9,15 @@ namespace Application.UnitTest.Mocks
         {
             var mockUow = new Mock<IUnitOfWork>();
             var mockUserManager = MockUserManager.GetUserManager();
+            var mockOfferRepository = MockOfferRepository.GetOfferRepository();
             mockUow.Setup(m => m.UserManager).Returns(mockUserManager.Object);
+            mockUow.Setup(m =>m.OfferRepository).Returns(mockOfferRepository.Object);
 
-            mockUow.Setup(r => r.Save()).ReturnsAsync(1);
+            mockUow.Setup(r => r.SaveAsync()).ReturnsAsync(1);
 
             return mockUow;
 
         }
-
 
     }
 }

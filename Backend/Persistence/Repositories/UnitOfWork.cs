@@ -1,4 +1,4 @@
-﻿using Application.Contracts.Presistence;
+﻿using Application.Contracts.Persistance;
 using Domain;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
@@ -8,8 +8,9 @@ namespace Persistence.Repositories
     public class UnitOfWork : IUnitOfWork
     {
         private readonly AppDbContext _dbContext;
+        private readonly IServiceProvider _services;
         private UserManager<AppUser> _usermanager;
-        private IServiceProvider _services;
+        private IOfferRepository _offerRepository;
 
         public UnitOfWork(AppDbContext dbContext,IServiceProvider services)
         {
@@ -21,10 +22,16 @@ namespace Persistence.Repositories
         {
             get
             {
-                if (_usermanager == null)
-                    _usermanager = _services.GetService<UserManager<AppUser>>();
-
+                _usermanager ??= _services.GetService<UserManager<AppUser>>();
                 return _usermanager;
+            }
+        }
+
+        public IOfferRepository OfferRepository
+        {
+            get {                
+                _offerRepository ??= new OfferRepository(_dbContext);
+                return _offerRepository;
             }
         }
 
@@ -34,7 +41,7 @@ namespace Persistence.Repositories
             GC.SuppressFinalize(this);
         }
 
-        public async Task<int> Save()
+        public async Task<int> SaveAsync()
         {
             return await _dbContext.SaveChangesAsync();
         }

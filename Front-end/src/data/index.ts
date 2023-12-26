@@ -1,14 +1,21 @@
+import { Routes } from "@/routes"
+
 export const discover = [
     {
-        name:'Browse',
-        route:'/',
-        protected:false
+      name:'NFTs',
+      route:Routes.NFTS,
+      protected:false
     },
     {
         name:'Collections',
-        route:'/',
+        route:Routes.COLLECTIONS,
         protected:false
     },
+    {
+      name:'Users',
+      route:Routes.USERS,
+      protected:false
+  },
 ]
 
 export const help_center = [
@@ -19,16 +26,6 @@ export const help_center = [
     },
     {
         name:'Contact Us',
-        route:'/',
-        protected:false
-    },
-    {
-        name:'Sign Up',
-        route:'/',
-        protected:false
-    },
-    {
-        name:'Sign In',
         route:'/',
         protected:false
     },
@@ -215,3 +212,121 @@ export const provenances = [
       date:(new Date()).toLocaleDateString()
     },
   ]
+
+  export const bids = [
+    {
+      from: "potts",
+      bid_price: "0.25",
+      bid_usd_price: "250.00",
+      date:(new Date()).toLocaleDateString()
+    },
+    {
+      from: "banner",
+      bid_price: "0.15",
+      bid_usd_price: "150.00",
+      date:(new Date()).toLocaleDateString()
+    },
+    {
+      from: "rogers",
+      bid_price: "0.22",
+      bid_usd_price: "350.00",
+      date:(new Date()).toLocaleDateString()
+    },
+    {
+      from: "romanoff",
+      bid_price: "0.55",
+      bid_usd_price: "450.00",
+      date:(new Date()).toLocaleDateString()
+    },
+    {
+      from: "thanos",
+      bid_price: "0.21",
+      bid_usd_price: "550.00",
+      date:(new Date()).toLocaleDateString()
+    },
+    {
+      from: "odinson",
+      bid_price: "0.75",
+      bid_usd_price: "200.00",
+      date:(new Date()).toLocaleDateString()
+    },
+    {
+      from: "stark",
+      bid_price: "0.05",
+      bid_usd_price: "300.00",
+      date:(new Date()).toLocaleDateString()
+    },
+  ]
+
+export const sort_types = [
+  {
+    name:'Trending',
+    value:'trending'
+  },
+  {
+    name:'Recently Listed',
+    value:'recently_listed'
+  },
+  {
+    name:'Price Low - High',
+    value:'low_high'
+  },
+  {
+    name:'Price High - Low',
+    value:'high_low'
+  },
+]
+
+
+export const sale_types = [
+  {
+    name:'Live Auction',
+    value:'auction'
+  },
+  {
+    name:'Buy Now',
+    value:'buy_now'
+  },
+]
+
+export const tabs = ['created', 'owned', 'liked', 'collections', 'followers', 'following']
+
+
+export const collections = [
+  {
+    id: "1",
+    name: "Collection One",
+    profile_pic:'/collection/collection-pic.png'
+  },
+  {
+    id: "2",
+    name: "Collection Two",
+    profile_pic:'/collection/collection-pic.png'
+  },
+  {
+    id: "3",
+    name: "Collection Three",
+    profile_pic:'/collection/collection-pic.png'
+  },
+
+]
+
+
+export const users = [
+  {
+    id: "1",
+    name: "Tony Stark",
+    profile_pic:'/collection/collection-pic.png'
+  },
+  {
+    id: "2",
+    name: "Bruce Banner",
+    profile_pic:'/collection/collection-pic.png'
+  },
+  {
+    id: "3",
+    name: "Steve Rogers",
+    profile_pic:'/collection/collection-pic.png'
+  },
+
+]

@@ -10,6 +10,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
   } from "@/components/ui/dropdown-menu"
+import { Routes } from "@/routes";
   
 
 type Props = {}
@@ -31,14 +32,14 @@ const Profile = (props: Props) => {
                             Tony Stark
                         </div>
                         <div className="text-sm font-medium truncate max-w-[10rem]" >
-                            X03849938292020338778343
+                            0x3849938292020338778343
                         </div>
                     </div>
                 </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem className="py-3">
-                <Link href='' className="flex items-center gap-3">
+                <Link href={`${Routes.USER}/0x3849938292020338778343`} className="flex items-center gap-3 w-full">
                     <FaUserAlt size={30} />
                     <div>Profile</div>
                  </Link>
