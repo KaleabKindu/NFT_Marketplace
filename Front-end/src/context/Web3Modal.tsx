@@ -26,13 +26,11 @@ const chains = [
 	fantom,
 ];
 
-// 1. Get projectID at https://cloud.walletconnect.com
-
 const projectId = process.env.NEXT_PUBLIC_PROJECT_ID || "";
 
 const metadata = {
-	name: "Next Starter Template",
-	description: "A Next.js starter template with Web3Modal v3 + Wagmi",
+	name: "NFT Marketplace",
+	description: "The Largest NFT Marketplace to Buy, Sell and Discover Exclusive Digital Products as Non-Fungible Token(NFTs)",
 	url: "https://web3modal.com",
 	icons: ["https://avatars.githubusercontent.com/u/37784886"],
 };
