@@ -19,14 +19,14 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<CategoryDto>> GetCategories([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+        public ActionResult<IEnumerable<CategoryListDto>> GetCategories([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
             var categories = _categoryService.GetCategories(page, pageSize);
             return Ok(categories);
         }
 
         [HttpGet("{id}")]
-        public ActionResult<CategoryDto> GetCategory(int id)
+        public ActionResult<CategoryListDto> GetCategory(int id)
         {
             var category = _categoryService.GetCategoryById(id);
 
@@ -39,14 +39,14 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public ActionResult<CategoryDto> CreateCategory([FromBody] CategoryDto categoryDto)
+        public ActionResult<CategoryListDto> CreateCategory([FromBody] CategoryListDto categoryDto)
         {
             var createdCategory = _categoryService.CreateCategory(categoryDto);
             return CreatedAtAction(nameof(GetCategory), new { id = createdCategory.CategoryId }, createdCategory);
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateCategory(int id, [FromBody] CategoryDto categoryDto)
+        public IActionResult UpdateCategory(int id, [FromBody] UpdateCategoryDto categoryDto)
         {
             if (id != categoryDto.CategoryId)
             {
