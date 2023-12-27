@@ -43,7 +43,7 @@ const UserDetail = (props: Props) => {
         <div className="self-start flex items-center gap-5">
             <Button className='rounded-full'>Follow</Button>
             <DropdownMenu>
-                <DropdownMenuTrigger>
+                <DropdownMenuTrigger asChild>
                     <Button className="rounded-full" variant={'ghost'} size={'icon'}>
                         <BsThreeDots size={25}/>
                     </Button>

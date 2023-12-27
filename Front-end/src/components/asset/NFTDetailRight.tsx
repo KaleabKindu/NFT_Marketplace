@@ -29,15 +29,7 @@ const NFTDetailRight = (props: Props) => {
   return (
     <div className='flex-1 p-3'>
         <div className='flex flex-col gap-10'>
-            <div>
-                <TypographyH2 text='Boomerang'/>
-                <div className='flex gap-2 items-center'>
-                    <TypographyP text='Owned By'/>
-                    <Link href={''}>
-                        <span className='text-blue-500'> A60E90</span>
-                    </Link>
-                </div>
-            </div>
+            <TypographyH2 text='Boomerang'/>
             <div className='flex flex-wrap items-center lg:divide-x-2'>
               <Link href={`${Routes.USER}`} className='flex items-center gap-3 p-5'>
                 <Avatar className='h-12 w-12'/>

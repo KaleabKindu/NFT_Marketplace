@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import Providers from '../components/Providers'
 import Head from 'next/head'
+import { Web3Modal } from '@/context/Web3Modal'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -18,9 +19,6 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <Head>
-       <link rel="shortcut icon" href="/favicon.ico" />
-      </Head>
       <body className={inter.className}>
         <Providers>
             {children}  
