@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Net;
 using System.Text.Json;
-using System.Threading.Tasks;
 using API.Model;
 using Application.Common.Exceptions;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using Application.Responses;
+
 
 namespace API.MiddleWares
 {
@@ -18,7 +15,7 @@ namespace API.MiddleWares
         public readonly IHostEnvironment _env;
         public readonly ILogger<ExceptionHandler> _logger;
         public static JsonSerializerOptions options = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
-        private ResponseObject response { get; set; }
+        private BaseResponse<Nullable<int>> response { get; set; }
    
         public ExceptionHandler(RequestDelegate next, ILogger<ExceptionHandler> logger, IHostEnvironment env)
         {
@@ -38,18 +35,26 @@ namespace API.MiddleWares
             }
             catch(AppException ex)
             {
+                Console.WriteLine("AppException.............");
                 failed = true;
                 context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
                 _logger.LogError(ex, ex.Message);
-                response = ResponseObject.Factory(ex.Message);
+                response = new BaseResponse<Nullable<int>>(null) {
+                    Success = false,
+                    Message = ex.Message,
+                };
 
             }
             catch(Exception ex)
             {
+                Console.WriteLine("Exception....................");
                 failed = true;
                 context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
                 _logger.LogError(ex, ex.Message);
-                response = ResponseObject.Factory("UnKnown Internal Error");
+                response = new BaseResponse<Nullable<int>>(null) {
+                    Success = false,
+                    Error = "Unknown Internal Server Error"
+                };
             }
             finally
             {
