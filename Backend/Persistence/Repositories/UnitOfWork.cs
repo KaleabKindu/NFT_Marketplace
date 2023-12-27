@@ -10,6 +10,7 @@ namespace Persistence.Repositories
         private readonly AppDbContext _dbContext;
         private readonly IServiceProvider _services;
         private UserManager<AppUser> _usermanager;
+        private IBidRepository _bidRepository;
         private IOfferRepository _offerRepository;
 
         public UnitOfWork(AppDbContext dbContext,IServiceProvider services)
@@ -24,6 +25,17 @@ namespace Persistence.Repositories
             {
                 _usermanager ??= _services.GetService<UserManager<AppUser>>();
                 return _usermanager;
+            }
+        }
+
+        public IBidRepository BidRepository
+        {
+            get
+            {
+                if (_bidRepository == null)
+                    _bidRepository = new BidRepository(_dbContext);
+
+                return _bidRepository;
             }
         }
 
