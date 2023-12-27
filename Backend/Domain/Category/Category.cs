@@ -1,14 +1,11 @@
-namespace Application.Features.Categories.Dtos
+namespace Domain.Category
 {
-    public class CategoryDtO
+    public class Category
     {
         public int CategoryId { get; set; }
 
         public string CategoryName { get; set; }
 
         public string Description { get; set; }
-
-        public List<ItemDTO> Items { get; set; } = new List<ItemDTO>();
     }
-
 }
