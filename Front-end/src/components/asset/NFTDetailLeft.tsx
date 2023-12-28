@@ -12,6 +12,7 @@ import {
     AccordionTrigger,
   } from "@/components/ui/accordion"
 import Link from "next/link"
+import { CiImageOn } from "react-icons/ci"
   
 type Props = {}
 
@@ -36,6 +37,9 @@ const NFTDetailLeft = (props: Props) => {
                     <FaHeart className={`${liked && 'text-red-500'} p-0`} size={20} />
                 </Button>
                 <TypographySmall text={likes}/>
+            </Badge>
+            <Badge className='p-2 absolute top-5 left-5 bg-background/30 hover:bg-background text-foreground' >
+                <CiImageOn size={25} />
             </Badge>
 
         </div>
