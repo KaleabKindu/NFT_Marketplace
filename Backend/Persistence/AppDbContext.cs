@@ -13,6 +13,22 @@ namespace Persistence
             AppContext.SetSwitch("Npgsql.DisableDateTimeInfinityConversions", true);
         }
 
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+
+            foreach (var entry in ChangeTracker.Entries<BaseClass>())
+            {
+                entry.Entity.UpdatedAt = DateTime.UtcNow;
+
+                if (entry.State == EntityState.Added)
+                {
+                    entry.Entity.CreatedAt = DateTime.UtcNow;
+                }
+            }
+
+            return base.SaveChangesAsync(cancellationToken);
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
@@ -32,6 +48,7 @@ namespace Persistence
         }
 
         public DbSet<Offer> Offers { get; set; }
+        public DbSet<Bid> Bids { get; set; }
 
     }
 }
