@@ -9,6 +9,7 @@ import {
 	avalanche,
 	bsc,
 	fantom,
+	localhost,
 	gnosis,
 	mainnet,
 	optimism,
@@ -19,6 +20,7 @@ const chains = [
 	mainnet,
 	polygon,
 	avalanche,
+	localhost,
 	arbitrum,
 	bsc,
 	optimism,
@@ -27,7 +29,6 @@ const chains = [
 ];
 
 const projectId = process.env.NEXT_PUBLIC_PROJECT_ID || "";
-
 const metadata = {
 	name: "NFT Marketplace",
 	description: "The Largest NFT Marketplace to Buy, Sell and Discover Exclusive Digital Products as Non-Fungible Token(NFTs)",
