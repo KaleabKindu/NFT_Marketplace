@@ -9,6 +9,8 @@ namespace Application.Contracts.Persistance
         IBidRepository BidRepository {get;}
         IOfferRepository OfferRepository { get; }
 
+        ICategoryRepository CategoryRepository { get; }
+
         Task<int> SaveAsync();
     }
 }

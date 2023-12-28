@@ -12,6 +12,7 @@ namespace Persistence.Repositories
         private UserManager<AppUser> _usermanager;
         private IBidRepository _bidRepository;
         private IOfferRepository _offerRepository;
+        private ICategoryRepository _CategoryRepository;
 
         public UnitOfWork(AppDbContext dbContext,IServiceProvider services)
         {
@@ -44,6 +45,14 @@ namespace Persistence.Repositories
             get {                
                 _offerRepository ??= new OfferRepository(_dbContext);
                 return _offerRepository;
+            }
+        }
+
+        public ICategoryRepository CategoryRepository
+        {
+            get {                
+                _CategoryRepository ??= new CategoryRepository(_dbContext);
+                return _CategoryRepository;
             }
         }
 
