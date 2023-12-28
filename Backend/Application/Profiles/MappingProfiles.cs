@@ -1,4 +1,5 @@
 ﻿using Application.Features.Categories.Dtos;
+﻿using Application.Features.Bids.Dtos;
 using Application.Features.Offers.Dtos;
 using AutoMapper;
 using Domain;
@@ -25,6 +26,13 @@ namespace Application.Profiles
             #endregion
 
         
+            #region offer 
+            CreateMap<Bid, BidDto>().ReverseMap();
+            CreateMap<CreateBidDto, Bid>();
+            CreateMap<UpdateBidDto, Bid>()
+                .ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null));
+
+            #endregion
         }
     }
 }

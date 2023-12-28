@@ -7,7 +7,7 @@ type Props = {}
 
 const NFTDetail = (props: Props) => {
   return ( 
-    <div className="flex flex-col gap-10">
+    <div className="flex flex-col gap-10 mt-16">
       <div className='flex flex-col lg:flex-row gap-10'>
           <NFTDetailsLeft/>
           <NFTDetailsRight/>

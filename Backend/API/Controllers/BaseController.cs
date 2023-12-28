@@ -1,4 +1,5 @@
-﻿using ErrorOr;
+﻿using Application.Responses;
+using ErrorOr;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -13,9 +14,9 @@ namespace API.Controllers
 
         protected IMediator Mediator => _mediatr ??= HttpContext.RequestServices.GetService<IMediator>();
 
-        protected IActionResult HandleResult<T>(ErrorOr<T> result)
+        protected IActionResult HandleResult<T>(ErrorOr<T> result, string message = "Operation successful")
         {
-            return result.Match( value => Ok(value),Problem);
+            return result.Match( value => Ok(new BaseResponse<T>(value) { Success=true, Message = message }), Problem);
         }
 
         
