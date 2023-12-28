@@ -3,74 +3,41 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Application.Features.Categories.Commands;
 using Application.Features.Categories.Dtos;
+using Domain.Category;
+using Application.Features.Categories.Queries;
 
 namespace API.Controllers
 {
-    [Authorize]
-    [ApiController]
-    [Route("api/[controller]")]
-    public class CategoryController : ControllerBase
+    public class CategoriesController : BasaApiController
     {
-        private readonly ICategoryService _categoryService;
-
-        public CategoryController(ICategoryService categoryService)
+        [HttpPost]
+        public async Task<IActionResult> CreateCategory(CreateCategoryDto categoryDto)
         {
-            _categoryService = categoryService;
+            return HandleResult(await Mediator.Send(new CreateCategoryCommand { Category = categoryDto }));
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<CategoryListDto>> GetCategories([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+        public async Task<IActionResult> GetCategories()
         {
-            var categories = _categoryService.GetCategories(page, pageSize);
-            return Ok(categories);
+            return HandleResult(await Mediator.Send(new GetAllCategoryQuery()));
         }
 
-        [HttpGet("{id}")]
-        public ActionResult<CategoryListDto> GetCategory(int id)
+        [HttpGet("{Id}")]
+        public async Task<IActionResult> GetCategory(int Id)
         {
-            var category = _categoryService.GetCategoryById(id);
-
-            if (category == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(category);
+            return HandleResult(await Mediator.Send(new GetCategoryByIdQuery { Id = Id }));
         }
 
-        [HttpPost]
-        public ActionResult<CategoryListDto> CreateCategory([FromBody] CategoryListDto categoryDto)
+        [HttpPut]
+        public async Task<IActionResult> UpdateCategory(UpdateCategoryDto category)
         {
-            var createdCategory = _categoryService.CreateCategory(categoryDto);
-            return CreatedAtAction(nameof(GetCategory), new { id = createdCategory.CategoryId }, createdCategory);
+            return  HandleResult(await Mediator.Send(new UpdateCategoryCommand { Category = category }));
         }
 
-        [HttpPut("{id}")]
-        public IActionResult UpdateCategory(int id, [FromBody] UpdateCategoryDto categoryDto)
+        [HttpDelete("{Id}")]
+        public async Task<IActionResult> DeleteActvity(int Id)
         {
-            if (id != categoryDto.CategoryId)
-            {
-                return BadRequest("Mismatched category IDs");
-            }
-
-            _categoryService.UpdateCategory(categoryDto);
-
-            return NoContent();
-        }
-
-        [HttpDelete("{id}")]
-        public IActionResult DeleteCategory(int id)
-        {
-            var category = _categoryService.GetCategoryById(id);
-
-            if (category == null)
-            {
-                return NotFound();
-            }
-
-            _categoryService.DeleteCategory(id);
-
-            return NoContent();
+            return  HandleResult(await Mediator.Send(new DeleteCategoryCommand { Id = Id }));
         }
     }
 }

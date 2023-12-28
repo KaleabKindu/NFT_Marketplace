@@ -1,9 +1,7 @@
 namespace Domain.Category
 {
-    public class Category
+    public class Category: BaseClass
     {
-        public int CategoryId { get; set; }
-
         public string CategoryName { get; set; }
 
         public string Description { get; set; }

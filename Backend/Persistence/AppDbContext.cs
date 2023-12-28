@@ -1,4 +1,5 @@
 ﻿using Domain;
+using Domain.Category;
 using Domain.Offers;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -32,6 +33,7 @@ namespace Persistence
         }
 
         public DbSet<Offer> Offers { get; set; }
+        public DbSet<Category> Category { get; set; }
 
     }
 }
