@@ -41,9 +41,9 @@ type Props = {}
 
 const SearchFilter = (props: Props) => {
   return (
-    <div className="flex flex-col lg:flex-row gap-8 items-center mt-16">
+    <div className="flex flex-col lg:flex-row gap-3 items-center mt-16">
         <SearchInput className='flex-1' />
-        <div className="flex-1 flex flex-wrap justify-center items-center gap-3">
+        <div className="flex-1 flex flex-wrap lg:flex-nowrap justify-center items-center gap-2">
             <PriceFilter/>
             <SaleFilter/>
             <CategoryFilter/>
@@ -82,14 +82,14 @@ export const SaleFilter = (props: Props) => {
     }
   return (
     <DropdownMenu>
-        <DropdownMenuTrigger>
-            <Badge className="flex items-center gap-2 py-1 bg-secondary hover:bg-secondary/80 text-secondary-foreground">
+        <DropdownMenuTrigger asChild>
+            <Button variant={'secondary'} className="flex items-center gap-2 py-1 rounded-full">
                 <MdOutlineSell size={25}/>
                 <TypographySmall className='text-foreground' text='Sale Type'/>
-                <Button variant='ghost' size='sm' className="p-0 h-auto rounded-full" onClick={() => setSelectedSaleType([])}>
+                <Badge variant={'secondary'} className="p-0 h-auto rounded-full" onClick={() => setSelectedSaleType([])}>
                     {selectedSaleTypes.length > 0 ? <IoMdCloseCircle size={25} />:<IoChevronDown size={20}/>}
-                </Button>
-            </Badge>
+                </Badge>
+            </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="rounded-xl">
             <div className="flex flex-col gap-3 w-[20rem] p-5">
@@ -119,14 +119,14 @@ export const SaleFilter = (props: Props) => {
 export const PriceFilter = (props: Props) => {
     return (
       <DropdownMenu>
-          <DropdownMenuTrigger>
-            <Badge className="flex items-center gap-2 py-1 bg-secondary hover:bg-secondary/80 text-secondary-foreground">
+          <DropdownMenuTrigger asChild>
+            <Button variant='secondary' className="flex items-center gap-2 py-1 rounded-full">
                 <IoWalletOutline size={25}/>
                 <TypographySmall className='text-foreground' text='0.01ETH - 10ETH'/>
-                <Button variant='ghost' size='sm' className="p-0 h-auto rounded-full">
+                <Badge variant='secondary' className="p-0 h-auto rounded-full">
                     <IoMdCloseCircle size={25} />
-                </Button>
-            </Badge>
+                </Badge>
+            </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="rounded-xl">
             <div className="flex flex-col gap-5 w-[20rem] p-5">
@@ -170,14 +170,14 @@ export const CategoryFilter = (props: Props) => {
     }
 return (
     <DropdownMenu>
-        <DropdownMenuTrigger>
-            <Badge className="flex items-center gap-2 py-1 bg-secondary hover:bg-secondary/80 text-secondary-foreground">
+        <DropdownMenuTrigger asChild>
+            <Button variant='secondary' className="flex items-center gap-2 py-1 rounded-full">
                 <BiCategory size={25}/>
                 <TypographySmall className='text-foreground' text='Category'/>
-                <Button variant='ghost' size='sm' className="p-0 h-auto rounded-full" onClick={() => setSelectedCategories([])}>
+                <Badge variant={'secondary'} className="p-0 h-auto rounded-full" onClick={(e) => setSelectedCategories([])}>
                     {selectedCategories.length > 0 ? <IoMdCloseCircle size={25} />:<IoChevronDown size={20}/>}
-                </Button>
-            </Badge>
+                </Badge>
+            </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="rounded-xl">
             <div className="flex flex-col gap-3 w-[20rem] p-5">
@@ -213,24 +213,17 @@ const handleChange = (e:string) => {
 
 return (
     <DropdownMenu open={open} onOpenChange={(val) => setOpen(val)}>
-    <DropdownMenuTrigger>
-        <Badge className="flex items-center gap-2 py-1 bg-secondary hover:bg-secondary/80 text-secondary-foreground">
+    <DropdownMenuTrigger asChild>
+        <Button variant={'secondary'} className="flex items-center gap-2 py-1 rounded-full">
             <BiSortAlt2 size={25}/>
             <TypographySmall className='text-foreground' text={sortBy ? sortBy:'Sort By'}/>
-            <Button 
-             variant='ghost'
-             size='sm'
+            <Badge 
+             variant='secondary'
              className="p-0 h-auto rounded-full" 
-             onClick={(e) => {
-                console.log('here')
-                if(sortBy){
-                    e.stopPropagation()
-                    setSortBy('')
-                }
-             }}>
+             onClick={() => setSortBy('')}>
                 {sortBy ? <IoMdCloseCircle size={25} />:<IoChevronDown size={20}/>}
-            </Button>
-        </Badge>
+            </Badge>
+        </Button>
     </DropdownMenuTrigger>
     <DropdownMenuContent className="rounded-xl">
         <RadioGroup className="p-5 w-[20rem]" value={sortBy} onValueChange={(e) => handleChange(e)} defaultValue="option-one">

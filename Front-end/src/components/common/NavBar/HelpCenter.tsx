@@ -15,7 +15,7 @@ const HelpCenter = (props: Props) => {
     
   return (
     <DropdownMenu>
-        <DropdownMenuTrigger className="rounded-full">
+        <DropdownMenuTrigger asChild>
             <Button variant='ghost' className='rounded-full' size='lg'>Help Center</Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>

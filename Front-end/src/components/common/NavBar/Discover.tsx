@@ -15,7 +15,7 @@ const Discover = (props: Props) => {
     
   return (
     <DropdownMenu>
-        <DropdownMenuTrigger className="rounded-full">
+        <DropdownMenuTrigger asChild>
             <Button variant='ghost' className='rounded-full' size='lg'>Discover</Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
