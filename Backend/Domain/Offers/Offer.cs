@@ -1,8 +1,7 @@
-namespace Domain.Offers
+namespace Domain
 {
-    public sealed class Offer:BaseClass{
+    public sealed class Offer: BaseClass{
         public AppUser OfferProvider { get; set; }
-        public DateTime Date { get; set; }
         public string Asset { get; set; }
         public double Amount { get; set; }
     }

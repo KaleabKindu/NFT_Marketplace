@@ -1,7 +1,7 @@
-﻿using Application.Responses;
-using ErrorOr;
+﻿using ErrorOr;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Application.Common.Responses;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace API.Controllers
@@ -16,9 +16,8 @@ namespace API.Controllers
 
         protected IActionResult HandleResult<T>(ErrorOr<T> result, string message = "Operation successful")
         {
-            return result.Match( value => Ok(new BaseResponse<T>(value) { Success=true, Message = message }), Problem);
+            return result.Match( value => Ok(value), Problem);
         }
-
         
         protected IActionResult Problem(List<Error> errors)
         {

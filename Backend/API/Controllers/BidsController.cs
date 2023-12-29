@@ -7,36 +7,36 @@ namespace API.Controllers
 {
     public class BidsController : BasaApiController
     {
-        [HttpGet] //api/Bids
-        public async Task<IActionResult> GetBid()
+        [HttpGet]
+        public async Task<IActionResult> GetBids([FromQuery] int PageNumber = 1, [FromQuery] int PageSize = 10)
         {
-            return HandleResult(await Mediator.Send(new GetBidsQuery()), "Bids fetched successfully");
+            return HandleResult(await Mediator.Send(new GetBidsQuery() { PageNumber = PageNumber, PageSize = PageSize}));
         }
 
 
         [HttpGet("{Id}")]
         public async Task<IActionResult> GetBid(int Id)
         {
-            return HandleResult(await Mediator.Send(new GetBidByIdQuery { Id = Id }), "Bid details fetched successfully");
+            return HandleResult(await Mediator.Send(new GetBidByIdQuery { Id = Id }));
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateBid(CreateBidDto Bid)
+        public async Task<IActionResult> CreateBid([FromBody] CreateBidDto Bid)
         {
-            return  HandleResult(await Mediator.Send(new CreateBidCommand { Bid = Bid }), "Bid created successfully");
+            return  HandleResult(await Mediator.Send(new CreateBidCommand { Bid = Bid }));
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateBid(UpdateBidDto Bid)
+        public async Task<IActionResult> UpdateBid([FromBody] UpdateBidDto Bid)
         {
-            return  HandleResult(await Mediator.Send(new UpdateBidCommand { Bid = Bid }), "Bid updated successfully");
+            return  HandleResult(await Mediator.Send(new UpdateBidCommand { Bid = Bid }));
         }
 
       
         [HttpDelete("{Id}")]
-        public async Task<IActionResult> DeleteActvity(int Id)
+        public async Task<IActionResult> DeleteBid(int Id)
         {
-            return  HandleResult(await Mediator.Send(new DeleteBidCommand { Id = Id }), "Bid deleted successfully");
+            return  HandleResult(await Mediator.Send(new DeleteBidCommand { Id = Id }));
         }
     }
 }

@@ -1,20 +1,21 @@
-using Application.Common;
-using Application.Contracts.Persistance;
-using Application.Features.Offers.Dtos;
-using AutoMapper;
-using Domain.Offers;
 using ErrorOr;
 using MediatR;
+using AutoMapper;
+using Application.Common.Errors;
+using Application.Common.Responses;
+using Application.Common.Exceptions;
+using Application.Features.Offers.Dtos;
+using Application.Contracts.Persistance;
 
 namespace Application.Features.Offers.Commands
 {
-    public class UpdateOfferCommand : IRequest<ErrorOr<Unit>>
+    public class UpdateOfferCommand : IRequest<ErrorOr<BaseResponse<Unit>>>
     {
         public UpdateOfferDto Offer { get; set; }
     }
 
     public class UpdateOfferCommandHandler
-        : IRequestHandler<UpdateOfferCommand, ErrorOr<Unit>>
+        : IRequestHandler<UpdateOfferCommand, ErrorOr<BaseResponse<Unit>>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -25,7 +26,7 @@ namespace Application.Features.Offers.Commands
             _mapper = mapper;
         }
 
-        public async Task<ErrorOr<Unit>> Handle(
+        public async Task<ErrorOr<BaseResponse<Unit>>> Handle(
             UpdateOfferCommand request,
             CancellationToken cancellationToken
         )
@@ -34,14 +35,17 @@ namespace Application.Features.Offers.Commands
                 request.Offer.Id
             );
 
-            if (offer == null) return OfferError.NotFound;
+            if (offer == null) return ErrorFactory.NotFound("Offer");
         
             _mapper.Map(request.Offer, offer);
 
             if (await _unitOfWork.SaveAsync() == 0)
-                return CommonError.ErrorSavingChanges;
+                throw new DbAccessException("Unable to save to database");
             
-            return Unit.Value;
+            return new BaseResponse<Unit>(){
+                Message="Offer updated successfully",
+                Value=Unit.Value
+            };        
         }
     }
 }

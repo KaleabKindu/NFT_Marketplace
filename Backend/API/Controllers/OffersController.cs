@@ -1,42 +1,41 @@
-﻿using Application.Features.Offers.Commands;
+﻿using Microsoft.AspNetCore.Mvc;
 using Application.Features.Offers.Dtos;
 using Application.Features.Offers.Queries;
-using Microsoft.AspNetCore.Mvc;
+using Application.Features.Offers.Commands;
 
 namespace API.Controllers
 {
     public class OffersController : BasaApiController
     {
-        [HttpGet] //api/Offers
-        public async Task<IActionResult> GetOffer()
+        [HttpGet]
+        public async Task<IActionResult> GetAllOffers([FromQuery] int PageNumber = 1, [FromQuery] int PageSize = 10)
         {
-            return HandleResult(await Mediator.Send(new GetAllOfferQuery()), "Offers fetched successfully");
+            return HandleResult(await Mediator.Send(new GetAllOfferQuery(){ PageNumber=PageNumber, PageSize=PageSize }));
         }
 
 
         [HttpGet("{Id}")]
         public async Task<IActionResult> GetOffer(int Id)
         {
-            return HandleResult(await Mediator.Send(new GetOfferByIdQuery { Id = Id }), "Offer details fetched successfully");
+            return HandleResult(await Mediator.Send(new GetOfferByIdQuery { Id = Id }));
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateOffer(CreateOfferDto Offer)
+        public async Task<IActionResult> CreateOffer([FromBody] CreateOfferDto Offer)
         {
-            return  HandleResult(await Mediator.Send(new CreateOfferCommand { Offer = Offer }), "Offer created successfully");
+            return  HandleResult(await Mediator.Send(new CreateOfferCommand { Offer = Offer }));
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateOffer(UpdateOfferDto Offer)
+        public async Task<IActionResult> UpdateOffer([FromBody] UpdateOfferDto Offer)
         {
-            return  HandleResult(await Mediator.Send(new UpdateOfferCommand { Offer = Offer }), "Offer updated successfully");
+            return  HandleResult(await Mediator.Send(new UpdateOfferCommand { Offer = Offer }));
         }
-
       
         [HttpDelete("{Id}")]
-        public async Task<IActionResult> DeleteActvity(int Id)
+        public async Task<IActionResult> DeleteOffer(int Id)
         {
-            return  HandleResult(await Mediator.Send(new DeleteOfferCommand { Id = Id }), "Offer deleted successfully");
+            return  HandleResult(await Mediator.Send(new DeleteOfferCommand { Id = Id }));
         }
     }
 }

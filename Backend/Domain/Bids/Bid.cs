@@ -2,10 +2,10 @@ namespace Domain
 {
     public class Bid: BaseClass
     {
-        public string bidder;
+        public string Bidder { set; get; }
 
-        public string asset;
+        public string Asset { set; get; }
 
-        public double amount;
+        public double Amount  { set; get; }
     }
 }
