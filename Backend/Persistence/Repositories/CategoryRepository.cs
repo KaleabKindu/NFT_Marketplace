@@ -1,9 +1,7 @@
 using Application.Contracts.Persistance;
-using Domain.Category;
+using Domain;
 namespace Persistence.Repositories
 {
-
-    // IOfferRepository.cs
     public class CategoryRepository : Repository<Category>,ICategoryRepository
     {
         private readonly AppDbContext _dbContext;

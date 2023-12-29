@@ -1,4 +1,4 @@
-using Domain.Category;
+using Domain;
 
 namespace Application.Contracts.Persistance
 {

@@ -1,19 +1,21 @@
 using Application.Common;
+using Application.Common.Errors;
+using Application.Common.Exceptions;
+using Application.Common.Responses;
 using Application.Contracts.Persistance;
-using Domain.Category;
 using ErrorOr;
 
 using MediatR;
 
 namespace Application.Features.Categories.Commands
 {
-    public class DeleteCategoryCommand : IRequest<ErrorOr<Unit>>
+    public class DeleteCategoryCommand : IRequest<ErrorOr<BaseResponse<Unit>>>
     {
         public long Id { get; set; }
     }
 
     public class DeleteCategoryCommandHandler
-        : IRequestHandler<DeleteCategoryCommand, ErrorOr<Unit>>
+        : IRequestHandler<DeleteCategoryCommand, ErrorOr<BaseResponse<Unit>>>
     {
         private readonly IUnitOfWork _unitOfWork;
 
@@ -22,21 +24,24 @@ namespace Application.Features.Categories.Commands
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<ErrorOr<Unit>> Handle(
+        public async Task<ErrorOr<BaseResponse<Unit>>> Handle(
             DeleteCategoryCommand request,
             CancellationToken cancellationToken
         )
         {
             var category = await _unitOfWork.CategoryRepository.GetByIdAsync(request.Id);
 
-            if (category == null) return CategoryError.NotFound;
+            if (category == null) return ErrorFactory.NotFound("Category");;
             
             _unitOfWork.CategoryRepository.DeleteAsync(category);
 
             if (await _unitOfWork.SaveAsync() == 0)
-                return CommonError.ErrorSavingChanges;
+                throw new DbAccessException("Unable to save to database");
 
-            return Unit.Value;
+            return new BaseResponse<Unit>(){
+                Message="Category deleted successfully",
+                Value=Unit.Value
+            };
         }
     }
 }

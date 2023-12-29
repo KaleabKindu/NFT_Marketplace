@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Application.Features.Categories.Commands;
 using Application.Features.Categories.Dtos;
-using Domain.Category;
 using Application.Features.Categories.Queries;
 
 namespace API.Controllers
@@ -11,33 +10,33 @@ namespace API.Controllers
     public class CategoriesController : BasaApiController
     {
         [HttpPost]
-        public async Task<IActionResult> CreateCategory(CreateCategoryDto categoryDto)
+        public async Task<IActionResult> CreateCategory([FromBody] CreateCategoryDto categoryDto)
         {
-            return HandleResult(await Mediator.Send(new CreateCategoryCommand { Category = categoryDto }),  "Category Created Successfully");
+            return HandleResult(await Mediator.Send(new CreateCategoryCommand { Category = categoryDto }));
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetCategories()
+        public async Task<IActionResult> GetCategories([FromQuery] int PageNumber = 1, [FromQuery] int PageSize = 10)
         {
-            return HandleResult(await Mediator.Send(new GetAllCategoryQuery()),  "Category Fetched Successfully");
+            return HandleResult(await Mediator.Send(new GetAllCategoryQuery(){ PageNumber=PageNumber, PageSize=PageSize }));
         }
 
         [HttpGet("{Id}")]
         public async Task<IActionResult> GetCategory(int Id)
         {
-            return HandleResult(await Mediator.Send(new GetCategoryByIdQuery { Id = Id }), "Category Details Fetched Successfully");
+            return HandleResult(await Mediator.Send(new GetCategoryByIdQuery { Id = Id }));
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateCategory(UpdateCategoryDto category)
+        public async Task<IActionResult> UpdateCategory([FromBody] UpdateCategoryDto category)
         {
-            return  HandleResult(await Mediator.Send(new UpdateCategoryCommand { Category = category }), "Bid Updated Successfully");
+            return  HandleResult(await Mediator.Send(new UpdateCategoryCommand { Category = category }));
         }
 
         [HttpDelete("{Id}")]
-        public async Task<IActionResult> DeleteActvity(int Id)
+        public async Task<IActionResult> DeleteCategory(int Id)
         {
-            return  HandleResult(await Mediator.Send(new DeleteCategoryCommand { Id = Id }),  "Bid Deleted Successfully");
+            return  HandleResult(await Mediator.Send(new DeleteCategoryCommand { Id = Id }));
         }
     }
 }

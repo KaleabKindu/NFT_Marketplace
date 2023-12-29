@@ -1,21 +1,20 @@
+using Application.Common.Errors;
+using Application.Common.Responses;
 using Application.Contracts.Persistance;
 using Application.Features.Categories.Dtos;
-using Application.Features.Offers.Dtos;
 using AutoMapper;
-using Domain.Category;
-using Domain.Offers;
 using ErrorOr;
 using MediatR;
 
 namespace Application.Features.Categories.Queries
 {
-    public class GetCategoryByIdQuery : IRequest<ErrorOr<CategoryListDto>>
+    public class GetCategoryByIdQuery : IRequest<ErrorOr<BaseResponse<CategoryListDto>>>
     {
         public long Id { get; set; }
     }
 
     public class GetCategoryByIdQueryHandler
-        : IRequestHandler<GetCategoryByIdQuery, ErrorOr<CategoryListDto>>
+        : IRequestHandler<GetCategoryByIdQuery, ErrorOr<BaseResponse<CategoryListDto>>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -26,15 +25,19 @@ namespace Application.Features.Categories.Queries
             _mapper = mapper;
         }
 
-        public async Task<ErrorOr<CategoryListDto>> Handle(
+        public async Task<ErrorOr<BaseResponse<CategoryListDto>>> Handle(
             GetCategoryByIdQuery request,
             CancellationToken cancellationToken
         )
         {
             var category = await _unitOfWork.CategoryRepository.GetByIdAsync(request.Id);
 
-            if (category == null) return CategoryError.NotFound;
-            return _mapper.Map<CategoryListDto>(category);
+            if (category == null) return ErrorFactory.NotFound("Category");
+    
+            return new BaseResponse<CategoryListDto>(){
+                Message="Bid details fetched successfully",
+                Value=_mapper.Map<CategoryListDto>(category)
+            };
         }
     }
 }

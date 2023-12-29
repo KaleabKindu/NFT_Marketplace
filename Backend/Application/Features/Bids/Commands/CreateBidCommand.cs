@@ -9,13 +9,13 @@ using Application.Common.Responses;
 
 namespace Application.Features.Bids.Commands
 {
-    public class CreateBidCommand : IRequest<ErrorOr<BaseResponse<long>>>
+    public class CreateBidCommand : IRequest<ErrorOr<BaseResponse<BidDto>>>
     {
         public CreateBidDto Bid { get; set; }
     }
 
     public class CreateBidCommandHandler
-        : IRequestHandler<CreateBidCommand, ErrorOr<BaseResponse<long>>>
+        : IRequestHandler<CreateBidCommand, ErrorOr<BaseResponse<BidDto>>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -26,7 +26,7 @@ namespace Application.Features.Bids.Commands
             _mapper = mapper;
         }
 
-        public async Task<ErrorOr<BaseResponse<long>>> Handle(
+        public async Task<ErrorOr<BaseResponse<BidDto>>> Handle(
             CreateBidCommand request,
             CancellationToken cancellationToken
         )
@@ -37,9 +37,9 @@ namespace Application.Features.Bids.Commands
             if (await _unitOfWork.SaveAsync() == 0) 
                 throw new DbAccessException("Unable to save to database");
             
-            return new BaseResponse<long>(){
+            return new BaseResponse<BidDto>(){
                 Message="Bid created successfully",
-                Value=bid.Id
+                Value=_mapper.Map<BidDto>(bid)
             };
         }
     }

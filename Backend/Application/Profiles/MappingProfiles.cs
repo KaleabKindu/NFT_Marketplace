@@ -3,7 +3,6 @@
 using Application.Features.Offers.Dtos;
 using AutoMapper;
 using Domain;
-using Domain.Category;
 
 namespace Application.Profiles
 {
@@ -14,14 +13,17 @@ namespace Application.Profiles
             #region Offer 
             CreateMap<Offer, OfferDto>().ReverseMap();
             CreateMap<CreateOfferDto,Offer>();
-            CreateMap<UpdateOfferDto,Offer>();
+            CreateMap<UpdateOfferDto,Offer>()
+                .ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null));
+
             #endregion
 
             #region Category 
             CreateMap<Category, CategoryListDto>().ReverseMap();
             CreateMap<CreateCategoryDto,Category>();
-            CreateMap<UpdateCategoryDto,Category>();
-            CreateMap<CategoryListDto,Category>();
+            CreateMap<UpdateCategoryDto,Category>()
+                .ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null));
+
             #endregion
 
         

@@ -10,13 +10,13 @@ using MediatR;
 
 namespace Application.Features.Bids.Commands
 {
-    public class UpdateBidCommand : IRequest<ErrorOr<BaseResponse<Unit>>>
+    public class UpdateBidCommand : IRequest<ErrorOr<BaseResponse<BidDto>>>
     {
         public UpdateBidDto Bid { get; set; }
     }
 
     public class UpdateBidCommandHandler
-        : IRequestHandler<UpdateBidCommand, ErrorOr<BaseResponse<Unit>>>
+        : IRequestHandler<UpdateBidCommand, ErrorOr<BaseResponse<BidDto>>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -27,7 +27,7 @@ namespace Application.Features.Bids.Commands
             _mapper = mapper;
         }
 
-        public async Task<ErrorOr<BaseResponse<Unit>>> Handle(
+        public async Task<ErrorOr<BaseResponse<BidDto>>> Handle(
             UpdateBidCommand request,
             CancellationToken cancellationToken
         )
@@ -43,9 +43,9 @@ namespace Application.Features.Bids.Commands
             if (await _unitOfWork.SaveAsync() == 0)
                 throw new DbAccessException("Unable to save to database");
             
-            return new BaseResponse<Unit>(){
+            return new BaseResponse<BidDto>(){
                 Message="Bid updated successfully",
-                Value=Unit.Value
+                Value=_mapper.Map<BidDto>(Bid)
             };
         }
     }

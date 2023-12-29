@@ -1,5 +1,4 @@
 ﻿using Domain;
-using Domain.Category;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 

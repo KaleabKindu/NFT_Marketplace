@@ -1,9 +1,7 @@
 
-using Application.Features.Common;
-
 namespace Application.Features.Bids.Dtos
 {
-    public class CreateBidDto: BaseDto
+    public class CreateBidDto
     {
         public string Bidder { set; get; }
 
