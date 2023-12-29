@@ -9,13 +9,13 @@ using Application.Contracts.Persistance;
 
 namespace Application.Features.Offers.Commands
 {
-    public class CreateOfferCommand : IRequest<ErrorOr<BaseResponse<long>>>
+    public class CreateOfferCommand : IRequest<ErrorOr<BaseResponse<OfferDto>>>
     {
         public CreateOfferDto Offer { get; set; }
     }
 
     public class CreateOfferCommandHandler
-        : IRequestHandler<CreateOfferCommand, ErrorOr<BaseResponse<long>>>
+        : IRequestHandler<CreateOfferCommand, ErrorOr<BaseResponse<OfferDto>>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -26,7 +26,7 @@ namespace Application.Features.Offers.Commands
             _mapper = mapper;
         }
 
-        public async Task<ErrorOr<BaseResponse<long>>> Handle(
+        public async Task<ErrorOr<BaseResponse<OfferDto>>> Handle(
             CreateOfferCommand request,
             CancellationToken cancellationToken
         )
@@ -37,9 +37,9 @@ namespace Application.Features.Offers.Commands
             if (await _unitOfWork.SaveAsync() == 0) 
                 throw new DbAccessException("Unable to save changes to database");
             
-            return new BaseResponse<long>(){
+            return new BaseResponse<OfferDto>(){
                 Message="Offer created successfully",
-                Value=offer.Id
+                Value=_mapper.Map<OfferDto>(offer)
             };
         }
 
