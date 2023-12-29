@@ -8,7 +8,7 @@ namespace Application.Common.Errors{
         public static Error NotFound(string entityName) => Error.NotFound($"{entityName}.NotFound", $"{entityName} not found");
 
         // Create
-        public static Error DuplicateCode(string entityName) => Error.Conflict($"{entityName}.DuplicateCode", $"Duplicate code for {entityName}");
+        public static Error Conflict(string entityName) => Error.Conflict($"{entityName}.DuplicateCode", $"Duplicate code for {entityName}");
 
         // Validation errors for Create/Update
         public static Error ValidationFailed(string entityName, string errorMessage) => Error.Validation($"{entityName}.ValidationFailed", $"{entityName} validation failed: {errorMessage}");

@@ -5,7 +5,7 @@ using Application.Features.Offers.Commands;
 
 namespace API.Controllers
 {
-    public class OffersController : BasaApiController
+    public class OffersController : BaseController
     {
         [HttpGet]
         public async Task<IActionResult> GetAllOffers([FromQuery] int PageNumber = 1, [FromQuery] int PageSize = 10)

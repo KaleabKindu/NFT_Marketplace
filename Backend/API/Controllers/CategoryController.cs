@@ -7,7 +7,7 @@ using Application.Features.Categories.Queries;
 
 namespace API.Controllers
 {
-    public class CategoriesController : BasaApiController
+    public class CategoriesController : BaseController
     {
         [HttpPost]
         public async Task<IActionResult> CreateCategory([FromBody] CreateCategoryDto categoryDto)

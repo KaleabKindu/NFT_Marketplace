@@ -1,5 +1,5 @@
 ﻿using Domain;
-using Infrustructure.Services;
+using Infrastructure.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Persistence;
 using System.Text;
@@ -7,12 +7,13 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Extensions.Configuration;
 using Application.Contracts;
+using Application.Contracts.Services;
 
-namespace Infrustructure
+namespace Infrastructure
 {
-    public static class InfrustructureServicesRegistration
+    public static class InfrastructureServicesRegistration
     {
-        public static IServiceCollection ConfigureInfrustructureServices(this IServiceCollection services,IConfiguration configuration)
+        public static IServiceCollection ConfigureInfrastructureServices(this IServiceCollection services,IConfiguration configuration)
         {
 
             services.AddIdentityCore<AppUser>(opt =>
@@ -40,7 +41,7 @@ namespace Infrustructure
             {
                
             });
-            services.AddScoped<TokenService>();
+            services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IUserAccessor, UserAccessor>();
 
             return services;

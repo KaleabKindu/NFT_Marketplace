@@ -4,22 +4,23 @@ using Domain;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.Extensions.Configuration;
+using Application.Contracts.Services;
 
-namespace Infrustructure.Services
+namespace Infrastructure.Services
 {
-    public class TokenService
+    public class TokenService: ITokenService
     {
         public readonly IConfiguration _config;
         public TokenService(IConfiguration config)
         {
             _config = config;
         }
-        public string CreateToken(AppUser user)
+        public string CreateToken(AppUser user, int expireInDays)
         {
             var claims = new List<Claim>{
-                new(ClaimTypes.Name,user.FullName),
-                new(ClaimTypes.NameIdentifier,user.UserName),
-                new(ClaimTypes.Email,user.Email),
+                new(ClaimTypes.Anonymous,user.PublicAddress),
+                // new(ClaimTypes.NameIdentifier,user.UserName),
+                // new(ClaimTypes.Email,user.Email),
             };
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["TokenKey"]));
 
@@ -28,7 +29,7 @@ namespace Infrustructure.Services
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.UtcNow.AddDays(7),
+                Expires = DateTime.UtcNow.AddDays(expireInDays),
                 SigningCredentials = creds,
             };
             var tokenHandler = new JwtSecurityTokenHandler();

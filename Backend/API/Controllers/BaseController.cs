@@ -8,7 +8,7 @@ namespace API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class BasaApiController : ControllerBase
+    public class BaseController : ControllerBase
     {
         private IMediator _mediatr;
 

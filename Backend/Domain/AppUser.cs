@@ -5,6 +5,7 @@ namespace Domain
     {
         public string Password { get; set; }
         public string FullName { get; set; }
+        public string PublicAddress { get; set; }
+        public string Nonce { get; set; }
     }
-
 }
