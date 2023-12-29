@@ -7,6 +7,7 @@ import {
     DropdownMenuTrigger,
   } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button";
+import { help_center } from "@/data";
 
 type Props = {}
 
@@ -14,30 +15,19 @@ const HelpCenter = (props: Props) => {
     
   return (
     <DropdownMenu>
-        <DropdownMenuTrigger className="rounded-full">
+        <DropdownMenuTrigger asChild>
             <Button variant='ghost' className='rounded-full' size='lg'>Help Center</Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-            <DropdownMenuItem className="py-3">
-                <Link href=''>
-                    About Us
+          {
+            help_center.map((option, index) => 
+            <DropdownMenuItem key={index} className="py-3">
+                <Link href={option.route} className="w-full">
+                   {option.name}
                  </Link>
             </DropdownMenuItem>
-            <DropdownMenuItem className="py-3">
-                <Link href=''>
-                    Contact Us
-                 </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem className="py-3">
-                <Link href=''>
-                    Sign In
-                 </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem className="py-3">
-                <Link href=''>
-                    Sign Up
-                 </Link>
-            </DropdownMenuItem>
+            )
+          }
         </DropdownMenuContent>
     </DropdownMenu>
   );

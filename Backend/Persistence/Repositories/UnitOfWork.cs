@@ -1,4 +1,4 @@
-﻿using Application.Contracts.Presistence;
+﻿using Application.Contracts.Persistance;
 using Domain;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
@@ -8,8 +8,11 @@ namespace Persistence.Repositories
     public class UnitOfWork : IUnitOfWork
     {
         private readonly AppDbContext _dbContext;
+        private readonly IServiceProvider _services;
         private UserManager<AppUser> _usermanager;
-        private IServiceProvider _services;
+        private IBidRepository _bidRepository;
+        private IOfferRepository _offerRepository;
+        private ICategoryRepository _CategoryRepository;
 
         public UnitOfWork(AppDbContext dbContext,IServiceProvider services)
         {
@@ -21,10 +24,35 @@ namespace Persistence.Repositories
         {
             get
             {
-                if (_usermanager == null)
-                    _usermanager = _services.GetService<UserManager<AppUser>>();
-
+                _usermanager ??= _services.GetService<UserManager<AppUser>>();
                 return _usermanager;
+            }
+        }
+
+        public IBidRepository BidRepository
+        {
+            get
+            {
+                if (_bidRepository == null)
+                    _bidRepository = new BidRepository(_dbContext);
+
+                return _bidRepository;
+            }
+        }
+
+        public IOfferRepository OfferRepository
+        {
+            get {                
+                _offerRepository ??= new OfferRepository(_dbContext);
+                return _offerRepository;
+            }
+        }
+
+        public ICategoryRepository CategoryRepository
+        {
+            get {                
+                _CategoryRepository ??= new CategoryRepository(_dbContext);
+                return _CategoryRepository;
             }
         }
 
@@ -34,7 +62,7 @@ namespace Persistence.Repositories
             GC.SuppressFinalize(this);
         }
 
-        public async Task<int> Save()
+        public async Task<int> SaveAsync()
         {
             return await _dbContext.SaveChangesAsync();
         }

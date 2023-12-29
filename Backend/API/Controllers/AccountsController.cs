@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
-using API.Services;
+using Infrustructure.Services;
 using API.Model;
 
 namespace API.Controllers

@@ -10,12 +10,16 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
   } from "@/components/ui/dropdown-menu"
+import { Routes } from "@/routes";
+import { useDisconnect } from "wagmi";
+import useWeb3Status from "@/hooks/useWeb3Status";
   
 
 type Props = {}
 
 const Profile = (props: Props) => {
-    
+    const { disconnect } = useDisconnect()
+    const { address } = useWeb3Status()
   return (
     <DropdownMenu>
         <DropdownMenuTrigger className="rounded-full">
@@ -31,23 +35,21 @@ const Profile = (props: Props) => {
                             Tony Stark
                         </div>
                         <div className="text-sm font-medium truncate max-w-[10rem]" >
-                            X03849938292020338778343
+                            {address}
                         </div>
                     </div>
                 </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem className="py-3">
-                <Link href='' className="flex items-center gap-3">
+                <Link href={`${Routes.USER}/${address}`} className="flex items-center gap-3 w-full">
                     <FaUserAlt size={30} />
                     <div>Profile</div>
                  </Link>
             </DropdownMenuItem>
-            <DropdownMenuItem className="py-3">
-                <Link href='' className="flex items-center gap-3">
-                    <MdLogout size={30} />
-                    <div>Disconnect</div>
-                 </Link>
+            <DropdownMenuItem className="flex items-center gap-3 py-3 cursor-pointer" onClick={() => disconnect()}>
+                <MdLogout size={30} />
+                <div>Disconnect</div>
             </DropdownMenuItem>
         </DropdownMenuContent>
     </DropdownMenu>

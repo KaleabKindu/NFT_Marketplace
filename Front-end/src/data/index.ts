@@ -2,11 +2,6 @@ import { Routes } from "@/routes"
 
 export const discover = [
     {
-        name:'Home',
-        route:Routes.HOME,
-        protected:false
-    },
-    {
       name:'NFTs',
       route:Routes.NFTS,
       protected:false
@@ -31,16 +26,6 @@ export const help_center = [
     },
     {
         name:'Contact Us',
-        route:'/',
-        protected:false
-    },
-    {
-        name:'Sign Up',
-        route:'/',
-        protected:false
-    },
-    {
-        name:'Sign In',
         route:'/',
         protected:false
     },
@@ -290,10 +275,6 @@ export const sort_types = [
     name:'Price High - Low',
     value:'high_low'
   },
-  {
-    name:'Most Favorited',
-    value:'favorited'
-  },
 ]
 
 
@@ -306,8 +287,46 @@ export const sale_types = [
     name:'Buy Now',
     value:'buy_now'
   },
+]
+
+export const tabs = ['created', 'owned', 'liked', 'collections', 'followers', 'following']
+
+
+export const collections = [
   {
-    name:'Has Offers',
-    value:'has_offers'
+    id: "1",
+    name: "Collection One",
+    profile_pic:'/collection/collection-pic.png'
   },
+  {
+    id: "2",
+    name: "Collection Two",
+    profile_pic:'/collection/collection-pic.png'
+  },
+  {
+    id: "3",
+    name: "Collection Three",
+    profile_pic:'/collection/collection-pic.png'
+  },
+
+]
+
+
+export const users = [
+  {
+    id: "1",
+    name: "Tony Stark",
+    profile_pic:'/collection/collection-pic.png'
+  },
+  {
+    id: "2",
+    name: "Bruce Banner",
+    profile_pic:'/collection/collection-pic.png'
+  },
+  {
+    id: "3",
+    name: "Steve Rogers",
+    profile_pic:'/collection/collection-pic.png'
+  },
+
 ]

@@ -15,14 +15,14 @@ const Discover = (props: Props) => {
     
   return (
     <DropdownMenu>
-        <DropdownMenuTrigger className="rounded-full">
+        <DropdownMenuTrigger asChild>
             <Button variant='ghost' className='rounded-full' size='lg'>Discover</Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
             {
                 discover.map((option, index) => 
                 <DropdownMenuItem key={index} className="py-3">
-                    <Link href={option.route}>
+                    <Link href={option.route} className="w-full">
                         {option.name}
                     </Link>
                 </DropdownMenuItem>

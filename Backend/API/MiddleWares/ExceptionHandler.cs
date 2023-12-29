@@ -1,13 +1,9 @@
-﻿using System;
+﻿using MediatR;
 using System.Net;
 using System.Text.Json;
-using System.Threading.Tasks;
-using API.Model;
 using Application.Common.Exceptions;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using Application.Common.Responses;
+
 
 namespace API.MiddleWares
 {
@@ -18,7 +14,7 @@ namespace API.MiddleWares
         public readonly IHostEnvironment _env;
         public readonly ILogger<ExceptionHandler> _logger;
         public static JsonSerializerOptions options = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
-        private ResponseObject response { get; set; }
+        private BaseResponse<Unit> response { get; set; }
    
         public ExceptionHandler(RequestDelegate next, ILogger<ExceptionHandler> logger, IHostEnvironment env)
         {
@@ -36,42 +32,102 @@ namespace API.MiddleWares
             {
                 await _next(context);
             }
-            catch(ValidationException ex)
+            catch (OwnershipVerificationException ex)
             {
+                Console.WriteLine("OwnershipVerificationException.............");
+                failed = true;
+                context.Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                _logger.LogError(ex, ex.Message);
+                response = new BaseResponse<Unit>(){
+                    Success = false,
+                    Message = ex.Message,
+                    Value = Unit.Value
+                };
+            }
+            catch (InsufficientFundsException ex)
+            {
+                Console.WriteLine("InsufficientFundsException.............");
+                failed = true;
+                context.Response.StatusCode = (int)HttpStatusCode.PreconditionFailed;
+                _logger.LogError(ex, ex.Message);
+                response = new BaseResponse<Unit>(){
+                    Success = false,
+                    Message = ex.Message,
+                    Value = Unit.Value
+                };
+            }
+            catch (TransactionFailureException ex)
+            {
+                Console.WriteLine("TransactionFailureException.............");
                 failed = true;
                 context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
                 _logger.LogError(ex, ex.Message);
-                response = ResponseObject.FactoryWithError(ex.Message,ex.Details);
+                response = new BaseResponse<Unit>(){
+                    Success = false,
+                    Message = ex.Message,
+                    Value = Unit.Value
+                };
             }
-            catch(NotFoundException ex)
+            catch (MetadataValidationException ex)
             {
-                failed = true;
-                context.Response.StatusCode = (int)HttpStatusCode.NotFound;
-                _logger.LogError(ex, ex.Message);
-                response = ResponseObject.Factory(ex.Message);
-
-            }
-            catch(BadRequestException ex)
-            {
+                Console.WriteLine("MetadataValidationException.............");
                 failed = true;
                 context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
                 _logger.LogError(ex, ex.Message);
-                response = ResponseObject.Factory(ex.Message);
+                response = new BaseResponse<Unit>(){
+                    Success = false,
+                    Message = ex.Message,
+                    Value = Unit.Value
+                };
             }
-            catch(AppException ex)
+            catch (ContractDeploymentException ex)
             {
+                Console.WriteLine("ContractDeploymentException.............");
                 failed = true;
                 context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
                 _logger.LogError(ex, ex.Message);
-                response = ResponseObject.Factory(ex.Message);
+                response = new BaseResponse<Unit>(){
+                    Success = false,
+                    Message = ex.Message,
+                    Value = Unit.Value
+                };
+            }
+            catch (BlockchainConnectivityException ex)
+            {
+                Console.WriteLine("BlockchainConnectivityException.............");
+                failed = true;
+                context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                _logger.LogError(ex, ex.Message);
+                response = new BaseResponse<Unit>(){
+                    Success = false,
+                    Value = Unit.Value,
+                    Message = ex.Message,
+                };
+            }
+            catch(AppException ex)
+            {
+                Console.WriteLine("AppException.............");
+                failed = true;
+                context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                _logger.LogError(ex, ex.Message);
+                response = new BaseResponse<Unit>() {
+                    Success = false,
+                    Message = ex.Message,
+                    Value = Unit.Value
+                };
 
             }
             catch(Exception ex)
             {
+                Console.WriteLine("Exception....................");
                 failed = true;
                 context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
                 _logger.LogError(ex, ex.Message);
-                response = ResponseObject.Factory("UnKnown Internal Error");
+                response = new BaseResponse<Unit>() {
+                    Success = false,
+                    Error = "Unknown Internal Server Error",
+                    Value = Unit.Value
+                };
             }
             finally
             {
@@ -82,11 +138,8 @@ namespace API.MiddleWares
                     await context.Response.WriteAsync(json);
 
                 }
-
             }
         }
-
-
     }
 }
 

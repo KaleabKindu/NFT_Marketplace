@@ -3,26 +3,23 @@ import Logo from '../Logo'
 import Profile from './Profile'
 import Notifications from './Notifications'
 import { SunMoon, MoonStar } from 'lucide-react';
-import { useTheme } from "next-themes"
  
 import { Button } from "@/components/ui/button"
 import Container from '../Container'
 import SideBar from './SideBar'
-import Link from 'next/link';
 import Discover from './Discover';
 import HelpCenter from './HelpCenter';
-
+import Link from 'next/link';
+import { Routes } from '@/routes';
+import { useWeb3Modal } from '@web3modal/wagmi/react';
+import useWeb3Status from '@/hooks/useWeb3Status';
+import useWebTheme from '@/hooks/useWebTheme';
 type Props = {}
 
 const NavBar = (props: Props) => {
-  const { theme, setTheme } = useTheme()
-  const handleToggle = () => {
-    if(theme === 'light'){
-      setTheme('dark')
-    }else{
-      setTheme('light')
-    }
-  }
+  const { mode, handleToggle } = useWebTheme()
+  const { connected } = useWeb3Status()
+  const { open } = useWeb3Modal()
   return (
     <div className='fixed top-0 w-full bg-background  z-50'>
       <Container className='flex items-center justify-between border-b'>
@@ -38,18 +35,22 @@ const NavBar = (props: Props) => {
             <HelpCenter/>
 
             {/* Notification Section */}
-            <Notifications/>
+            {connected && <Notifications/>}
 
             {/* Toggle Theme  */}
-            <Button variant='ghost' className='rounded-full' onClick={handleToggle}>
-              {theme === 'dark' ? <SunMoon />:  <MoonStar />}
+            <Button variant='ghost' size={'icon'} className='rounded-full' onClick={handleToggle}>
+              {mode === 'dark' ? <SunMoon />:  <MoonStar />} 
             </Button>
 
-            {/* Create NFT Section*/}
-            <Button className='rounded-full' size='lg'>Create</Button>
+            {connected ? 
+            <Link href={Routes.MINT}>
+              <Button className='rounded-full' size='lg'>Create</Button>
+            </Link>:
+              <Button className='rounded-md' onClick={() => open()}>Connect Wallet</Button>
+            }
 
             {/* User Profile Section */}
-            <Profile/>
+            {connected && <Profile/>}
           </div>
 
           {/* Mobile Sidebar */}
