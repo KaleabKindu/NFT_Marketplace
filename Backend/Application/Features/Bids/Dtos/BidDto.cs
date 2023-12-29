@@ -1,12 +1,14 @@
 
+using Application.Features.Common;
+
 namespace Application.Features.Bids.Dtos
 {
-    public class BidDto
+    public class BidDto: BaseDto
     {
-        public string bidder;
+        public string Bidder { set; get; }
 
-        public string asset;
+        public string Asset { set; get; }
 
-        public double amount;
+        public double Amount { set; get; }
     }
 }

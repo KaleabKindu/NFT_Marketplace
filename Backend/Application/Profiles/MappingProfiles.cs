@@ -3,8 +3,6 @@
 using Application.Features.Offers.Dtos;
 using AutoMapper;
 using Domain;
-using Domain.Category;
-using Domain.Offers;
 
 namespace Application.Profiles
 {
@@ -12,22 +10,26 @@ namespace Application.Profiles
     {
         public MappingProfile()
         {
-            #region offer 
+            #region Offer 
             CreateMap<Offer, OfferDto>().ReverseMap();
             CreateMap<CreateOfferDto,Offer>();
-            CreateMap<UpdateOfferDto,Offer>();
+            CreateMap<UpdateOfferDto,Offer>()
+                .ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null));
+
             #endregion
 
-            #region category 
+            #region Category 
             CreateMap<Category, CategoryListDto>().ReverseMap();
             CreateMap<CreateCategoryDto,Category>();
-            CreateMap<UpdateCategoryDto,Category>();
-            CreateMap<CategoryListDto,Category>();
+            CreateMap<UpdateCategoryDto,Category>()
+                .ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null));
+
             #endregion
 
         
-            #region offer 
-            CreateMap<Bid, BidDto>().ReverseMap();
+            #region Bid 
+            CreateMap<Bid, BidDto>();
+            CreateMap<Bid, BidsListDto>();
             CreateMap<CreateBidDto, Bid>();
             CreateMap<UpdateBidDto, Bid>()
                 .ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null));

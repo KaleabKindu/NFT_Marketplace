@@ -1,20 +1,21 @@
-using Application.Common;
-using Application.Contracts.Persistance;
-using Application.Features.Offers.Dtos;
-using AutoMapper;
-using Domain.Offers;
+using Domain;
 using ErrorOr;
 using MediatR;
+using AutoMapper;
+using Application.Common.Responses;
+using Application.Common.Exceptions;
+using Application.Features.Offers.Dtos;
+using Application.Contracts.Persistance;
 
 namespace Application.Features.Offers.Commands
 {
-    public class CreateOfferCommand : IRequest<ErrorOr<long>>
+    public class CreateOfferCommand : IRequest<ErrorOr<BaseResponse<OfferDto>>>
     {
         public CreateOfferDto Offer { get; set; }
     }
 
     public class CreateOfferCommandHandler
-        : IRequestHandler<CreateOfferCommand, ErrorOr<long>>
+        : IRequestHandler<CreateOfferCommand, ErrorOr<BaseResponse<OfferDto>>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -25,7 +26,7 @@ namespace Application.Features.Offers.Commands
             _mapper = mapper;
         }
 
-        public async Task<ErrorOr<long>> Handle(
+        public async Task<ErrorOr<BaseResponse<OfferDto>>> Handle(
             CreateOfferCommand request,
             CancellationToken cancellationToken
         )
@@ -34,9 +35,12 @@ namespace Application.Features.Offers.Commands
             await _unitOfWork.OfferRepository.AddAsync(offer);
     
             if (await _unitOfWork.SaveAsync() == 0) 
-                return CommonError.ErrorSavingChanges;
+                throw new DbAccessException("Unable to save changes to database");
             
-            return offer.Id;
+            return new BaseResponse<OfferDto>(){
+                Message="Offer created successfully",
+                Value=_mapper.Map<OfferDto>(offer)
+            };
         }
 
     }

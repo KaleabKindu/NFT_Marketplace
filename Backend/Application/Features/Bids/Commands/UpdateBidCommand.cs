@@ -1,4 +1,7 @@
 using Application.Common;
+using Application.Common.Errors;
+using Application.Common.Exceptions;
+using Application.Common.Responses;
 using Application.Contracts.Persistance;
 using Application.Features.Bids.Dtos;
 using AutoMapper;
@@ -7,13 +10,13 @@ using MediatR;
 
 namespace Application.Features.Bids.Commands
 {
-    public class UpdateBidCommand : IRequest<ErrorOr<Unit>>
+    public class UpdateBidCommand : IRequest<ErrorOr<BaseResponse<BidDto>>>
     {
         public UpdateBidDto Bid { get; set; }
     }
 
     public class UpdateBidCommandHandler
-        : IRequestHandler<UpdateBidCommand, ErrorOr<Unit>>
+        : IRequestHandler<UpdateBidCommand, ErrorOr<BaseResponse<BidDto>>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -24,7 +27,7 @@ namespace Application.Features.Bids.Commands
             _mapper = mapper;
         }
 
-        public async Task<ErrorOr<Unit>> Handle(
+        public async Task<ErrorOr<BaseResponse<BidDto>>> Handle(
             UpdateBidCommand request,
             CancellationToken cancellationToken
         )
@@ -33,14 +36,17 @@ namespace Application.Features.Bids.Commands
                 request.Bid.Id
             );
 
-            if (Bid == null) return Error.NotFound("Bid.NotFound", "Bid not found");
+            if (Bid == null) return ErrorFactory.NotFound("Bid");
         
             _mapper.Map(request.Bid, Bid);
 
             if (await _unitOfWork.SaveAsync() == 0)
-                return CommonError.ErrorSavingChanges;
+                throw new DbAccessException("Unable to save to database");
             
-            return Unit.Value;
+            return new BaseResponse<BidDto>(){
+                Message="Bid updated successfully",
+                Value=_mapper.Map<BidDto>(Bid)
+            };
         }
     }
 }

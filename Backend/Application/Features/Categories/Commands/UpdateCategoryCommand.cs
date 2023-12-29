@@ -1,22 +1,21 @@
-using Application.Common;
+using Application.Common.Errors;
+using Application.Common.Exceptions;
+using Application.Common.Responses;
 using Application.Contracts.Persistance;
 using Application.Features.Categories.Dtos;
-using Application.Features.Offers.Dtos;
 using AutoMapper;
-using Domain.Category;
-using Domain.Offers;
 using ErrorOr;
 using MediatR;
 
 namespace Application.Features.Categories.Commands
 {
-    public class UpdateCategoryCommand : IRequest<ErrorOr<Unit>>
+    public class UpdateCategoryCommand : IRequest<ErrorOr<BaseResponse<CategoryListDto>>>
     {
         public UpdateCategoryDto Category { get; set; }
     }
 
     public class UpdateCategoryCommandHandler
-        : IRequestHandler<UpdateCategoryCommand, ErrorOr<Unit>>
+        : IRequestHandler<UpdateCategoryCommand, ErrorOr<BaseResponse<CategoryListDto>>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -27,7 +26,7 @@ namespace Application.Features.Categories.Commands
             _mapper = mapper;
         }
 
-        public async Task<ErrorOr<Unit>> Handle(
+        public async Task<ErrorOr<BaseResponse<CategoryListDto>>> Handle(
             UpdateCategoryCommand request,
             CancellationToken cancellationToken
         )
@@ -36,14 +35,17 @@ namespace Application.Features.Categories.Commands
                 request.Category.Id
             );
 
-            if (category == null) return CategoryError.NotFound;
+            if (category == null) return ErrorFactory.NotFound("Category");
         
             _mapper.Map(request.Category, category);
 
             if (await _unitOfWork.SaveAsync() == 0)
-                return CommonError.ErrorSavingChanges;
+                throw new DbAccessException("Unable to save to database");
             
-            return Unit.Value;
+            return new BaseResponse<CategoryListDto>(){
+                Message="Bid updated successfully",
+                Value=_mapper.Map<CategoryListDto>(category)
+            };        
         }
     }
 }

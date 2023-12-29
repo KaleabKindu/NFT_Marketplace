@@ -1,11 +1,12 @@
 using System;
 using Application.Contracts.Persistance;
+using Domain;
 using Microsoft.EntityFrameworkCore;
 
 namespace Persistence.Repositories
 {
     // IRepository.cs
-    public class Repository<T> : IRepository<T> where T : class
+    public class Repository<T> : IRepository<T> where T : BaseClass
     {
         private readonly AppDbContext _dbContext;
 
@@ -30,9 +31,15 @@ namespace Persistence.Repositories
             return entity != null;
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync()
+        public async Task<IEnumerable<T>> GetAllAsync(int page=1, int limit=10)
         {
-            return await _dbContext.Set<T>().ToListAsync();
+            int skip = (page - 1) * limit;
+        
+            return await _dbContext.Set<T>()
+                .OrderByDescending(entity => entity.CreatedAt)
+                .Skip(skip)
+                .Take(limit)
+                .ToListAsync();
         }
 
         public async Task<T> GetByIdAsync(long id)
@@ -43,6 +50,10 @@ namespace Persistence.Repositories
         public void UpdateAsync(T entity)
         {
             _dbContext.Entry(entity).State = EntityState.Modified;
+        }
+
+        public async Task<int> Count(){
+            return await _dbContext.Set<T>().CountAsync();
         }
     }
 

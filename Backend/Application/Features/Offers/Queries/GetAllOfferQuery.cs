@@ -3,13 +3,17 @@ using Application.Features.Offers.Dtos;
 using AutoMapper;
 using ErrorOr;
 using MediatR;
+using Rideshare.Application.Responses;
 
 namespace Application.Features.Offers.Queries
 {
-    public class GetAllOfferQuery : IRequest<ErrorOr<List<OfferDto>>> { }
+    public class GetAllOfferQuery : IRequest<ErrorOr<PaginatedResponse<OfferDto>>> { 
+        public int PageNumber { get; set; } = 1;
+        public int PageSize { get; set; } = 10;
+    }
 
     public class GetAllOfferQueryHandler
-        : IRequestHandler<GetAllOfferQuery, ErrorOr<List<OfferDto>>>
+        : IRequestHandler<GetAllOfferQuery, ErrorOr<PaginatedResponse<OfferDto>>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -20,14 +24,21 @@ namespace Application.Features.Offers.Queries
             _mapper = mapper;
         }
 
-        public async Task<ErrorOr<List<OfferDto>>> Handle(
+        public async Task<ErrorOr<PaginatedResponse<OfferDto>>> Handle(
             GetAllOfferQuery request,
             CancellationToken cancellationToken
         )
         {
-            var offer = await _unitOfWork.OfferRepository.GetAllAsync();
+            var offers = await _unitOfWork.OfferRepository.GetAllAsync(request.PageNumber, request.PageSize);
+            var total_count = await _unitOfWork.OfferRepository.Count();
 
-            return _mapper.Map<List<OfferDto>>(offer);
+            return new PaginatedResponse<OfferDto>(){
+                Message="Offers list fetched successfully",
+                PageNumber=request.PageNumber,
+                PageSize=request.PageSize,
+                Count=total_count,
+                Value=_mapper.Map<List<OfferDto>>(offers)
+            };
         }
     }
 }

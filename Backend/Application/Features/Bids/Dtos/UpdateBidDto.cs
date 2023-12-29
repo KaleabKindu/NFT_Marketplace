@@ -5,6 +5,6 @@ namespace Application.Features.Bids.Dtos
 {
     public class UpdateBidDto: BaseDto
     {
-        public double? amount;
+        public double? amount { set; get; }
     }
 }

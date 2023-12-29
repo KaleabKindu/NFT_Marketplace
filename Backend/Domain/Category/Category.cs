@@ -1,4 +1,4 @@
-namespace Domain.Category
+namespace Domain
 {
     public class Category: BaseClass
     {

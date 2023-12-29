@@ -1,6 +1,4 @@
 ﻿using Domain;
-using Domain.Category;
-using Domain.Offers;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 

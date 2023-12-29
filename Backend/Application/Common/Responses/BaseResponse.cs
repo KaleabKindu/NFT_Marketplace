@@ -1,4 +1,4 @@
-namespace Application.Responses{
+namespace Application.Common.Responses{
     public class BaseResponse<T>
     {
         public bool Success { get; set; } = true;
@@ -6,9 +6,9 @@ namespace Application.Responses{
         public string Error { get; set; } = "";
         public T? Value { get; set; }
 
-        public BaseResponse(T? Value)
-        {
-            this.Value = Value;
-        }
+        // public BaseResponse(T? Value)
+        // {
+        //     this.Value = Value;
+        // }
     }
 }
