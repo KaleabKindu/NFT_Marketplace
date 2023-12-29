@@ -1,4 +1,3 @@
-using Application.Common;
 using Application.Common.Errors;
 using Application.Common.Exceptions;
 using Application.Common.Responses;
