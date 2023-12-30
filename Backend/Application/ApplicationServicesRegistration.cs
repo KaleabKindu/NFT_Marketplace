@@ -3,7 +3,7 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
-using RDP.Application.Common.Behaviors;
+using Application.Common.Behaviors;
 
 
 namespace Application

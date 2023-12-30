@@ -1,14 +1,22 @@
 using System;
+using Application.Common.Errors;
 using Application.Common.Exceptions;
-using Application.Contracts.Presistence;
-using Application.Features.Assets.CQRS.Command;
 using Application.Common.Responses;
+using Application.Contracts.Persistance;
 using AutoMapper;
+using ErrorOr;
 using MediatR;
 
-namespace Application.Features.Assets.CQRS.Handler
+namespace Application.Features.Assets.Command
 {
-    public class DeleteAssetCommandHandler : IRequestHandler<DeleteAssetCommand, BaseResponse<Unit>>
+    public class DeleteAssetCommand :IRequest<ErrorOr<BaseResponse<Unit>>>
+    {
+        public int Id {get; set;}
+        
+    }
+
+
+    public class DeleteAssetCommandHandler : IRequestHandler<DeleteAssetCommand, ErrorOr<BaseResponse<Unit>>>
     {
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
@@ -21,19 +29,19 @@ namespace Application.Features.Assets.CQRS.Handler
             
         }
 
-        public async Task<BaseResponse<Unit>> Handle(DeleteAssetCommand request, CancellationToken cancellationToken)
+        public async Task<ErrorOr<BaseResponse<Unit>>> Handle(DeleteAssetCommand request, CancellationToken cancellationToken)
         {
            var response = new BaseResponse<Unit>();
 
             var asset = await _unitOfWork.AssetRepository.GetByIdAsync(request.Id);
 
             if (asset == null)
-                throw new NotFoundException("Asset Not Found");
+                return ErrorFactory.NotFound("Asset Not Found");
 
             _unitOfWork.AssetRepository.DeleteAsync(asset) ;
 
-            if (await _unitOfWork.Save() == 0)
-                throw new InternalServerErrorException("Database Error: Unable To Save");
+            if (await _unitOfWork.SaveAsync() == 0)
+                throw new DbAccessException("Database Error: Unable To SaveAsync");
 
             response.Success = true;
             response.Message = "Deletion Succeeded";

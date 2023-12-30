@@ -4,6 +4,7 @@ using Application.Features.Offers.Dtos;
 using Application.Features.Assets.Dtos;
 using AutoMapper;
 using Domain;
+using Domain.Asset;
 
 namespace Application.Profiles
 {
@@ -36,17 +37,19 @@ namespace Application.Profiles
                 .ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null));
 
             #endregion
-        }
+
             #region Assets
 
             CreateMap<Asset, AssetDto>().ReverseMap();
             CreateMap<Asset, UpdateAssetDto>().ReverseMap();
             CreateMap<Asset, CreateAssetDto>().ReverseMap();
             #endregion Assets
+        }
+            
 
 
         }
 
 
     }
-}
+

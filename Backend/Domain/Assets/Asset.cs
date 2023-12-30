@@ -1,9 +1,9 @@
 using System;
-using Domain;
+using Microsoft.EntityFrameworkCore.Migrations.Operations;
 
-namespace Application.Features.Assets.Dtos
+namespace Domain.Asset
 {
-    public class CreateAssetDto
+    public class Asset : BaseClass
     {
         public string Title { get; set; }
         public string Description { get; set; }
@@ -20,6 +20,10 @@ namespace Application.Features.Assets.Dtos
         public long WinningBidId { get; set; }
         public string MetaData { get; set; }
         public float Royalties { get; set; }
+
+
+
+
 
 
     }
