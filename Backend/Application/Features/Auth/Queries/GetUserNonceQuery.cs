@@ -1,11 +1,10 @@
 using ErrorOr;
 using MediatR;
-using AutoMapper;
 using Application.Contracts.Persistance;
 using Application.Common.Errors;
 using Application.Common.Responses;
 using Application.Features.Auth.Dtos;
-using Microsoft.EntityFrameworkCore;
+using Application.Common.Exceptions;
 
 namespace Application.Features.Auth.Queries
 {
@@ -18,29 +17,28 @@ namespace Application.Features.Auth.Queries
         : IRequestHandler<GetUserNonce, ErrorOr<BaseResponse<NonceDto>>>
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
 
-        public GetUserNonceQueryHandler(IUnitOfWork unitOfWork, IMapper mapper)
+        public GetUserNonceQueryHandler(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
-            _mapper = mapper;
         }
 
         public async Task<ErrorOr<BaseResponse<NonceDto>>> Handle(
             GetUserNonce query,
             CancellationToken cancellationToken
         )
-        {
-            var user = await _unitOfWork.UserManager.Users.FirstOrDefaultAsync(user => user.PublicAddress == query.PublicAddress);
-
-            if (user == null) return ErrorFactory.NotFound("User");
-            
-            return new BaseResponse<NonceDto>(){
-                Message="User nonce fetched successfully",
-                Value=new NonceDto(){
-                    Nonce=user.Nonce
-                }
-            };
+        {   
+            try{
+                string nonce = await  _unitOfWork.UserRepository.GetUserNonceAsync(query.PublicAddress);
+                return new BaseResponse<NonceDto>(){
+                    Message="User nonce fetched successfully",
+                    Value=new NonceDto(){
+                        Nonce=nonce
+                    }
+                };
+            }catch(NotFoundException exception){
+                return ErrorFactory.NotFound("User", exception.Message);
+            }   
         }
     }
 }

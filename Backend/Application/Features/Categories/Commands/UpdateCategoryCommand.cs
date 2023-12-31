@@ -35,7 +35,7 @@ namespace Application.Features.Categories.Commands
                 request.Category.Id
             );
 
-            if (category == null) return ErrorFactory.NotFound("Category");
+            if (category == null) return ErrorFactory.NotFound("Category", "Category not found");
         
             _mapper.Map(request.Category, category);
 

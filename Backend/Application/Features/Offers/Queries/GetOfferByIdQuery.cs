@@ -32,7 +32,7 @@ namespace Application.Features.Offers.Queries
         {
             var offer = await _unitOfWork.OfferRepository.GetByIdAsync(request.Id);
 
-            if (offer == null) return ErrorFactory.NotFound("Offer");
+            if (offer == null) return ErrorFactory.NotFound("Offer","Offer not found");
             return new BaseResponse<OfferDto>(){
                 Message="Offer details fetched successfully",
                 Value=_mapper.Map<OfferDto>(offer)

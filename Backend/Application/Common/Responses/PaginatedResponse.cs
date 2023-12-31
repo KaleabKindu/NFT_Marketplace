@@ -1,6 +1,6 @@
 using Application.Common.Responses;
 
-namespace Rideshare.Application.Responses;
+namespace Application.Responses;
 
 public class PaginatedResponse<T>: BaseResponse<List<T>>
 {

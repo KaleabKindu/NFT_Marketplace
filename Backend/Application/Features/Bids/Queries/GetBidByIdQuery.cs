@@ -32,7 +32,7 @@ namespace Application.Features.Bids.Queries
         {
             var Bid = await _unitOfWork.BidRepository.GetByIdAsync(query.Id);
 
-            if (Bid == null) return ErrorFactory.NotFound("Bid");
+            if (Bid == null) return ErrorFactory.NotFound("Bid","Bid not found");
             
             return new BaseResponse<BidDto>(){
                 Message="Bid details fetched successfully",
