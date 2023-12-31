@@ -124,12 +124,12 @@ namespace Persistence.Repositories
                 throw new EthereumVerificationException("Signed message verification failed");
             }
 
-            // user.Nonce = Guid.NewGuid().ToString();
-            // var updateResult = await _userManager.UpdateAsync(user);
-            // if (!updateResult.Succeeded)
-            // {
-            //     throw new DbAccessException("Unable to update user nonce");
-            // }
+            user.Nonce = Guid.NewGuid().ToString();
+            var updateResult = await _userManager.UpdateAsync(user);
+            if (!updateResult.Succeeded)
+            {
+                throw new DbAccessException("Unable to update user nonce");
+            }
 
             var tokenInfo = _jwtService.GenerateToken(user, roles);
 
