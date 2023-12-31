@@ -47,7 +47,7 @@
         {}
     }
 
-    public class MetadataValidationException : Exception
+    public class MetadataValidationException : AppException
     {
         public MetadataValidationException(string message) : base(message)
         {}

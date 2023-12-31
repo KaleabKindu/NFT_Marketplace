@@ -1,16 +1,25 @@
-﻿using ErrorOr;
+﻿using Application.Contracts;
+using ErrorOr;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Application.Common.Responses;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace API.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Authorize]
+    [Route("nft-gebeya/api/v1/[controller]")]
     public class BaseController : ControllerBase
     {
         private IMediator _mediatr;
+
+        protected readonly IUserAccessor _userAccessor;
+
+        public BaseController(IUserAccessor userAccessor)
+        {
+            _userAccessor = userAccessor ?? throw new ArgumentNullException(nameof(userAccessor));
+        }
 
         protected IMediator Mediator => _mediatr ??= HttpContext.RequestServices.GetService<IMediator>();
 

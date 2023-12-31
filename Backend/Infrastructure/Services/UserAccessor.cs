@@ -13,9 +13,9 @@ namespace Infrastructure.Services
         {
             _httpContextAccessor = httpContextAccessor;
         }
-        public string GetUsername()
-        {
-            return _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        public string GetPublicAddress(){
+            return _httpContextAccessor.HttpContext.User.FindFirstValue("PublicAddress");
         }
     }
 }

@@ -8,7 +8,6 @@ namespace Application.Contracts.Persistance
         UserManager<AppUser> UserManager { get; }
         IBidRepository BidRepository {get;}
         IOfferRepository OfferRepository { get; }
-
         ICategoryRepository CategoryRepository { get; }
 
         Task<int> SaveAsync();

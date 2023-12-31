@@ -1,3 +1,5 @@
+#nullable enable
+
 namespace Application.Common.Responses{
     public class BaseResponse<T>
     {
@@ -5,10 +7,5 @@ namespace Application.Common.Responses{
         public string Message { get; set; } = "";
         public string Error { get; set; } = "";
         public T? Value { get; set; }
-
-        // public BaseResponse(T? Value)
-        // {
-        //     this.Value = Value;
-        // }
     }
 }

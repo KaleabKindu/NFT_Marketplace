@@ -2,31 +2,41 @@ using Microsoft.AspNetCore.Mvc;
 using Application.Features.Auth.Commands;
 using Microsoft.AspNetCore.Authorization;
 using Application.Features.Auth.Queries;
+using Application.Features.Auth.Dtos;
+using Application.Contracts;
 
 
 namespace API.Controllers{
-
+    [AllowAnonymous]
     public class AuthController : BaseController
     {
-        [HttpGet("/nonce")]
-        [AllowAnonymous]
-        public async Task<IActionResult> GetUserNonce([FromBody] string PublicAddress)
+        public AuthController(IUserAccessor userAccessor) : base(userAccessor)
+        {
+        }
+
+        [HttpGet("nonce")]
+        public async Task<IActionResult> GetUserNonce([FromQuery] string PublicAddress)
         {
             return HandleResult(await Mediator.Send(new GetUserNonce(){ PublicAddress=PublicAddress }));
         }
 
-        [HttpPost("/register")]
-        [AllowAnonymous]
-        public async Task<IActionResult> Register([FromBody] string PublicAddress)
+        [HttpPost("register")]
+        public async Task<IActionResult> Register([FromQuery] string PublicAddress)
         {
             return HandleResult(await Mediator.Send(new CreateUserCommand(){ PublicAddress=PublicAddress }));
         }
 
-        [HttpPost("/authenticate")]
-        [AllowAnonymous]
-        public async Task<IActionResult> Authenticate([FromBody] string publicAddress, [FromBody] string signedNonce)
+        [HttpPost("authenticate")]
+        public async Task<IActionResult> Authenticate([FromBody] AuthenticateDto authenticateDto)
         {
-            return HandleResult(await Mediator.Send(new AuthenticateUserCommand(){ PublicAddress=publicAddress, SignedNonce=signedNonce }));
+            return HandleResult(
+                await Mediator.Send(
+                    new AuthenticateUserCommand(){ 
+                        PublicAddress=authenticateDto.PublicAddress, 
+                        SignedNonce=authenticateDto.SignedNonce
+                    }
+                )
+            );
         }
     }
 }

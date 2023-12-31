@@ -8,41 +8,46 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.Extensions.Configuration;
 using Application.Contracts;
 using Application.Contracts.Services;
+using System.Security.Claims;
 
 namespace Infrastructure
 {
     public static class InfrastructureServicesRegistration
     {
-        public static IServiceCollection ConfigureInfrastructureServices(this IServiceCollection services,IConfiguration configuration)
+        public static IServiceCollection ConfigureInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
         {
 
-            services.AddIdentityCore<AppUser>(opt =>
-            {
-                opt.Password.RequireNonAlphanumeric = false;
-                opt.User.RequireUniqueEmail = true;
-
-            }).AddEntityFrameworkStores<AppDbContext>();
-
-
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["TokenKey"]));
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(opt =>
+            services.AddIdentity<AppUser, AppRole>().AddEntityFrameworkStores<AppDbContext>();
+            services.AddAuthentication(
+                opt =>
                 {
-                    opt.TokenValidationParameters = new TokenValidationParameters
+                    opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                    opt.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                }).AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
                     {
+                        RequireExpirationTime = true,
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        RoleClaimType = ClaimTypes.Role,
                         ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = key,
-                        ValidateIssuer = false,
-                        ValidateAudience = false
+                        ValidIssuer = configuration["Jwt:Issuer"],
+                        ValidAudience = configuration["Jwt:Audience"],
+                        IssuerSigningKey =
+                            new SymmetricSecurityKey(
+                                Encoding.UTF8.GetBytes(configuration["Jwt:SecurityKey"])
+                        )
                     };
-                });
-
-            services.AddAuthorization(opt =>
-            {
-               
-            });
-            services.AddScoped<ITokenService, TokenService>();
+                }
+            );
+            services.AddAuthorization();
+            
+            services.AddScoped<IJwtService, JwtService>();
             services.AddScoped<IUserAccessor, UserAccessor>();
+            services.AddScoped<IEthereumCryptoService, EthereumCryptoService>();
 
             return services;
         }

@@ -1,3 +1,4 @@
+using Bogus;
 using Domain;
 using ErrorOr;
 using MediatR;
@@ -22,6 +23,8 @@ namespace Application.Features.Auth.Commands
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
+        private static readonly Faker _faker = new();
+
         public CreateUserCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
@@ -40,13 +43,16 @@ namespace Application.Features.Auth.Commands
 
             var user = new AppUser
             {
+                UserName = _faker.Internet.UserName(),
                 PublicAddress = command.PublicAddress,
-                Nonce = Guid.NewGuid().ToString()
+                Nonce = Guid.NewGuid().ToString(),
             };
 
             var result = await _unitOfWork.UserManager.CreateAsync(user);
-            if (result.Succeeded)
-                throw new DbAccessException("Unable to save user to database");
+            var authorizationResult = await _unitOfWork.UserManager.AddToRoleAsync(user, "Trader");
+            if (!result.Succeeded || !authorizationResult.Succeeded){
+                throw new DbAccessException($"Unable to save user to database:{ result.Errors.ToArray()[0]}");
+            }
 
             return new BaseResponse<UserDto>(){
                 Message="User created successfully",

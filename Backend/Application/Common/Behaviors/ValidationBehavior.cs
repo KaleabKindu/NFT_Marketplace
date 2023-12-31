@@ -4,6 +4,7 @@ using MediatR;
 
 namespace RDP.Application.Common.Behaviors;
 
+#nullable enable
 public class ValidationBehavior<TRequest, TResponse> :
     IPipelineBehavior<TRequest, TResponse> where TRequest : IRequest<TResponse> where TResponse : IErrorOr
 {
