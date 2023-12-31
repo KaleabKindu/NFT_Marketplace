@@ -1,10 +1,8 @@
 using ErrorOr;
 using MediatR;
-using Application.Contracts.Persistance;
 using Application.Common.Responses;
 using Application.Features.Auth.Dtos;
-using Application.Common.Errors;
-using Application.Common.Exceptions;
+using Application.Contracts.Persistance;
 
 namespace Application.Features.Auth.Commands
 {
@@ -29,18 +27,14 @@ namespace Application.Features.Auth.Commands
             CancellationToken cancellationToken
         )
         {
-            try{
-                TokenDto tokenInfo = await _unitOfWork.UserRepository.AuthenticateUserAsync(command.PublicAddress, command.SignedNonce);
+            ErrorOr<TokenDto> result = await _unitOfWork.UserRepository.AuthenticateUserAsync(command.PublicAddress, command.SignedNonce);
+            if(result.IsError)
+                return ErrorOr<BaseResponse<TokenDto>>.From(result.Errors);
 
-                return new BaseResponse<TokenDto>(){
-                    Message="User authenticated successfully",
-                    Value= tokenInfo
-                };
-            }catch(NotFoundException exception){
-                return ErrorFactory.NotFound("User", exception.Message);
-            }catch(EthereumVerificationException exception){
-                return ErrorFactory.BadRequestError("User", exception.Message);
-            }
+            return new BaseResponse<TokenDto>(){
+                Message="User authenticated successfully",
+                Value= result.Value
+            };
         }
     }
 }

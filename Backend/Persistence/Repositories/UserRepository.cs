@@ -1,14 +1,15 @@
-using System.Data;
-using System.Runtime.Serialization;
-using Application.Common.Exceptions;
-using Application.Contracts.Persistance;
-using Application.Contracts.Services;
-using Application.Features.Auth.Dtos;
-using Application.Responses;
 using Bogus;
 using Domain;
+using ErrorOr;
+using System.Data;
+using Application.Responses;
+using Application.Common.Errors;
+using Application.Common.Exceptions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Application.Contracts.Services;
+using Application.Features.Auth.Dtos;
+using Application.Contracts.Persistance;
 
 
 namespace Persistence.Repositories
@@ -31,13 +32,12 @@ namespace Persistence.Repositories
         }
 
         // Create
-        public async Task<AppUser> CreateUserAsync(string publicAddress)
+        public async Task<AppUser> CreateOrFetchUserAsync(string publicAddress)
         {
-            if (await _userManager.Users.AnyAsync(user => user.PublicAddress == publicAddress))
-            {
-                throw new DuplicateResourceException("Public address already registered");
-            }
-
+            var existing_user = await _userManager.Users.FirstOrDefaultAsync(u => u.PublicAddress == publicAddress);
+            if (existing_user != null)
+                return existing_user;
+                
             var user = new AppUser
             {
                 UserName = _faker.Internet.UserName(),
@@ -73,19 +73,6 @@ namespace Persistence.Repositories
             };
         }
 
-        public async Task<AppUser?> FindUserByPublicAddressAsync(string publicAddress)
-        {
-            return await _userManager.Users.FirstOrDefaultAsync(u => u.PublicAddress == publicAddress);
-        }
-
-        public async Task<string> GetUserNonceAsync(string publicAddress){
-            var user = await FindUserByPublicAddressAsync(publicAddress);
-            if (user == null) 
-                throw new NotFoundException("User not found");
-
-            return user.Nonce;
-        }
-
         // Delete
         public async Task DeleteUserAsync(string publicAddress)
         {
@@ -106,12 +93,12 @@ namespace Persistence.Repositories
             return await _userManager.Users.AnyAsync(u => u.PublicAddress == publicAddress);
         }
 
-        public async Task<TokenDto> AuthenticateUserAsync(string publicAddress, string signedNonce)
+        public async Task<ErrorOr<TokenDto>> AuthenticateUserAsync(string publicAddress, string signedNonce)
         {
             var user = await _userManager.Users.FirstOrDefaultAsync(u => u.PublicAddress == publicAddress);
             if (user == null)
             {
-                throw new NotFoundException($"User with public address {publicAddress} not found");
+                return ErrorFactory.NotFound("User", $"User with public address `{publicAddress}` not found"); 
             }
 
             var roles = await _userManager.GetRolesAsync(user);
@@ -121,7 +108,7 @@ namespace Persistence.Repositories
             if (!isSignatureValid)
             {
                 await _userManager.DeleteAsync(user);
-                throw new EthereumVerificationException("Signed message verification failed");
+                return ErrorFactory.BadRequestError("User", "Invalid signed message"); 
             }
 
             user.Nonce = Guid.NewGuid().ToString();
