@@ -75,7 +75,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI(c =>
     {
         c.RoutePrefix = "swagger";
-        c.SwaggerEndpoint("v1/swagger.json", "NFT Marketplace API v1");
+        c.SwaggerEndpoint("v1/swagger.json", "NFT Gebeya Backend API v1");
     });
 }
 
