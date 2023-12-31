@@ -2,7 +2,7 @@
 using System.Net;
 using System.Text.Json;
 using Application.Common.Exceptions;
-using Application.Common.Responses;
+using ErrorOr;
 
 
 namespace API.MiddleWares
@@ -14,7 +14,7 @@ namespace API.MiddleWares
         public readonly IHostEnvironment _env;
         public readonly ILogger<ExceptionHandler> _logger;
         public static JsonSerializerOptions options = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
-        private BaseResponse<Unit> response { get; set; }
+        private ErrorOr<Unit> response { get; set; }
    
         public ExceptionHandler(RequestDelegate next, ILogger<ExceptionHandler> logger, IHostEnvironment env)
         {
@@ -38,11 +38,8 @@ namespace API.MiddleWares
                 failed = true;
                 context.Response.StatusCode = (int)HttpStatusCode.Forbidden;
                 _logger.LogError(ex, ex.Message);
-                response = new BaseResponse<Unit>(){
-                    Success = false,
-                    Message = ex.Message,
-                    Value = Unit.Value
-                };
+                response = Error.Failure("OwnershipVerificationException", ex.Message);
+                
             }
             catch (InsufficientFundsException ex)
             {
@@ -50,11 +47,7 @@ namespace API.MiddleWares
                 failed = true;
                 context.Response.StatusCode = (int)HttpStatusCode.PreconditionFailed;
                 _logger.LogError(ex, ex.Message);
-                response = new BaseResponse<Unit>(){
-                    Success = false,
-                    Message = ex.Message,
-                    Value = Unit.Value
-                };
+                response = Error.Validation("Issufficient Funds",ex.Message);
             }
             catch (TransactionFailureException ex)
             {
@@ -62,11 +55,7 @@ namespace API.MiddleWares
                 failed = true;
                 context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
                 _logger.LogError(ex, ex.Message);
-                response = new BaseResponse<Unit>(){
-                    Success = false,
-                    Message = ex.Message,
-                    Value = Unit.Value
-                };
+                response = Error.Failure("TransactionFailureException", ex.Message);
             }
             catch (MetadataValidationException ex)
             {
@@ -74,11 +63,7 @@ namespace API.MiddleWares
                 failed = true;
                 context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
                 _logger.LogError(ex, ex.Message);
-                response = new BaseResponse<Unit>(){
-                    Success = false,
-                    Message = ex.Message,
-                    Value = Unit.Value
-                };
+                response = Error.Validation("MetadataValidationException",ex.Message);
             }
             catch (ContractDeploymentException ex)
             {
@@ -86,11 +71,7 @@ namespace API.MiddleWares
                 failed = true;
                 context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
                 _logger.LogError(ex, ex.Message);
-                response = new BaseResponse<Unit>(){
-                    Success = false,
-                    Message = ex.Message,
-                    Value = Unit.Value
-                };
+                response = Error.Failure("ContractDeploymentException", ex.Message);
             }
             catch (BlockchainConnectivityException ex)
             {
@@ -98,11 +79,7 @@ namespace API.MiddleWares
                 failed = true;
                 context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
                 _logger.LogError(ex, ex.Message);
-                response = new BaseResponse<Unit>(){
-                    Success = false,
-                    Value = Unit.Value,
-                    Message = ex.Message,
-                };
+                response = Error.Failure("BlockchainConnectivityException", ex.Message);
             }
             catch(AppException ex)
             {
@@ -110,11 +87,7 @@ namespace API.MiddleWares
                 failed = true;
                 context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
                 _logger.LogError(ex, ex.Message);
-                response = new BaseResponse<Unit>() {
-                    Success = false,
-                    Message = ex.Message,
-                    Value = Unit.Value
-                };
+                response = Error.Failure("AppException", ex.Message);
 
             }
             catch(Exception ex)
@@ -123,11 +96,7 @@ namespace API.MiddleWares
                 failed = true;
                 context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
                 _logger.LogError(ex, ex.Message);
-                response = new BaseResponse<Unit>() {
-                    Success = false,
-                    Error = "Unknown Internal Server Error",
-                    Value = Unit.Value
-                };
+                response = Error.Failure("UnkNown", ex.Message);
             }
             finally
             {
