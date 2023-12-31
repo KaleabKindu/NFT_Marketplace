@@ -31,7 +31,7 @@ namespace Application.Features.Bids.Commands
         {
             var Bid = await _unitOfWork.BidRepository.GetByIdAsync(request.Id);
 
-            if (Bid == null) return ErrorFactory.NotFound("Bid");
+            if (Bid == null) return ErrorFactory.NotFound("Bid", "Bid not found");
             
             _unitOfWork.BidRepository.DeleteAsync(Bid);
 

@@ -30,7 +30,7 @@ namespace Application.Features.Categories.Commands
         {
             var category = await _unitOfWork.CategoryRepository.GetByIdAsync(request.Id);
 
-            if (category == null) return ErrorFactory.NotFound("Category");;
+            if (category == null) return ErrorFactory.NotFound("Category", "Category not found");
             
             _unitOfWork.CategoryRepository.DeleteAsync(category);
 

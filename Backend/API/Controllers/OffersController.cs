@@ -2,11 +2,18 @@
 using Application.Features.Offers.Dtos;
 using Application.Features.Offers.Queries;
 using Application.Features.Offers.Commands;
+using Microsoft.AspNetCore.Authorization;
+using Application.Contracts;
 
 namespace API.Controllers
 {
-    public class OffersController : BasaApiController
+    [Authorize]
+    public class OffersController : BaseController
     {
+        public OffersController(IUserAccessor userAccessor) : base(userAccessor)
+        {
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetAllOffers([FromQuery] int PageNumber = 1, [FromQuery] int PageSize = 10)
         {

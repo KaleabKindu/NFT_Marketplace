@@ -36,7 +36,7 @@ namespace Application.Features.Bids.Commands
                 request.Bid.Id
             );
 
-            if (Bid == null) return ErrorFactory.NotFound("Bid");
+            if (Bid == null) return ErrorFactory.NotFound("Bid", "Bid not found");
         
             _mapper.Map(request.Bid, Bid);
 

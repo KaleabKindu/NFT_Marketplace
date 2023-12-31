@@ -35,7 +35,7 @@ namespace Application.UnitTest.Offertest.Query
         {
             var result = await _handler.Handle(new GetAllOfferQuery(), CancellationToken.None);
             result.Value.ShouldBeOfType<List<OfferDto>>();
-            result.Value.Count().ShouldBe(2);
+            result.Value.Count.ShouldBe(2);
         }
     }
 }
