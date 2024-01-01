@@ -17,7 +17,7 @@ namespace Application.UnitTest.Offertest.Command
         private readonly Mock<IUnitOfWork> _mockRepo;
         private readonly CreateOfferDto _offerDto;
         private readonly CreateOfferCommandHandler _handler;
-        private readonly IUserAccessor _userAccessor;
+        // private readonly IUserAccessor _userAccessor;
 
         public CreateOfferCommandHandlerTest()
         {

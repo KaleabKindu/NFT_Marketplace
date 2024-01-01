@@ -16,7 +16,7 @@ type Props = {}
 const Notifications = (props: Props) => {
   return (
     <DropdownMenu>
-        <DropdownMenuTrigger>
+        <DropdownMenuTrigger asChild>
           <Button variant='ghost' className='rounded-full' >
             <MdNotifications size={30}/>
           </Button>

@@ -1,29 +1,40 @@
-﻿using Application.Contracts.Persistance;
-using Domain;
+﻿using Domain;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.DependencyInjection;
+using Application.Contracts.Services;
+using Application.Contracts.Persistance;
 
 namespace Persistence.Repositories
 {
     public class UnitOfWork : IUnitOfWork
     {
         private readonly AppDbContext _dbContext;
-        private readonly IServiceProvider _services;
-        private UserManager<AppUser> _usermanager;
+        private IUserRepository _userRepository;
+        private IBidRepository _bidRepository;
         private IOfferRepository _offerRepository;
+        private ICategoryRepository _CategoryRepository;
 
-        public UnitOfWork(AppDbContext dbContext,IServiceProvider services)
+        public UnitOfWork(AppDbContext dbContext, UserManager<AppUser> userManager, IJwtService jwtService, IEthereumCryptoService ethereumCryptoService)
         {
             _dbContext = dbContext;
-            _services = services;
+            _userRepository = new UserRepository(userManager, jwtService, ethereumCryptoService);
         }
                 
-        public UserManager<AppUser> UserManager
+        public IUserRepository UserRepository 
         {
             get
             {
-                _usermanager ??= _services.GetService<UserManager<AppUser>>();
-                return _usermanager;
+                return _userRepository;
+            }
+        }
+
+        public IBidRepository BidRepository
+        {
+            get
+            {
+                if (_bidRepository == null)
+                    _bidRepository = new BidRepository(_dbContext);
+
+                return _bidRepository;
             }
         }
 
@@ -32,6 +43,14 @@ namespace Persistence.Repositories
             get {                
                 _offerRepository ??= new OfferRepository(_dbContext);
                 return _offerRepository;
+            }
+        }
+
+        public ICategoryRepository CategoryRepository
+        {
+            get {                
+                _CategoryRepository ??= new CategoryRepository(_dbContext);
+                return _CategoryRepository;
             }
         }
 
