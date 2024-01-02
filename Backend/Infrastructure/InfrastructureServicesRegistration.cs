@@ -9,6 +9,10 @@ using Microsoft.Extensions.Configuration;
 using Application.Contracts;
 using Application.Contracts.Services;
 using System.Security.Claims;
+using Infrastructure.Services.Events;
+using Application.Events;
+using Application.Events.Handlers;
+using RabbitMQ.Client;
 
 namespace Infrastructure
 {
@@ -48,6 +52,33 @@ namespace Infrastructure
             services.AddScoped<IJwtService, JwtService>();
             services.AddScoped<IUserAccessor, UserAccessor>();
             services.AddScoped<IEthereumCryptoService, EthereumCryptoService>();
+
+            // Register event handlers
+            services.AddTransient<IEventHandler<ValueSetEvent>, ValueSetEventHandler>();
+
+            services.AddSingleton<IConnection>(sp =>
+                {
+                    var factory = new ConnectionFactory
+                    {
+                        Uri = new Uri(configuration["RabbitMQ:ConnectionString"]),
+                        AutomaticRecoveryEnabled = true
+                    };
+                    return  factory.CreateConnection();
+                })
+                .AddHealthChecks()
+                .AddRabbitMQ();
+
+            // Register message queue (e.g., RabbitMQ)
+            services.AddSingleton<RabbitMqService>();
+
+            // Register event emitting service and the processor
+            services.AddTransient<PublisherService>();
+            services.AddTransient<ConsumerService>();
+
+
+            // Add hosted service for event queueing and processing
+            services.AddHostedService(provider => provider.GetRequiredService<PublisherService>());
+            services.AddHostedService(provider => provider.GetRequiredService<ConsumerService>());
 
             return services;
         }
