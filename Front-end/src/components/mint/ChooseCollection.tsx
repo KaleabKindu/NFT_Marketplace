@@ -13,13 +13,13 @@ const ChooseCollection = (props: Props) => {
     const [ selected, setSelected ] = useState(0)
   return (
     <div>
-        <TypographyH4 text='Choose Collection'/>
+        <TypographyH4 text='Add To a Collection(Optional)'/>
         <TypographySmall text='Choose an exiting collection or create a new one'/>
         <ScrollArea>
             <div className="flex gap-5 mt-5">
                 {
                     Array.from({length:3}).map((_, index) => 
-                     <Button key={index} variant={index + 1 === selected ?'default':'ghost'} className="flex flex-col gap-5 p-5 border whitespace-normal text-left items-stretch rounded-md  h-auto w-[15rem]" onClick={() => setSelected(index + 1)}>
+                     <Button type="button" key={index} variant={index + 1 === selected ?'default':'ghost'} className="flex flex-col gap-5 p-5 border whitespace-normal text-left items-stretch rounded-md  h-auto w-[15rem]" onClick={() => setSelected(index + 1)}>
                         <div className="flex justify-between items-center">
                             <Avatar className="w-10 h-10"/>
                             {index + 1 === selected && <IoCheckmarkCircle size={30}/>}
@@ -28,7 +28,7 @@ const ChooseCollection = (props: Props) => {
                      </Button>
                     )
                 }
-                <Button variant={'ghost'} className="flex flex-col gap-5 p-5 border whitespace-normal text-left items-center rounded-md  h-auto w-[15rem]">
+                <Button type="button" variant={'ghost'} className="flex flex-col gap-5 p-5 border whitespace-normal text-left items-center rounded-md  h-auto w-[15rem]">
                     <MdAdd size={30} />
                 </Button>
             </div>

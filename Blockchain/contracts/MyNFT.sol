@@ -14,7 +14,7 @@ contract MyNFT is ERC721URIStorage, Ownable {
     Counters.Counter private _tokenIds;
     Counters.Counter private _productsSold;
 
-    uint256 _listingPrice = 0.0025 ether;
+    uint256 _listingPrice = 0.00000000025 ether;
 
     mapping(uint256 => Product) public idToProduct;
 
@@ -23,30 +23,38 @@ contract MyNFT is ERC721URIStorage, Ownable {
 
     struct Product {
         uint256 tokenId;
+        string name;
+        string description;
+        string image;
+        string files;
         address payable seller;
         address payable owner;
-        address payable original_owner;
+        address payable creator;
         uint256 price;
         bool sold;
         uint256 auctionId;
-        uint256 royaltyPercentage;
+        uint256 royalty;
     }
 
     event productCreated(
-        uint256 indexed tokenId,
-        address seller,
-        address owner,
-        address original_owner,
+        uint256 tokenId,
+        string name,
+        string description,
+        string image,
+        string files,
+        address payable seller,
+        address payable owner,
+        address payable creator,
         uint256 price,
         bool sold,
         uint256 auctionId,
-        uint256 royaltyPercentage
+        uint256 royalty
     );
 
 
-    constructor(address initialOwner) ERC721("NFT Token", "MTK")
+    constructor() ERC721("NFT Token", "MTK")
     {
-        Ownable(initialOwner);
+        Ownable(msg.sender);
     }
 
     function updateListingPrice(uint256 price) public onlyOwner {
@@ -58,43 +66,70 @@ contract MyNFT is ERC721URIStorage, Ownable {
     }
 
     function mintProduct(
-        string memory uri,
+        string memory name,
+        string memory description,
+        string memory image,
+        string memory files,
         uint256 price,
         bool auction,
-        uint256 biddingDuration,
-        uint256 royaltyPercentage
+        uint256 auctionEnd,
+        uint256 royalty
         ) public payable returns(uint256) {
 
         require(price > 0, 'Price must greater than 0');
         require(msg.value == _listingPrice, 'Listing Payment must be equal to listing price');
-        require(royaltyPercentage <= 10, 'Royalty percentage must be between 0 and 10');
+        require(royalty <= 10, 'Royalty percentage must be between 0 and 10');
 
         _tokenIds.increment();
         
         uint256 nextTokenId =_tokenIds.current();
         _safeMint(msg.sender, nextTokenId);
-        _setTokenURI(nextTokenId, uri);
+        _setTokenURI(nextTokenId, files);
 
-        createProduct(nextTokenId, price, auction, biddingDuration, royaltyPercentage);
+        createProduct(
+            nextTokenId,
+            name,
+            description,
+            image,
+            files,
+            price,
+            auction,
+            auctionEnd,
+            royalty
+        );
 
 
         return nextTokenId;
     }
 
-    function createProduct(uint256 tokenId, uint256 price, bool auction, uint256 biddingDuration, uint256 royaltyPercentage) private {
+    function createProduct(
+        uint256 tokenId, 
+        string memory name,
+        string memory description,
+        string memory image,
+        string memory files,
+        uint256 price,
+        bool auction,
+        uint256 auctionEnd,
+        uint256 royalty
+        ) private {
         uint256 auctionId = 0;
         if (auction) {
-            auctionId = createAuction(tokenId, price, biddingDuration);
+            auctionId = createAuction(tokenId, price, auctionEnd);
         }
         idToProduct[tokenId] = Product(
              tokenId,
+             name,
+             description,
+             image,
+             files,
              payable(msg.sender),
              payable(address(this)),  
              payable(msg.sender),
              price,
              false,
              auctionId,
-             royaltyPercentage
+             royalty
         );
         Products.push(idToProduct[tokenId]);
 
@@ -102,25 +137,26 @@ contract MyNFT is ERC721URIStorage, Ownable {
 
         emit productCreated(
             tokenId,
-            msg.sender,
-            address(this),
-            msg.sender,
+            name,
+            description,
+            image,
+            files,
+            payable(msg.sender),
+            payable(address(this)),  
+            payable(msg.sender),
             price,
             false,
             auctionId,
-            royaltyPercentage
+            royalty
         );
     }
 
-    function createAuction(uint256 tokenId, uint256 floorPrice, uint256 biddingDuration) public onlyOwner returns (uint256){
-        require(idToProduct[tokenId].owner == address(this), "NFT must be owned by the contract");
-        require(idToProduct[tokenId].auctionId == 0, "NFT is already in an auction");
-
+    function createAuction(uint256 tokenId, uint256 floorPrice, uint256 auctionEnd) public returns (uint256){
         // Deploy the auction contract
         NFTAuction auctionContract = new NFTAuction();
 
         // Create the auction
-        uint256 auctionId = auctionContract.createAuction(address(this), tokenId, floorPrice, biddingDuration);
+        uint256 auctionId = auctionContract.createAuction(address(this), tokenId, floorPrice, auctionEnd);
 
         // Update the product with the auction details
         idToProduct[tokenId].auctionId = auctionId;
@@ -144,7 +180,7 @@ contract MyNFT is ERC721URIStorage, Ownable {
 
     function buyProduct( uint256 tokenId) public payable {
         uint256 price = idToProduct[tokenId].price;
-        uint256 royaltyAmount = (price * idToProduct[tokenId].royaltyPercentage) / 100;
+        uint256 royaltyAmount = (price * idToProduct[tokenId].royalty) / 100;
         require(msg.value == price, "Please Top up the asking price to purchase the product");
 
         idToProduct[tokenId].owner = payable(msg.sender);
@@ -154,11 +190,11 @@ contract MyNFT is ERC721URIStorage, Ownable {
         _transfer(address(this), msg.sender, tokenId);
 
         payable(owner()).transfer(_listingPrice);
-        if(idToProduct[tokenId].seller == idToProduct[tokenId].original_owner){
+        if(idToProduct[tokenId].seller == idToProduct[tokenId].creator){
             payable(idToProduct[tokenId].seller).transfer(price);
         }else{
             payable(idToProduct[tokenId].seller).transfer(price - royaltyAmount);
-            payable(idToProduct[tokenId].original_owner).transfer(royaltyAmount); 
+            payable(idToProduct[tokenId].creator).transfer(royaltyAmount); 
         }
     }
 

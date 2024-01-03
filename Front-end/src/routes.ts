@@ -13,5 +13,6 @@ export enum Routes {
     USERS = '/explore/users',
 
 
+    ETHER_TRANSACTIONS = 'https://etherscan.io/tx'
 
 }
