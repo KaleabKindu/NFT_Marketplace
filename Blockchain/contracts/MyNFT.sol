@@ -14,7 +14,7 @@ contract MyNFT is ERC721URIStorage, Ownable {
     Counters.Counter private _tokenIds;
     Counters.Counter private _productsSold;
 
-    uint256 _listingPrice = 0.0025 ether;
+    uint256 _listingPrice = 0.00000000025 ether;
 
     mapping(uint256 => Product) public idToProduct;
 
