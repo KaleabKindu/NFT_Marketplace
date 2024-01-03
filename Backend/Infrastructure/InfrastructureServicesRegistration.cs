@@ -13,6 +13,7 @@ using Infrastructure.Services.Events;
 using Application.Events;
 using Application.Events.Handlers;
 using RabbitMQ.Client;
+using Microsoft.Extensions.Logging;
 
 namespace Infrastructure
 {
@@ -71,15 +72,36 @@ namespace Infrastructure
             // Register message queue (e.g., RabbitMQ)
             services.AddSingleton<RabbitMqService>();
 
-            // Register event emitting service and the processor
-            services.AddTransient<PublisherService>();
-            services.AddTransient<ConsumerService>();
+            #region ValueSet Event
+            /***
+                Register and host `ValueSet` event listening service
+                to handle `ValueSet` events emitted from the smart contract
+            ***/ 
+
+            // Register and host valueset event listening service
+            services.AddTransient<EventListeningService<ValueSetEvent>>();
+            services.AddHostedService(provider => provider.GetRequiredService<EventListeningService<ValueSetEvent>>());
+                        
+            // Register and host valueset event processing service
+            services.AddTransient<EventProcessingService<ValueSetEvent>>();
+            services.AddHostedService(provider => provider.GetRequiredService<EventProcessingService<ValueSetEvent>>());
+            
+            #endregion ValueSet Event
 
 
-            // Add hosted service for event queueing and processing
-            services.AddHostedService(provider => provider.GetRequiredService<PublisherService>());
-            services.AddHostedService(provider => provider.GetRequiredService<ConsumerService>());
+            #region Other Event
+            /***
+                Register and host `Other` event listening service
+                to handle `Other` events emitted from the smart contract
+            ***/ 
+            #endregion Other Event
 
+            services.AddLogging(builder =>
+            {
+                builder.SetMinimumLevel(LogLevel.Debug);
+                builder.AddConsole(); 
+            });
+            
             return services;
         }
     }
