@@ -2,12 +2,12 @@ import { ethers } from "hardhat";
 
 async function main() {
 
-  const store = await ethers.deployContract("Store");
+  const contract = await ethers.deployContract("MyNFT");
 
-  await store.waitForDeployment();
+  await contract.waitForDeployment();
 
   console.log(
-    `Deployed to address ${store.target}`
+    `Deployed to address ${contract.target}`
   );
 }
 

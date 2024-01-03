@@ -41,9 +41,9 @@ contract NFTAuction {
         address _tokenContract,
         uint256 _tokenId,
         uint256 _floorPrice,
-        uint256 _biddingDuration
+        uint256 auctionEnd
     ) external returns (uint256)  {
-        require(_biddingDuration > 0, "Auction duration must be greater than 0");
+        require(auctionEnd > block.timestamp, "Auction End must be different from now");
 
         auctionIds.increment();
         uint256 auctionId = auctionIds.current();
@@ -56,7 +56,7 @@ contract NFTAuction {
             floorPrice: _floorPrice,
             highestBid: _floorPrice,
             highestBidder: address(0),
-            biddingEnd: block.timestamp + _biddingDuration,
+            biddingEnd: auctionEnd,
             ended: false
         });
 
