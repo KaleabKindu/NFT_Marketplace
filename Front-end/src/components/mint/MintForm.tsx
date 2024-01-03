@@ -121,7 +121,7 @@ const MintForm = (props: Props) => {
         image:`https://nftstorage.link/ipfs/${image_cid}/${image?.name}`,
         files:`ipfs://${files_cid}`,
       }
-      prepareContractWrite(true, 0.0025)
+      prepareContractWrite(true, process.env.NEXT_PUBLIC_LISTING_PRICE as string)
       prepareArguments(
         [
           metadata.name,

@@ -1,7 +1,6 @@
 import { ReactNode, createContext, useEffect, useState } from 'react'
 import { parseEther } from 'viem'
 import { useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
-import  { address } from '@/../../Blockchain/constants' 
 import { useToast } from "@/components/ui/use-toast"
 import { ToastAction } from '@/components/ui/toast'
 import Link from 'next/link'
@@ -15,7 +14,7 @@ interface ContractWriteContextProps {
   transactionSuccess:boolean,
   writing:boolean,
   writeSuccess:boolean,
-  prepareContractWrite:(a:boolean, b:number) => void,
+  prepareContractWrite:(a:boolean, b:string) => void,
   prepareArguments:(a:any[]) => void
 }
 
@@ -26,7 +25,7 @@ export const ContractWriteContext = createContext<ContractWriteContextProps>({
   transactionSuccess:false,
   writing:false,
   writeSuccess:false,
-  prepareContractWrite:(a:boolean, b:number) => {},
+  prepareContractWrite:(a:boolean, b:string) => {},
   prepareArguments:(a:any[]) => {}
 })
 
@@ -45,7 +44,7 @@ const ContractWrite = ({children}: Props) => {
     isSuccess:prepared,
     isError:preparingError 
   } = usePrepareContractWrite({
-      address:address,
+      address:process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as `0x${string}`,
       abi:abi,
       args:args,
       functionName:'mintProduct',
@@ -104,9 +103,9 @@ const ContractWrite = ({children}: Props) => {
       }
   },[prepared, write])
 
-  const prepareContractWrite = (a:boolean, value:number) => {
+  const prepareContractWrite = (a:boolean, value:string) => {
       setPrepare(a)
-      setValue(value.toString())
+      setValue(value)
   }
   const prepareArguments = (a:any[]) => setArgs(a)
   const isLoading = writing || preparing || waitingForTransaction
