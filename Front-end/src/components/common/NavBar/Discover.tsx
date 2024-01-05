@@ -8,6 +8,7 @@ import {
   } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button";
 import { discover } from "@/data";
+import { MdOutlineKeyboardArrowDown } from "react-icons/md";
 
 type Props = {}
 
@@ -16,7 +17,10 @@ const Discover = (props: Props) => {
   return (
     <DropdownMenu>
         <DropdownMenuTrigger asChild>
-            <Button variant='ghost' className='rounded-full' size='lg'>Discover</Button>
+            <Button variant='ghost' className='rounded-full' size='lg'>
+                Discover
+                <MdOutlineKeyboardArrowDown  className='ml-3' />
+            </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
             {

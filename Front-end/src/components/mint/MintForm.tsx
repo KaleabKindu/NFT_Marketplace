@@ -115,33 +115,36 @@ const MintForm = (props: Props) => {
       setUploading(true)
       const image_cid = await storeAsset(image ? [image]:null)
       const files_cid = await storeAsset(files)
-      setUploadSuccess(true)
-      const metadata:NFT = {
-        ...others,
+      const metadata = {
+        name:others.name,
+        description:others.description,
         image:`https://nftstorage.link/ipfs/${image_cid}/${image?.name}`,
         files:`ipfs://${files_cid}`,
       }
+      const metadata_json = JSON.stringify(metadata)
+      const metadata_file = new File([metadata_json], 'metadata.json', { type:'application/json' })
+
+      const metadata_cid = await storeAsset([metadata_file])
+      setUploadSuccess(true)
+
       prepareContractWrite(true, process.env.NEXT_PUBLIC_LISTING_PRICE as string)
       prepareArguments(
         [
-          metadata.name,
-          metadata.description,
-          metadata.image,
-          metadata.files,
-          metadata.price,
-          metadata.auction,
-          metadata.auctionEnd,
-          metadata.royalty
+          `ipfs://${metadata_cid}`,
+          others.price,
+          others.auction,
+          others.auctionEnd,
+          others.royalty
         ])
     } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "Uh oh! Something went wrong.",
-        description: "There was a problem with uploading your files.",
-        action: <ToastAction altText="Try again">Try again</ToastAction>,
-      })
-      setOpen(false)
-      console.log('error', error)
+        toast({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description: "There was a problem with uploading your files.",
+          action: <ToastAction altText="Try again">Try again</ToastAction>,
+        })
+        setOpen(false)
+        console.log('error', error)
     } finally {
       setUploading(false)
     }

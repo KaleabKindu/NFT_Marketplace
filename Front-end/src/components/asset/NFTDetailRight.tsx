@@ -74,15 +74,11 @@ const NFTDetailRight = (props: Props) => {
                     </div>
                     <div className='flex gap-5'>
                         <Button className='flex-1' >Place Bid</Button>
-                        <Button className='flex-1' variant={'secondary'}>Make Offer</Button>
+                        <Button className='flex-1' variant={'secondary'}>Buy Now</Button>
                     </div>
                 </div>
             </div>
             <Accordion type="single" collapsible defaultValue='item-1'>
-                <AccordionItem value="item-1">
-                    <AccordionTrigger className="bg-accent text-accent-foreground px-5 mb-5 rounded-t-md">Offers</AccordionTrigger>
-                    <AccordionContent className=""><OffersTable/></AccordionContent>
-                </AccordionItem>
                 <AccordionItem value="item-2">
                     <AccordionTrigger className="bg-accent text-accent-foreground px-5 rounded-t-md">Bids</AccordionTrigger>
                     <AccordionContent className=""><BidsTable/></AccordionContent>
