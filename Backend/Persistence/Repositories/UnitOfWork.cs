@@ -1,4 +1,6 @@
-﻿using Domain;
+﻿using Application.Contracts.Persistance;
+using Application.Contracts.Presistence;
+using Domain;
 using Microsoft.AspNetCore.Identity;
 using Application.Contracts.Services;
 using Application.Contracts.Persistance;
@@ -8,6 +10,9 @@ namespace Persistence.Repositories
     public class UnitOfWork : IUnitOfWork
     {
         private readonly AppDbContext _dbContext;
+        private readonly IServiceProvider _services;
+        private UserManager<AppUser> _usermanager;
+        private IAssetRepository _assetRepository;
         private IUserRepository _userRepository;
         private IBidRepository _bidRepository;
         private IOfferRepository _offerRepository;
@@ -51,6 +56,14 @@ namespace Persistence.Repositories
             get {                
                 _CategoryRepository ??= new CategoryRepository(_dbContext);
                 return _CategoryRepository;
+            }
+        }
+
+        public IAssetRepository AssetRepository {
+            get{
+                if (_assetRepository == null)
+                    _assetRepository =  new AssetRepository(_dbContext);
+            return _assetRepository;
             }
         }
 

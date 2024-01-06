@@ -2,7 +2,7 @@ using ErrorOr;
 using FluentValidation;
 using MediatR;
 
-namespace RDP.Application.Common.Behaviors;
+namespace Application.Common.Behaviors;
 
 #nullable enable
 public class ValidationBehavior<TRequest, TResponse> :
