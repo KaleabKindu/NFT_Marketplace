@@ -1,4 +1,5 @@
 ﻿using Domain;
+using Domain.Asset;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -49,6 +50,7 @@ namespace Persistence
         public DbSet<Offer> Offers { get; set; }
         public DbSet<Category> Category { get; set; }
         public DbSet<Bid> Bids { get; set; }
+        public DbSet<Asset> Assets{get; set;}
 
     }
 }
