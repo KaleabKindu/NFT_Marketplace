@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 
 
-namespace Infrustructure.Services
+namespace Infrastructure.Services
 {
     public class UserAccessor : IUserAccessor
     {
@@ -13,9 +13,9 @@ namespace Infrustructure.Services
         {
             _httpContextAccessor = httpContextAccessor;
         }
-        public string GetUsername()
-        {
-            return _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        public string GetPublicAddress(){
+            return _httpContextAccessor.HttpContext.User.FindFirstValue("PublicAddress");
         }
     }
 }

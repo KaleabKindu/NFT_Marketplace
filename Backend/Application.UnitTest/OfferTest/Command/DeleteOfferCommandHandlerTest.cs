@@ -19,7 +19,7 @@ namespace Application.UnitTest.Offertest.Command
         private readonly Mock<IUnitOfWork> _mockRepo;
         private long _id { get; set; }
         private readonly DeleteOfferCommandHandler _handler;
-        private readonly CreateOfferDto _offerDto;
+        // private readonly CreateOfferDto _offerDto;
         public DeleteOfferCommandHandlerTest()
         {
             _mockRepo = MockUnitOfWork.GetUnitOfWork();

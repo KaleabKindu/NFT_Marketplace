@@ -14,16 +14,16 @@ namespace Application.UnitTest.Mocks
                     Id = Guid.NewGuid().ToString(),
                     UserName = "myUserName1",
                     Email = "email1@gmail.com",
-                    Password = "password",
-                    FullName  = "this is may name "
+                    // Password = "password",
+                    // FullName  = "this is may name "
                 },
                 new AppUser
                 {
                     Id = Guid.NewGuid().ToString(),
                     UserName = "myUserName2",
                     Email = "email2@gmail.com",
-                    Password = "password",
-                    FullName  = "this is may name "
+                    // Password = "password",
+                    // FullName  = "this is may name "
                 }
             };
                 

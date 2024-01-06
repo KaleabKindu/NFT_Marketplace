@@ -4,7 +4,7 @@ using Application.Features.Offers.Dtos;
 using Application.Features.Assets.Dtos;
 using AutoMapper;
 using Domain;
-using Domain.Asset;
+using Application.Features.Auth.Dtos;
 
 namespace Application.Profiles
 {
@@ -12,6 +12,14 @@ namespace Application.Profiles
     {
         public MappingProfile()
         {
+            #region AppUser 
+            CreateMap<AppUser, UserDto>().ReverseMap();
+            // CreateMap<CreateOfferDto,Offer>();
+            // CreateMap<UpdateOfferDto,Offer>()
+            //     .ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null));
+
+            #endregion
+
             #region Offer 
             CreateMap<Offer, OfferDto>().ReverseMap();
             CreateMap<CreateOfferDto,Offer>();

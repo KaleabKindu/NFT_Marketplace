@@ -5,21 +5,21 @@ namespace Application.Common.Errors{
     public static class ErrorFactory
     {
         // Read
-        public static Error NotFound(string entityName) => Error.NotFound($"{entityName}.NotFound", $"{entityName} not found");
+        public static Error NotFound(string entityName, string errorMessage) => Error.NotFound($"{entityName}.NotFound", $"{errorMessage}");
 
         // Create
-        public static Error DuplicateCode(string entityName) => Error.Conflict($"{entityName}.DuplicateCode", $"Duplicate code for {entityName}");
+        public static Error Conflict(string entityName, string errorMessage) => Error.Conflict($"{entityName}.Conflict", $"{errorMessage}");
 
         // Validation errors for Create/Update
-        public static Error ValidationFailed(string entityName, string errorMessage) => Error.Validation($"{entityName}.ValidationFailed", $"{entityName} validation failed: {errorMessage}");
+        public static Error ValidationFailed(string entityName, string errorMessage) => Error.Validation($"{entityName}.ValidationFailed", $"{errorMessage}");
 
         // Authorization error
-        public static Error AuthorizationError(string entityName) => Error.Unauthorized($"{entityName}.AuthorizationError", $"Not authorized to perform this operation on {entityName}");
+        public static Error AuthorizationError(string entityName, string errorMessage) => Error.Unauthorized($"{entityName}.AuthorizationError", $"{errorMessage}");
 
         // Not supported error
-        public static Error NotSupportedError(string entityName) => Error.Unexpected($"{entityName}.NotSupported", $"{entityName} operation not supported");
+        public static Error NotSupportedError(string entityName, string errorMessage) => Error.Unexpected($"{entityName}.NotSupported", $"{errorMessage}");
 
         // Bad request error
-        public static Error BadRequestError(string entityName, string errorMessage) => Error.Failure($"{entityName}.BadRequest", $"Bad request for {entityName}: {errorMessage}");
+        public static Error BadRequestError(string entityName, string errorMessage) => Error.Failure($"{entityName}.BadRequest", $"{errorMessage}");
     }
 }

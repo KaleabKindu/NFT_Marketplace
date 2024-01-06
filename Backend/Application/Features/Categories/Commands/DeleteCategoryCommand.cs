@@ -1,4 +1,3 @@
-using Application.Common;
 using Application.Common.Errors;
 using Application.Common.Exceptions;
 using Application.Common.Responses;
@@ -31,7 +30,7 @@ namespace Application.Features.Categories.Commands
         {
             var category = await _unitOfWork.CategoryRepository.GetByIdAsync(request.Id);
 
-            if (category == null) return ErrorFactory.NotFound("Category");;
+            if (category == null) return ErrorFactory.NotFound("Category", "Category not found");
             
             _unitOfWork.CategoryRepository.DeleteAsync(category);
 

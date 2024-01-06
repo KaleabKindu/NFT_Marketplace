@@ -1,6 +1,4 @@
 ﻿using Application.Contracts.Persistance;
-using Domain;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

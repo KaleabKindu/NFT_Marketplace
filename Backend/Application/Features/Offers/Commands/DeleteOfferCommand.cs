@@ -29,7 +29,7 @@ namespace Application.Features.Offers.Commands
         {
             var offer = await _unitOfWork.OfferRepository.GetByIdAsync(request.Id);
 
-            if (offer == null) return ErrorFactory.NotFound("Offer");
+            if (offer == null) return ErrorFactory.NotFound("Offer", "Offer not found");
             
             _unitOfWork.OfferRepository.DeleteAsync(offer);
 

@@ -1,9 +1,9 @@
 using Application.Contracts.Persistance;
 using Application.Features.Offers.Dtos;
+using Application.Responses;
 using AutoMapper;
 using ErrorOr;
 using MediatR;
-using Rideshare.Application.Responses;
 
 namespace Application.Features.Offers.Queries
 {

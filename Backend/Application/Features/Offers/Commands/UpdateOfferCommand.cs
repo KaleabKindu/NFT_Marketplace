@@ -35,7 +35,7 @@ namespace Application.Features.Offers.Commands
                 request.Offer.Id
             );
 
-            if (offer == null) return ErrorFactory.NotFound("Offer");
+            if (offer == null) return ErrorFactory.NotFound("Offer","Offer not found");
         
             _mapper.Map(request.Offer, offer);
 

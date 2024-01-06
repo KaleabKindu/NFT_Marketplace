@@ -3,7 +3,7 @@ using Application.Contracts.Persistance;
 using AutoMapper;
 using ErrorOr;
 using MediatR;
-using Rideshare.Application.Responses;
+using Application.Responses;
 
 namespace Application.Features.Categories.Queries
 {

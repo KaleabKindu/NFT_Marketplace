@@ -3,7 +3,7 @@ using MediatR;
 using AutoMapper;
 using Application.Contracts.Persistance;
 using Application.Features.Bids.Dtos;
-using Rideshare.Application.Responses;
+using Application.Responses;
 
 namespace Application.Features.Bids.Queries
 {

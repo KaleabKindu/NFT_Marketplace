@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 using Application.Contracts.Persistance;
-using Domain.Offers;
+using Domain;
 using Moq;
 
 namespace Application.UnitTest.Mocks
@@ -18,13 +18,13 @@ namespace Application.UnitTest.Mocks
                     Id = 1,
                     Amount=100,
                     Asset = "asset",
-                    Date =  DateTime.ParseExact("20/02/2023 00:00", "dd/MM/yyyy hh:mm", CultureInfo.InvariantCulture),
+                    CreatedAt =  DateTime.ParseExact("20/02/2023 00:00", "dd/MM/yyyy hh:mm", CultureInfo.InvariantCulture),
                 },
                 new() {
                     Id = 2,
                     Amount=100,
                     Asset = "asset",
-                    Date =  DateTime.ParseExact("20/02/2023 00:00", "dd/MM/yyyy hh:mm", CultureInfo.InvariantCulture),
+                    CreatedAt =  DateTime.ParseExact("20/02/2023 00:00", "dd/MM/yyyy hh:mm", CultureInfo.InvariantCulture),
                 },
 
             };
@@ -32,7 +32,7 @@ namespace Application.UnitTest.Mocks
 
             var mockRepo = new Mock<IOfferRepository>();
 
-            mockRepo.Setup(r => r.GetAllAsync()).ReturnsAsync(Offers);
+            mockRepo.Setup(r => r.GetAllAsync(1, 10)).ReturnsAsync(Offers);
 
             mockRepo.Setup(r => r.AddAsync(It.IsAny<Offer>())).ReturnsAsync((Offer offer) =>
             {

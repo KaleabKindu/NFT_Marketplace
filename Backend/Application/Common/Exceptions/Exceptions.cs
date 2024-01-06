@@ -12,6 +12,12 @@
         { }
     }
 
+    public class NotFoundException: AppException
+    {
+        public NotFoundException(string Message) : base(Message)
+        {}
+    }
+
     // Ownership Verification Exception
     public class OwnershipVerificationException : AppException
     {
@@ -47,9 +53,21 @@
         { }
     }
 
-    public class MetadataValidationException : Exception
+    public class MetadataValidationException : AppException
     {
         public MetadataValidationException(string message) : base(message)
         { }
+    }
+
+    public class EthereumVerificationException: AppException
+    {
+        public EthereumVerificationException(string Message) : base(Message)
+        {}
+    }
+
+    public class DuplicateResourceException: AppException
+    {
+        public DuplicateResourceException(string Message) : base(Message)
+        {}
     }
 }
