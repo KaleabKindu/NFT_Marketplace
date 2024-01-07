@@ -3,9 +3,9 @@ using ErrorOr;
 using MediatR;
 using AutoMapper;
 using Application.Contracts.Persistance;
-using Domain;
 using Application.Common.Exceptions;
 using Application.Common.Responses;
+using Domain.Categories;
 
 namespace Application.Features.Categories.Commands
 {

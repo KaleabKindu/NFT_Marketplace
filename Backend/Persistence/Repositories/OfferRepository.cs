@@ -1,5 +1,5 @@
 using Application.Contracts.Persistance;
-using Domain;
+using Domain.Offers;
 namespace Persistence.Repositories
 {
 

@@ -1,10 +1,8 @@
-using System;
 using Application.Features.Assets.Dtos;
 using Application.Common.Responses;
 using MediatR;
 using AutoMapper;
 using Application.Contracts.Persistance;
-using Application.Common.Exceptions;
 using ErrorOr;
 using Application.Common.Errors;
 
@@ -37,9 +35,8 @@ namespace Application.Features.Assets.Query
             var asset = await _unitOfWork.AssetRepository.GetByIdAsync(request.Id);
 
             if (asset == null)
-                return ErrorFactory.NotFound("Asset NotFound");
+                return ErrorFactory.NotFound("Asset","Asset not found");
 
-            response.Success = true;
             response.Message = "Fetch Successful";
             response.Value = _mapper.Map<AssetDto>(asset);
             return response;

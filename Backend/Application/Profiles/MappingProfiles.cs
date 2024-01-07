@@ -5,6 +5,10 @@ using Application.Features.Assets.Dtos;
 using AutoMapper;
 using Domain;
 using Application.Features.Auth.Dtos;
+using Domain.Offers;
+using Domain.Categories;
+using Domain.Bids;
+using Domain.Assets;
 
 namespace Application.Profiles
 {

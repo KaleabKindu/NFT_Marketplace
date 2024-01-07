@@ -1,5 +1,4 @@
-using Domain;
-using Microsoft.AspNetCore.Identity;
+using Application.Contracts.Presistence;
 
 namespace Application.Contracts.Persistance
 {
@@ -9,8 +8,7 @@ namespace Application.Contracts.Persistance
         IBidRepository BidRepository {get; }
         IOfferRepository OfferRepository { get; }
         ICategoryRepository CategoryRepository { get; }
-        public IAssetRepository AssetRepository{get;}
-
+        IAssetRepository AssetRepository{get;}
 
         Task<int> SaveAsync();
     }

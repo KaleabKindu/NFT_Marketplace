@@ -1,4 +1,4 @@
-namespace Domain
+namespace Domain.Offers
 {
     public sealed class Offer: BaseClass{
         public AppUser OfferProvider { get; set; }

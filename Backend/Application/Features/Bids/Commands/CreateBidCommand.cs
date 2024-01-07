@@ -1,4 +1,3 @@
-using Domain;
 using ErrorOr;
 using MediatR;
 using AutoMapper;
@@ -6,6 +5,7 @@ using Application.Features.Bids.Dtos;
 using Application.Contracts.Persistance;
 using Application.Common.Exceptions;
 using Application.Common.Responses;
+using Domain.Bids;
 
 namespace Application.Features.Bids.Commands
 {

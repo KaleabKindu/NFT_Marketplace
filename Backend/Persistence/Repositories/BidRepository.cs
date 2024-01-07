@@ -1,5 +1,5 @@
-using Domain;
 using Application.Contracts.Persistance;
+using Domain.Bids;
 
 namespace Persistence.Repositories
 {

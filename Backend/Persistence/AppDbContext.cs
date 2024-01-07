@@ -1,5 +1,8 @@
 ﻿using Domain;
-using Domain.Asset;
+using Domain.Assets;
+using Domain.Bids;
+using Domain.Categories;
+using Domain.Offers;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 

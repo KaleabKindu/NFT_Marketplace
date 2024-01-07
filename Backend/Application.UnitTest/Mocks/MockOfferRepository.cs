@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 using Application.Contracts.Persistance;
-using Domain;
+using Domain.Offers;
 using Moq;
 
 namespace Application.UnitTest.Mocks
@@ -12,7 +12,7 @@ namespace Application.UnitTest.Mocks
         {
 
 
-            var Offers = new List<Offer>
+            var offers = new List<Offer>
             {
                 new() {
                     Id = 1,
@@ -32,37 +32,37 @@ namespace Application.UnitTest.Mocks
 
             var mockRepo = new Mock<IOfferRepository>();
 
-            mockRepo.Setup(r => r.GetAllAsync(1, 10)).ReturnsAsync(Offers);
+            mockRepo.Setup(r => r.GetAllAsync(1, 10)).ReturnsAsync(offers);
 
             mockRepo.Setup(r => r.AddAsync(It.IsAny<Offer>())).ReturnsAsync((Offer offer) =>
             {
-                offer.Id = Offers.Count() + 1;
-                Offers.Add(offer);
+                offer.Id = offers.Count() + 1;
+                offers.Add(offer);
                 return offer;
             });
 
             mockRepo.Setup(r => r.UpdateAsync(It.IsAny<Offer>())).Callback((Offer offer) =>
             {
-                var newOffers = Offers.Where((r) => r.Id != offer.Id);
-                Offers = newOffers.ToList();
-                Offers.Add(offer);
+                var newoffers = offers.Where((r) => r.Id != offer.Id);
+                offers = newoffers.ToList();
+                offers.Add(offer);
             });
 
             mockRepo.Setup(r => r.DeleteAsync(It.IsAny<Offer>())).Callback((Offer offer) =>
             {
-                Offers.Remove(offer);
+                offers.Remove(offer);
             });
 
             mockRepo.Setup(r => r.Exists(It.IsAny<long>())).ReturnsAsync((long Id) =>
             {
-                var offer = Offers.FirstOrDefault((r) => r.Id == Id);
+                var offer = offers.FirstOrDefault((r) => r.Id == Id);
                 return offer != null;
             });
 
 
             mockRepo.Setup(r => r.GetByIdAsync(It.IsAny<long>())).ReturnsAsync((long Id) =>
             {
-                return Offers.FirstOrDefault((r) => r.Id == Id);
+                return offers.FirstOrDefault((r) => r.Id == Id);
             });
 
             return mockRepo;
