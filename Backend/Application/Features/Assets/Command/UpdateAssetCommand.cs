@@ -1,9 +1,7 @@
-using System;
 using Application.Features.Assets.Dtos;
 using Application.Common.Responses;
 using MediatR;
 using Application.Common.Exceptions;
-using Application.Features.Assets.Dtos.Validators;
 using Application.Contracts.Persistance;
 using AutoMapper;
 using ErrorOr;
@@ -39,7 +37,7 @@ namespace Application.Features.Assets.Command
             var asset = await _unitOfWork.AssetRepository.GetByIdAsync(request.UpdateAssetDto.Id);
 
             if (asset == null )
-                return ErrorFactory.NotFound("Resource Not Found");
+                return ErrorFactory.NotFound("Resource","Resource Not Found");
 
             _mapper.Map(request.UpdateAssetDto, asset);
             _unitOfWork.AssetRepository.UpdateAsync(asset);
@@ -48,7 +46,6 @@ namespace Application.Features.Assets.Command
                 throw new DbAccessException("Database Error: Unable To SaveAsync");
 
 
-            response.Success = true;
             response.Message = "Update Successful";
             response.Value = Unit.Value;
 

@@ -6,6 +6,7 @@ using Application.UnitTest.Mocks;
 using AutoMapper;
 using Moq;
 using Shouldly;
+using Application.Common.Responses;
 
 namespace Application.UnitTest.Offertest.Query
 {
@@ -38,7 +39,7 @@ namespace Application.UnitTest.Offertest.Query
         {
             var result = await _handler.Handle(new GetOfferByIdQuery() { Id = Id }, CancellationToken.None);
             result.IsError.ShouldBeFalse();
-            result.Value.ShouldBeOfType<OfferDto>();
+            result.Value.ShouldBeOfType<BaseResponse<OfferDto>>();
         }
 
         [Fact]

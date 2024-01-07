@@ -1,12 +1,10 @@
-using System;
 using Application.Features.Assets.Dtos;
 using Application.Features.Common;
-using Application.Common.Responses;
 using MediatR;
-using Rideshare.Application.Responses;
 using Application.Contracts.Persistance;
 using AutoMapper;
 using ErrorOr;
+using Application.Responses;
 
 namespace Application.Features.Assets.Query
 {

@@ -1,7 +1,4 @@
-using System;
-using Microsoft.EntityFrameworkCore.Migrations.Operations;
-
-namespace Domain.Asset
+namespace Domain.Assets
 {
     public class Asset : BaseClass
     {
@@ -20,11 +17,5 @@ namespace Domain.Asset
         public long WinningBidId { get; set; }
         public string MetaData { get; set; }
         public float Royalties { get; set; }
-
-
-
-
-
-
     }
 }

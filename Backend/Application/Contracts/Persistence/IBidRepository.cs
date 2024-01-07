@@ -1,4 +1,4 @@
-using Domain;
+using Domain.Bids;
 
 namespace Application.Contracts.Persistance
 {

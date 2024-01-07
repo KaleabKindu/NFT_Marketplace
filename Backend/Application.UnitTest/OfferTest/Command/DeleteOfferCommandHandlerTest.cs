@@ -4,11 +4,9 @@ using Moq;
 using Shouldly;
 using Application.UnitTest.Mocks;
 using Application.Contracts.Persistance;
-using Application.Features.Offers.Dtos;
 using Application.Features.Offers.Commands;
-using Application.Common.Exceptions;
-using System.Globalization;
 using Application.Profiles;
+using Application.Common.Responses;
 
 namespace Application.UnitTest.Offertest.Command
 {
@@ -42,7 +40,7 @@ namespace Application.UnitTest.Offertest.Command
 
             var result = await _handler.Handle(new DeleteOfferCommand() { Id = _id }, CancellationToken.None);
             result.IsError.ShouldBeFalse();
-            result.Value.ShouldBeOfType<Unit>();
+            result.Value.ShouldBeOfType<BaseResponse<Unit>>();
 
             var Offers = await _mockRepo.Object.OfferRepository.GetAllAsync();
             Offers.Count().ShouldBe(1);

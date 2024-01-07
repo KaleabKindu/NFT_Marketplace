@@ -1,12 +1,9 @@
-using System;
 using Application.Common.Exceptions;
 using Application.Common.Responses;
 using Application.Contracts.Persistance;
 using Application.Features.Assets.Dtos;
-using Application.Features.Assets.Dtos.Validators;
 using AutoMapper;
-using Domain;
-using Domain.Asset;
+using Domain.Assets;
 using ErrorOr;
 using MediatR;
 
@@ -43,7 +40,6 @@ namespace Application.Features.Assets.Command
             if (await _unitOfWork.SaveAsync() == 0)
                 throw new DbAccessException("Database Error: Unable To Save");
 
-            response.Success = true;
             response.Message = "Creation Succesful";
             response.Value = asset.Id;
 

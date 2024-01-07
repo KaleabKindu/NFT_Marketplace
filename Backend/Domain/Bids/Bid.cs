@@ -1,4 +1,4 @@
-namespace Domain
+namespace Domain.Bids
 {
     public class Bid: BaseClass
     {

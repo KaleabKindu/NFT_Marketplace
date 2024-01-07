@@ -1,15 +1,12 @@
-﻿using Application.Common.Exceptions;
-using Application.Contracts.Persistance;
+﻿using Application.Contracts.Persistance;
 using Application.Features.Offers.Commands;
 using Application.Features.Offers.Dtos;
 using Application.Profiles;
 using Application.UnitTest.Mocks;
 using AutoMapper;
-using ErrorOr;
-using MediatR;
 using Moq;
 using Shouldly;
-using System.Globalization;
+
 namespace Application.UnitTest.Offertest.Command
 {
     public class UpdateOfferCommandHandlerTest

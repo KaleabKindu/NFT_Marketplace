@@ -1,4 +1,4 @@
-﻿using Application.Contracts;
+﻿using Application.Common.Responses;
 using Application.Contracts.Persistance;
 using Application.Features.Offers.Commands;
 using Application.Features.Offers.Dtos;
@@ -45,7 +45,7 @@ namespace Application.UnitTest.Offertest.Command
         {
             var result = await _handler.Handle(new CreateOfferCommand() { Offer = _offerDto }, CancellationToken.None);
             result.IsError.ShouldBeFalse();
-            result.Value.ShouldBeOfType<long>();
+            result.Value.ShouldBeOfType<BaseResponse<OfferDto>>();
 
             var offers = await _mockRepo.Object.OfferRepository.GetAllAsync();
             offers.Count().ShouldBe(3);

@@ -6,6 +6,7 @@ using Application.UnitTest.Mocks;
 using AutoMapper;
 using Moq;
 using Shouldly;
+using Application.Responses;
 
 namespace Application.UnitTest.Offertest.Query
 {
@@ -34,8 +35,8 @@ namespace Application.UnitTest.Offertest.Query
         public async Task GetOfferList()
         {
             var result = await _handler.Handle(new GetAllOfferQuery(), CancellationToken.None);
-            result.Value.ShouldBeOfType<List<OfferDto>>();
-            result.Value.Count.ShouldBe(2);
+            result.Value.ShouldBeOfType<PaginatedResponse<OfferDto>>();
+            result.Value.Value.Count.ShouldBe(2);
         }
     }
 }

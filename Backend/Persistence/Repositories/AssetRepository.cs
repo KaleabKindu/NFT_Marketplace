@@ -1,8 +1,5 @@
-using System;
 using Application.Contracts.Presistence;
-using Domain;
-using Domain.Asset;
-using Microsoft.EntityFrameworkCore;
+using Domain.Assets;
 
 namespace Persistence.Repositories
 {
@@ -16,9 +13,5 @@ namespace Persistence.Repositories
             
         }
 
-        
-
-
-        
     }
 }
