@@ -19,5 +19,7 @@ public interface IUserRepository
 
     // Other
 	Task<bool> PublicAddressExists(string publicAddress);
+
+	Task<AppUser> GetUserByPublicAddress(string address);
 	Task<ErrorOr<TokenDto>> AuthenticateUserAsync(string publicAddress, string signedNonce);
 }
