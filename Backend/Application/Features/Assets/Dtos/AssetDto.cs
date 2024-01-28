@@ -1,24 +1,21 @@
 using System;
 using Domain;
+using Domain.Categories;
 
 namespace Application.Features.Assets.Dtos
 {
-    public class AssetDto 
+    public class AssetDto
     {
-        public string Title { get; set; }
+        public string Name { get; set; }
+        public long TokenId { get; set; }
         public string Description { get; set; }
-        public string ImageUrl { get; set; }
-        public long CreatorId { get; set; }
-        public long CategoryId { get; set; }
+        public string Image { get; set; }
+        public string Owner { get; set; }
+        public string Creator { get; set; }
+        public Category Category { get; set; }
+        public string Price { get; set; }
+        // public Auction Auction { get; set; }
         public long CollectionId { get; set; }
-        public string IpfsHash { get; set; }
-
-        public DateTime MintedAt { get; set; }
-        public int EditionNumber { get; set; }
-
-        public int TotalSupply { get; set; }
-        public long WinningBidId { get; set; }
-        public string MetaData { get; set; }
-        public float Royalties { get; set; }
+        public float Royalty { get; set; }
     }
 }

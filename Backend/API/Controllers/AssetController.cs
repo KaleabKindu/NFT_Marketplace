@@ -8,11 +8,10 @@ using Application.Contracts;
 namespace API.Controllers
 {
 
-    [ApiController]
-    [Route("api/assets")]
-    public class AssetController : BaseController
+    
+    public class AssetsController : BaseController
     {
-        public AssetController(IUserAccessor userAccessor):base(userAccessor){}
+        public AssetsController(IUserAccessor userAccessor):base(userAccessor){}
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
@@ -27,9 +26,9 @@ namespace API.Controllers
             return HandleResult(await Mediator.Send(new GetAllAssetQuery { PageNumber = pageNumber, PageSize = pageSize }));
         }
 
-        [HttpPost]
+        [HttpPost("mint")]
 
-        public async Task<IActionResult> Post([FromForm] CreateAssetDto createAssetDto)
+        public async Task<IActionResult> Post([FromBody] CreateAssetDto createAssetDto)
         {
 
             return HandleResult( await Mediator.Send(new CreateAssetCommand { CreateAssetDto = createAssetDto }));
