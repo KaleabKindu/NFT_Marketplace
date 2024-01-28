@@ -1,5 +1,5 @@
 using Application.Contracts.Persistence;
-using Domain.Trasactions;
+using Domain.Transactions;
 using Microsoft.EntityFrameworkCore;
 
 namespace Persistence.Repositories
@@ -17,15 +17,14 @@ namespace Persistence.Repositories
         {
             int skip = (page - 1) * limit;
 
-            IQueryable<Transaction> query = _dbContext.Set<Transaction>()
-                .OrderByDescending(entity => entity.CreatedAt);
-
+            IQueryable<Transaction> query = _dbContext.Transactions.Include(x => x.Asset);
+                
             if (assetId != 0)
             {
-                query = query.Where(entity => entity.AssetId == assetId);
+                query = query.Where(entity => entity.Asset.Id == assetId);
             }
 
-            return await query.Skip(skip).Take(limit).ToListAsync();
+            return await query.OrderByDescending(entity => entity.CreatedAt).Skip(skip).Take(limit).ToListAsync();
         }
     }
 }

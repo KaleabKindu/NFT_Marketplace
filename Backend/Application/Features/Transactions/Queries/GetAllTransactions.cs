@@ -1,11 +1,11 @@
 using Application.Contracts.Persistance;
-using Application.Features.Trasactions.Dtos;
+using Application.Features.Transactions.Dtos;
 using Application.Responses;
 using AutoMapper;
 using ErrorOr;
 using MediatR;
 
-namespace Application.Features.Trasactions.Queries
+namespace Application.Features.Transactions.Queries
 {
     public class GetAllTransactionsQuery : IRequest<ErrorOr<PaginatedResponse<TransactionDto>>> {
         public int PageNumber { get; set; } = 1;

@@ -6,6 +6,7 @@ using Application.Common.Responses;
 using Application.Features.Busy.Dtos;
 using Application.Common.Errors;
 using Application.Common.Exceptions;
+using Domain.Transactions;
 
 namespace Application.Features.Buys.Commands
 {
@@ -41,6 +42,16 @@ namespace Application.Features.Buys.Commands
 
             asset.Owner = user;
         
+            var transaction  = new Transaction()
+            {
+                Asset = asset,
+                Buyer = user,
+                Seller = asset.Owner,
+                Amount = request.BuyAsset.Price,
+                BlockchainTxHash = request.BuyAsset.Hash
+            };
+            
+            await _unitOfWork.TransactionRepository.AddAsync(transaction);
     
             if (await _unitOfWork.SaveAsync() == 0) 
                 throw new DbAccessException("Unable to save to database");

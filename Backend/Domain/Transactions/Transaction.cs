@@ -1,4 +1,6 @@
-namespace Domain.Trasactions
+using Domain.Assets;
+
+namespace Domain.Transactions
 {
     public enum TransactionStatus
     {
@@ -8,14 +10,12 @@ namespace Domain.Trasactions
     }
     public class Transaction : BaseClass
     {
-        public int BuyerId { get; set; }
-        public int SellerId { get; set; }
-        public int AssetId { get; set; }
-        public float Amount { get; set; }
+        public AppUser Buyer { get; set; }
+        public AppUser Seller { get; set; }
+        public Asset Asset { get; set; }
+        public double Amount { get; set; }
         public TransactionStatus Status { get; set; } = TransactionStatus.Pending;
         public string BlockchainTxHash { get; set; }
-        public string TokenId { get; set; }
-
     }
 }
 

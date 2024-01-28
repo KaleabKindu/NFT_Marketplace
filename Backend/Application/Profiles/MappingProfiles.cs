@@ -9,6 +9,8 @@ using Domain.Offers;
 using Domain.Categories;
 using Domain.Bids;
 using Domain.Assets;
+using Domain.Transactions;
+using Application.Features.Transactions.Dtos;
 
 namespace Application.Profiles
 {
@@ -50,18 +52,20 @@ namespace Application.Profiles
 
             #endregion
 
-            #region Assets
 
+            #region Assets
             CreateMap<Asset, AssetDto>().ReverseMap();
             CreateMap<Asset, UpdateAssetDto>().ReverseMap();
             CreateMap<Asset, CreateAssetDto>().ReverseMap();
             #endregion Assets
+
+            #region Transaction
+            CreateMap<Transaction, TransactionDto>(); 
+            #endregion Transaction
+        
         }
-            
-
-
-        }
-
 
     }
+
+}
 

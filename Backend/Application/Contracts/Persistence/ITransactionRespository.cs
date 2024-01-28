@@ -1,5 +1,5 @@
 using Application.Contracts.Persistance;
-using Domain.Trasactions;
+using Domain.Transactions;
 
 namespace Application.Contracts.Persistence
 {

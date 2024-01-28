@@ -1,5 +1,5 @@
 using Application.Contracts;
-using Application.Features.Trasactions.Queries;
+using Application.Features.Transactions.Queries;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
