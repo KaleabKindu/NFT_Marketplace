@@ -16,7 +16,6 @@ namespace API.Controllers
         [Authorize(Roles = "Admin, Trader")]
         public async Task<IActionResult> CreateBuy([FromBody] BuyAssetDto BuyAsset)
         {
-            _userAccessor.GetPublicAddress();
             return  HandleResult(await Mediator.Send(new BuyAssetCommand { BuyAsset = BuyAsset, UserPublicAddress =  _userAccessor.GetPublicAddress()}));
         }
     }
