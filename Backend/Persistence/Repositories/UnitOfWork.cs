@@ -3,7 +3,7 @@ using Application.Contracts.Presistence;
 using Domain;
 using Microsoft.AspNetCore.Identity;
 using Application.Contracts.Services;
-using Application.Contracts.Persistance;
+using Application.Contracts.Persistence;
 
 namespace Persistence.Repositories
 {
@@ -17,6 +17,7 @@ namespace Persistence.Repositories
         private IBidRepository _bidRepository;
         private IOfferRepository _offerRepository;
         private ICategoryRepository _CategoryRepository;
+        private ITransactionRepository _transactionRepository;
 
         public UnitOfWork(AppDbContext dbContext, UserManager<AppUser> userManager, IJwtService jwtService, IEthereumCryptoService ethereumCryptoService)
         {
@@ -56,6 +57,14 @@ namespace Persistence.Repositories
             get {                
                 _CategoryRepository ??= new CategoryRepository(_dbContext);
                 return _CategoryRepository;
+            }
+        }
+
+        public ITransactionRepository TransactionRepository
+        {
+            get {
+                _transactionRepository ??= new TransactionRepository(_dbContext);
+                return _transactionRepository;
             }
         }
 

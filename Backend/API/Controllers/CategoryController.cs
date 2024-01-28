@@ -22,16 +22,16 @@ namespace API.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> GetCategories([FromQuery] int PageNumber = 1, [FromQuery] int PageSize = 10)
+        public async Task<IActionResult> GetCategories([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
         {
-            return HandleResult(await Mediator.Send(new GetAllCategoryQuery(){ PageNumber=PageNumber, PageSize=PageSize }));
+            return HandleResult(await Mediator.Send(new GetAllCategoryQuery(){ PageNumber=pageNumber, PageSize=pageSize }));
         }
 
         [HttpGet("{Id}")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> GetCategory(int Id)
+        public async Task<IActionResult> GetCategory(int id)
         {
-            return HandleResult(await Mediator.Send(new GetCategoryByIdQuery { Id = Id }));
+            return HandleResult(await Mediator.Send(new GetCategoryByIdQuery { Id = id }));
         }
 
         [HttpPut]
@@ -43,9 +43,9 @@ namespace API.Controllers
 
         [HttpDelete("{Id}")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> DeleteCategory(int Id)
+        public async Task<IActionResult> DeleteCategory(int id)
         {
-            return  HandleResult(await Mediator.Send(new DeleteCategoryCommand { Id = Id }));
+            return  HandleResult(await Mediator.Send(new DeleteCategoryCommand { Id = id }));
         }
     }
 }
