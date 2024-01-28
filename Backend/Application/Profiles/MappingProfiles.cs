@@ -20,6 +20,7 @@ namespace Application.Profiles
         {
             #region AppUser 
             CreateMap<AppUser, UserDto>().ReverseMap();
+            CreateMap<AppUser, UserFetchDto>().ReverseMap();
             // CreateMap<CreateOfferDto,Offer>();
             // CreateMap<UpdateOfferDto,Offer>()
             //     .ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null));
@@ -55,6 +56,9 @@ namespace Application.Profiles
 
             #region Assets
             CreateMap<Asset, AssetDto>().ReverseMap();
+            CreateMap<Asset, AssetListOpenAuctDto>().ReverseMap();
+            CreateMap<Asset, AssetDetailDto>().ReverseMap();
+            CreateMap<Asset, AssetListDto>().ReverseMap();
             CreateMap<Asset, UpdateAssetDto>().ReverseMap();
             CreateMap<Asset, CreateAssetDto>().ReverseMap();
             #endregion Assets

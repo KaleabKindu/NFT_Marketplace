@@ -13,5 +13,9 @@ namespace Persistence.Repositories
             
         }
 
+        public async Task<IEnumerable<Asset>> GetAssetsWOpenAuct()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

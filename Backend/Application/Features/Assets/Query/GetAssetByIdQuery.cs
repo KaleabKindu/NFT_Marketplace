@@ -8,13 +8,13 @@ using Application.Common.Errors;
 
 namespace Application.Features.Assets.Query
 {
-    public class GetAssetByIdQuery : IRequest<ErrorOr<BaseResponse<AssetDto>>>
+    public class GetAssetByIdQuery : IRequest<ErrorOr<BaseResponse<AssetDetailDto>>>
     {
         public int Id {get; set;}
         
     }
 
-     public class GetAssetByIdQueryHandler : IRequestHandler<GetAssetByIdQuery, ErrorOr<BaseResponse<AssetDto>>>
+     public class GetAssetByIdQueryHandler : IRequestHandler<GetAssetByIdQuery, ErrorOr<BaseResponse<AssetDetailDto>>>
     {
 
         private readonly IMapper _mapper;
@@ -27,10 +27,10 @@ namespace Application.Features.Assets.Query
 
         }
 
-        public async Task<ErrorOr<BaseResponse<AssetDto>>> Handle(GetAssetByIdQuery request, CancellationToken cancellationToken)
+        public async Task<ErrorOr<BaseResponse<AssetDetailDto>>> Handle(GetAssetByIdQuery request, CancellationToken cancellationToken)
         {
 
-            var response = new BaseResponse<AssetDto>();
+            var response = new BaseResponse<AssetDetailDto>();
 
             var asset = await _unitOfWork.AssetRepository.GetByIdAsync(request.Id);
 
@@ -38,7 +38,7 @@ namespace Application.Features.Assets.Query
                 return ErrorFactory.NotFound("Asset","Asset not found");
 
             response.Message = "Fetch Successful";
-            response.Value = _mapper.Map<AssetDto>(asset);
+            response.Value = _mapper.Map<AssetDetailDto>(asset);
             return response;
         }
     }

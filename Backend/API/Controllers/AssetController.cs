@@ -26,6 +26,14 @@ namespace API.Controllers
             return HandleResult(await Mediator.Send(new GetAllAssetQuery { PageNumber = pageNumber, PageSize = pageSize }));
         }
 
+        [HttpGet("open-auction")]
+        public async Task<IActionResult> Get ([FromQuery] int pageNumber = 1 , [FromQuery] int pageSize = 10){
+           
+            return HandleResult(await Mediator.Send(new GetAssetsWOpenAuctQuery { PageNumber = pageNumber, PageSize = pageSize }));
+
+
+        }
+
         [HttpPost("mint")]
 
         public async Task<IActionResult> Post([FromBody] CreateAssetDto createAssetDto)
