@@ -55,9 +55,16 @@ namespace Application.Profiles
 
 
             #region Assets
-            CreateMap<Asset, AssetDto>().ReverseMap();
+            CreateMap<Asset, AssetDto>()
+                .ForMember(dest => dest.Creator, opt => opt.MapFrom(src => src.Creator.PublicAddress))
+                .ForMember(dest => dest.Owner, opt => opt.MapFrom(src => src.Owner.PublicAddress));
+
             CreateMap<Asset, AssetListOpenAuctDto>().ReverseMap();
-            CreateMap<Asset, AssetDetailDto>().ReverseMap();
+
+            CreateMap<Asset, AssetDetailDto>()
+                .ForMember(dest => dest.Creator, opt => opt.MapFrom(src => new UserFetchDto{ PublicAddress=src.Creator.PublicAddress, UserName=src.Creator.UserName}))
+                .ForMember(dest => dest.Owner , opt => opt.MapFrom(src => new UserFetchDto{ PublicAddress = src.Owner.PublicAddress, UserName = src.Owner.UserName}));
+
             CreateMap<Asset, AssetListDto>().ReverseMap();
             CreateMap<Asset, UpdateAssetDto>().ReverseMap();
             CreateMap<Asset, CreateAssetDto>().ReverseMap();
