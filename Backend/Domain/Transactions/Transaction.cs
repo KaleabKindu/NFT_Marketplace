@@ -8,8 +8,17 @@ namespace Domain.Transactions
         Completed,
         Canceled
     }
+
+    public enum TransactionType
+    {
+        Sell,
+        Transfer,
+        Mint
+    }
+
     public class Transaction : BaseClass
     {
+        public TransactionType Type { get; set; }
         public AppUser Buyer { get; set; }
         public AppUser Seller { get; set; }
         public Asset Asset { get; set; }

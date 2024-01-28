@@ -1,5 +1,5 @@
 ﻿using Application.Features.Categories.Dtos;
-﻿using Application.Features.Bids.Dtos;
+using Application.Features.Bids.Dtos;
 using Application.Features.Offers.Dtos;
 using Application.Features.Assets.Dtos;
 using AutoMapper;
@@ -21,6 +21,8 @@ namespace Application.Profiles
             #region AppUser 
             CreateMap<AppUser, UserDto>().ReverseMap();
             CreateMap<AppUser, UserFetchDto>().ReverseMap();
+            CreateMap<AppUser, UserProfile>()
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id));
             // CreateMap<CreateOfferDto,Offer>();
             // CreateMap<UpdateOfferDto,Offer>()
             //     .ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null));
@@ -71,7 +73,8 @@ namespace Application.Profiles
             #endregion Assets
 
             #region Transaction
-            CreateMap<Transaction, TransactionDto>(); 
+            CreateMap<Transaction, TransactionDto>()
+                    .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.Type.ToString())); 
             #endregion Transaction
         
         }

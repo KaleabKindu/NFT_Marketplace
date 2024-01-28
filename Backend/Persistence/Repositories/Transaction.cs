@@ -24,7 +24,13 @@ namespace Persistence.Repositories
                 query = query.Where(entity => entity.Asset.Id == assetId);
             }
 
-            return await query.OrderByDescending(entity => entity.CreatedAt).Skip(skip).Take(limit).ToListAsync();
+            return await query
+                    .OrderByDescending(entity => entity.CreatedAt)
+                    .Skip(skip)
+                    .Take(limit)
+                    .Include(x => x.Buyer)
+                    .Include(x => x.Seller)
+                    .ToListAsync();
         }
     }
 }

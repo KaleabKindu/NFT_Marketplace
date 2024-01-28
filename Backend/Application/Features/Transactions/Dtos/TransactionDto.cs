@@ -1,5 +1,7 @@
 using Application.Features.Assets.Dtos;
 using Application.Features.Auth.Dtos;
+using Application.Profiles;
+using Domain.Transactions;
 
 namespace Application.Features.Transactions.Dtos
 {
@@ -12,9 +14,10 @@ namespace Application.Features.Transactions.Dtos
     public class TransactionDto
     {
         public long Id { get; set; }
-        public UserDto Buyer { get; set; }
-        public UserDto Seller { get; set; }
-        public AssetDto Asset { get; set; }
+        public string Type { get; set; }
+        public UserProfile Buyer { get; set; }
+        public UserProfile Seller { get; set; }
+        public AssetDetailDto Asset { get; set; }
         public double Amount { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }

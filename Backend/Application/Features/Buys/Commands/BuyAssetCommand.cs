@@ -44,6 +44,7 @@ namespace Application.Features.Buys.Commands
         
             var transaction  = new Transaction()
             {
+                Type = TransactionType.Sell,
                 Asset = asset,
                 Buyer = user,
                 Seller = asset.Owner,
