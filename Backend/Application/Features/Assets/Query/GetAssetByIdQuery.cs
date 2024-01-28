@@ -32,7 +32,7 @@ namespace Application.Features.Assets.Query
 
             var response = new BaseResponse<AssetDetailDto>();
 
-            var asset = await _unitOfWork.AssetRepository.GetByIdAsync(request.Id);
+            var asset = await _unitOfWork.AssetRepository.GetAssetWithUser(request.Id);
 
             if (asset == null)
                 return ErrorFactory.NotFound("Asset","Asset not found");

@@ -39,7 +39,7 @@ namespace API.Controllers
         public async Task<IActionResult> Post([FromBody] CreateAssetDto createAssetDto)
         {
 
-            return HandleResult( await Mediator.Send(new CreateAssetCommand { CreateAssetDto = createAssetDto }));
+            return HandleResult( await Mediator.Send(new CreateAssetCommand { CreateAssetDto = createAssetDto , PublicAddress = _userAccessor.GetPublicAddress() }));
         }
 
         [HttpPut]

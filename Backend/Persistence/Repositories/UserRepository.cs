@@ -55,6 +55,8 @@ namespace Persistence.Repositories
             return user;
         }
 
+        
+
         // Read
         public async Task<List<AppRole>> GetUserRolesAsync(AppUser user)
         {
@@ -125,6 +127,14 @@ namespace Persistence.Repositories
                 AccessToken = tokenInfo.Item1,
                 ExpireInDays = Math.Round(tokenInfo.Item2 / (60 * 24), 2)
             };
+        }
+
+        public async  Task<AppUser> GetUserByPublicAddress(string publicAddress)
+        {
+            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.PublicAddress == publicAddress);
+            return user;
+
+            
         }
     }
 }

@@ -1,3 +1,4 @@
+using Application.Common.Errors;
 using Application.Common.Exceptions;
 using Application.Common.Responses;
 using Application.Contracts.Persistance;
@@ -12,6 +13,7 @@ namespace Application.Features.Assets.Command
     public class CreateAssetCommand : IRequest<ErrorOr<BaseResponse<long>>>
     {
         public CreateAssetDto CreateAssetDto { get; set; }
+        public string PublicAddress {get; set;}
 
         
     }
@@ -33,7 +35,14 @@ namespace Application.Features.Assets.Command
         {
             var response = new BaseResponse<long>();
 
+            var user = await _unitOfWork.UserRepository.GetUserByPublicAddress(request.PublicAddress);
+
+            if (user == null)
+                return ErrorFactory.NotFound(nameof(user), "user not found");
             var asset = _mapper.Map<Asset>(request.CreateAssetDto);
+            asset.Creator = user;
+            asset.Owner = user;
+
             await _unitOfWork.AssetRepository.AddAsync(asset);
 
 
