@@ -15,9 +15,9 @@ namespace API.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Admin, Trader")]
-        public async Task<IActionResult> GetBids([FromQuery] int PageNumber = 1, [FromQuery] int PageSize = 10)
+        public async Task<IActionResult> GetBids([FromQuery] int PageNumber = 1, [FromQuery] int PageSize = 10, [FromQuery] int AssetId = default)
         {
-            return HandleResult(await Mediator.Send(new GetBidsQuery() { PageNumber = PageNumber, PageSize = PageSize}));
+            return HandleResult(await Mediator.Send(new GetBidsQuery() { PageNumber = PageNumber, PageSize = PageSize, AssetId=AssetId }));
         }
 
 
@@ -32,7 +32,7 @@ namespace API.Controllers
         [Authorize(Roles = "Admin, Trader")]
         public async Task<IActionResult> CreateBid([FromBody] CreateBidDto Bid)
         {
-            return  HandleResult(await Mediator.Send(new CreateBidCommand { Bid = Bid }));
+            return  HandleResult(await Mediator.Send(new CreateBidCommand { Bid = Bid, Bidder= _userAccessor.GetPublicAddress() }));
         }
 
         [HttpPut]
