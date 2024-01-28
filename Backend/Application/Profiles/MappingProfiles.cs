@@ -47,8 +47,13 @@ namespace Application.Profiles
 
         
             #region Bid 
-            CreateMap<Bid, BidDto>();
-            CreateMap<Bid, BidsListDto>();
+            CreateMap<Bid, BidDto>()
+                .ForMember(dest => dest.Bidder, opt => opt.MapFrom(src => src.Bidder.PublicAddress))
+                .ForMember(dest => dest.AssetId, opt => opt.MapFrom(src => src.Asset.Id));
+
+            CreateMap<Bid, BidsListDto>()
+                .ForMember(dest => dest.Bidder, opt => opt.MapFrom(src => src.Bidder.PublicAddress));
+
             CreateMap<CreateBidDto, Bid>();
             CreateMap<UpdateBidDto, Bid>()
                 .ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null));

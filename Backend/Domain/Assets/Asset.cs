@@ -1,4 +1,4 @@
-using Domain.Categories;
+using Domain.Bids;
 
 namespace Domain.Assets
 {
@@ -15,5 +15,6 @@ namespace Domain.Assets
         // public Auction Auction { get; set; }
         public long CollectionId { get; set; }
         public float Royalty { get; set; }
+        public List<Bid> Bids { get; set; }
     }
 }

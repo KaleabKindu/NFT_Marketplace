@@ -7,8 +7,10 @@ namespace Application.Features.Bids.Dtos
     {
         public string Bidder { set; get; }
 
-        public string Asset { set; get; }
+        public long AssetId { set; get; }
 
         public double Amount { set; get; }
+
+        public string TransactionHash { set; get; }
     }
 }
