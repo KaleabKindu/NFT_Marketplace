@@ -5,6 +5,7 @@ using Application.Contracts.Persistance;
 using Application.Features.Assets.Dtos;
 using AutoMapper;
 using Domain.Assets;
+using Domain.Auctions;
 using ErrorOr;
 using MediatR;
 
@@ -42,6 +43,10 @@ namespace Application.Features.Assets.Command
             var asset = _mapper.Map<Asset>(request.CreateAssetDto);
             asset.Creator = user;
             asset.Owner = user;
+            var auction = new Auction{
+                TokenId = request.CreateAssetDto.TokenId,
+                
+            };
 
             await _unitOfWork.AssetRepository.AddAsync(asset);
 
