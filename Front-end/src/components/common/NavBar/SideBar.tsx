@@ -45,12 +45,7 @@ const SideBar = (props: Props) => {
   const session = useAppSelector(state => state.auth.session)
   const { mode, handleToggle } = useWebTheme()
   const { toast } = useToast()
-  const { address, isConnected } = useAccount({ 
-    onConnect:() => {
-    if(!session){
-      signIn()
-    }
-  }})
+  const { address, isConnected } = useAccount()
   const { disconnect } = useDisconnect()
   const [getNonce] = useGetNounceMutation()
   const [authenticateSignature] = useAuthenticateSignatureMutation()
