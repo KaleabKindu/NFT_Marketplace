@@ -13,6 +13,7 @@ import {
 import { Routes } from "@/routes";
 import { useDisconnect } from "wagmi";
 import useWeb3Status from "@/hooks/useWeb3Status";
+import { persistor } from "@/store";
   
 
 type Props = {}
@@ -20,6 +21,10 @@ type Props = {}
 const Profile = (props: Props) => {
     const { disconnect } = useDisconnect()
     const { address } = useWeb3Status()
+    const handleLogout = () => {
+        disconnect()
+        persistor.purge()
+    }
   return (
     <DropdownMenu>
         <DropdownMenuTrigger className="rounded-full">
@@ -47,7 +52,7 @@ const Profile = (props: Props) => {
                     <div>Profile</div>
                  </Link>
             </DropdownMenuItem>
-            <DropdownMenuItem className="flex items-center gap-3 py-3 cursor-pointer" onClick={() => disconnect()}>
+            <DropdownMenuItem className="flex items-center gap-3 py-3 cursor-pointer" onClick={() => handleLogout()}>
                 <MdLogout size={30} />
                 <div>Disconnect</div>
             </DropdownMenuItem>

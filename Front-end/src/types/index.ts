@@ -10,3 +10,11 @@ export interface NFT {
     auction:boolean;
     auctionEnd:number;
 }
+
+export type Address = `0x${string}`
+
+
+export interface Credentials {
+    publicAddress:Address,
+    signedNonce:string
+}
