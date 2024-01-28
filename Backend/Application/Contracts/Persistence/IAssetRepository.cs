@@ -4,5 +4,8 @@ using Domain.Assets;
 namespace Application.Contracts.Presistence
 {
     public interface IAssetRepository: IRepository<Asset>
-    {}
+    {
+         Task<IEnumerable<Asset>> GetAssetsWOpenAuct();
+         Task<Asset> GetAssetWithUser(long id);
+    }
 }

@@ -4,8 +4,9 @@ pragma solidity ^0.8.20;
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract NFTAuction {
+contract NFTAuction is Ownable {
 
     using Counters for Counters.Counter;
 
@@ -19,7 +20,7 @@ contract NFTAuction {
         uint256 floorPrice;
         uint256 highestBid; 
         address highestBidder; 
-        uint256 biddingEnd;
+        uint256 auctionEnd;
         bool ended;
     }
 
@@ -31,18 +32,23 @@ contract NFTAuction {
         uint256 tokenId,
         address seller,
         uint256 floorPrice,
-        uint256 biddingEnd
+        uint256 auctionEnd
     );
 
     event BidPlaced(uint256 indexed auctionId, address bidder, uint256 amount);
     event AuctionEnded(uint256 indexed auctionId, address winner, uint256 amount);
+
+    constructor(address sender){
+        Ownable(sender);
+    }
+
 
     function createAuction(
         address _tokenContract,
         uint256 _tokenId,
         uint256 _floorPrice,
         uint256 auctionEnd
-    ) external returns (uint256)  {
+    ) external returns (address)  {
         require(auctionEnd > block.timestamp, "Auction End must be different from now");
 
         auctionIds.increment();
@@ -56,13 +62,13 @@ contract NFTAuction {
             floorPrice: _floorPrice,
             highestBid: _floorPrice,
             highestBidder: address(0),
-            biddingEnd: auctionEnd,
+            auctionEnd: auctionEnd,
             ended: false
         });
 
-        emit AuctionCreated(auctionId, _tokenContract, _tokenId, msg.sender, _floorPrice, auctions[auctionId].biddingEnd);
+        emit AuctionCreated(auctionId, _tokenContract, _tokenId, msg.sender, _floorPrice, auctions[auctionId].auctionEnd);
 
-        return auctionId;
+        return address(this);
     }
 
     function placeBid(uint256 _auctionId) external payable {
@@ -70,7 +76,7 @@ contract NFTAuction {
 
         require(auction.auctionId != 0, "Auction does not exist");
         require(!auction.ended, "Auction has already ended");
-        require(block.timestamp < auction.biddingEnd, "Auction has ended");
+        require(block.timestamp < auction.auctionEnd, "Auction has ended");
 
         require(msg.value > auction.highestBid, "Bid must be greater than the highest bid");
 
@@ -90,7 +96,7 @@ contract NFTAuction {
 
         require(auction.auctionId != 0, "Auction does not exist");
         require(!auction.ended, "Auction has already ended");
-        require(block.timestamp >= auction.biddingEnd, "Auction has not ended yet");
+        require(block.timestamp >= auction.auctionEnd, "Auction has not ended yet");
 
         auction.ended = true;
 
@@ -99,5 +105,15 @@ contract NFTAuction {
         payable(auction.seller).transfer(auction.highestBid);
 
         emit AuctionEnded(_auctionId, auction.seller, auction.floorPrice);
+    }
+
+    function restartAuction(
+        uint256 _tokenId,
+        uint256 _floorPrice,
+        uint256 auctionEnd
+    ) public onlyOwner {
+        auctions[_tokenId].floorPrice = _floorPrice;
+        auctions[_tokenId].auctionEnd = auctionEnd;
+        auctions[_tokenId].ended = false;
     }
 }

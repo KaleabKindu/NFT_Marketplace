@@ -1,14 +1,12 @@
-using System;
 using Application.Contracts.Persistance;
 using Domain;
 using Microsoft.EntityFrameworkCore;
 
 namespace Persistence.Repositories
 {
-    // IRepository.cs
     public class Repository<T> : IRepository<T> where T : BaseClass
     {
-        private readonly AppDbContext _dbContext;
+        protected readonly AppDbContext _dbContext;
 
         public Repository(AppDbContext dbContext)
         {

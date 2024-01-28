@@ -1,11 +1,15 @@
+using Domain.Assets;
+
 namespace Domain.Bids
 {
     public class Bid: BaseClass
     {
-        public string Bidder { set; get; }
+        public AppUser Bidder { set; get; }
 
-        public string Asset { set; get; }
+        public Asset Asset { set; get; }
 
         public double Amount  { set; get; }
+
+        public string TransactionHash { set; get; }
     }
 }

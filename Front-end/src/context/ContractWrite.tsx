@@ -5,7 +5,7 @@ import { useToast } from "@/components/ui/use-toast"
 import { ToastAction } from '@/components/ui/toast'
 import Link from 'next/link'
 import { Routes } from '@/routes'
-import abi from '@/abi/MyNFT.json'
+import NftAbi from '@/data/abi/MyNFT.json'
 
 interface ContractWriteContextProps {
   isLoading:boolean,
@@ -14,8 +14,7 @@ interface ContractWriteContextProps {
   transactionSuccess:boolean,
   writing:boolean,
   writeSuccess:boolean,
-  prepareContractWrite:(a:boolean, b:string) => void,
-  prepareArguments:(a:any[]) => void
+  contractWrite:(a:string, b?:string, d?:any[]) => void,
 }
 
 export const ContractWriteContext = createContext<ContractWriteContextProps>({
@@ -25,8 +24,7 @@ export const ContractWriteContext = createContext<ContractWriteContextProps>({
   transactionSuccess:false,
   writing:false,
   writeSuccess:false,
-  prepareContractWrite:(a:boolean, b:string) => {},
-  prepareArguments:(a:any[]) => {}
+  contractWrite:(a:string, b?:string, d?:any[]) => {},
 })
 
 type Props = {
@@ -36,8 +34,9 @@ type Props = {
 const ContractWrite = ({children}: Props) => {
   const { toast } = useToast()
   const [ prepare, setPrepare ] = useState(false)
-  const [ args, setArgs ] = useState<any[]>([])
-  const [ value, setValue ] = useState('0')
+  const [ args, setArgs ] = useState<any[] | undefined>(undefined)
+  const [ functionName, setFunctionName ] = useState('')
+  const [ value, setValue ] = useState<string | undefined>(undefined)
   const { 
     config, 
     isLoading:preparing, 
@@ -45,10 +44,10 @@ const ContractWrite = ({children}: Props) => {
     isError:preparingError 
   } = usePrepareContractWrite({
       address:process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as `0x${string}`,
-      abi:abi,
+      abi:NftAbi,
       args:args,
-      functionName:'mintProduct',
-      value:parseEther(value),
+      functionName:functionName,
+      value:value ? parseEther(value):undefined,
       enabled:prepare,
       onError(err) {
         console.log('preparation failed',err)
@@ -84,6 +83,7 @@ const ContractWrite = ({children}: Props) => {
         })
       },
       onSuccess(data) {
+        console.log('Transaction Success', data)
         toast({
             description: 'Your Transaction was Successfull',
             action: (
@@ -100,14 +100,15 @@ const ContractWrite = ({children}: Props) => {
   useEffect(() => {
       if(prepared){
           write?.()
+          console.log('ready', args)
       }
   },[prepared, write])
-
-  const prepareContractWrite = (a:boolean, value:string) => {
-      setPrepare(a)
+  const contractWrite = (functionName:string, value?:string, args?:any[]) => {
+      setPrepare(true)
       setValue(value)
+      setFunctionName(functionName)
+      setArgs(args)
   }
-  const prepareArguments = (a:any[]) => setArgs(a)
   const isLoading = writing || preparing || waitingForTransaction
   const isError = writeError || preparingError || transactionError
 
@@ -119,8 +120,7 @@ const ContractWrite = ({children}: Props) => {
           transactionSuccess:transactionSuccess,
           writing:writing,
           writeSuccess:writeSuccess,
-          prepareContractWrite:prepareContractWrite,
-          prepareArguments:prepareArguments
+          contractWrite:contractWrite,
       }}>
       {children}
     </ContractWriteContext.Provider>

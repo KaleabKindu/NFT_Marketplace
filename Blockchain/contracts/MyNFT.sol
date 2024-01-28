@@ -6,50 +6,57 @@ import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "./Auction.sol";
+import "hardhat/console.sol";
 
 contract MyNFT is ERC721URIStorage, Ownable {
     using Counters for Counters.Counter;
 
     Counters.Counter private _tokenIds;
+    Counters.Counter private auctionIds;
     Counters.Counter private _productsSold;
 
     uint256 _listingPrice = 0.00000000025 ether;
 
     mapping(uint256 => Product) public idToProduct;
+    mapping(uint256 => Auction) public idToAuction;
 
 
     Product[] public Products;
 
     struct Product {
         uint256 tokenId;
-        string name;
-        string description;
-        string image;
-        string files;
-        address payable seller;
-        address payable owner;
         address payable creator;
         uint256 price;
-        bool sold;
         uint256 auctionId;
         uint256 royalty;
     }
+    struct Auction {
+        uint256 auctionId;
+        uint256 tokenId;
+        address payable seller;
+        uint256 floorPrice;
+        uint256 highestBid; 
+        address payable highestBidder; 
+        uint256 auctionEnd;
+    }
 
-    event productCreated(
+    event ProductCreated(
         uint256 tokenId,
-        string name,
-        string description,
-        string image,
-        string files,
-        address payable seller,
-        address payable owner,
         address payable creator,
         uint256 price,
-        bool sold,
         uint256 auctionId,
         uint256 royalty
     );
+    event AuctionCreated(
+        uint256 indexed auctionId,
+        uint256 tokenId,
+        address seller,
+        uint256 floorPrice,
+        uint256 auctionEnd
+    );
+
+    event BidPlaced(uint256 indexed auctionId, address bidder, uint256 amount);
+    event AuctionEnded(uint256 indexed auctionId, address winner, uint256 amount);
 
 
     constructor() ERC721("NFT Token", "MTK")
@@ -66,10 +73,7 @@ contract MyNFT is ERC721URIStorage, Ownable {
     }
 
     function mintProduct(
-        string memory name,
-        string memory description,
-        string memory image,
-        string memory files,
+        string memory uri,
         uint256 price,
         bool auction,
         uint256 auctionEnd,
@@ -84,14 +88,10 @@ contract MyNFT is ERC721URIStorage, Ownable {
         
         uint256 nextTokenId =_tokenIds.current();
         _safeMint(msg.sender, nextTokenId);
-        _setTokenURI(nextTokenId, files);
+        _setTokenURI(nextTokenId, uri);
 
         createProduct(
             nextTokenId,
-            name,
-            description,
-            image,
-            files,
             price,
             auction,
             auctionEnd,
@@ -104,10 +104,6 @@ contract MyNFT is ERC721URIStorage, Ownable {
 
     function createProduct(
         uint256 tokenId, 
-        string memory name,
-        string memory description,
-        string memory image,
-        string memory files,
         uint256 price,
         bool auction,
         uint256 auctionEnd,
@@ -119,201 +115,149 @@ contract MyNFT is ERC721URIStorage, Ownable {
         }
         idToProduct[tokenId] = Product(
              tokenId,
-             name,
-             description,
-             image,
-             files,
-             payable(msg.sender),
-             payable(address(this)),  
              payable(msg.sender),
              price,
-             false,
              auctionId,
              royalty
         );
         Products.push(idToProduct[tokenId]);
 
-        _transfer(msg.sender, address(this), tokenId);
-
-        emit productCreated(
+        emit ProductCreated(
             tokenId,
-            name,
-            description,
-            image,
-            files,
-            payable(msg.sender),
-            payable(address(this)),  
             payable(msg.sender),
             price,
-            false,
             auctionId,
             royalty
         );
     }
 
-    function createAuction(uint256 tokenId, uint256 floorPrice, uint256 auctionEnd) public returns (uint256){
-        // Deploy the auction contract
-        NFTAuction auctionContract = new NFTAuction();
+    function resellProduct(uint256 tokenId, uint256 price, bool auction, uint256 auctionEnd) public payable{
 
-        // Create the auction
-        uint256 auctionId = auctionContract.createAuction(address(this), tokenId, floorPrice, auctionEnd);
+        require(ownerOf(tokenId) == msg.sender, "Only Owner of the NFT can resale this Product");
+        require(msg.value == _listingPrice, "Listing Payment must be equal to listing price");
 
-        // Update the product with the auction details
-        idToProduct[tokenId].auctionId = auctionId;
+        idToProduct[tokenId].price = price;
+
+        if(auction){
+            restartAuction(idToProduct[tokenId].auctionId, price, auctionEnd);
+        }
+        _productsSold.decrement();
+    }
+
+    function buyAsset( uint256 tokenId) public payable {
+        uint256 price = idToProduct[tokenId].price;
+        uint256 royaltyAmount = (price * idToProduct[tokenId].royalty) / 100;
+        console.log("Price %s - Value %s - Equal %s", price, msg.value, msg.value == price);
+        require(msg.value == price, "Please Top up the asking price to purchase the product");
+        console.log("Price %s and Royalty %s", price, royaltyAmount);
+        _productsSold.increment();
+
+        if(idToProduct[tokenId].creator != ownerOf(tokenId)){
+            console.log("Transfer %s Ether to %s", price - royaltyAmount, ownerOf(tokenId));
+            payable(ownerOf(tokenId)).transfer(price - royaltyAmount);
+            console.log("Transfer Complete");
+            console.log("Royalty Transfer %s Ether to %s", royaltyAmount, idToProduct[tokenId].creator);
+            payable(idToProduct[tokenId].creator).transfer(royaltyAmount); 
+            console.log("Transfer Complete");
+        }else{
+            console.log("Transfer %s Ether to %s", price, ownerOf(tokenId));
+            payable(ownerOf(tokenId)).transfer(price);
+            console.log("Transfer Complete");  
+        }
+
+        console.log("NFT Transfer Begin - Owner %s", ownerOf(tokenId));
+        _transfer(ownerOf(tokenId), msg.sender, tokenId);
+        console.log("NFT Transfer Complete - Owner %s", ownerOf(tokenId));
+    }
+
+    function fetchMarketProducts() public view returns(Product[] memory){
+        return Products;
+    }
+
+
+    // Auction Related Functions
+    function createAuction(
+        uint256 _tokenId,
+        uint256 _floorPrice,
+        uint256 auctionEnd
+    ) private returns (uint256)  {
+        require(auctionEnd > block.timestamp, "Auction End must be different from now");
+
+        auctionIds.increment();
+        uint256 auctionId = auctionIds.current();
+
+        idToAuction[auctionId] = Auction({
+            auctionId: auctionId,
+            tokenId: _tokenId,
+            seller: payable(msg.sender),
+            floorPrice: _floorPrice,
+            highestBid: _floorPrice,
+            highestBidder: payable(address(0)),
+            auctionEnd: auctionEnd
+        });
+
+        emit AuctionCreated(auctionId, _tokenId, msg.sender, _floorPrice, auctionEnd);
+
         return auctionId;
     }
 
-    function resellProduct(uint256 tokenId, uint256 price) public payable{
 
-        require(idToProduct[tokenId].owner == msg.sender, "Only Owner of the NFT can resale this Product");
-        require(msg.value == _listingPrice, "Listing Payment must be equal to listing price");
+    function placeBid(uint256 _auctionId) external payable {
+        Auction storage auction = idToAuction[_auctionId];
+        require(auction.auctionId != 0, "Auction does not exist");
+        require(block.timestamp < auction.auctionEnd, "Auction has already ended");
 
-        idToProduct[tokenId].sold = false;
-        idToProduct[tokenId].price = price;
-        idToProduct[tokenId].seller = payable(msg.sender);
-        idToProduct[tokenId].owner = payable(address(this));
+        require(msg.value > auction.highestBid, "Bid must be greater than the highest bid");
 
-        _productsSold.decrement();
-        _transfer(msg.sender, address(this), tokenId);
+        if(auction.highestBidder != address(0)){
+        // Refund the previous highest bidder
+        auction.highestBidder.transfer(auction.highestBid);
+        }
 
+        idToAuction[_auctionId].highestBid = msg.value;
+        idToAuction[_auctionId].highestBidder = payable(msg.sender);
+
+        emit BidPlaced(_auctionId, msg.sender, msg.value);
     }
 
-    function buyProduct( uint256 tokenId) public payable {
-        uint256 price = idToProduct[tokenId].price;
-        uint256 royaltyAmount = (price * idToProduct[tokenId].royalty) / 100;
-        require(msg.value == price, "Please Top up the asking price to purchase the product");
+    function restartAuction(
+        uint256 _auctionId,
+        uint256 _floorPrice,
+        uint256 auctionEnd
+    ) public onlyOwner {
+        idToAuction[_auctionId].floorPrice = _floorPrice;
+        idToAuction[_auctionId].auctionEnd = auctionEnd;
+    }
 
-        idToProduct[tokenId].owner = payable(msg.sender);
-        idToProduct[tokenId].sold = true;
+    function endAuction(uint256 _auctionId) external {
+        Auction storage auction = idToAuction[_auctionId];
+        Product storage product = idToProduct[auction.tokenId];
+        uint256 price = auction.highestBid;
+        uint256 royaltyAmount = (price * product.royalty) / 100;
 
-        _productsSold.increment();
-        _transfer(address(this), msg.sender, tokenId);
+        console.log("time %s %s %s", block.timestamp, auction.auctionEnd, block.timestamp >= auction.auctionEnd);
+        require(auction.auctionId != 0, "Auction does not exist");
+        require(auction.highestBidder != address(0), "No Bids Found on Auction");
 
-        payable(owner()).transfer(_listingPrice);
-        if(idToProduct[tokenId].seller == idToProduct[tokenId].creator){
-            payable(idToProduct[tokenId].seller).transfer(price);
+        if(product.creator != ownerOf(product.tokenId)){
+            console.log("Transfer %s Ether to %s", price - royaltyAmount, auction.seller);
+            payable(auction.seller).transfer(price  - royaltyAmount);
+            console.log("Transfer Complete");
+            console.log("Royalty Transfer %s Ether to %s", royaltyAmount, product.creator);
+            payable(product.creator).transfer(royaltyAmount); 
+            console.log("Transfer Complete");
         }else{
-            payable(idToProduct[tokenId].seller).transfer(price - royaltyAmount);
-            payable(idToProduct[tokenId].creator).transfer(royaltyAmount); 
+            console.log('Transfer %s Ether to %s', price, auction.seller);
+            payable(auction.seller).transfer(price);
+            console.log('Ether Transfer Complete');  
         }
+        console.log("Transfer %s to %s", auction.tokenId, auction.highestBidder);
+        _transfer(ownerOf(auction.tokenId), auction.highestBidder, auction.tokenId);
+        console.log('NFT Transfer Complete');
+        
+        emit AuctionEnded(_auctionId, auction.seller, auction.floorPrice);
     }
 
-
-    function fetchMarketProducts() public view returns(Product[] memory){
-        uint256 itemsCount = _tokenIds.current();
-        uint256 unsoldCount = _tokenIds.current() - _productsSold.current();
-
-        Product[] memory items = new Product[](unsoldCount);
-
-        uint256 currentIndex = 0;
-
-        for(uint256 i = 0; i < itemsCount; i++){
-            Product storage currentProduct = idToProduct[i + 1];
-            if(currentProduct.owner == address(this)){
-                items[currentIndex] = currentProduct;
-                currentIndex++;
-            }
-        }
-
-        return items;
-    }
-
-    function fetchMyProducts() public view returns(Product[] memory){
-        uint256 itemsCount = _tokenIds.current();
-        uint256 myProducts = 0;
-
-        for(uint256 i = 0; i < itemsCount; i++){
-            Product storage currentProduct = idToProduct[i + 1];
-            if(currentProduct.owner == msg.sender){
-                myProducts++;
-            }
-        }
-
-        Product[] memory items = new Product[](myProducts);
-        uint256 currentIndex = 0;
-
-        for(uint256 i = 0; i < itemsCount; i++){
-            Product storage currentProduct = Products[i];
-            if(currentProduct.owner == msg.sender){
-                items[currentIndex] = currentProduct;
-                currentIndex++;
-            }
-        }
-
-        return items;
-    }
-
-
-
-    function fetchProductsListed() public view returns(Product[] memory){
-        uint256 itemsCount = _tokenIds.current();
-        uint256 myProducts = 0;
-
-        for(uint256 i = 0; i < itemsCount; i++){
-            Product storage currentProduct = idToProduct[i + 1];
-            if(currentProduct.seller == msg.sender){
-                myProducts++;
-            }
-        }
-
-        Product[] memory items = new Product[](myProducts);
-        uint256 currentIndex = 0;
-
-        for(uint256 i = 0; i < itemsCount; i++){
-            Product storage currentProduct = idToProduct[i + 1];
-            if(currentProduct.seller == msg.sender){
-                items[currentIndex] = currentProduct;
-                currentIndex++;
-            }
-        }
-
-        return items;
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    function _baseURI() internal pure override returns (string memory) {
-        return "ipfs://";
-    }
-    // The following functions are overrides required by Solidity.
-
-    function tokenURI(uint256 tokenId)
-        public
-        view
-        override(ERC721URIStorage)
-        returns (string memory)
-    {
-        return super.tokenURI(tokenId);
-    }
-
-    function supportsInterface(bytes4 interfaceId)
-        public
-        view
-        override(ERC721URIStorage)
-        returns (bool)
-    {
-        return super.supportsInterface(interfaceId);
-    }
 }
 
 

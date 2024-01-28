@@ -44,6 +44,9 @@ import { Calendar } from "@/components/ui/calendar"
 import { format } from 'date-fns'
 import { Button } from '../ui/button'
 import { useContext, useEffect, useState } from 'react'
+import { parseEther } from 'viem'
+import { useContractEvent } from 'wagmi'
+import NftAbi from '@/data/abi/MyNFT.json'
 
 interface FormInput {
   name: string;
@@ -103,8 +106,7 @@ const MintForm = (props: Props) => {
     isLoading, 
     isError,
     transactionSuccess,
-    prepareArguments, 
-    prepareContractWrite 
+    contractWrite 
   } = useContext(ContractWriteContext)
   
   
@@ -115,33 +117,39 @@ const MintForm = (props: Props) => {
       setUploading(true)
       const image_cid = await storeAsset(image ? [image]:null)
       const files_cid = await storeAsset(files)
-      setUploadSuccess(true)
-      const metadata:NFT = {
-        ...others,
+      const metadata = {
+        name:others.name,
+        description:others.description,
         image:`https://nftstorage.link/ipfs/${image_cid}/${image?.name}`,
         files:`ipfs://${files_cid}`,
       }
-      prepareContractWrite(true, process.env.NEXT_PUBLIC_LISTING_PRICE as string)
-      prepareArguments(
+      const metadata_json = JSON.stringify(metadata)
+      const metadata_file = new File([metadata_json], 'metadata.json', { type:'application/json' })
+
+      const metadata_cid = await storeAsset([metadata_file])
+      setUploadSuccess(true)
+
+      contractWrite(
+        'mintProduct',
+        process.env.NEXT_PUBLIC_LISTING_PRICE as string,
         [
-          metadata.name,
-          metadata.description,
-          metadata.image,
-          metadata.files,
-          metadata.price,
-          metadata.auction,
-          metadata.auctionEnd,
-          metadata.royalty
-        ])
+          `ipfs://${metadata_cid}`,
+          parseEther(others.price.toString(), 'wei'),
+          others.auction,
+          Math.round(others.auctionEnd / 1000),
+          others.royalty
+        ]
+        )
+      form.reset()
     } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "Uh oh! Something went wrong.",
-        description: "There was a problem with uploading your files.",
-        action: <ToastAction altText="Try again">Try again</ToastAction>,
-      })
-      setOpen(false)
-      console.log('error', error)
+        toast({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description: "There was a problem with uploading your files.",
+          action: <ToastAction altText="Try again">Try again</ToastAction>,
+        })
+        setOpen(false)
+        console.log('error', error)
     } finally {
       setUploading(false)
     }
@@ -156,7 +164,14 @@ const MintForm = (props: Props) => {
     }
   }, [form, isError, transactionSuccess])
 
-
+  useContractEvent({
+    address:process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as `0x${string}`,
+    abi:NftAbi,
+    eventName:'ProductCreated',
+    listener:(logs:any) => {
+      console.log('event', logs[0], typeof(logs[0]))
+    }
+  })
   return (
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-5">
