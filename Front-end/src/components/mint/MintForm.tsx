@@ -44,6 +44,9 @@ import { Calendar } from "@/components/ui/calendar"
 import { format } from 'date-fns'
 import { Button } from '../ui/button'
 import { useContext, useEffect, useState } from 'react'
+import { parseEther } from 'viem'
+import { useContractEvent } from 'wagmi'
+import NftAbi from '@/data/abi/MyNFT.json'
 
 interface FormInput {
   name: string;
@@ -103,8 +106,7 @@ const MintForm = (props: Props) => {
     isLoading, 
     isError,
     transactionSuccess,
-    prepareArguments, 
-    prepareContractWrite 
+    contractWrite 
   } = useContext(ContractWriteContext)
   
   
@@ -127,15 +129,18 @@ const MintForm = (props: Props) => {
       const metadata_cid = await storeAsset([metadata_file])
       setUploadSuccess(true)
 
-      prepareContractWrite(true, process.env.NEXT_PUBLIC_LISTING_PRICE as string)
-      prepareArguments(
+      contractWrite(
+        'mintProduct',
+        process.env.NEXT_PUBLIC_LISTING_PRICE as string,
         [
           `ipfs://${metadata_cid}`,
-          others.price,
+          parseEther(others.price.toString(), 'wei'),
           others.auction,
-          others.auctionEnd,
+          Math.round(others.auctionEnd / 1000),
           others.royalty
-        ])
+        ]
+        )
+      form.reset()
     } catch (error) {
         toast({
           variant: "destructive",
@@ -159,7 +164,14 @@ const MintForm = (props: Props) => {
     }
   }, [form, isError, transactionSuccess])
 
-
+  useContractEvent({
+    address:process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as `0x${string}`,
+    abi:NftAbi,
+    eventName:'ProductCreated',
+    listener:(logs:any) => {
+      console.log('event', logs[0], typeof(logs[0]))
+    }
+  })
   return (
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-5">

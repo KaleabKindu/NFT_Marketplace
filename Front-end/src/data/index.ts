@@ -330,3 +330,32 @@ export const users = [
   },
 
 ]
+
+
+export const nft_detail = {
+  tokenId:7,
+  name:'Boomrang',
+  description:'Unleash your inner meowjesty with the Tatto Kitty Gang! These 9,999 uniquely tattooed NFTs purr with purrsonality and rebellion. Every swirl and line tells a story, from delicate flower vines to bold tribal markings. Find your perfect feline match, unlock exclusive perks like DAO membership and metaverse access, and join a purrfectly messy community of cat-loving rebels. Mint your Tatto Kitty and let the purrpetual rebellion begin.',
+  image:'/landing-page/audio-category.jpg',
+  category:'image',
+  price:'5',
+  auction:{
+    auctionId:3,
+    auctionEnd: Date.now() + 5000000000,
+    current_price:'0.05'
+  },
+  likes:22,
+  creator:{
+    name:'Anthony Stark',
+    address:'0xowieurweoor',
+    royalty:5
+  },
+  owner:{
+    name:'Bruce Banner',
+    address:'0xowieurweoor'
+  },
+  collection:{
+    name:'Avengers',
+    address:'0xowieurweoor'
+  }
+}
