@@ -5,6 +5,8 @@ using Application.Contracts.Persistance;
 using Application.Features.Assets.Dtos;
 using AutoMapper;
 using Domain.Assets;
+using Domain.Auctions;
+using Domain.Transactions;
 using ErrorOr;
 using MediatR;
 
@@ -42,9 +44,30 @@ namespace Application.Features.Assets.Command
             var asset = _mapper.Map<Asset>(request.CreateAssetDto);
             asset.Creator = user;
             asset.Owner = user;
+            var auction = new Auction{
+                AuctionId = request.CreateAssetDto.Auction.AuctionId,
+                TokenId = request.CreateAssetDto.TokenId,
+                Seller = user,
+                FloorPrice = request.CreateAssetDto.Price,
+                AuctionEnd = request.CreateAssetDto.Auction.AuctionEnd,
+                HighestBid = request.CreateAssetDto.Price,
+                
+            };
+
+            asset.Auction = auction;
 
             await _unitOfWork.AssetRepository.AddAsync(asset);
 
+            await _unitOfWork.TransactionRepository.AddAsync(new Transaction
+            {
+                Asset = asset,
+                Buyer = null,
+                Seller = null,
+                Amount = request.CreateAssetDto.Price,
+                Type = TransactionType.Mint,
+                BlockchainTxHash = request.CreateAssetDto.TransactionHash,
+                Status = TransactionStatus.Completed
+            });
 
             if (await _unitOfWork.SaveAsync() == 0)
                 throw new DbAccessException("Database Error: Unable To Save");

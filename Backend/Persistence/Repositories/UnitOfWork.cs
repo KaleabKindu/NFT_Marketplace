@@ -18,6 +18,7 @@ namespace Persistence.Repositories
         private IOfferRepository _offerRepository;
         private ICategoryRepository _CategoryRepository;
         private ITransactionRepository _transactionRepository;
+        private IAuctionRepository _AuctionRepository;
 
         public UnitOfWork(AppDbContext dbContext, UserManager<AppUser> userManager, IJwtService jwtService, IEthereumCryptoService ethereumCryptoService)
         {
@@ -73,6 +74,14 @@ namespace Persistence.Repositories
                 if (_assetRepository == null)
                     _assetRepository =  new AssetRepository(_dbContext);
             return _assetRepository;
+            }
+        }
+
+        public IAuctionRepository AuctionRepository{
+            get {
+                if (_AuctionRepository == null)
+                    _AuctionRepository = new AuctionRepository(_dbContext);
+                return _AuctionRepository;
             }
         }
 

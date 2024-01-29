@@ -18,7 +18,7 @@ namespace Application.Features.Transactions.Dtos
         public UserProfile Buyer { get; set; }
         public UserProfile Seller { get; set; }
         public AssetDetailDto Asset { get; set; }
-        public double Amount { get; set; }
+        public string Amount { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public TransactionStatus Status { get; set; }

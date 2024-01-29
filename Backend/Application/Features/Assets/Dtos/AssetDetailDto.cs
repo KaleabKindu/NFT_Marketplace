@@ -1,4 +1,5 @@
 using System;
+using Application.Features.Auctions.Dtos;
 using Application.Features.Auth.Dtos;
 
 namespace Application.Features.Assets.Dtos
@@ -15,7 +16,7 @@ namespace Application.Features.Assets.Dtos
         public UserFetchDto Creator { get; set; }
         public UserFetchDto Owner { get; set; }
 
-        // public AuctionDto   Auction {get; set;}
+        public GetAuctionDto   Auction {get; set;}
         public float Royalty { get; set; }
         public int likes {get; set;}
 

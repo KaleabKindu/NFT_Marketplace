@@ -11,6 +11,7 @@ namespace Application.Contracts.Persistance
         ICategoryRepository CategoryRepository { get; }
         IAssetRepository AssetRepository{get;}
         ITransactionRepository TransactionRepository{ get;}
+        IAuctionRepository AuctionRepository{get;}
 
         Task<int> SaveAsync();
     }
