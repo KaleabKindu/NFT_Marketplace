@@ -11,6 +11,8 @@ using Domain.Bids;
 using Domain.Assets;
 using Domain.Transactions;
 using Application.Features.Transactions.Dtos;
+using Domain.Auctions;
+using Application.Features.Auctions.Dtos;
 
 namespace Application.Profiles
 {
@@ -81,6 +83,16 @@ namespace Application.Profiles
             CreateMap<Transaction, TransactionDto>()
                     .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.Type.ToString())); 
             #endregion Transaction
+
+
+            #region Auction
+
+            CreateMap<Auction, GetAuctionDto>()
+                .ForMember(dest => dest.CurrentPrice , opt => opt.MapFrom(src => src.HighestBid));  
+            CreateMap<Auction, CreateAuctionDto>().ReverseMap();
+
+            #endregion Auction
+
         
         }
 
