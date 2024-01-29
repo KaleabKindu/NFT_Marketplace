@@ -44,6 +44,7 @@ namespace Application.Features.Assets.Command
             asset.Creator = user;
             asset.Owner = user;
             var auction = new Auction{
+                AuctionId = request.CreateAssetDto.Auction.AuctionId,
                 TokenId = request.CreateAssetDto.TokenId,
                 Seller = user,
                 FloorPrice = request.CreateAssetDto.Price,
@@ -52,7 +53,7 @@ namespace Application.Features.Assets.Command
                 
             };
 
-            await _unitOfWork.AuctionRepository.AddAsync(auction);
+            asset.Auction = auction;
 
             await _unitOfWork.AssetRepository.AddAsync(asset);
 

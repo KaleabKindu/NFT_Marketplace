@@ -1,8 +1,9 @@
 using System;
+using Application.Features.Common;
 
 namespace Application.Features.Assets.Dtos
 {
-    public class AssetListDto
+    public class AssetListDto : BaseDto
     {
         public string Category { get; set; }
         
