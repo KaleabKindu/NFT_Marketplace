@@ -3,6 +3,7 @@ using Application.Features.Assets.Query;
 using Application.Features.Assets.Dtos;
 using Microsoft.AspNetCore.Mvc;
 using Application.Contracts;
+using Microsoft.AspNetCore.Authorization;
 
 
 namespace API.Controllers
@@ -13,19 +14,24 @@ namespace API.Controllers
     {
         public AssetsController(IUserAccessor userAccessor):base(userAccessor){}
 
+        [AllowAnonymous]
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
 
             return HandleResult(await Mediator.Send(new GetAssetByIdQuery { Id = id }));
         }
+        
 
+        [AllowAnonymous]
         [HttpGet("all")]
         public async Task<IActionResult> GetAll([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
         {
             return HandleResult(await Mediator.Send(new GetAllAssetQuery { PageNumber = pageNumber, PageSize = pageSize }));
         }
+        
 
+        [AllowAnonymous]
         [HttpGet("open-auction")]
         public async Task<IActionResult> Get ([FromQuery] int pageNumber = 1 , [FromQuery] int pageSize = 10){
            

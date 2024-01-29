@@ -15,7 +15,6 @@ namespace Application.Features.Assets.Dtos.Validators
         RuleFor(dto => dto.Category).NotNull().WithMessage("Category is required.");
         RuleFor(dto => dto.Price).NotEmpty().WithMessage("Price is required.");
         // RuleFor(dto => dto.Auction).NotNull().WithMessage("Auction is required.");
-        RuleFor(dto => dto.CollectionId).GreaterThan(0).WithMessage("Valid CollectionId is required.");
         RuleFor(dto => dto.Royalty).GreaterThanOrEqualTo(0).WithMessage("Valid Royalty is required.");
     }
 }
