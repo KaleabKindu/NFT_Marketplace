@@ -1,3 +1,4 @@
+using Domain.Auctions;
 using Domain.Bids;
 
 namespace Domain.Assets
@@ -12,7 +13,7 @@ namespace Domain.Assets
         public AppUser Creator { get; set; }
         public string Category { get; set; }
         public string Price { get; set; }
-        // public Auction Auction { get; set; }
+        public Auction Auction { get; set; }
         public long CollectionId { get; set; }
         public float Royalty { get; set; }
         public List<Bid> Bids { get; set; }

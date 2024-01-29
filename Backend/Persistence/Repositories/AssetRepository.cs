@@ -16,13 +16,16 @@ namespace Persistence.Repositories
 
         public async Task<IEnumerable<Asset>> GetAssetsWOpenAuct()
         {
-            throw new NotImplementedException();
+            DateTime epochStart = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            long epochTimeInSeconds = (long)(DateTime.Now - epochStart).TotalSeconds;
+            return await _dbContext.Assets.Include(asset => asset.Auction).Where(asset => asset.Auction.AuctionEnd > epochTimeInSeconds).ToListAsync();
         }
 
-        public async Task<Asset> GetAssetWithUser (long id){
+        public async Task<Asset> GetAssetWithDetail (long id){
             return  await _context.Assets
             .Include( asset => asset.Creator)
             .Include(asset => asset.Owner)
+            .Include(asset => asset.Auction)
             .FirstOrDefaultAsync( asset => asset.Id == id);
         }
     }

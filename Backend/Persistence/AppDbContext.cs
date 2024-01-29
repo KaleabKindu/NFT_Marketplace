@@ -1,5 +1,6 @@
 ﻿using Domain;
 using Domain.Assets;
+using Domain.Auctions;
 using Domain.Bids;
 using Domain.Categories;
 using Domain.Offers;
@@ -56,6 +57,7 @@ namespace Persistence
         public DbSet<Bid> Bids { get; set; }
         public DbSet<Asset> Assets{get; set;}
         public DbSet<Transaction> Transactions { get; set; }
+        public DbSet<Auction> Auctions {get; set;}
 
     }
 }
