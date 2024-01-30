@@ -46,7 +46,7 @@ const NFTDetailLeft = ({id}: Props) => {
         :
         <div className='flex-1 flex flex-col gap-10'>
             <div className="relative h-[25rem] lg:h-[50rem]">
-                <Image className='object-cover rounded-lg' src={asset?.image || ''} fill alt=''/>
+                <Image className='object-cover rounded-lg' src={asset?.image || '/landing-page/audio-category.jpg'} fill alt=''/>
                 <Badge className='flex items-center gap-3 absolute top-5 right-5 bg-background/30 hover:bg-background text-foreground' >
                     <Button variant='ghost' size={'sm'} className='rounded-full h-auto p-2' onClick={handleLikes}>
                         <FaHeart className={`${liked && 'text-red-500'} p-0`} size={20} />
@@ -63,7 +63,7 @@ const NFTDetailLeft = ({id}: Props) => {
                     <AccordionItem value="item-1">
                         <AccordionTrigger className="bg-accent text-accent-foreground px-5 rounded-md mb-5">Description</AccordionTrigger>
                         <AccordionContent className="px-5">
-                        {asset?.description}
+                        {asset?.description || 'No Description'}
                         </AccordionContent>
                     </AccordionItem>
 
@@ -79,11 +79,11 @@ const NFTDetailLeft = ({id}: Props) => {
                                 </div> */}
                                 <div className="flex justify-between items-center">
                                     <TypographyH4 text={'Token ID: '}/>
-                                    <TypographyP text={asset?.tokenId}/>
+                                    <TypographyP text={asset?.tokenId || 1}/>
                                 </div>
                                 <div className="flex justify-between items-center">
                                     <TypographyH4 text={'Creator Royality: '}/>
-                                    <TypographyP text={`${asset?.royalty}%`}/>
+                                    <TypographyP text={`${asset?.royalty || 5}%`}/>
                                 </div>
                             </div>
                         </AccordionContent>

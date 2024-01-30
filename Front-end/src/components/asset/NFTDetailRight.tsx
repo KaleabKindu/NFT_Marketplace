@@ -93,6 +93,8 @@ const NFTDetailRight = ({id}: Props) => {
   useEffect(() => {
     if(asset){
       setAuction(asset.auction?.auctionId !== 0)
+    }else{
+      setAuction(true)
     }
   },[asset])
   return (
@@ -104,18 +106,18 @@ const NFTDetailRight = ({id}: Props) => {
         <div className='flex flex-col gap-10'>
             <TypographyH2 text={asset?.name}/>
             <div className='flex flex-wrap items-center lg:divide-x-2'>
-              <Link href={`${Routes.USER}/${asset?.creator?.publicAddress}`} className='flex lg:min-w-[25%] items-center gap-3 p-5'>
+              <Link href={`${Routes.USER}/${asset?.creator?.publicAddress || nft_detail.creator.address}`} className='flex lg:min-w-[25%] items-center gap-3 p-5'>
                 <Avatar className='h-12 w-12'/>
                 <div className='flex flex-col'>
                   <TypographySmall text='Creator'/>
-                  <TypographyH4 text={asset?.creator?.userName}/>
+                  <TypographyH4 text={asset?.creator?.userName || nft_detail.creator.name}/>
                 </div>
               </Link>
-              <Link href={`${Routes.USER}/${asset?.owner?.publicAddress}`} className='flex lg:min-w-[25%] items-center gap-3 p-5'>
+              <Link href={`${Routes.USER}/${asset?.owner?.publicAddress || nft_detail.owner.address}`} className='flex lg:min-w-[25%] items-center gap-3 p-5'>
                 <Avatar className='h-12 w-12'/>
                 <div className='flex flex-col'>
                   <TypographySmall text='Owner'/>
-                  <TypographyH4 text={asset?.owner?.userName}/>
+                  <TypographyH4 text={asset?.owner?.userName || nft_detail.owner.name}/>
                 </div>
               </Link>
               {/* <Link href={`${Routes.COLLECTION}`} className='flex items-center gap-3 p-5'>
@@ -134,7 +136,7 @@ const NFTDetailRight = ({id}: Props) => {
                             className='text-primary/60' 
                             text={        
                             <CountDown
-                                date={new Date(asset?.auction?.auction_end || 0)}
+                                date={new Date(asset?.auction?.auction_end || nft_detail.auction.auctionEnd)}
                                 renderer={onRender}
                             />}/>
                 </div>}
@@ -142,7 +144,7 @@ const NFTDetailRight = ({id}: Props) => {
                     <div>
                         <TypographyP text='Current Price'/>
                         <div className='flex gap-2 items-end'>
-                            <TypographyH2  text={`${asset?.price} ETH`}/>
+                            <TypographyH2  text={`${asset?.price || 0.394} ETH`}/>
                             <TypographyP className='text-primary/60' text={`$${807.07}`}/>
                         </div>
                     </div>
