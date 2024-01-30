@@ -44,16 +44,21 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from "@hookform/resolvers/zod"
 import { MdWallet } from 'react-icons/md'
 import { useAccount, useBalance } from 'wagmi'
-import { formatEther, parseEther } from 'viem'
-type Props = {}
+import { useGetNFTQuery } from "@/store/api"
+import { Skeleton } from "../ui/skeleton"
 
-const NFTDetailRight = (props: Props) => {
+type Props = {
+  id:string 
+}
+
+const NFTDetailRight = ({id}: Props) => {
+  const { data:asset, isLoading } = useGetNFTQuery(id)
   const [ bidModal, setBidModal ] = useState(false)
   const [ saleModal, setSaleModal ] = useState(false)
 
-  const [ fixedSale, setFixedSale ] = useState(false)
+  const [ auction, setAuction ] = useState(false)
   const { 
-    isLoading, 
+    isLoading:writing,
     isError,
     transactionSuccess,
     contractWrite 
@@ -75,93 +80,97 @@ const NFTDetailRight = (props: Props) => {
 
     const handleBuy = () => {
       setSaleModal(true)
-      setFixedSale(true)
     }
     const handleBid = () => {
       setBidModal(true)
-      setFixedSale(false)
     }
     useEffect(() => {
       if(isError || transactionSuccess){
         setBidModal(false)
         setSaleModal(false)
-        setFixedSale(false)
       }
     }, [isError, transactionSuccess])
+  useEffect(() => {
+    if(asset){
+      setAuction(asset.auction?.auctionId !== 0)
+    }
+  },[asset])
   return (
+    <>
+    {isLoading ?
+        <Skeleton className="flex-1 h-[25rem] lg:h-[50rem] rounded-md" />
+        :
     <div className='flex-1 p-3'>
         <div className='flex flex-col gap-10'>
-            <TypographyH2 text={nft_detail.name}/>
+            <TypographyH2 text={asset?.name}/>
             <div className='flex flex-wrap items-center lg:divide-x-2'>
-              <Link href={`${Routes.USER}/${nft_detail.creator.address}`} className='flex items-center gap-3 p-5'>
+              <Link href={`${Routes.USER}/${asset?.creator?.publicAddress}`} className='flex lg:min-w-[25%] items-center gap-3 p-5'>
                 <Avatar className='h-12 w-12'/>
                 <div className='flex flex-col'>
                   <TypographySmall text='Creator'/>
-                  <TypographyH4 text={nft_detail.creator.name}/>
+                  <TypographyH4 text={asset?.creator?.userName}/>
                 </div>
               </Link>
-              <Link href={`${Routes.USER}/${nft_detail.owner.address}`} className='flex items-center gap-3 p-5'>
+              <Link href={`${Routes.USER}/${asset?.owner?.publicAddress}`} className='flex lg:min-w-[25%] items-center gap-3 p-5'>
                 <Avatar className='h-12 w-12'/>
                 <div className='flex flex-col'>
                   <TypographySmall text='Owner'/>
-                  <TypographyH4 text={nft_detail.owner.name}/>
+                  <TypographyH4 text={asset?.owner?.userName}/>
                 </div>
               </Link>
-              <Link href={`${Routes.COLLECTION}`} className='flex items-center gap-3 p-5'>
+              {/* <Link href={`${Routes.COLLECTION}`} className='flex items-center gap-3 p-5'>
                 <Avatar className='h-12 w-12' src='/collection/collection.png'/>
                 <div className='flex flex-col'>
                   <TypographySmall text='Collection'/>
                   <TypographyH4 text={nft_detail.collection.name}/>
                 </div>
-              </Link>
+              </Link> */}
             </div>
             <div className='flex flex-col gap-5 border rounded-md bg-secondary/50'>
+               {auction &&
                 <div className='flex flex-col gap-5 border-b p-5'>
                     <TypographyH2 text='Auction Ends in:'/>
                     <TypographyH3 
                             className='text-primary/60' 
                             text={        
                             <CountDown
-                                date={nft_detail.auction.auctionEnd}
+                                date={new Date(asset?.auction?.auction_end || 0)}
                                 renderer={onRender}
                             />}/>
-                </div>
+                </div>}
                 <div className='flex flex-col gap-10 p-5'>
                     <div>
                         <TypographyP text='Current Price'/>
                         <div className='flex gap-2 items-end'>
-                            <TypographyH2  text={`${'0.3948'} ETH`}/>
+                            <TypographyH2  text={`${asset?.price} ETH`}/>
                             <TypographyP className='text-primary/60' text={`$${807.07}`}/>
                         </div>
                     </div>
-                    <div className='flex gap-5'>
-                        <Button type='button' className='flex-1' onClick={handleBid}>
-                        {isLoading && fixedSale ? 
-                          <>
-                            <Loader2 className="mr-2 h-6 w-6 animate-spin" />
-                            Placing Bid...
-                          </>:'Place Bid'}
-                        </Button>
-                        <Button type='button' className='flex-1' variant={'secondary'} onClick={handleBuy}>
-                        {isLoading && !fixedSale ? 
-                          <>
-                            <Loader2 className="mr-2 h-6 w-6 animate-spin" />
-                            Buying...
-                          </>:'Buy Now'}
-                        </Button>
-                    </div>
+                    {/* <div className='flex gap-5'> */}
+                        {auction && 
+                        <Button type='button' className='flex-1 lg:w-[50%] w-full' onClick={handleBid}>
+                          Place Bid
+                        </Button>}
+                        {!auction &&
+                        <Button type='button' className='flex-1 lg:w-[50%] w-full' variant={'secondary'} onClick={handleBuy}>
+                          Buy Now
+                        </Button>}
+                    {/* </div> */}
                 </div>
             </div>
+            {auction && 
             <Accordion type="single" collapsible defaultValue='item-1'>
                 <AccordionItem value="item-2">
                     <AccordionTrigger className="bg-accent text-accent-foreground px-5 rounded-t-md">Bids</AccordionTrigger>
                     <AccordionContent className=""><BidsTable/></AccordionContent>
                 </AccordionItem>
-            </Accordion>
+            </Accordion>}
         </div>
-        <BidModal open={bidModal} close={() => setBidModal(false)} auctionId={nft_detail.auction.auctionId}/>
-        <SaleModal open={saleModal} close={() => setSaleModal(false)} tokenId={nft_detail.tokenId} price={nft_detail.price}/>
-    </div>
+        <BidModal open={bidModal} close={() => setBidModal(false)} auctionId={asset?.auction?.auctionId as number}/>
+        <SaleModal open={saleModal} close={() => setSaleModal(false)} tokenId={asset?.tokenId as number} price={asset?.price as string}/>
+    </div>}
+    
+    </>
   ) 
 }
 

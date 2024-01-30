@@ -30,7 +30,7 @@ import { ToastAction } from '../ui/toast'
 
 import { File } from 'nft.storage'
 import { cn, storeAsset } from '@/lib/utils'
-import { NFT } from '@/types'
+import { Auction, NFT } from '@/types'
 import { CalendarIcon, Loader2 } from "lucide-react"
 import { useToast } from "@/components/ui/use-toast"
 import { RiAuctionLine } from "react-icons/ri";
@@ -43,10 +43,13 @@ import {
 import { Calendar } from "@/components/ui/calendar"
 import { format } from 'date-fns'
 import { Button } from '../ui/button'
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useRef, useState } from 'react'
 import { parseEther } from 'viem'
 import { useContractEvent } from 'wagmi'
 import NftAbi from '@/data/abi/MyNFT.json'
+import { useCreateNFTMutation } from '@/store/api'
+import { useRouter } from 'next/navigation'
+import { Routes } from '@/routes'
 
 interface FormInput {
   name: string;
@@ -94,9 +97,13 @@ type Props = {}
 const MintForm = (props: Props) => {
   const [ uploading, setUploading ] = useState(false)
   const [ uploadSuccess, setUploadSuccess ] = useState(false)
+  const [ uploadNftSuccess, setUploadNftSuccess ] = useState(false)
+  const [ uploadNft, setUploadNft ] = useState(false)
+  const router = useRouter()
   const [ open, setOpen ] = useState(false)
+  const payload = useRef<NFT | undefined>(undefined)
   const { toast } = useToast()
-
+  const [ postNFT ] = useCreateNFTMutation()
   const form = useForm<FormInput>({
     resolver:zodResolver(schema),
     defaultValues:initialState
@@ -107,7 +114,7 @@ const MintForm = (props: Props) => {
     isError,
     transactionSuccess,
     contractWrite 
-  } = useContext(ContractWriteContext)
+  } = useContext(ContractWriteContext) 
   
   
   const onSubmit = async (values:FormInput) =>{
@@ -125,6 +132,20 @@ const MintForm = (props: Props) => {
       }
       const metadata_json = JSON.stringify(metadata)
       const metadata_file = new File([metadata_json], 'metadata.json', { type:'application/json' })
+      const asset_payload:NFT = {
+        name:values.name,
+        description:values.description,
+        image:`https://nftstorage.link/ipfs/${image_cid}/${image?.name}`,
+        category:'image',
+        collectionId:1,
+        price:values.price.toString(),
+        royalty:values.royalty,
+        auction:values.auction ? {
+          auction_end: Math.round(values.auctionEnd / 1000),
+        }:undefined
+      }
+      payload.current = asset_payload
+      
 
       const metadata_cid = await storeAsset([metadata_file])
       setUploadSuccess(true)
@@ -140,7 +161,7 @@ const MintForm = (props: Props) => {
           others.royalty
         ]
         )
-      form.reset()
+      form.reset(initialState)
     } catch (error) {
         toast({
           variant: "destructive",
@@ -154,22 +175,49 @@ const MintForm = (props: Props) => {
       setUploading(false)
     }
   }
+  const postAsset = async (asset:NFT) => {
+    try {
+      setUploadNft(true)
+      const id = await postNFT(asset).unwrap()
+      setUploadNftSuccess(true)
+      form.reset(initialState)
+      router.push(`${Routes.PRODUCT}/${id}`)
+    } catch (error) {
+      console.log(error)
+    } finally{
+      setUploadNft(false)
+      setOpen(false)
+    }
+  }
 
   useEffect(() => {
-    if(isError || transactionSuccess){
+    if(isError){
       setOpen(false)
-      if(transactionSuccess){
-        form.reset(initialState)
-      }
     }
-  }, [form, isError, transactionSuccess])
+  }, [isError])
 
   useContractEvent({
     address:process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as `0x${string}`,
     abi:NftAbi,
     eventName:'ProductCreated',
     listener:(logs:any) => {
-      console.log('event', logs[0], typeof(logs[0]))
+      const event = logs[0]
+      const product = event.args
+      console.log('event', product)
+      const _payload = payload.current
+      const asset:NFT = {
+        ..._payload as NFT,
+        tokenId:parseInt((product.tokenId as bigint).toString()),
+        auction:{
+          ..._payload?.auction as Auction,
+          auctionId:parseInt((product.auctionId as bigint).toString())
+        },
+        transactionHash:event.transactionHash
+      }
+      if(_payload){
+        console.log('asset', asset)
+        postAsset(asset)
+      }
     }
   })
   return (
@@ -328,7 +376,7 @@ const MintForm = (props: Props) => {
                 </FormItem>
               )}
             />
-          <ChooseCollection/>
+          {/* <ChooseCollection/> */}
           <Button type='submit' disabled={uploading || isLoading } className='rounded-full self-end' size='lg'>
             {(uploading || isLoading) ? 
             <>
@@ -341,6 +389,8 @@ const MintForm = (props: Props) => {
           open={open}
           uploading={uploading} 
           uploadSuccess={uploadSuccess}
+          uploadNft={uploadNft}
+          uploadNftSuccess={uploadNftSuccess}
           />
       </Form>
 
@@ -355,9 +405,11 @@ type ProgressProps = {
   open:boolean,
   uploading:boolean,
   uploadSuccess:boolean,
+  uploadNft:boolean,
+  uploadNftSuccess:boolean,
 }
 
-export const MintingProgress = ({ open, uploading, uploadSuccess }: ProgressProps) => {
+export const MintingProgress = ({ open, uploading, uploadSuccess, uploadNft, uploadNftSuccess }: ProgressProps) => {
   const { 
     waitingForTransaction, 
     transactionSuccess, 
@@ -390,11 +442,11 @@ export const MintingProgress = ({ open, uploading, uploadSuccess }: ProgressProp
               </div>
               <div className='flex items-center gap-5'>
                 <div className='flex justify-center items-center rounded-full bg-secondary p-2 h-[3.5rem] w-[3.5rem]'>
-                  {waitingForTransaction ? <Loader2 className="h-8 w-8 animate-spin" />: transactionSuccess ? <IoCheckmarkCircle size={40}/>:<TypographyH4 text='3'/>}
+                  {uploadNft ? <Loader2 className="h-8 w-8 animate-spin" />: uploadNftSuccess ? <IoCheckmarkCircle size={40}/>:<TypographyH4 text='3'/>}
                 </div>
                 <div className='flex flex-col'>
-                  <TypographyH4 text='Minting Your Assets'/>
-                  <TypographySmall text='Please stay on this page and keep this browser tab open.'/>
+                  <TypographyH4 text='Uploading Your Assets to Server'/>
+                  <TypographySmall text='Your asset metadata is stored on our server'/>
                 </div>
               </div>
             </DialogDescription>

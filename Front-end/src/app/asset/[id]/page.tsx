@@ -1,16 +1,19 @@
+'use client'
 import NFTDetailsLeft from "@/components/asset/NFTDetailLeft"
 import NFTDetailsRight from "@/components/asset/NFTDetailRight"
 import NFTProvenance from "@/components/asset/NFTProvenance"
 import MoreFromCollection from "@/components/asset/MoreFromCollection"
 import MoreFromCreator from "@/components/asset/MoreFromCreator"
-type Props = {}
+type Props = {
+  params:{id:string}
+}
 
-const NFTDetail = (props: Props) => {
+const NFTDetail = ({params}: Props) => {
   return ( 
     <div className="flex flex-col gap-10 mt-16">
       <div className='flex flex-col lg:flex-row gap-10'>
-          <NFTDetailsLeft/>
-          <NFTDetailsRight/>
+          <NFTDetailsLeft id={params.id}/>
+          <NFTDetailsRight id={params.id}/>
       </div>
       <NFTProvenance/>
       <MoreFromCollection/>
