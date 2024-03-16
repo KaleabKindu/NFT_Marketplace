@@ -10,6 +10,7 @@
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,md,css}\""
   },
   "dependencies": {
+    "@files-ui/react": "^1.2.4",
     "@hookform/resolvers": "^3.3.3",
     "@radix-ui/react-accordion": "^1.1.2",
     "@radix-ui/react-avatar": "^1.0.4",
@@ -47,6 +48,7 @@
     "redux-persist": "^6.0.0",
     "tailwind-merge": "^2.1.0",
     "tailwindcss-animate": "^1.0.7",
+    "use-debounce": "^10.0.0",
     "viem": "^1.21.1",
     "wagmi": "^1.4.12",
     "zod": "^3.22.4"

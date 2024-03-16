@@ -118,6 +118,45 @@ export const categories = [
   },
 ];
 
+export const category_type = [
+  {
+    name: "Art",
+    value: "art"
+  },
+  {
+    name: "Photography",
+    value: "photography"
+  },
+  {
+    name: "Audio",
+    value: "audio"
+  },
+  {
+    name: "Video",
+    value: "video"
+  },
+  {
+    name: "3D",
+    value: "3d"
+  },
+  {
+    name: "Design",
+    value: "design"
+  },
+  {
+    name: "Drawing & Painting",
+    value: "drawing_painting"
+  },
+  {
+    name: "E-Books",
+    value: "e-books"
+  },
+  {
+    name: "Tickets",
+    value: "tickets"
+  },
+]
+
 export const provenances = [
   {
     event: "Sale",
@@ -266,27 +305,27 @@ export const sort_types = [
     value: "trending",
   },
   {
-    name: "Recently Listed",
-    value: "recently_listed",
+    name: "Recent",
+    value: "recent",
   },
   {
-    name: "Price Low - High",
+    name: "Low - High",
     value: "low_high",
   },
   {
-    name: "Price High - Low",
+    name: "High - Low",
     value: "high_low",
   },
 ];
 
 export const sale_types = [
   {
-    name: "Live Auction",
+    name: "Auction",
     value: "auction",
   },
   {
     name: "Buy Now",
-    value: "buy_now",
+    value: "fixed",
   },
 ];
 

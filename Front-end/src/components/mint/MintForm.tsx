@@ -54,6 +54,7 @@ import NftAbi from "@/data/abi/MyNFT.json";
 import { useCreateNFTMutation } from "@/store/api";
 import { useRouter } from "next/navigation";
 import { Routes } from "@/routes";
+import MultipleFilesUpload from "../common/MultipleFilesUpload";
 
 interface FormInput {
   name: string;
@@ -223,6 +224,7 @@ const MintForm = (props: Props) => {
       }
     },
   });
+  console.log(form.getValues('files'))
   return (
     <Form {...form}>
       <form
@@ -272,12 +274,7 @@ const MintForm = (props: Props) => {
             <FormItem>
               <FormLabel>Files</FormLabel>
               <FormControl>
-                <Input
-                  type="file"
-                  id="files"
-                  multiple
-                  onChange={(e) => field.onChange(e.target.files)}
-                />
+                <MultipleFilesUpload onChange={field.onChange}/>
               </FormControl>
               <FormDescription>
                 Upload Files relevant to the Digital Product you want to mint as
@@ -429,6 +426,7 @@ const MintForm = (props: Props) => {
       </form>
       <MintingProgress
         open={open}
+        openModal={(a) => setOpen(a)}
         uploading={uploading}
         uploadSuccess={uploadSuccess}
         uploadNft={uploadNft}
@@ -442,6 +440,7 @@ export default MintForm;
 
 type ProgressProps = {
   open: boolean;
+  openModal: (a:boolean) => void
   uploading: boolean;
   uploadSuccess: boolean;
   uploadNft: boolean;
@@ -450,6 +449,7 @@ type ProgressProps = {
 
 export const MintingProgress = ({
   open,
+  openModal,
   uploading,
   uploadSuccess,
   uploadNft,
@@ -458,7 +458,7 @@ export const MintingProgress = ({
   const { waitingForTransaction, transactionSuccess, writing, writeSuccess } =
     useContext(ContractWriteContext);
   return (
-    <Dialog open={open}>
+    <Dialog open={open} onOpenChange={(open) => openModal(open)}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Minting Your Assets</DialogTitle>

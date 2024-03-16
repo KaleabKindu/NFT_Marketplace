@@ -21,9 +21,9 @@ const HelpCenter = (props: Props) => {
           <MdOutlineKeyboardArrowDown className="ml-3" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent>
+      <DropdownMenuContent className="rounded-xl">
         {help_center.map((option, index) => (
-          <DropdownMenuItem key={index} className="py-3">
+          <DropdownMenuItem key={index} className="w-[200px] px-5 py-3">
             <Link href={option.route} className="w-full">
               {option.name}
             </Link>

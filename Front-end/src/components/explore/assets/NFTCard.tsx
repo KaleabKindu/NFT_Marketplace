@@ -15,7 +15,8 @@ type Props = {};
 const NFTCard = (props: Props) => {
   const [liked, setLiked] = useState(false);
   const [likes, setLikes] = useState(22);
-  const handleLikes = () => {
+  const handleLikes = (e:any) => {
+    e.preventDefault()
     setLiked(!liked);
     if (liked) {
       setLikes(likes - 1);
@@ -49,7 +50,7 @@ const NFTCard = (props: Props) => {
             <CiImageOn size={25} />
           </Badge>
         </div>
-        <div className="flex flex-col gap-5 p-5">
+        <div className="flex flex-col p-3">
           <div className="flex items-center justify-between">
             <TypographyH4 text="Clone #1234" />
           </div>

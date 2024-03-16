@@ -16,7 +16,7 @@ const CollectionCard = (props: Props) => {
     <Link
       href={`${Routes.COLLECTION}/${Math.floor(Math.random() * 10000000000)}`}
     >
-      <Card className="flex flex-col gap-2 bg-accent hover:bg-accent/70 max-w-[35rem] h-[35rem] w-full group">
+      <Card className="flex flex-col gap-2 bg-accent hover:bg-accent/70 max-w-[25rem] h-[25rem] w-full group">
         <div className="relative overflow-clip h-[55%] ">
           <Image
             className="object-cover rounded-t-lg group-hover:scale-105"

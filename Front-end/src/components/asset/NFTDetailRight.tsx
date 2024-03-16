@@ -22,6 +22,7 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
+  DialogTrigger,
 } from "@/components/ui/dialog";
 import {
   Table,
@@ -58,10 +59,7 @@ type Props = {
 };
 
 const NFTDetailRight = ({ id }: Props) => {
-  const { data: asset, isLoading } = useGetNFTQuery(id);
-  const [bidModal, setBidModal] = useState(false);
-  const [saleModal, setSaleModal] = useState(false);
-
+  const { data: asset } = useGetNFTQuery(id);
   const [auction, setAuction] = useState(false);
   const {
     isLoading: writing,
@@ -94,19 +92,6 @@ const NFTDetailRight = ({ id }: Props) => {
       </div>
     );
   };
-
-  const handleBuy = () => {
-    setSaleModal(true);
-  };
-  const handleBid = () => {
-    setBidModal(true);
-  };
-  useEffect(() => {
-    if (isError || transactionSuccess) {
-      setBidModal(false);
-      setSaleModal(false);
-    }
-  }, [isError, transactionSuccess]);
   useEffect(() => {
     if (asset) {
       setAuction(asset.auction?.auctionId !== 0);
@@ -115,127 +100,98 @@ const NFTDetailRight = ({ id }: Props) => {
     }
   }, [asset]);
   return (
-    <>
-      {isLoading ? (
-        <Skeleton className="flex-1 h-[25rem] lg:h-[50rem] rounded-md" />
-      ) : (
-        <div className="flex-1 p-3">
-          <div className="flex flex-col gap-10">
-            <TypographyH2 text={asset?.name} />
-            <div className="flex flex-wrap items-center lg:divide-x-2">
-              <Link
-                href={`${Routes.USER}/${asset?.creator?.publicAddress || nft_detail.creator.address}`}
-                className="flex lg:min-w-[25%] items-center gap-3 p-5"
-              >
-                <Avatar className="h-12 w-12" />
-                <div className="flex flex-col">
-                  <TypographySmall text="Creator" />
-                  <TypographyH4
-                    text={asset?.creator?.userName || nft_detail.creator.name}
-                  />
-                </div>
-              </Link>
-              <Link
-                href={`${Routes.USER}/${asset?.owner?.publicAddress || nft_detail.owner.address}`}
-                className="flex lg:min-w-[25%] items-center gap-3 p-5"
-              >
-                <Avatar className="h-12 w-12" />
-                <div className="flex flex-col">
-                  <TypographySmall text="Owner" />
-                  <TypographyH4
-                    text={asset?.owner?.userName || nft_detail.owner.name}
-                  />
-                </div>
-              </Link>
-              {/* <Link href={`${Routes.COLLECTION}`} className='flex items-center gap-3 p-5'>
-                <Avatar className='h-12 w-12' src='/collection/collection.png'/>
-                <div className='flex flex-col'>
-                  <TypographySmall text='Collection'/>
-                  <TypographyH4 text={nft_detail.collection.name}/>
-                </div>
-              </Link> */}
+    <div className="flex-1 p-3">
+      <div className="flex flex-col gap-10">
+        <TypographyH2 text={asset?.name || `Clone ${id}`} />
+        <div className="flex flex-wrap items-center lg:divide-x-2">
+          <Link
+            href={`${Routes.USER}/${asset?.creator?.publicAddress || nft_detail.creator.address}`}
+            className="flex lg:min-w-[25%] items-center gap-3 p-5"
+          >
+            <Avatar className="h-12 w-12" />
+            <div className="flex flex-col">
+              <TypographySmall text="Creator" />
+              <TypographyH4
+                text={asset?.creator?.userName || nft_detail.creator.name}
+              />
             </div>
-            <div className="flex flex-col gap-5 border rounded-md bg-secondary/50">
-              {auction && (
-                <div className="flex flex-col gap-5 border-b p-5">
-                  <TypographyH2 text="Auction Ends in:" />
-                  <TypographyH3
-                    className="text-primary/60"
-                    text={
-                      <CountDown
-                        date={
-                          new Date(
-                            asset?.auction?.auction_end ||
-                              nft_detail.auction.auctionEnd,
-                          )
-                        }
-                        renderer={onRender}
-                      />
+          </Link>
+          <Link
+            href={`${Routes.USER}/${asset?.owner?.publicAddress || nft_detail.owner.address}`}
+            className="flex lg:min-w-[25%] items-center gap-3 p-5"
+          >
+            <Avatar className="h-12 w-12" />
+            <div className="flex flex-col">
+              <TypographySmall text="Owner" />
+              <TypographyH4
+                text={asset?.owner?.userName || nft_detail.owner.name}
+              />
+            </div>
+          </Link>
+          <Link href={`${Routes.COLLECTION}`} className='flex items-center gap-3 p-5'>
+            <Avatar className='h-12 w-12' src='/collection/collection.png'/>
+            <div className='flex flex-col'>
+              <TypographySmall text='Collection'/>
+              <TypographyH4 text={nft_detail.collection.name}/>
+            </div>
+          </Link>
+        </div>
+        <div className="flex flex-col gap-5 border rounded-md bg-secondary/50">
+          {auction && (
+            <div className="flex flex-col gap-5 border-b p-5">
+              <TypographyH2 text="Auction Ends in:" />
+              <TypographyH3
+                className="text-primary/60"
+                text={
+                  <CountDown
+                    date={
+                      new Date(
+                        asset?.auction?.auction_end ||
+                          nft_detail.auction.auctionEnd,
+                      )
                     }
+                    renderer={onRender}
                   />
-                </div>
-              )}
-              <div className="flex flex-col gap-10 p-5">
-                <div>
-                  <TypographyP text="Current Price" />
-                  <div className="flex gap-2 items-end">
-                    <TypographyH2 text={`${asset?.price || 0.394} ETH`} />
-                    <TypographyP
-                      className="text-primary/60"
-                      text={`$${807.07}`}
-                    />
-                  </div>
-                </div>
-                {/* <div className='flex gap-5'> */}
-                {auction && (
-                  <Button
-                    type="button"
-                    className="flex-1 lg:w-[50%] w-full"
-                    onClick={handleBid}
-                  >
-                    Place Bid
-                  </Button>
-                )}
-                {!auction && (
-                  <Button
-                    type="button"
-                    className="flex-1 lg:w-[50%] w-full"
-                    variant={"secondary"}
-                    onClick={handleBuy}
-                  >
-                    Buy Now
-                  </Button>
-                )}
-                {/* </div> */}
+                }
+              />
+            </div>
+          )}
+          <div className="flex flex-col gap-10 p-5">
+            <div>
+              <TypographyP text="Current Price" />
+              <div className="flex gap-2 items-end">
+                <TypographyH2 text={`${asset?.price || 0.394} ETH`} />
+                <TypographyP
+                  className="text-primary/60"
+                  text={`$${807.07}`}
+                />
               </div>
             </div>
-            {auction && (
-              <Accordion type="single" collapsible defaultValue="item-1">
-                <AccordionItem value="item-2">
-                  <AccordionTrigger className="bg-accent text-accent-foreground px-5 rounded-t-md">
-                    Bids
-                  </AccordionTrigger>
-                  <AccordionContent className="">
-                    <BidsTable />
-                  </AccordionContent>
-                </AccordionItem>
-              </Accordion>
+            {auction ? (
+               <BidModal
+                auctionId={asset?.auction?.auctionId as number}
+                /> ): (
+                <SaleModal
+                  tokenId={asset?.tokenId as number}
+                  price={asset?.price as string}
+                />
             )}
           </div>
-          <BidModal
-            open={bidModal}
-            close={() => setBidModal(false)}
-            auctionId={asset?.auction?.auctionId as number}
-          />
-          <SaleModal
-            open={saleModal}
-            close={() => setSaleModal(false)}
-            tokenId={asset?.tokenId as number}
-            price={asset?.price as string}
-          />
         </div>
-      )}
-    </>
+        {auction && (
+          <Accordion type="single" collapsible defaultValue="item-1">
+            <AccordionItem value="item-2">
+              <AccordionTrigger className="bg-accent text-accent-foreground px-5 rounded-t-md">
+                Bids
+              </AccordionTrigger>
+              <AccordionContent className="">
+                <BidsTable />
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+        )}
+      </div>
+    </div>
   );
 };
 
@@ -303,11 +259,9 @@ const schema = z.object({
 });
 
 type BidModalProps = {
-  open: boolean;
-  close: () => void;
   auctionId: number;
 };
-export const BidModal = ({ open, auctionId }: BidModalProps) => {
+export const BidModal = ({ auctionId }: BidModalProps) => {
   const { address } = useAccount();
   const { data: balance } = useBalance({ address: address });
   const {
@@ -331,7 +285,15 @@ export const BidModal = ({ open, auctionId }: BidModalProps) => {
     }
   }, [transactionSuccess]);
   return (
-    <Dialog open={open}>
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button
+          type="button"
+          className="flex-1 lg:w-[50%] w-full"
+        >
+          Place Bid
+        </Button>
+      </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Place Bid</DialogTitle>
@@ -403,12 +365,10 @@ export const BidModal = ({ open, auctionId }: BidModalProps) => {
   );
 };
 type SaleModalProps = {
-  open: boolean;
-  close: () => void;
   tokenId: number;
   price: string;
 };
-export const SaleModal = ({ open, tokenId, price, close }: SaleModalProps) => {
+export const SaleModal = ({ tokenId, price }: SaleModalProps) => {
   const { address } = useAccount();
   const { data: balance } = useBalance({ address: address });
   const {
@@ -428,7 +388,15 @@ export const SaleModal = ({ open, tokenId, price, close }: SaleModalProps) => {
     }
   }, [transactionSuccess]);
   return (
-    <Dialog open={open}>
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button
+        className="flex-1 lg:w-[50%] w-full"
+        variant={"secondary"}
+        >
+          Buy Now
+        </Button>
+      </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Buy Now</DialogTitle>

@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 const Page = (props: Props) => {
   return (
-    <div className="flex flex-col gap-10 pt-16">
+    <div className="flex flex-col gap-10">
       <SearchFilter />
       <CollectionsList />
     </div>

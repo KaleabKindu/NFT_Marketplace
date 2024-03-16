@@ -77,8 +77,7 @@ const NavBar = (props: Props) => {
     }
   };
   return (
-    <div className="fixed top-0 w-full bg-background  z-50">
-      <Container className="flex items-center justify-between border-b">
+      <Container className="sticky z-50 bg-background top-0 flex items-center justify-between border-b">
         {/* Left Section */}
         <Logo />
 
@@ -132,7 +131,6 @@ const NavBar = (props: Props) => {
         {/* Mobile Sidebar */}
         <SideBar />
       </Container>
-    </div>
   );
 };
 
