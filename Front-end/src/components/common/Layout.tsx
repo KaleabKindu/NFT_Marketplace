@@ -10,7 +10,7 @@ const Layout = ({ children }: Props) => {
   return (
     <>
       <NavBar />
-      <div className="min-h-[90vh] pt-[5rem]">{children}</div>
+      <div className="min-h-[90vh]">{children}</div>
       <Footer />
     </>
   );

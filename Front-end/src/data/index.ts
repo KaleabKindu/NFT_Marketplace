@@ -121,41 +121,41 @@ export const categories = [
 export const category_type = [
   {
     name: "Art",
-    value: "art"
+    value: "art",
   },
   {
     name: "Photography",
-    value: "photography"
+    value: "photography",
   },
   {
     name: "Audio",
-    value: "audio"
+    value: "audio",
   },
   {
     name: "Video",
-    value: "video"
+    value: "video",
   },
   {
     name: "3D",
-    value: "3d"
+    value: "3d",
   },
   {
     name: "Design",
-    value: "design"
+    value: "design",
   },
   {
     name: "Drawing & Painting",
-    value: "drawing_painting"
+    value: "drawing_painting",
   },
   {
     name: "E-Books",
-    value: "e-books"
+    value: "e-books",
   },
   {
     name: "Tickets",
-    value: "tickets"
+    value: "tickets",
   },
-]
+];
 
 export const provenances = [
   {

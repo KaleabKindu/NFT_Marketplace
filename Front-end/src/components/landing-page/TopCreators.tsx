@@ -6,6 +6,10 @@ import { Avatar } from "../common/Avatar";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
 import { useState } from "react";
+import { users } from "@/utils";
+import { Routes } from "@/routes";
+import { User } from "@/types";
+import Link from "next/link";
 
 type Props = {};
 
@@ -13,10 +17,10 @@ const TopCreators = (props: Props) => {
   return (
     <div className="flex flex-col gap-5">
       <TypographyH2 text="Top Creators" />
-      <TypographyH4 text="Checkout Top Rated Creators on the NFT Marketplace" />
+      <TypographyH4 text="Checkout Top Rated Creators" />
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 items-center gap-5">
-        {Array.from({ length: 8 }).map((_, index) => (
-          <Creator key={index} index={index} />
+        {users.map((user, index) => (
+          <Creator key={index} index={index} user={user} />
         ))}
       </div>
     </div>
@@ -25,49 +29,55 @@ const TopCreators = (props: Props) => {
 
 type CreatorProps = {
   index: number;
+  user: User;
   showRank?: boolean;
 };
 
-export const Creator = ({ index, showRank = true }: CreatorProps) => {
+export const Creator = ({ index, user, showRank = true }: CreatorProps) => {
   const [following, setFollowing] = useState(false);
 
   return (
-    <Card className="relative flex flex-col rounded-2xl justify-evenly items-center h-[15rem] bg-secondary group">
-      <div className="relative rounded-t-2xl overflow-clip w-full h-[75%] ">
-        <Image
-          className="object-cover rounded-t-2xl group-hover:scale-105"
-          src="/landing-page/futuristic-blue.jpg"
-          fill
-          alt=""
-        />
-      </div>
-      <div className="relative z-40 rounded-full bg-secondary -mt-12 p-3">
-        <Avatar className="h-16 w-16" />
-      </div>
-      <div className="flex gap-3 items-center justify-around w-full p-3">
-        <div>
-          <TypographyH4 text="Bruce Banner" />
-          <div className="flex items-center gap-3">
-            <TypographyP
-              className="font-semibold text-primary/80"
-              text="Sales: "
-            />
-            <TypographyP className="font-semibold" text="34.5ETH" />
-          </div>
+    <Link href={`${Routes.USER}/${user.publicAddress}`}>
+      <Card className="relative flex flex-col rounded-2xl justify-evenly items-center h-[15rem] bg-secondary group">
+        <div className="relative rounded-t-2xl overflow-clip w-full h-[75%] ">
+          <Image
+            className="object-cover rounded-t-2xl group-hover:scale-105"
+            src={user.profile_background || "/landing-page/futuristic-blue.jpg"}
+            fill
+            alt=""
+          />
         </div>
-        <Button
-          className="text-md rounded-full"
-          onClick={() => setFollowing(!following)}
-        >
-          {following ? "Following" : "Follow"}
-        </Button>
-      </div>
-      {showRank && (
-        <Badge className="absolute top-5 left-5 text-md bg-accent text-accent-foreground">
-          {index + 1}
-        </Badge>
-      )}
-    </Card>
+        <div className="relative z-40 rounded-full bg-secondary -mt-12 p-3">
+          <Avatar className="h-16 w-16" src={user.avatar} />
+        </div>
+        <div className="flex gap-3 items-center justify-around w-full p-3">
+          <div>
+            <TypographyH4 text={user.userName} />
+            <div className="flex items-center gap-3">
+              <TypographyP
+                className="font-semibold text-primary/80"
+                text="Sales: "
+              />
+              <TypographyP
+                className="font-semibold"
+                text={`${user.sales}ETH`}
+              />
+            </div>
+          </div>
+          <Button
+            className="text-md rounded-full"
+            onClick={() => setFollowing(!following)}
+          >
+            {following ? "Following" : "Follow"}
+          </Button>
+        </div>
+        {showRank && (
+          <Badge className="absolute top-5 left-5 text-md bg-accent text-accent-foreground">
+            {index + 1}
+          </Badge>
+        )}
+      </Card>
+    </Link>
   );
 };
 

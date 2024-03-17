@@ -140,7 +140,6 @@ const MintForm = (props: Props) => {
         description: values.description,
         image: `https://nftstorage.link/ipfs/${image_cid}/${image?.name}`,
         category: "image",
-        collectionId: 1,
         price: values.price.toString(),
         royalty: values.royalty,
         auction: values.auction
@@ -224,7 +223,7 @@ const MintForm = (props: Props) => {
       }
     },
   });
-  console.log(form.getValues('files'))
+  console.log(form.getValues("files"));
   return (
     <Form {...form}>
       <form
@@ -274,7 +273,7 @@ const MintForm = (props: Props) => {
             <FormItem>
               <FormLabel>Files</FormLabel>
               <FormControl>
-                <MultipleFilesUpload onChange={field.onChange}/>
+                <MultipleFilesUpload onChange={field.onChange} />
               </FormControl>
               <FormDescription>
                 Upload Files relevant to the Digital Product you want to mint as
@@ -440,7 +439,7 @@ export default MintForm;
 
 type ProgressProps = {
   open: boolean;
-  openModal: (a:boolean) => void
+  openModal: (a: boolean) => void;
   uploading: boolean;
   uploadSuccess: boolean;
   uploadNft: boolean;

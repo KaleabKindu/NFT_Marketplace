@@ -53,13 +53,14 @@ import { MdWallet } from "react-icons/md";
 import { useAccount, useBalance } from "wagmi";
 import { useGetNFTQuery } from "@/store/api";
 import { Skeleton } from "../ui/skeleton";
+import { assets } from "@/utils";
 
 type Props = {
   id: string;
 };
 
 const NFTDetailRight = ({ id }: Props) => {
-  const { data: asset } = useGetNFTQuery(id);
+  const { data } = useGetNFTQuery(id);
   const [auction, setAuction] = useState(false);
   const {
     isLoading: writing,
@@ -92,47 +93,52 @@ const NFTDetailRight = ({ id }: Props) => {
       </div>
     );
   };
+  const asset = data
+    ? data
+    : assets.find((asset) => asset.tokenId?.toString() === id);
   useEffect(() => {
-    if (asset) {
-      setAuction(asset.auction?.auctionId !== 0);
+    if (data) {
+      setAuction(data.auction?.auctionId !== 0);
     } else {
       setAuction(true);
     }
-  }, [asset]);
+  }, [data]);
   return (
     <div className="flex-1 p-3">
       <div className="flex flex-col gap-10">
-        <TypographyH2 text={asset?.name || `Clone ${id}`} />
+        <TypographyH2 text={asset?.name} />
         <div className="flex flex-wrap items-center lg:divide-x-2">
           <Link
-            href={`${Routes.USER}/${asset?.creator?.publicAddress || nft_detail.creator.address}`}
+            href={`${Routes.USER}/${asset?.creator?.publicAddress}`}
             className="flex lg:min-w-[25%] items-center gap-3 p-5"
           >
-            <Avatar className="h-12 w-12" />
+            <Avatar className="h-12 w-12" src={asset?.creator?.avatar} />
             <div className="flex flex-col">
               <TypographySmall text="Creator" />
-              <TypographyH4
-                text={asset?.creator?.userName || nft_detail.creator.name}
-              />
+              <TypographyH4 text={asset?.creator?.userName} />
             </div>
           </Link>
           <Link
-            href={`${Routes.USER}/${asset?.owner?.publicAddress || nft_detail.owner.address}`}
+            href={`${Routes.USER}/${asset?.owner?.publicAddress}`}
             className="flex lg:min-w-[25%] items-center gap-3 p-5"
           >
-            <Avatar className="h-12 w-12" />
+            <Avatar className="h-12 w-12" src={asset?.owner?.avatar} />
             <div className="flex flex-col">
               <TypographySmall text="Owner" />
-              <TypographyH4
-                text={asset?.owner?.userName || nft_detail.owner.name}
-              />
+              <TypographyH4 text={asset?.owner?.userName} />
             </div>
           </Link>
-          <Link href={`${Routes.COLLECTION}`} className='flex items-center gap-3 p-5'>
-            <Avatar className='h-12 w-12' src='/collection/collection.png'/>
-            <div className='flex flex-col'>
-              <TypographySmall text='Collection'/>
-              <TypographyH4 text={nft_detail.collection.name}/>
+          <Link
+            href={`${Routes.COLLECTION}/${asset?.collection?.id}`}
+            className="flex items-center gap-3 p-5"
+          >
+            <Avatar
+              className="h-12 w-12"
+              src={asset?.collection?.avatar || "/collection/collection.png"}
+            />
+            <div className="flex flex-col">
+              <TypographySmall text="Collection" />
+              <TypographyH4 text={asset?.collection?.name} />
             </div>
           </Link>
         </div>
@@ -161,20 +167,16 @@ const NFTDetailRight = ({ id }: Props) => {
               <TypographyP text="Current Price" />
               <div className="flex gap-2 items-end">
                 <TypographyH2 text={`${asset?.price || 0.394} ETH`} />
-                <TypographyP
-                  className="text-primary/60"
-                  text={`$${807.07}`}
-                />
+                <TypographyP className="text-primary/60" text={`$${807.07}`} />
               </div>
             </div>
             {auction ? (
-               <BidModal
-                auctionId={asset?.auction?.auctionId as number}
-                /> ): (
-                <SaleModal
-                  tokenId={asset?.tokenId as number}
-                  price={asset?.price as string}
-                />
+              <BidModal auctionId={asset?.auction?.auctionId as number} />
+            ) : (
+              <SaleModal
+                tokenId={asset?.tokenId as number}
+                price={asset?.price as string}
+              />
             )}
           </div>
         </div>
@@ -287,10 +289,7 @@ export const BidModal = ({ auctionId }: BidModalProps) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button
-          type="button"
-          className="flex-1 lg:w-[50%] w-full"
-        >
+        <Button type="button" className="flex-1 lg:w-[50%] w-full">
           Place Bid
         </Button>
       </DialogTrigger>
@@ -390,10 +389,7 @@ export const SaleModal = ({ tokenId, price }: SaleModalProps) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button
-        className="flex-1 lg:w-[50%] w-full"
-        variant={"secondary"}
-        >
+        <Button className="flex-1 lg:w-[50%] w-full" variant={"secondary"}>
           Buy Now
         </Button>
       </DialogTrigger>

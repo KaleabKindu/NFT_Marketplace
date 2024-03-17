@@ -8,7 +8,11 @@ export interface NFT {
   category?: string;
   price: string;
   royalty: number;
-  collectionId?: number;
+  collection?: {
+    id: number;
+    avatar: string;
+    name: string;
+  };
   creator?: User;
   owner?: User;
   auction?: Auction;
@@ -29,5 +33,27 @@ export interface Credentials {
 
 export interface User {
   userName: string;
+  avatar: string;
   publicAddress: Address;
+  bio?: string;
+  profile_background?: string;
+  social_media?: SocialMedia;
+  sales?: number;
+}
+export interface SocialMedia {
+  facebook: string;
+  twitter: string;
+  youtube: string;
+  telegram: string;
+}
+export interface Collection {
+  id: string;
+  avatar: string;
+  name: string;
+  description: string;
+  volume: string;
+  floor_price: string;
+  latest_price: string;
+  items: number;
+  creator: User;
 }

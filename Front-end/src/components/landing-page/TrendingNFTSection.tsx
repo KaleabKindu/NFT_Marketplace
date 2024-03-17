@@ -1,6 +1,6 @@
 import TrendingNFTCard from "./TrendingNFTCard";
 import { TypographyH2, TypographyH4 } from "../common/Typography";
-
+import { assets } from "@/utils";
 type Props = {};
 
 const TrendingNFTSection = (props: Props) => {
@@ -9,8 +9,8 @@ const TrendingNFTSection = (props: Props) => {
       <TypographyH2 text="Discover More NFTs" />
       <TypographyH4 text="Explore New Trending NFTs" />
       <div className="grid grid-cols-1  md:grid-cols-2 lg:grid-cols-3 items-center gap-5">
-        {Array.from({ length: 6 }).map((_, index) => (
-          <TrendingNFTCard key={index} />
+        {assets.slice(0, 6).map((asset, index) => (
+          <TrendingNFTCard asset={asset} key={index} />
         ))}
       </div>
     </div>

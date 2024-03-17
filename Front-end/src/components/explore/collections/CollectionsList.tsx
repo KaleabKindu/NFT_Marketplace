@@ -8,6 +8,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Routes } from "@/routes";
+import { collections } from "@/utils";
 import Link from "next/link";
 
 type Props = {};
@@ -27,31 +28,31 @@ const CollectionsList = (props: Props) => {
           </TableRow>
         </TableHeader>
         <TableBody className="rounded-3xl">
-          {Array.from({ length: 10 }).map((_, index) => (
+          {collections.map((collection, index) => (
             <TableRow className="border-0" key={index}>
               <TableCell>{index + 1}</TableCell>
               <TableCell className="font-medium">
                 <Link
-                  href={`${Routes.COLLECTION}/yuiowpo`}
+                  href={`${Routes.COLLECTION}/${collection.id}`}
                   className="flex items-center gap-4 "
                 >
                   <Avatar
                     className="w-12 h-12 rounded-md mr-4"
-                    src="/collection/collection-pic.png"
+                    src={collection.avatar || "/collection/collection-pic.png"}
                   />
-                  Collection {index + 1}
+                  {collection.name}
                 </Link>
               </TableCell>
-              <TableCell>0.5 ETH</TableCell>
-              <TableCell>15 ETH</TableCell>
-              <TableCell>{Math.floor(Math.random() * 1000)}</TableCell>
+              <TableCell>{collection.floor_price} ETH</TableCell>
+              <TableCell>{collection.volume} ETH</TableCell>
+              <TableCell>{collection.items}</TableCell>
               <TableCell>
                 <Link
                   className="flex items-center"
-                  href={`${Routes.USER}/0x3278347jnm2332`}
+                  href={`${Routes.USER}/${collection.creator.publicAddress}`}
                 >
-                  <Avatar className="mr-3" />
-                  Tony Stark
+                  <Avatar className="mr-3" src={collection.creator.avatar} />
+                  {collection.creator.userName}
                 </Link>
               </TableCell>
             </TableRow>

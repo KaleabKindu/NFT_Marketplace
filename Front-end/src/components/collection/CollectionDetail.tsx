@@ -5,23 +5,32 @@ import {
   TypographyP,
   TypographySmall,
 } from "../common/Typography";
+import { collections } from "@/utils";
 
-type Props = {};
+type Props = {
+  id: string;
+};
 
-const CollectionDetail = (props: Props) => {
+const CollectionDetail = ({ id }: Props) => {
+  const collection = collections.find((collection) => collection.id === id);
   return (
     <div className="relative flex flex-col lg:flex-row gap-8 -mt-[15vh] w-[90%] lg:w-[85%] mx-auto bg-background border z-40 rounded-3xl p-8">
       <div className="relative w-full h-[300px] lg:w-[350px] lg:h-[300px]">
         <Image
           className="rounded-3xl object-cover"
-          src="/collection/collection-pic.png"
+          src={collection?.avatar || "/collection/collection-pic.png"}
           fill
           alt=""
         />
       </div>
       <div className="flex flex-col gap-5">
-        <TypographyH2 text="Awesome NFT Collection" />
-        <TypographyP text="Karafuru is home to 5,555 generative arts where colors reign supreme. Leave the drab reality and enter the world of Karafuru by Museum of Toys." />
+        <TypographyH2 text={collection?.name || "Awesome NFT Collection"} />
+        <TypographyP
+          text={
+            collection?.description ||
+            "Karafuru is home to 5,555 generative arts where colors reign supreme. Leave the drab reality and enter the world of Karafuru by Museum of Toys."
+          }
+        />
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           <div className="flex flex-col items-center gap-5 lg:gap-8 p-5 lg:p-7 border rounded-xl">
             <TypographySmall
@@ -30,7 +39,7 @@ const CollectionDetail = (props: Props) => {
             />
             <TypographyH3
               className="text-accent-foreground/60"
-              text={`${0.5475} ETH`}
+              text={`${collection?.floor_price} ETH`}
             />
           </div>
           <div className="flex flex-col items-center gap-5 lg:gap-8 p-5 lg:p-7 border rounded-xl">
@@ -40,7 +49,7 @@ const CollectionDetail = (props: Props) => {
             />
             <TypographyH3
               className="text-accent-foreground/60"
-              text={`${0.5475} ETH`}
+              text={`${collection?.volume} ETH`}
             />
           </div>
           <div className="flex flex-col items-center gap-5 lg:gap-8 p-5 lg:p-7 border rounded-xl">
@@ -50,7 +59,7 @@ const CollectionDetail = (props: Props) => {
             />
             <TypographyH3
               className="text-accent-foreground/60"
-              text={`${0.5475} ETH`}
+              text={`${collection?.latest_price} ETH`}
             />
           </div>
           <div className="flex flex-col items-center gap-5 lg:gap-8 p-5 lg:p-7 border rounded-xl">
@@ -58,7 +67,10 @@ const CollectionDetail = (props: Props) => {
               className="text-accent-foreground/60"
               text="Items"
             />
-            <TypographyH3 className="text-accent-foreground/60" text={2270} />
+            <TypographyH3
+              className="text-accent-foreground/60"
+              text={collection?.items}
+            />
           </div>
         </div>
       </div>

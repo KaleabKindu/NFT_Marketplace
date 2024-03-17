@@ -10,8 +10,8 @@ type Props = {};
 const Page = (props: Props) => {
   return (
     <div className="flex flex-col gap-10">
-      <div className='w-full max-w-3xl mx-auto'>
-       <SearchInput /> 
+      <div className="w-full max-w-3xl mx-auto">
+        <SearchInput />
       </div>
       <UsersList />
     </div>

@@ -6,13 +6,24 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "../ui/badge";
-import { IoWalletOutline, IoChevronDown, IoRadioButtonOff } from "react-icons/io5";
+import {
+  IoWalletOutline,
+  IoChevronDown,
+  IoRadioButtonOff,
+} from "react-icons/io5";
 import { TypographyP, TypographySmall } from "../common/Typography";
 import { Button } from "../ui/button";
 import { IoMdCloseCircle } from "react-icons/io";
 import { Slider } from "@/components/ui/slider";
 import { BiSortAlt2, BiCategory } from "react-icons/bi";
-import { categories, category_type, collections, sale_types, sort_types, users } from "@/data";
+import {
+  categories,
+  category_type,
+  collections,
+  sale_types,
+  sort_types,
+  users,
+} from "@/data";
 import { Checkbox } from "../ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -38,7 +49,7 @@ import {
 } from "@/components/ui/popover";
 import { Avatar } from "../common/Avatar";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useDebounce } from "use-debounce"
+import { useDebounce } from "use-debounce";
 
 type Props = {};
 
@@ -63,20 +74,23 @@ type SearchProps = {
 };
 
 export const SearchInput = ({ className }: SearchProps) => {
-  const router = useRouter()
-  const pathname = usePathname()
-  const params = useSearchParams() 
-  const [ query, setQuery ] = useState('')
-  const [ value ] = useDebounce(query, 1000)
-  const updateQueryParameter = useCallback((value:string, key:string) => {
-    const newParams = new URLSearchParams(params.toString())
-    value ? newParams.set(key, value):newParams.delete(key)
-    router.push(`${pathname}?${newParams.toString()}`)
-  },[params])
+  const router = useRouter();
+  const pathname = usePathname();
+  const params = useSearchParams();
+  const [query, setQuery] = useState("");
+  const [value] = useDebounce(query, 1000);
+  const updateQueryParameter = useCallback(
+    (value: string, key: string) => {
+      const newParams = new URLSearchParams(params.toString());
+      value ? newParams.set(key, value) : newParams.delete(key);
+      router.push(`${pathname}?${newParams.toString()}`);
+    },
+    [params],
+  );
 
   useEffect(() => {
-    updateQueryParameter(value, 'search')
-  },[value])
+    updateQueryParameter(value, "search");
+  }, [value]);
   return (
     <div className={cn("relative", className)}>
       <CiSearch className="absolute top-0 bottom-0 my-auto left-3" size={25} />
@@ -91,26 +105,29 @@ export const SearchInput = ({ className }: SearchProps) => {
 };
 
 export const SaleFilter = (props: Props) => {
-  const params = useSearchParams()
-  const router = useRouter()
-  const pathname = usePathname()
-  const [ open, setOpen ] = useState(false)
-  const [selectedSaleType, setSelectedSaleType] = useState<string>('');
+  const params = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+  const [open, setOpen] = useState(false);
+  const [selectedSaleType, setSelectedSaleType] = useState<string>("");
   const handleChange = (status: boolean, value: string) => {
     if (status) {
       setSelectedSaleType(value);
     } else {
-      setSelectedSaleType('');
+      setSelectedSaleType("");
     }
   };
-  const updateQueryParameter = useCallback((value:string, key:string) => {
-    const newParams = new URLSearchParams(params.toString())
-    value ? newParams.set(key, value):newParams.delete(key)
-    router.push(`${pathname}?${newParams.toString()}`)
-  },[params])
+  const updateQueryParameter = useCallback(
+    (value: string, key: string) => {
+      const newParams = new URLSearchParams(params.toString());
+      value ? newParams.set(key, value) : newParams.delete(key);
+      router.push(`${pathname}?${newParams.toString()}`);
+    },
+    [params],
+  );
   useEffect(() => {
-    updateQueryParameter(selectedSaleType, 'sale_type')
-  },[selectedSaleType])
+    updateQueryParameter(selectedSaleType, "sale_type");
+  }, [selectedSaleType]);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -120,11 +137,14 @@ export const SaleFilter = (props: Props) => {
           className="flex items-center gap-2 py-1 rounded-full"
         >
           <MdOutlineSell size={25} />
-          <TypographySmall className="text-foreground capitalize" text={selectedSaleType ? selectedSaleType:'Sale Type'} />
+          <TypographySmall
+            className="text-foreground capitalize"
+            text={selectedSaleType ? selectedSaleType : "Sale Type"}
+          />
           <Badge
             variant={"secondary"}
             className="p-0 h-auto rounded-full"
-            onClick={() => setSelectedSaleType('')}
+            onClick={() => setSelectedSaleType("")}
           >
             {selectedSaleType ? (
               <IoMdCloseCircle size={25} />
@@ -144,13 +164,15 @@ export const SaleFilter = (props: Props) => {
             <TypographyP text="All" />
           </div>
           {sale_types.map((sale, index) => (
-          <div key={index} className="flex gap-3 items-center">
-            <Checkbox
-              checked={selectedSaleType === sale.value}
-              onCheckedChange={(val: boolean) => handleChange(val, sale.value)}
-            />
-            <TypographyP text={sale.name} />
-          </div>
+            <div key={index} className="flex gap-3 items-center">
+              <Checkbox
+                checked={selectedSaleType === sale.value}
+                onCheckedChange={(val: boolean) =>
+                  handleChange(val, sale.value)
+                }
+              />
+              <TypographyP text={sale.name} />
+            </div>
           ))}
         </div>
       </PopoverContent>
@@ -159,66 +181,92 @@ export const SaleFilter = (props: Props) => {
 };
 
 export const PriceFilter = (props: Props) => {
-  const router = useRouter()
-  const pathname = usePathname()
-  const params = useSearchParams()
-  const [ open, setOpen ] = useState(false)
-  const [ minPrice, setMinPrice ] = useState(0)
-  const [ maxPrice, setMaxPrice ] = useState(0)
-  const [ debminPrice ] = useDebounce(minPrice, 1000)
-  const [ debmaxPrice ] = useDebounce(maxPrice, 1000)
-  const handlePriceChange = (range:number[]) => {
-    setMinPrice(range[0])
-    setMaxPrice(range[1])
-  }
+  const router = useRouter();
+  const pathname = usePathname();
+  const params = useSearchParams();
+  const [open, setOpen] = useState(false);
+  const [minPrice, setMinPrice] = useState(0);
+  const [maxPrice, setMaxPrice] = useState(0);
+  const [debminPrice] = useDebounce(minPrice, 1000);
+  const [debmaxPrice] = useDebounce(maxPrice, 1000);
+  const handlePriceChange = (range: number[]) => {
+    setMinPrice(range[0]);
+    setMaxPrice(range[1]);
+  };
 
-  const handleClose = (e:any) => {
-    e.preventDefault()
-    setMinPrice(0)
-    setMaxPrice(0)
-  }
-  
+  const handleClose = (e: any) => {
+    e.preventDefault();
+    setMinPrice(0);
+    setMaxPrice(0);
+  };
+
   useEffect(() => {
-    const newParams = new URLSearchParams(params.toString())
-    debminPrice ? newParams.set('min_price', debminPrice.toString()):newParams.delete('min_price')
-    debmaxPrice ? newParams.set('max_price', debmaxPrice.toString()):newParams.delete('max_price')
-    router.push(`${pathname}?${newParams.toString()}`)
-  },[debminPrice, debmaxPrice])
+    const newParams = new URLSearchParams(params.toString());
+    debminPrice
+      ? newParams.set("min_price", debminPrice.toString())
+      : newParams.delete("min_price");
+    debmaxPrice
+      ? newParams.set("max_price", debmaxPrice.toString())
+      : newParams.delete("max_price");
+    router.push(`${pathname}?${newParams.toString()}`);
+  }, [debminPrice, debmaxPrice]);
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger>
         <Button
-            variant="secondary"
-            className="flex items-center gap-2 py-1 rounded-full"
-          >
-            <IoWalletOutline size={25} />
-            <TypographySmall className="text-foreground" text={`${minPrice}ETH - ${maxPrice}ETH`} />
-            <Badge variant="secondary" className="p-0 h-auto rounded-full">
-              {minPrice + maxPrice != 0 ? (
-                <IoMdCloseCircle onClick={handleClose} className='cursor-pointer' size={25} />
-              ) : (
-                <IoChevronDown size={20} />
-              )}            
-            </Badge>
+          variant="secondary"
+          className="flex items-center gap-2 py-1 rounded-full"
+        >
+          <IoWalletOutline size={25} />
+          <TypographySmall
+            className="text-foreground"
+            text={`${minPrice}ETH - ${maxPrice}ETH`}
+          />
+          <Badge variant="secondary" className="p-0 h-auto rounded-full">
+            {minPrice + maxPrice != 0 ? (
+              <IoMdCloseCircle
+                onClick={handleClose}
+                className="cursor-pointer"
+                size={25}
+              />
+            ) : (
+              <IoChevronDown size={20} />
+            )}
+          </Badge>
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-fit p-0 rounded-xl">
         <div className="rounded-xl bg-background z-20 mt-3">
           <div className="flex flex-col gap-5 w-[20rem] p-5">
             <TypographyP text="Price Range" />
-            <Slider onValueChange={handlePriceChange} minStepsBetweenThumbs={1} value={[minPrice, maxPrice]} step={0.1} />
+            <Slider
+              onValueChange={handlePriceChange}
+              minStepsBetweenThumbs={1}
+              value={[minPrice, maxPrice]}
+              step={0.1}
+            />
             <div className="flex justify-between">
               <div className="flex flex-col gap-1.5 w-[40%]">
                 <TypographySmall className="ml-2" text="Min Price" />
                 <div className="flex justify-between gap-2 items-center ">
-                  <Input type='number' onChange={(e) => setMinPrice(parseFloat(e.target.value))} className="rounded-xl bg-transparent" value={minPrice} />
+                  <Input
+                    type="number"
+                    onChange={(e) => setMinPrice(parseFloat(e.target.value))}
+                    className="rounded-xl bg-transparent"
+                    value={minPrice}
+                  />
                   <TypographySmall text="ETH" />
                 </div>
               </div>
               <div className="flex flex-col gap-1.5 w-[40%]">
                 <TypographySmall className="mr-2 self-end" text="Max Price" />
                 <div className="flex justify-between items-center gap-2">
-                <Input type='number' onChange={(e) => setMaxPrice(parseFloat(e.target.value))} className="rounded-xl bg-transparent" value={maxPrice} />
+                  <Input
+                    type="number"
+                    onChange={(e) => setMaxPrice(parseFloat(e.target.value))}
+                    className="rounded-xl bg-transparent"
+                    value={maxPrice}
+                  />
                   <TypographySmall text="ETH" />
                 </div>
               </div>
@@ -231,10 +279,10 @@ export const PriceFilter = (props: Props) => {
 };
 
 export const CategoryFilter = (props: Props) => {
-  const router = useRouter()
-  const pathname = usePathname()
-  const params = useSearchParams()
-  const [ open, setOpen ] = useState(false)
+  const router = useRouter();
+  const pathname = usePathname();
+  const params = useSearchParams();
+  const [open, setOpen] = useState(false);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const handleChange = (status: boolean, value: string) => {
     if (status) {
@@ -243,84 +291,90 @@ export const CategoryFilter = (props: Props) => {
       setSelectedCategories(selectedCategories.filter((val) => val !== value));
     }
   };
-  const updateQueryParameter = useCallback((value:string, key:string) => {
-    const newParams = new URLSearchParams(params.toString())
-    value ? newParams.set(key, value):newParams.delete(key)
-    router.push(`${pathname}?${newParams.toString()}`)
-  },[params])
+  const updateQueryParameter = useCallback(
+    (value: string, key: string) => {
+      const newParams = new URLSearchParams(params.toString());
+      value ? newParams.set(key, value) : newParams.delete(key);
+      router.push(`${pathname}?${newParams.toString()}`);
+    },
+    [params],
+  );
 
   useEffect(() => {
-    updateQueryParameter(selectedCategories.join(','), 'categories')
-  },[selectedCategories])
+    updateQueryParameter(selectedCategories.join(","), "categories");
+  }, [selectedCategories]);
   return (
-      <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger>
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger>
         <Button
-            variant="secondary"
-            className="flex items-center gap-2 py-1 rounded-full"
+          variant="secondary"
+          className="flex items-center gap-2 py-1 rounded-full"
+        >
+          <BiCategory size={25} />
+          <TypographySmall className="text-foreground" text="Category" />
+          <Badge
+            variant={"secondary"}
+            className="p-0 h-auto rounded-full"
+            onClick={(e) => {
+              e.preventDefault();
+              setSelectedCategories([]);
+            }}
           >
-            <BiCategory size={25} />
-            <TypographySmall className="text-foreground" text="Category" />
-            <Badge
-              variant={"secondary"}
-              className="p-0 h-auto rounded-full"
-              onClick={(e) => {
-                e.preventDefault()
-                setSelectedCategories([])
-              }}
-            >
-              {selectedCategories.length > 0 ? (
-                <IoMdCloseCircle size={25} />
-              ) : (
-                <IoChevronDown size={20} />
-              )}
-            </Badge>
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-[300px] p-0 rounded-xl">
-          <div className="flex flex-col gap-3 w-[20rem] p-5">
-            <div className="flex gap-3 items-center">
-              <Checkbox
-                checked={selectedCategories.includes("all")}
-                onCheckedChange={(val: boolean) => handleChange(val, "all")}
-              />
-              <TypographyP text="All" />
-            </div>
-            {category_type.map((category, index) => (
-              <div key={index} className="flex gap-3 items-center">
-                <Checkbox
-                  checked={selectedCategories.includes(category.value)}
-                  onCheckedChange={(val: boolean) =>
-                    handleChange(val, category.value)
-                  }
-                />
-                <TypographyP text={category.name} />
-              </div>
-            ))}
+            {selectedCategories.length > 0 ? (
+              <IoMdCloseCircle size={25} />
+            ) : (
+              <IoChevronDown size={20} />
+            )}
+          </Badge>
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-[300px] p-0 rounded-xl">
+        <div className="flex flex-col gap-3 w-[20rem] p-5">
+          <div className="flex gap-3 items-center">
+            <Checkbox
+              checked={selectedCategories.includes("all")}
+              onCheckedChange={(val: boolean) => handleChange(val, "all")}
+            />
+            <TypographyP text="All" />
           </div>
-        </PopoverContent>
-      </Popover>
+          {category_type.map((category, index) => (
+            <div key={index} className="flex gap-3 items-center">
+              <Checkbox
+                checked={selectedCategories.includes(category.value)}
+                onCheckedChange={(val: boolean) =>
+                  handleChange(val, category.value)
+                }
+              />
+              <TypographyP text={category.name} />
+            </div>
+          ))}
+        </div>
+      </PopoverContent>
+    </Popover>
   );
 };
 
 export const SortFilter = (props: Props) => {
-  const router = useRouter()
-  const pathname = usePathname()
-  const params = useSearchParams() 
+  const router = useRouter();
+  const pathname = usePathname();
+  const params = useSearchParams();
   const [open, setOpen] = useState(false);
   const [index, setIndex] = useState(-1);
   const handleChange = (value: string) => {
-    setIndex((parseInt(value)));
+    setIndex(parseInt(value));
   };
-  const updateQueryParameter = useCallback((value:string, key:string) => {
-    const newParams = new URLSearchParams(params.toString())
-    value ? newParams.set(key, value):newParams.delete(key)
-    router.push(`${pathname}?${newParams.toString()}`)
-  },[params])
+  const updateQueryParameter = useCallback(
+    (value: string, key: string) => {
+      const newParams = new URLSearchParams(params.toString());
+      value ? newParams.set(key, value) : newParams.delete(key);
+      router.push(`${pathname}?${newParams.toString()}`);
+    },
+    [params],
+  );
 
   useEffect(() => {
-    updateQueryParameter(sort_types[index]?.value, 'sort_by')
-  },[index])
+    updateQueryParameter(sort_types[index]?.value, "sort_by");
+  }, [index]);
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger>
@@ -329,7 +383,10 @@ export const SortFilter = (props: Props) => {
           className="flex items-center gap-2 py-1 rounded-full"
         >
           <BiSortAlt2 size={25} />
-          <TypographySmall className="text-foreground capitalize" text={index > -1 ? sort_types[index].name:'Sale Type'} />
+          <TypographySmall
+            className="text-foreground capitalize"
+            text={index > -1 ? sort_types[index].name : "Sale Type"}
+          />
           <Badge
             variant={"secondary"}
             className="p-0 h-auto rounded-full"
@@ -369,35 +426,51 @@ export const SortFilter = (props: Props) => {
 };
 
 export const CollectionsFilter = (props: Props) => {
-  const router = useRouter()
-  const pathname = usePathname()
-  const params = useSearchParams() 
+  const router = useRouter();
+  const pathname = usePathname();
+  const params = useSearchParams();
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
-  const handleClear = (e:any) => {
-    e.preventDefault()
-    setValue('')
-  }
-  const updateQueryParameter = useCallback((value:string, key:string) => {
-    const newParams = new URLSearchParams(params.toString())
-    value ? newParams.set(key, value):newParams.delete(key)
-    router.push(`${pathname}?${newParams.toString()}`)
-  },[params])
+  const handleClear = (e: any) => {
+    e.preventDefault();
+    setValue("");
+  };
+  const updateQueryParameter = useCallback(
+    (value: string, key: string) => {
+      const newParams = new URLSearchParams(params.toString());
+      value ? newParams.set(key, value) : newParams.delete(key);
+      router.push(`${pathname}?${newParams.toString()}`);
+    },
+    [params],
+  );
 
   useEffect(() => {
-    updateQueryParameter(value, 'collection')
-  },[value])
+    updateQueryParameter(value, "collection");
+  }, [value]);
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger>
         <Button className="flex items-center gap-2 py-1 bg-secondary rounded-full hover:bg-secondary/80 text-secondary-foreground">
           <MdOutlineCollectionsBookmark size={25} />
-            <TypographySmall className="text-foreground" text={value ? (
-              collections.find(
-                (collection) => collection.name.toLowerCase() === value,
-              )?.name) : "Collections"} 
+          <TypographySmall
+            className="text-foreground"
+            text={
+              value
+                ? collections.find(
+                    (collection) => collection.name.toLowerCase() === value,
+                  )?.name
+                : "Collections"
+            }
+          />
+          {value ? (
+            <IoMdCloseCircle
+              className="cursor-pointer"
+              onClick={handleClear}
+              size={25}
             />
-            {value ? <IoMdCloseCircle className='cursor-pointer' onClick={handleClear} size={25} />:<ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />}
+          ) : (
+            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+          )}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[300px] p-1 rounded-xl">
@@ -434,35 +507,49 @@ export const CollectionsFilter = (props: Props) => {
 };
 
 export const UsersFilter = (props: Props) => {
-  const router = useRouter()
-  const pathname = usePathname()
-  const params = useSearchParams() 
+  const router = useRouter();
+  const pathname = usePathname();
+  const params = useSearchParams();
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
-  const handleClear = (e:any) => {
-    e.preventDefault()
-    setValue('')
-  }
-  const updateQueryParameter = useCallback((value:string, key:string) => {
-    const newParams = new URLSearchParams(params.toString())
-    value ? newParams.set(key, value):newParams.delete(key)
-    router.push(`${pathname}?${newParams.toString()}`)
-  },[params])
+  const handleClear = (e: any) => {
+    e.preventDefault();
+    setValue("");
+  };
+  const updateQueryParameter = useCallback(
+    (value: string, key: string) => {
+      const newParams = new URLSearchParams(params.toString());
+      value ? newParams.set(key, value) : newParams.delete(key);
+      router.push(`${pathname}?${newParams.toString()}`);
+    },
+    [params],
+  );
 
   useEffect(() => {
-    updateQueryParameter(value, 'creator')
-  },[value])
+    updateQueryParameter(value, "creator");
+  }, [value]);
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger>
         <Button className="flex items-center gap-2 h-auto bg-secondary rounded-full hover:bg-secondary/80 text-secondary-foreground">
           <LuUser2 size={25} />
-          <TypographySmall className="text-foreground" text={value ? (
-              users.find(
-                (user) => user.name.toLowerCase() === value,
-              )?.name) : "Users"} 
+          <TypographySmall
+            className="text-foreground"
+            text={
+              value
+                ? users.find((user) => user.name.toLowerCase() === value)?.name
+                : "Users"
+            }
+          />
+          {value ? (
+            <IoMdCloseCircle
+              className="cursor-pointer"
+              onClick={handleClear}
+              size={25}
             />
-           {value ? <IoMdCloseCircle className='cursor-pointer' onClick={handleClear} size={25} />:<ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />}
+          ) : (
+            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+          )}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-fit p-1 rounded-xl">

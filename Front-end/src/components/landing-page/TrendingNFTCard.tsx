@@ -13,10 +13,13 @@ import CountDown from "count-down-react";
 import { useState } from "react";
 import { Routes } from "@/routes";
 import Link from "next/link";
+import { NFT } from "@/types";
 
-type Props = {};
+type Props = {
+  asset: NFT;
+};
 
-const TrendingNFTCard = (props: Props) => {
+const TrendingNFTCard = ({ asset }: Props) => {
   const [liked, setLiked] = useState(false);
   const [likes, setLikes] = useState(22);
   const onTick = ({
@@ -40,12 +43,12 @@ const TrendingNFTCard = (props: Props) => {
   };
 
   return (
-    <Link href={`${Routes.PRODUCT}/${Math.floor(Math.random() * 10000000000)}`}>
+    <Link href={`${Routes.PRODUCT}/${asset.tokenId}`}>
       <Card className="p-5 bg-accent hover:bg-accent max-w-[35rem] w-full">
         <div className="relative overflow-clip  h-[30rem]">
           <Image
             className="object-cover rounded-lg hover:scale-105"
-            src="/landing-page/audio-category.jpg"
+            src={asset.image}
             fill
             alt=""
           />
@@ -58,19 +61,25 @@ const TrendingNFTCard = (props: Props) => {
               <TypographyH3
                 className="text-primary/60"
                 text={
-                  <CountDown date={Date.now() + 50000000} renderer={onTick} />
+                  <CountDown
+                    date={asset.auction?.auction_end as number}
+                    renderer={onTick}
+                  />
                 }
               />
             </div>
           </div>
           <div className="absolute rounded-tr-[0.5rem] transform skew-x-[50deg] bottom-0 left-0 py-[0.5rem] w-[80%] ml-[-4.5rem] bg-accent ">
             <div className="flex flex-col items-start pl-[4.5rem] gap-5 transform skew-x-[-50deg]">
-              <TypographyH3 className="text-primary/60" text="Clone #12232" />
+              <TypographyH3 className="text-primary/60" text={asset.name} />
               <Card className="relative p-3 bg-primary/5">
                 <Badge variant={"secondary"} className="absolute -top-3 left-1">
                   Current Bid
                 </Badge>
-                <TypographyH4 className="text-primary/60" text="0.001245ETH" />
+                <TypographyH4
+                  className="text-primary/60"
+                  text={`${asset.price}ETH`}
+                />
               </Card>
             </div>
           </div>
@@ -83,7 +92,7 @@ const TrendingNFTCard = (props: Props) => {
             >
               <FaHeart className={`${liked && "text-red-500"} p-0`} size={20} />
             </Button>
-            <TypographySmall text={likes} />
+            <TypographySmall text={asset.likes} />
           </Badge>
         </div>
       </Card>

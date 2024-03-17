@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/accordion";
 import NFTCard from "../explore/assets/NFTCard";
 import { ScrollArea, ScrollBar } from "../ui/scroll-area";
+import { assets } from "@/utils";
 
 const MoreFromCollection = () => {
   return (
@@ -19,12 +20,12 @@ const MoreFromCollection = () => {
         <AccordionContent>
           <ScrollArea>
             <div className="flex gap-5">
-              {Array.from({ length: 8 }).map((_, index) => (
+              {assets.map((asset, index) => (
                 <div
                   key={index}
                   className="shrink-0 w-full md:w-[50%] lg:w-[25%]"
                 >
-                  <NFTCard />
+                  <NFTCard asset={asset} />
                 </div>
               ))}
             </div>

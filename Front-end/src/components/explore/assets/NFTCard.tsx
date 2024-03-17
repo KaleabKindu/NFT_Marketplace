@@ -9,14 +9,17 @@ import { Badge } from "../../ui/badge";
 import { useState } from "react";
 import Link from "next/link";
 import { Routes } from "@/routes";
+import { NFT } from "@/types";
 
-type Props = {};
+type Props = {
+  asset: NFT;
+};
 
-const NFTCard = (props: Props) => {
+const NFTCard = ({ asset }: Props) => {
   const [liked, setLiked] = useState(false);
-  const [likes, setLikes] = useState(22);
-  const handleLikes = (e:any) => {
-    e.preventDefault()
+  const [likes, setLikes] = useState(asset?.likes as number);
+  const handleLikes = (e: any) => {
+    e.preventDefault();
     setLiked(!liked);
     if (liked) {
       setLikes(likes - 1);
@@ -26,12 +29,12 @@ const NFTCard = (props: Props) => {
   };
 
   return (
-    <Link href={`${Routes.PRODUCT}/${Math.floor(Math.random() * 10000000000)}`}>
+    <Link href={`${Routes.PRODUCT}/${asset.tokenId}`}>
       <Card className="md:max-w-[25rem] w-full rounded-3xl group ">
         <div className="relative  min-h-[20rem] h-full rounded-t-3xl overflow-clip">
           <Image
             className="object-cover rounded-t-3xl group-hover:scale-105"
-            src="/landing-page/audio-category.jpg"
+            src={asset.image}
             fill
             alt=""
           />
@@ -52,11 +55,14 @@ const NFTCard = (props: Props) => {
         </div>
         <div className="flex flex-col p-3">
           <div className="flex items-center justify-between">
-            <TypographyH4 text="Clone #1234" />
+            <TypographyH4 className="capitalize" text={asset.name} />
           </div>
           <div className="p-3 bg-primary/5">
             <TypographySmall text="Current Bid" />
-            <TypographyH4 className="text-primary/60" text="0.001245ETH" />
+            <TypographyH4
+              className="text-primary/60"
+              text={`${asset.price}ETH`}
+            />
           </div>
         </div>
       </Card>

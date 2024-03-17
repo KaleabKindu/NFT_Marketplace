@@ -1,3 +1,4 @@
+import { collections } from "@/utils";
 import CollectionCard from "../CollectionCard";
 import { TypographyH2, TypographyH4 } from "../common/Typography";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
@@ -10,10 +11,10 @@ const TopCollections = (props: Props) => {
       <TypographyH2 text="Top Collections" />
       <TypographyH4 text="Discover the new creative economy" />
       <ScrollArea>
-        <div className="flex gap-6">
-          {Array.from({ length: 6 }).map((_, index) => (
-            <div key={index} className="shrink-0 w-full md:w-[50%] lg:w-[26%]">
-              <CollectionCard key={index} />
+        <div className="flex w-full gap-5">
+          {collections.map((collection, index) => (
+            <div key={index} className="shrink-0 w-full md:w-[50%] lg:w-[15%]">
+              <CollectionCard collection={collection} />
             </div>
           ))}
         </div>
