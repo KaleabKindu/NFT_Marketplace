@@ -3,7 +3,7 @@ import { assets } from "@/utils";
 import NFTCard from "../explore/assets/NFTCard";
 type Props = {};
 
-const UserNFTs = (props: Props) => {
+const CreatedNFTS = (props: Props) => {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 items-center justify-center gap-5">
       {assets.map((asset, index) => (
@@ -13,4 +13,4 @@ const UserNFTs = (props: Props) => {
   );
 };
 
-export default UserNFTs;
+export default CreatedNFTS;

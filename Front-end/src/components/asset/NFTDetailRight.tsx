@@ -278,7 +278,6 @@ export const BidModal = ({ auctionId }: BidModalProps) => {
     defaultValues: initialState,
   });
   const onSubmit = () => {
-    console.log("here");
     contractWrite("placeBid", form.getValues("price").toString(), [auctionId]);
   };
   useEffect(() => {

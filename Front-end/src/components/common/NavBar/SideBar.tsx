@@ -66,12 +66,10 @@ const SideBar = (props: Props) => {
       const nonce = await getNonce(address as Address).unwrap();
 
       const signature = await signMessageAsync({ message: nonce });
-      console.log(signature);
       const token = await authenticateSignature({
         publicAddress: address as Address,
         signedNonce: signature,
       }).unwrap();
-      console.log("session", token);
       dispatch(setSession(token));
     } catch (error) {
       console.log(error);

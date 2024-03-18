@@ -24,7 +24,10 @@ const CollectionDetail = ({ id }: Props) => {
         />
       </div>
       <div className="flex flex-col gap-5">
-        <TypographyH2 text={collection?.name || "Awesome NFT Collection"} />
+        <TypographyH2
+          className="capitalize"
+          text={collection?.name || "Awesome NFT Collection"}
+        />
         <TypographyP
           text={
             collection?.description ||
@@ -39,7 +42,7 @@ const CollectionDetail = ({ id }: Props) => {
             />
             <TypographyH3
               className="text-accent-foreground/60"
-              text={`${collection?.floor_price} ETH`}
+              text={`${parseFloat(collection?.floor_price as string).toFixed(2)} ETH`}
             />
           </div>
           <div className="flex flex-col items-center gap-5 lg:gap-8 p-5 lg:p-7 border rounded-xl">
@@ -49,7 +52,7 @@ const CollectionDetail = ({ id }: Props) => {
             />
             <TypographyH3
               className="text-accent-foreground/60"
-              text={`${collection?.volume} ETH`}
+              text={`${parseFloat(collection?.volume as string).toFixed(2)} ETH`}
             />
           </div>
           <div className="flex flex-col items-center gap-5 lg:gap-8 p-5 lg:p-7 border rounded-xl">
@@ -59,7 +62,7 @@ const CollectionDetail = ({ id }: Props) => {
             />
             <TypographyH3
               className="text-accent-foreground/60"
-              text={`${collection?.latest_price} ETH`}
+              text={`${parseFloat(collection?.latest_price as string).toFixed(2)} ETH`}
             />
           </div>
           <div className="flex flex-col items-center gap-5 lg:gap-8 p-5 lg:p-7 border rounded-xl">

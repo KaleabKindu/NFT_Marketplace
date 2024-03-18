@@ -5,7 +5,7 @@ export enum Routes {
   PRODUCT = "/asset",
   COLLECTION = "/collection",
   MINT = "/asset/mint",
-  CONNECT = "/connect",
+  EDIT_PROFILE = "/user/edit-profile",
 
   // Explore
   NFTS = "/explore/assets",

@@ -1,5 +1,12 @@
 import { Routes } from "@/routes";
-
+import { MdCamera } from "react-icons/md";
+import { BsSoundwave } from "react-icons/bs";
+import { FaVideo } from "react-icons/fa6";
+import { SiVorondesign } from "react-icons/si";
+import { FaPaintBrush } from "react-icons/fa";
+import { IoBookOutline } from "react-icons/io5";
+import { IoTicketSharp } from "react-icons/io5";
+import { BsBox } from "react-icons/bs";
 export const discover = [
   {
     name: "NFTs",
@@ -61,99 +68,91 @@ export const howitworks = [
       "Connect with wallet, discover, buy NFTs, sell your NFTs and earn money",
   },
 ];
+export enum CATEGORY {
+  ART = "art",
+  PHOTOGRAPHY = "photography",
+  AUDIO = "audio",
+  VIDEO = "video",
+  THREE_D = "3d",
+  DESIGN = "design",
+  EBOOK = "ebook",
+  TICKET = "ticket",
+  DRAWING_PAINTING = "drawing_painting",
+}
+
+export enum FILTER {
+  SEARCH = "search",
+  SALE = "sale_type",
+  MIN_PRICE = "min_price",
+  MAX_PRICE = "max_price",
+  CATEGORY = "categories",
+  SORT_BY = "sort_by",
+  COLLECTION = "collection",
+  CREATOR = "creator",
+}
 export const categories = [
   {
     name: "Art",
     count: 250,
     image: "art-category.jpg",
-    route: "/",
+    value: CATEGORY.ART,
+    icon: MdCamera,
   },
   {
     name: "Photography",
     count: 330,
     image: "photography-category.jpg",
-    route: "/",
+    value: CATEGORY.PHOTOGRAPHY,
+    icon: MdCamera,
   },
   {
     name: "Audio",
     count: 234,
     image: "audio-category.jpg",
-    route: "/",
+    value: CATEGORY.AUDIO,
+    icon: BsSoundwave,
   },
   {
     name: "Video",
     count: 534,
     image: "video-category.jpg",
-    route: "/",
+    value: CATEGORY.VIDEO,
+    icon: FaVideo,
   },
   {
     name: "3D",
     count: 334,
     image: "3d-category.jpg",
-    route: "/",
+    value: CATEGORY.THREE_D,
+    icon: BsBox,
   },
   {
     name: "Design",
     count: 134,
     image: "design-category.jpg",
-    route: "/",
+    value: CATEGORY.DESIGN,
+    icon: SiVorondesign,
   },
   {
     name: "Drawing & Painting",
     count: 434,
     image: "drawing-category.jpg",
-    route: "/",
+    value: CATEGORY.DRAWING_PAINTING,
+    icon: FaPaintBrush,
   },
   {
     name: "E-Books",
     count: 200,
     image: "ebook-category.png",
-    route: "/",
+    value: CATEGORY.EBOOK,
+    icon: IoBookOutline,
   },
   {
     name: "Tickets",
     count: 100,
     image: "tickets-category.jpg",
-    route: "/",
-  },
-];
-
-export const category_type = [
-  {
-    name: "Art",
-    value: "art",
-  },
-  {
-    name: "Photography",
-    value: "photography",
-  },
-  {
-    name: "Audio",
-    value: "audio",
-  },
-  {
-    name: "Video",
-    value: "video",
-  },
-  {
-    name: "3D",
-    value: "3d",
-  },
-  {
-    name: "Design",
-    value: "design",
-  },
-  {
-    name: "Drawing & Painting",
-    value: "drawing_painting",
-  },
-  {
-    name: "E-Books",
-    value: "e-books",
-  },
-  {
-    name: "Tickets",
-    value: "tickets",
+    value: CATEGORY.TICKET,
+    icon: IoTicketSharp,
   },
 ];
 
@@ -301,12 +300,8 @@ export const bids = [
 
 export const sort_types = [
   {
-    name: "Trending",
-    value: "trending",
-  },
-  {
-    name: "Recent",
-    value: "recent",
+    name: "Date Added",
+    value: "date_added",
   },
   {
     name: "Low - High",

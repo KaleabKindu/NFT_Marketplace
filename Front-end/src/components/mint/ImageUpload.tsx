@@ -42,22 +42,6 @@ const ImageUpload = ({ form }: Props) => {
           </FormDescription>
           <FormControl>
             <div
-              onDragEnter={(e) => {
-                e.preventDefault();
-                console.log("enter");
-              }}
-              onDragCapture={(e) => {
-                e.preventDefault();
-                console.log("capture");
-              }}
-              onDragLeave={(e) => {
-                e.preventDefault();
-                console.log("leave");
-              }}
-              onDragOver={(e) => {
-                e.preventDefault();
-                console.log("over");
-              }}
               onDrop={(e) => handleDrop(e)}
               className="relative z-40 flex flex-col items-center justify-center border-3 border-dashed border-foreground rounded-lg h-[20rem] mt-5 bg-accent hover:bg-accent/70 cursor-pointer"
               onClick={() => ref.current?.click()}

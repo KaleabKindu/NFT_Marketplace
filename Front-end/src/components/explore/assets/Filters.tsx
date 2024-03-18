@@ -9,15 +9,14 @@ import {
   SortFilter,
   CollectionsFilter,
   UsersFilter,
-} from "../../collection/SearchFilter";
+} from "@/components/common/SearchFilters";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 
 type Props = {};
 
-const Filter = (props: Props) => {
+const Filters = (props: Props) => {
   const [showFilter, setShowFilter] = useState(false);
-  const [selected, setSelected] = useState("all");
   return (
     <div className="flex flex-col gap-5 w-full">
       <div className="flex items-center justify-end border-b py-6">
@@ -47,4 +46,4 @@ const Filter = (props: Props) => {
   );
 };
 
-export default Filter;
+export default Filters;

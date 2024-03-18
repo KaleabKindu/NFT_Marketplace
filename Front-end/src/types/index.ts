@@ -56,4 +56,5 @@ export interface Collection {
   latest_price: string;
   items: number;
   creator: User;
+  images?: string[];
 }

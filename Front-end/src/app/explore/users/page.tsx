@@ -1,6 +1,6 @@
 import { Metadata } from "next/types";
-import { SearchInput } from "@/components/collection/SearchFilter";
 import UsersList from "@/components/explore/users/UsersList";
+import { SearchInput } from "@/components/common/SearchFilters";
 export const metadata: Metadata = {
   title: "Explore All Users | NFT Marketplace",
 };

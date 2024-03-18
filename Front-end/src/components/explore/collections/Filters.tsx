@@ -3,11 +3,11 @@ import {
   UsersFilter,
   SearchInput,
   SortFilter,
-} from "@/components/collection/SearchFilter";
+} from "@/components/common/SearchFilters";
 
 type Props = {};
 
-const SearchFilter = (props: Props) => {
+const Filters = (props: Props) => {
   return (
     <div>
       <div className="flex flex-col lg:flex-row gap-8 items-center mt-16">
@@ -22,4 +22,4 @@ const SearchFilter = (props: Props) => {
   );
 };
 
-export default SearchFilter;
+export default Filters;

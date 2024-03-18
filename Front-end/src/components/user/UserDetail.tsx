@@ -15,6 +15,8 @@ import Link from "next/link";
 import CopyToClipboard from "react-copy-to-clipboard";
 import { Badge } from "../ui/badge";
 import { useToast } from "../ui/use-toast";
+import { useAccount } from "wagmi";
+import { MdEdit } from "react-icons/md";
 
 type Props = {
   address: string;
@@ -22,6 +24,7 @@ type Props = {
 
 const UserDetail = ({ address }: Props) => {
   const { toast } = useToast();
+  const account = useAccount();
   const user = users.find((user) => user.publicAddress === address);
   return (
     <div className="relative flex flex-col lg:flex-row gap-8 -mt-[15vh] w-[90%] lg:w-[85%] mx-auto bg-background border z-40 rounded-3xl p-8">
@@ -83,18 +86,16 @@ const UserDetail = ({ address }: Props) => {
           </Link>
         </div>
       </div>
-      <div className="self-start flex items-center gap-5">
-        <Button className="rounded-full">Follow</Button>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button className="rounded-full" variant={"ghost"} size={"icon"}>
-              <BsThreeDots size={25} />
+      <div className="self-start flex items-center gap-5 ml-auto">
+        {account.address === address ? (
+          <Link href="">
+            <Button variant={"ghost"} size={"icon"} className="rounded-full">
+              <MdEdit size={30} />
             </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuItem>Report Abuse</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+          </Link>
+        ) : (
+          <Button className="rounded-full">Follow</Button>
+        )}
       </div>
     </div>
   );

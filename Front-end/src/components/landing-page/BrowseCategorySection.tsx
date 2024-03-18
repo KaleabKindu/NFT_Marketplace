@@ -17,7 +17,10 @@ const BrowseCategorySection = (props: Props) => {
       <TypographyH2 text={"Browse By Category"} />
       <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5">
         {categories.map((category, index) => (
-          <Link key={index} href={Routes.NFTS}>
+          <Link
+            key={index}
+            href={`${Routes.NFTS}?categories=${category.value}`}
+          >
             <Card className="hover:scale-110">
               <CardContent className="relative h-44 p-0">
                 <Image

@@ -9,7 +9,7 @@ const generateDummyAssets = () => {
       tokenId: i + 1,
       name: faker.word.noun(),
       description: faker.lorem.sentence(),
-      image: faker.image.url(),
+      image: faker.image.urlPicsumPhotos(),
       likes: faker.number.int({ min: 0, max: 100 }),
       category: faker.word.sample(),
       price: faker.number
@@ -67,6 +67,12 @@ const generateDummyCollections = () => {
       latest_price: faker.number
         .float({ min: 1, max: 20, fractionDigits: 4 })
         .toString(),
+      images: [
+        faker.image.urlPicsumPhotos(),
+        faker.image.urlPicsumPhotos(),
+        faker.image.urlPicsumPhotos(),
+        faker.image.urlPicsumPhotos(),
+      ],
     };
     dummyData.push(data);
   }

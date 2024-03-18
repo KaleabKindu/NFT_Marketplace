@@ -1,5 +1,5 @@
+import Filters from "@/components/explore/collections/Filters";
 import CollectionsList from "@/components/explore/collections/CollectionsList";
-import SearchFilter from "@/components/explore/collections/SearchFilter";
 import { Metadata } from "next/types";
 
 type Props = {};
@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 const Page = (props: Props) => {
   return (
     <div className="flex flex-col gap-10">
-      <SearchFilter />
+      <Filters />
       <CollectionsList />
     </div>
   );

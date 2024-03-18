@@ -1,24 +1,14 @@
 "use client";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Badge } from "../ui/badge";
-import {
-  IoWalletOutline,
-  IoChevronDown,
-  IoRadioButtonOff,
-} from "react-icons/io5";
+import { IoWalletOutline, IoChevronDown } from "react-icons/io5";
 import { TypographyP, TypographySmall } from "../common/Typography";
 import { Button } from "../ui/button";
 import { IoMdCloseCircle } from "react-icons/io";
 import { Slider } from "@/components/ui/slider";
 import { BiSortAlt2, BiCategory } from "react-icons/bi";
 import {
+  FILTER,
   categories,
-  category_type,
   collections,
   sale_types,
   sort_types,
@@ -27,8 +17,8 @@ import {
 import { Checkbox } from "../ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { useCallback, useEffect, useState } from "react";
-import { MdOutlineSell, MdOutlineSportsCricket } from "react-icons/md";
+import { ReactNode, useCallback, useEffect, useState } from "react";
+import { MdOutlineSell } from "react-icons/md";
 import { cn } from "@/lib/utils";
 import { CiSearch } from "react-icons/ci";
 import { Input } from "../ui/input";
@@ -51,29 +41,12 @@ import { Avatar } from "../common/Avatar";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useDebounce } from "use-debounce";
 
-type Props = {};
-
-const SearchFilter = (props: Props) => {
-  return (
-    <div className="flex flex-col lg:flex-row gap-3 items-center mt-16">
-      <SearchInput className="flex-1" />
-      <div className="flex-1 flex flex-wrap lg:flex-nowrap justify-center items-center gap-2">
-        <PriceFilter />
-        <SaleFilter />
-        <CategoryFilter />
-        <SortFilter />
-      </div>
-    </div>
-  );
-};
-
-export default SearchFilter;
-
 type SearchProps = {
   className?: string;
+  postIcon?: ReactNode;
 };
 
-export const SearchInput = ({ className }: SearchProps) => {
+export const SearchInput = ({ className, postIcon }: SearchProps) => {
   const router = useRouter();
   const pathname = usePathname();
   const params = useSearchParams();
@@ -89,7 +62,7 @@ export const SearchInput = ({ className }: SearchProps) => {
   );
 
   useEffect(() => {
-    updateQueryParameter(value, "search");
+    updateQueryParameter(value, FILTER.SEARCH);
   }, [value]);
   return (
     <div className={cn("relative", className)}>
@@ -100,11 +73,19 @@ export const SearchInput = ({ className }: SearchProps) => {
         onChange={(e) => setQuery(e.target.value)}
         className="rounded-full pl-12 pr-4 bg-accent text-accent-foreground focus:border-background/80"
       />
+      {postIcon && (
+        <Button
+          className="absolute top-0 bottom-0 my-auto right-2 rounded-full"
+          size={"icon"}
+        >
+          {postIcon}
+        </Button>
+      )}
     </div>
   );
 };
 
-export const SaleFilter = (props: Props) => {
+export const SaleFilter = () => {
   const params = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
@@ -126,7 +107,7 @@ export const SaleFilter = (props: Props) => {
     [params],
   );
   useEffect(() => {
-    updateQueryParameter(selectedSaleType, "sale_type");
+    updateQueryParameter(selectedSaleType, FILTER.SALE);
   }, [selectedSaleType]);
 
   return (
@@ -180,7 +161,7 @@ export const SaleFilter = (props: Props) => {
   );
 };
 
-export const PriceFilter = (props: Props) => {
+export const PriceFilter = () => {
   const router = useRouter();
   const pathname = usePathname();
   const params = useSearchParams();
@@ -203,11 +184,11 @@ export const PriceFilter = (props: Props) => {
   useEffect(() => {
     const newParams = new URLSearchParams(params.toString());
     debminPrice
-      ? newParams.set("min_price", debminPrice.toString())
-      : newParams.delete("min_price");
+      ? newParams.set(FILTER.MIN_PRICE, debminPrice.toString())
+      : newParams.delete(FILTER.MIN_PRICE);
     debmaxPrice
-      ? newParams.set("max_price", debmaxPrice.toString())
-      : newParams.delete("max_price");
+      ? newParams.set(FILTER.MAX_PRICE, debmaxPrice.toString())
+      : newParams.delete(FILTER.MAX_PRICE);
     router.push(`${pathname}?${newParams.toString()}`);
   }, [debminPrice, debmaxPrice]);
   return (
@@ -278,7 +259,7 @@ export const PriceFilter = (props: Props) => {
   );
 };
 
-export const CategoryFilter = (props: Props) => {
+export const CategoryFilter = () => {
   const router = useRouter();
   const pathname = usePathname();
   const params = useSearchParams();
@@ -301,7 +282,7 @@ export const CategoryFilter = (props: Props) => {
   );
 
   useEffect(() => {
-    updateQueryParameter(selectedCategories.join(","), "categories");
+    updateQueryParameter(selectedCategories.join(","), FILTER.CATEGORY);
   }, [selectedCategories]);
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -337,7 +318,7 @@ export const CategoryFilter = (props: Props) => {
             />
             <TypographyP text="All" />
           </div>
-          {category_type.map((category, index) => (
+          {categories.map((category, index) => (
             <div key={index} className="flex gap-3 items-center">
               <Checkbox
                 checked={selectedCategories.includes(category.value)}
@@ -354,7 +335,7 @@ export const CategoryFilter = (props: Props) => {
   );
 };
 
-export const SortFilter = (props: Props) => {
+export const SortFilter = () => {
   const router = useRouter();
   const pathname = usePathname();
   const params = useSearchParams();
@@ -373,7 +354,7 @@ export const SortFilter = (props: Props) => {
   );
 
   useEffect(() => {
-    updateQueryParameter(sort_types[index]?.value, "sort_by");
+    updateQueryParameter(sort_types[index]?.value, FILTER.SORT_BY);
   }, [index]);
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -385,7 +366,7 @@ export const SortFilter = (props: Props) => {
           <BiSortAlt2 size={25} />
           <TypographySmall
             className="text-foreground capitalize"
-            text={index > -1 ? sort_types[index].name : "Sale Type"}
+            text={index > -1 ? sort_types[index].name : "Sort By"}
           />
           <Badge
             variant={"secondary"}
@@ -425,7 +406,7 @@ export const SortFilter = (props: Props) => {
   );
 };
 
-export const CollectionsFilter = (props: Props) => {
+export const CollectionsFilter = () => {
   const router = useRouter();
   const pathname = usePathname();
   const params = useSearchParams();
@@ -445,7 +426,7 @@ export const CollectionsFilter = (props: Props) => {
   );
 
   useEffect(() => {
-    updateQueryParameter(value, "collection");
+    updateQueryParameter(value, FILTER.COLLECTION);
   }, [value]);
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -506,7 +487,7 @@ export const CollectionsFilter = (props: Props) => {
   );
 };
 
-export const UsersFilter = (props: Props) => {
+export const UsersFilter = () => {
   const router = useRouter();
   const pathname = usePathname();
   const params = useSearchParams();
@@ -526,7 +507,7 @@ export const UsersFilter = (props: Props) => {
   );
 
   useEffect(() => {
-    updateQueryParameter(value, "creator");
+    updateQueryParameter(value, FILTER.CREATOR);
   }, [value]);
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -538,7 +519,7 @@ export const UsersFilter = (props: Props) => {
             text={
               value
                 ? users.find((user) => user.name.toLowerCase() === value)?.name
-                : "Users"
+                : "Creators"
             }
           />
           {value ? (

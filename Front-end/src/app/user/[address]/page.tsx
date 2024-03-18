@@ -1,11 +1,11 @@
 "use client";
 import UserDetail from "@/components/user/UserDetail";
-import UserNFTs from "@/components/user/UserNFTs";
-import { useState } from "react";
-import UserCollections from "@/components/user/UserCollections";
-import UserFollowersFollowings from "@/components/user/UserFollowersFollowings";
+import Followings from "@/components/user/Followings";
 import PopularUsers from "@/components/user/PopularUsers";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import Followers from "@/components/user/Followers";
+import UserCollections from "@/components/user/UserCollections";
+import CreatedNFTS from "@/components/user/CreatedNFTs";
 
 type Props = {
   params: {
@@ -33,16 +33,16 @@ const Page = ({ params }: Props) => {
           </TabsTrigger>
         </TabsList>
         <TabsContent value="created">
-          <UserNFTs />
+          <CreatedNFTS />
         </TabsContent>
         <TabsContent value="collections">
-          <UserNFTs />
+          <UserCollections />
         </TabsContent>
         <TabsContent value="followers">
-          <UserFollowersFollowings />
+          <Followers />
         </TabsContent>
         <TabsContent value="following">
-          <UserFollowersFollowings />
+          <Followings />
         </TabsContent>
       </Tabs>
       <PopularUsers />
