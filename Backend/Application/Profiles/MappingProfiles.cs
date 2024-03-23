@@ -28,6 +28,7 @@ namespace Application.Profiles
             // CreateMap<CreateOfferDto,Offer>();
             // CreateMap<UpdateOfferDto,Offer>()
             //     .ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<AppUser, UserListDto>().ForMember(dest => dest.Address, opt => opt.MapFrom(src => src.PublicAddress));
 
             #endregion
 
