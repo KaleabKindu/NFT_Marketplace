@@ -4,6 +4,7 @@ using Application.Features.Assets.Dtos;
 using Microsoft.AspNetCore.Mvc;
 using Application.Contracts;
 using Microsoft.AspNetCore.Authorization;
+using Domain.Assets;
 
 
 namespace API.Controllers
@@ -25,9 +26,31 @@ namespace API.Controllers
 
         [AllowAnonymous]
         [HttpGet("all")]
-        public async Task<IActionResult> GetAll([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
+        public async Task<IActionResult> GetAll(
+            [FromQuery] string query,
+            [FromQuery] double minPrice, 
+            [FromQuery] double maxPrice, 
+            [FromQuery] AssetCategory? category, 
+            [FromQuery] string sortBy, 
+            [FromQuery] string saleType, 
+            [FromQuery] long collectionId, 
+            [FromQuery] string creatorId, 
+            [FromQuery] int pageNumber = 1, 
+            [FromQuery] int pageSize = 10
+        )
         {
-            return HandleResult(await Mediator.Send(new GetAllAssetQuery { PageNumber = pageNumber, PageSize = pageSize }));
+            return HandleResult(await Mediator.Send(new GetAllAssetQuery { 
+                    Query = query,
+                    MinPrice = minPrice,
+                    MaxPrice = maxPrice,
+                    Category = category,
+                    SortBy = sortBy,
+                    SaleType = saleType,
+                    CollectionId = collectionId,
+                    CreatorId = creatorId,
+                    PageNumber = pageNumber, 
+                    PageSize = pageSize 
+                }));
         }
         
 

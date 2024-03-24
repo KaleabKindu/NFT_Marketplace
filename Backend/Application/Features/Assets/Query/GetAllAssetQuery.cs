@@ -5,12 +5,20 @@ using Application.Contracts.Persistance;
 using AutoMapper;
 using ErrorOr;
 using Application.Responses;
+using Domain.Assets;
 
 namespace Application.Features.Assets.Query
 {
-    public class GetAllAssetQuery : PaginatedQuery, IRequest<ErrorOr<PaginatedResponse<AssetListDto>>>
+    public sealed class GetAllAssetQuery : PaginatedQuery, IRequest<ErrorOr<PaginatedResponse<AssetListDto>>>
     {
-        
+        public string Query { get; set; } = "";
+        public double MaxPrice { get; set; } = -1;
+        public double MinPrice { get; set; } = -1;
+        public AssetCategory? Category { get; set; } = null;
+        public string SortBy { get; set; } = "Id";
+        public string? SaleType { get; set; } = null;
+        public long? CollectionId { get; set; } = null;
+        public string? CreatorId { get; set; } = null;        
     }
 
 
@@ -27,15 +35,15 @@ namespace Application.Features.Assets.Query
         } 
 
         public async Task<ErrorOr<PaginatedResponse<AssetListDto>>> Handle(GetAllAssetQuery request, CancellationToken cancellationToken)
-        {
+        {           
             
-            var result = await _unitOfWork.AssetRepository.GetAllAsync(request.PageNumber, request.PageSize);
-            var count  = await _unitOfWork.AssetRepository.Count();
+            var result = await _unitOfWork.AssetRepository
+                .GetFilteredAssets(request.Query,request.MinPrice, request.MaxPrice, request.Category, request.SortBy, request.SaleType, request.CollectionId, request.CreatorId, request.PageNumber, request.PageSize);
 
             var response = new PaginatedResponse<AssetListDto>{
                 Message = "Fetch Succesful",
-                Value = _mapper.Map<List<AssetListDto>>(result),
-                Count = count,
+                Value = _mapper.Map<List<AssetListDto>>(result.Item2),
+                Count = result.Item1,
                 PageNumber = request.PageNumber,
                 PageSize = request.PageSize
 
