@@ -15,6 +15,11 @@ defaults:
 env:
   # Set CI environment variable (global for all jobs)
   CI: false
+  SKIP_PREFLIGHT_CHECK: ${{secrets.SKIP_PREFLIGHT_CHECK}}
+  NEXT_PUBLIC_PROJECT_ID: ${{secrets.NEXT_PUBLIC_PROJECT_ID}}
+  NEXT_PUBLIC_IPFS_API_KEY: ${{secrets.NEXT_PUBLIC_IPFS_API_KEY}}
+  NEXT_PUBLIC_LISTING_PRICE: ${{secrets.NEXT_PUBLIC_LISTING_PRICE}}
+  NEXT_PUBLIC_CONTRACT_ADDRESS: ${{secrets.NEXT_PUBLIC_CONTRACT_ADDRESS}}
 
 jobs:
   build:
@@ -23,7 +28,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      # Build and Test React application (client-app)
+      # Build and Test React application 
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
