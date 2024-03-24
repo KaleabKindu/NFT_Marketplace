@@ -1,6 +1,6 @@
 # Define the trigger for the workflow
 
-name: CI - Build
+name: front-end build
 
 on:
   push:
@@ -28,7 +28,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 20  # Adjust Node.js version as needed
-          cache-dependency-path: ./package.json
+          cache-dependency-path: ./Front-end/package.json
           cache: 'npm'  # Cache npm dependencies
 
       # Install dependencies

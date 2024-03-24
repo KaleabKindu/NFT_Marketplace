@@ -1,6 +1,6 @@
 # Define the trigger for the workflow
 
-name: CI - Build
+name: backend build
 
 on:
   push:
