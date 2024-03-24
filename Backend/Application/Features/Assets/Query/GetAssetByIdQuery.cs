@@ -44,10 +44,10 @@ namespace Application.Features.Assets.Query
             response.Message = "Fetch Successful";
             response.Value = _mapper.Map<AssetDetailDto>(asset);
 
-            _logger.LogInformation(auction.HighestBid);
+            _logger.LogInformation(auction.HighestBid.ToString());
             _logger.LogInformation(auction.AuctionEnd.ToString());
-            _logger.LogInformation(asset.Auction.HighestBid);
-            _logger.LogInformation(response.Value.Auction.CurrentPrice);
+            _logger.LogInformation(asset.Auction.HighestBid.ToString());
+            _logger.LogInformation(response.Value.Auction.HighestBid);
             return response;
         }
     }

@@ -14,7 +14,7 @@ namespace Application.Features.Assets.Dtos
         public string Image { get; set; }
     
         public string Category { get; set; }
-        public string Price { get; set; }
+        public double Price { get; set; }
         public CreateAuctionDto Auction { get; set; }
         public long CollectionId { get; set; }
         public string TransactionHash { get; set; }
