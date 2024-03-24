@@ -6,7 +6,7 @@ namespace Application.Features.Auctions.Dtos
     {
         public long AuctionId { get; set; }
         public long AuctionEnd { get; set; }
-        public string CurrentPrice {get; set;}
+        public string HighestBid {get; set;}
         
     }
 }

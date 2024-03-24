@@ -88,7 +88,7 @@ namespace Application.Profiles
             #region Auction
 
             CreateMap<Auction, GetAuctionDto>()
-                .ForMember(dest => dest.CurrentPrice , opt => opt.MapFrom(src => src.HighestBid));  
+                .ForMember(dest => dest.HighestBid , opt => opt.MapFrom(src => src.HighestBid));  
             CreateMap<Auction, CreateAuctionDto>().ReverseMap();
 
             #endregion Auction

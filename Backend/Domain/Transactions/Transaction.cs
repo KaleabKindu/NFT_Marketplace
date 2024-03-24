@@ -22,7 +22,7 @@ namespace Domain.Transactions
         public AppUser Buyer { get; set; }
         public AppUser Seller { get; set; }
         public Asset Asset { get; set; }
-        public string Amount { get; set; }
+        public double Amount { get; set; }
         public TransactionStatus Status { get; set; } = TransactionStatus.Pending;
         public string BlockchainTxHash { get; set; }
     }
