@@ -13,6 +13,8 @@ using Domain.Transactions;
 using Application.Features.Transactions.Dtos;
 using Domain.Auctions;
 using Application.Features.Auctions.Dtos;
+using Domain.Collections;
+using Application.Features.Collections.Dtos;
 
 namespace Application.Profiles
 {
@@ -26,8 +28,10 @@ namespace Application.Profiles
             CreateMap<AppUser, UserProfile>()
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id));
             // CreateMap<CreateOfferDto,Offer>();
+
             // CreateMap<UpdateOfferDto,Offer>()
             //     .ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<AppUser, UserListDto>().ForMember(dest => dest.Address, opt => opt.MapFrom(src => src.PublicAddress));
 
             #endregion
 
@@ -88,10 +92,17 @@ namespace Application.Profiles
             #region Auction
 
             CreateMap<Auction, GetAuctionDto>()
-                .ForMember(dest => dest.CurrentPrice , opt => opt.MapFrom(src => src.HighestBid));  
+                .ForMember(dest => dest.HighestBid , opt => opt.MapFrom(src => src.HighestBid));  
             CreateMap<Auction, CreateAuctionDto>().ReverseMap();
 
             #endregion Auction
+
+            #region Collections
+
+            CreateMap<Collection, CollectionsListDto>()
+                .ForMember(dest => dest.UserDto , opt => opt.MapFrom(src => src.Creator));  
+            
+            #endregion Collections
 
         
         }

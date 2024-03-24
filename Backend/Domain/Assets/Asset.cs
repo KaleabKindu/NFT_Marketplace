@@ -1,5 +1,6 @@
 using Domain.Auctions;
 using Domain.Bids;
+using Domain.Collections;
 
 namespace Domain.Assets
 {
@@ -11,11 +12,23 @@ namespace Domain.Assets
         public string Image { get; set; }
         public AppUser Owner { get; set; }
         public AppUser Creator { get; set; }
-        public string Category { get; set; }
-        public string Price { get; set; }
+        public AssetCategory Category { get; set; }
+        public double Price { get; set; }
         public Auction Auction { get; set; }
+        public Collection Collection { get; set; }
         public long CollectionId { get; set; }
         public float Royalty { get; set; }
         public List<Bid> Bids { get; set; }
+    }
+
+    public enum  AssetCategory
+    {
+       image,
+       audio,
+       video,
+       art,
+       ticket,
+       design,
+       drawing
     }
 }
