@@ -1,0 +1,45 @@
+# Define the trigger for the workflow
+
+name: front-end build
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+defaults:
+  run:
+    working-directory: ./Front-end
+
+env:
+  # Set CI environment variable (global for all jobs)
+  CI: false
+  SKIP_PREFLIGHT_CHECK: ${{secrets.SKIP_PREFLIGHT_CHECK}}
+  NEXT_PUBLIC_PROJECT_ID: ${{secrets.NEXT_PUBLIC_PROJECT_ID}}
+  NEXT_PUBLIC_IPFS_API_KEY: ${{secrets.NEXT_PUBLIC_IPFS_API_KEY}}
+  NEXT_PUBLIC_LISTING_PRICE: ${{secrets.NEXT_PUBLIC_LISTING_PRICE}}
+  NEXT_PUBLIC_CONTRACT_ADDRESS: ${{secrets.NEXT_PUBLIC_CONTRACT_ADDRESS}}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+
+      # Build and Test React application 
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20  # Adjust Node.js version as needed
+          cache-dependency-path: ./Front-end/package.json
+          cache: 'npm'  # Cache npm dependencies
+
+      # Install dependencies
+      - name: Install dependencies (front-end)
+        run: npm install
+
+      - name: Build React application (front-end)
+        run: npm run build  # Adjust build command as needed
+
