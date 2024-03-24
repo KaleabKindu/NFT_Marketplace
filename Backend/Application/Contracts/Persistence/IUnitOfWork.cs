@@ -6,12 +6,13 @@ namespace Application.Contracts.Persistance
     public interface IUnitOfWork:IDisposable
     {
         IUserRepository UserRepository { get; }
-        IBidRepository BidRepository {get; }
+        IBidRepository BidRepository { get; }
         IOfferRepository OfferRepository { get; }
         ICategoryRepository CategoryRepository { get; }
-        IAssetRepository AssetRepository{get;}
+        IAssetRepository AssetRepository{ get; }
         ITransactionRepository TransactionRepository{ get;}
-        IAuctionRepository AuctionRepository{get;}
+        IAuctionRepository AuctionRepository{ get; }
+        ICollectionRepository CollectionRepository { get; }
 
         Task<int> SaveAsync();
     }
