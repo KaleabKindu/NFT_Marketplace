@@ -145,6 +145,7 @@ const MintForm = (props: Props) => {
         auction: values.auction
           ? {
               auction_end: Math.round(values.auctionEnd / 1000),
+              highest_bid: "0",
             }
           : undefined,
       };
