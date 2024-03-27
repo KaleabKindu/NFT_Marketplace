@@ -2,16 +2,19 @@
 import Image from "next/image";
 import { Card } from "../../ui/card";
 import { TypographyH4, TypographySmall } from "../../common/Typography";
-import { CiImageOn } from "react-icons/ci";
 import { Button } from "../../ui/button";
 import { FaHeart } from "react-icons/fa";
 import { Badge } from "../../ui/badge";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Routes } from "@/routes";
 import { NFT } from "@/types";
 import { GoClock } from "react-icons/go";
 import moment from "moment";
+import AudioPlayer from "./AudioPlayer";
+import VideoPlayer from "./VideoPlayer";
+import { categories } from "@/data";
+import { IconType } from "react-icons";
 type Props = {
   asset: NFT;
 };
@@ -28,17 +31,30 @@ const NFTCard = ({ asset }: Props) => {
       setLikes(likes + 1);
     }
   };
-
+  const Icon = categories.find((cat) => cat.value === asset.category)
+    ?.icon as IconType;
   return (
     <Link href={`${Routes.PRODUCT}/${asset.tokenId}`}>
       <Card className="md:max-w-[25rem] w-full rounded-3xl group ">
         <div className="relative  min-h-[20rem] h-full rounded-t-3xl overflow-clip">
-          <Image
-            className="object-cover rounded-t-3xl group-hover:scale-105"
-            src={asset.image}
-            fill
-            alt=""
-          />
+          {/* Images */}
+          {asset.image && (
+            <Image
+              className="object-cover rounded-t-3xl group-hover:scale-105"
+              src={asset.image}
+              fill
+              alt=""
+            />
+          )}
+
+          {/* Videos */}
+          {asset.video && (
+            <VideoPlayer className="rounded-t-3xl" url={asset.video} />
+          )}
+
+          {/* Audios */}
+          {asset.audio && <AudioPlayer url={asset.audio} />}
+
           <Badge className="flex items-center gap-3 absolute top-5 right-5 bg-background/30 hover:bg-background text-foreground">
             <Button
               variant="ghost"
@@ -51,7 +67,7 @@ const NFTCard = ({ asset }: Props) => {
             <TypographySmall text={likes} />
           </Badge>
           <Badge className="p-2 absolute top-5 left-5 bg-background/30 hover:bg-background text-foreground">
-            <CiImageOn size={25} />
+            <Icon size={25} />
           </Badge>
         </div>
         <div className="flex flex-col p-5">

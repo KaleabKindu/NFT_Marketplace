@@ -16,12 +16,14 @@ const MultipleFilesUpload = ({ onChange }: Props) => {
     setFiles(files.filter((x) => x.id !== id));
   };
   return (
-    <div className="">
+    <div>
       <Dropzone
         onChange={updateFiles}
         className="bg-secondary max-h-[200px] overflow-y-auto"
         label="Click or Drag'n Drop Files"
         style={{ border: 0 }}
+        header={false}
+        footer={false}
         value={files}
       >
         {files.map((file) => (
