@@ -3,7 +3,9 @@ export interface NFT {
   tokenId?: number;
   name: string;
   description: string;
-  image: string;
+  image?: string;
+  audio?: string;
+  video?: string;
   likes?: number;
   category?: string;
   price?: string;

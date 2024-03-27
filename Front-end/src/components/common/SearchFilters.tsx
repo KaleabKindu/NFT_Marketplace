@@ -264,26 +264,26 @@ export const CategoryFilter = () => {
   const pathname = usePathname();
   const params = useSearchParams();
   const [open, setOpen] = useState(false);
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string | undefined>(
+    undefined,
+  );
   const handleChange = (status: boolean, value: string) => {
     if (status) {
-      setSelectedCategories([...selectedCategories, value]);
+      setSelectedCategory(value);
+      updateQueryParameter(FILTER.CATEGORY, value);
     } else {
-      setSelectedCategories(selectedCategories.filter((val) => val !== value));
+      setSelectedCategory(undefined);
+      updateQueryParameter(FILTER.CATEGORY);
     }
   };
   const updateQueryParameter = useCallback(
-    (value: string, key: string) => {
+    (key: string, value?: string) => {
       const newParams = new URLSearchParams(params.toString());
       value ? newParams.set(key, value) : newParams.delete(key);
       router.push(`${pathname}?${newParams.toString()}`);
     },
     [params],
   );
-
-  useEffect(() => {
-    updateQueryParameter(selectedCategories.join(","), FILTER.CATEGORY);
-  }, [selectedCategories]);
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger>
@@ -298,10 +298,10 @@ export const CategoryFilter = () => {
             className="p-0 h-auto rounded-full"
             onClick={(e) => {
               e.preventDefault();
-              setSelectedCategories([]);
+              setSelectedCategory(undefined);
             }}
           >
-            {selectedCategories.length > 0 ? (
+            {selectedCategory ? (
               <IoMdCloseCircle size={25} />
             ) : (
               <IoChevronDown size={20} />
@@ -313,7 +313,7 @@ export const CategoryFilter = () => {
         <div className="flex flex-col gap-3 w-[20rem] p-5">
           <div className="flex gap-3 items-center">
             <Checkbox
-              checked={selectedCategories.includes("all")}
+              checked={selectedCategory === "all"}
               onCheckedChange={(val: boolean) => handleChange(val, "all")}
             />
             <TypographyP text="All" />
@@ -321,7 +321,7 @@ export const CategoryFilter = () => {
           {categories.map((category, index) => (
             <div key={index} className="flex gap-3 items-center">
               <Checkbox
-                checked={selectedCategories.includes(category.value)}
+                checked={selectedCategory === category.value}
                 onCheckedChange={(val: boolean) =>
                   handleChange(val, category.value)
                 }
@@ -332,6 +332,49 @@ export const CategoryFilter = () => {
         </div>
       </PopoverContent>
     </Popover>
+  );
+};
+export const CategoryFilter2 = () => {
+  const router = useRouter();
+  const pathname = usePathname();
+  const params = useSearchParams();
+  const [active, setActive] = useState<string | undefined>(undefined);
+  const handleChange = (value?: string) => {
+    setActive(value);
+    updateQueryParameter(FILTER.CATEGORY, value);
+  };
+  const updateQueryParameter = useCallback(
+    (key: string, value?: string) => {
+      const newParams = new URLSearchParams(params.toString());
+      value ? newParams.set(key, value) : newParams.delete(key);
+      router.push(`${pathname}?${newParams.toString()}`);
+    },
+    [params],
+  );
+  return (
+    <div className="flex flex-wrap gap-2">
+      <Button
+        type="button"
+        onClick={() => handleChange(undefined)}
+        size={"sm"}
+        className="rounded-full px-4 py-0.5 text-sm"
+        variant={!active ? "default" : "outline"}
+      >
+        All
+      </Button>
+      {categories.map((category, index) => (
+        <Button
+          type="button"
+          key={index}
+          onClick={() => handleChange(category.value)}
+          size={"sm"}
+          className="rounded-full px-4 py-0.5 text-sm"
+          variant={active === category.value ? "default" : "outline"}
+        >
+          {category.name}
+        </Button>
+      ))}
+    </div>
   );
 };
 
