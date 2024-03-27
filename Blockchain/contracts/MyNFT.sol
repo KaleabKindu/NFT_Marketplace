@@ -57,7 +57,8 @@ contract MyNFT is ERC721URIStorage, Ownable {
 
     event BidPlaced(uint256 indexed auctionId, address bidder, uint256 amount);
     event AuctionEnded(uint256 indexed auctionId, address winner, uint256 amount);
-
+    event TransferAsset(uint256 indexed tokenId, address newOwner);
+    event DeleteAsset(uint256 tokenid);
 
     constructor() ERC721("NFT Token", "MTK")
     {
@@ -168,6 +169,22 @@ contract MyNFT is ERC721URIStorage, Ownable {
         console.log("NFT Transfer Begin - Owner %s", ownerOf(tokenId));
         _transfer(ownerOf(tokenId), msg.sender, tokenId);
         console.log("NFT Transfer Complete - Owner %s", ownerOf(tokenId));
+    }
+    function transferAsset(uint256 tokenId) public onlyOwner {
+        console.log("NFT Transfer Begin - Owner %s", ownerOf(tokenId));
+        _transfer(ownerOf(tokenId), msg.sender, tokenId);
+        console.log("NFT Transfer Complete - Owner %s", ownerOf(tokenId));
+        emit TransferAsset(tokenId, msg.sender);
+    }
+    function deleteAsset(uint256 tokenId) public onlyOwner {
+        console.log("NFT Burn Begin - Owner %s", ownerOf(tokenId));
+        _burn(tokenId);
+        console.log("NFT Burn Complete - Owner %s", ownerOf(tokenId));   
+        if(idToProduct[tokenId].auctionId != 0){
+            delete idToAuction[idToProduct[tokenId].auctionId];
+        }
+        delete idToProduct[tokenId];
+        emit DeleteAsset(tokenId);
     }
 
     function fetchMarketProducts() public view returns(Product[] memory){

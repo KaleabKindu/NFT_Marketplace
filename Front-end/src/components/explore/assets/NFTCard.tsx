@@ -10,7 +10,8 @@ import { useState } from "react";
 import Link from "next/link";
 import { Routes } from "@/routes";
 import { NFT } from "@/types";
-
+import { GoClock } from "react-icons/go";
+import moment from "moment";
 type Props = {
   asset: NFT;
 };
@@ -53,16 +54,31 @@ const NFTCard = ({ asset }: Props) => {
             <CiImageOn size={25} />
           </Badge>
         </div>
-        <div className="flex flex-col p-3">
+        <div className="flex flex-col p-5">
           <div className="flex items-center justify-between">
             <TypographyH4 className="capitalize" text={asset.name} />
           </div>
-          <div className="p-3 bg-primary/5">
-            <TypographySmall text="Current Bid" />
-            <TypographyH4
-              className="text-primary/60"
-              text={`${asset.price}ETH`}
-            />
+          <div className="flex justify-between items-end">
+            <div className="flex-1 bg-primary/5">
+              <TypographySmall
+                className=" text-xs"
+                text={asset.auction ? "Current Bid" : "Price"}
+              />
+              <TypographyH4
+                className="text-primary/60"
+                text={`${asset.auction ? asset.auction.highest_bid : asset.price}ETH`}
+              />
+            </div>
+            <div className="flex-1 w-[50%] flex flex-col items-end">
+              {asset.auction && (
+                <div className="flex gap-1 items-center">
+                  <GoClock className="text-foreground/50" size={20} />
+                  <TypographySmall
+                    text={`${moment(new Date(asset.auction.auction_end)).toNow(true)} left`}
+                  />
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </Card>

@@ -12,9 +12,12 @@ const generateDummyAssets = () => {
       image: faker.image.urlPicsumPhotos(),
       likes: faker.number.int({ min: 0, max: 100 }),
       category: faker.word.sample(),
-      price: faker.number
-        .float({ min: 0.00001, max: 1, fractionDigits: 4 })
-        .toString(),
+      price:
+        i % 3 === 0
+          ? faker.number
+              .float({ min: 0.00001, max: 1, fractionDigits: 4 })
+              .toString()
+          : undefined,
       royalty: faker.number.int({ min: 1, max: 10 }),
       collection: {
         id: faker.number.int(),
@@ -22,19 +25,25 @@ const generateDummyAssets = () => {
         name: faker.word.noun(),
       },
       creator: {
-        userName: faker.internet.userName(),
+        username: faker.internet.userName(),
         avatar: faker.image.avatar(),
         publicAddress: `0x${faker.finance.bitcoinAddress()}`,
       },
       owner: {
-        userName: faker.internet.userName(),
+        username: faker.internet.userName(),
         avatar: faker.image.avatar(),
         publicAddress: `0x${faker.finance.bitcoinAddress()}`,
       },
-      auction: {
-        auctionId: faker.number.int(),
-        auction_end: new Date(faker.date.future()).getTime(),
-      },
+      auction:
+        i % 3 === 0
+          ? undefined
+          : {
+              auctionId: faker.number.int(),
+              auction_end: new Date(faker.date.future()).getTime(),
+              highest_bid: faker.number
+                .float({ min: 0.00001, max: 1, fractionDigits: 4 })
+                .toString(),
+            },
       transactionHash: `0x${faker.finance.litecoinAddress()}`,
     };
     dummyData.push(data);
@@ -53,7 +62,7 @@ const generateDummyCollections = () => {
       description: faker.lorem.sentence(),
       avatar: faker.image.url(),
       creator: {
-        userName: faker.internet.userName(),
+        username: faker.internet.userName(),
         avatar: faker.image.avatar(),
         publicAddress: `0x${faker.finance.bitcoinAddress()}`,
       },
@@ -85,7 +94,7 @@ const generateDummyUsers = () => {
   const dummyData = [];
   for (let i = 0; i < 10; i++) {
     const data: User = {
-      userName: faker.internet.userName(),
+      username: faker.internet.userName(),
       avatar: faker.image.avatar(),
       publicAddress: `0x${faker.finance.bitcoinAddress()}`,
       bio: faker.person.bio(),
