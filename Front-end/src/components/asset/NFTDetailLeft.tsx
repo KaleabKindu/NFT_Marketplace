@@ -83,12 +83,12 @@ const NFTDetailLeft = ({ id }: Props) => {
             className="rounded-full h-auto p-2"
             onClick={handleLikes}
           >
-            <FaHeart className={`${liked && "text-red-500"} p-0`} size={20} />
+            <FaHeart className={`${liked && "text-red-500"} p-0`} size={25} />
           </Button>
           <TypographySmall text={likes} />
         </Badge>
         <Badge className="p-2 absolute top-5 left-5 bg-background/30 hover:bg-background text-foreground">
-          <Icon size={25} />
+          <Icon size={30} />
         </Badge>
       </div>
       <div>

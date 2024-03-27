@@ -15,28 +15,26 @@ const AudioPlayer = ({ url }: Props) => {
   const [blob, setBlob] = useState<Blob | null>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
 
-  const handleCanPlayThrough = async () => {
-    if (audioRef.current) {
-      const audioBlob = await fetchAudioAsBlob(audioRef.current.src);
-      setBlob(audioBlob);
-    }
-  };
+  useEffect(() => {
+    const fetchAudioAsBlob = async (audioUrl: string) => {
+      try {
+        const response = await fetch(audioUrl);
+        if (!response.ok) {
+          throw new Error("Failed to fetch audio");
+        }
 
-  const fetchAudioAsBlob = async (audioUrl: string) => {
-    try {
-      const response = await fetch(audioUrl);
-      if (!response.ok) {
-        throw new Error("Failed to fetch audio");
+        const blob = await response.blob();
+
+        setBlob(blob);
+      } catch (error) {
+        console.error("Error fetching audio:", error);
+        return null;
       }
-
-      const blob = await response.blob();
-
-      return blob;
-    } catch (error) {
-      console.error("Error fetching audio:", error);
-      return null;
+    };
+    if (audioRef.current) {
+      fetchAudioAsBlob(url);
     }
-  };
+  }, [audioRef.current]);
   useEffect(() => {
     const handlePlaying = () => setPlaying(true);
     const handlePause = () => setPlaying(false);
@@ -72,7 +70,6 @@ const AudioPlayer = ({ url }: Props) => {
         className="hidden"
         src={url}
         onTimeUpdate={(a) => setCurrentTime(a.currentTarget.currentTime)}
-        onLoadedData={handleCanPlayThrough}
       />
       <Button
         variant={"ghost"}

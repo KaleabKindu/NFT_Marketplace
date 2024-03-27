@@ -62,12 +62,7 @@ export function TypographyLarge({ text, className }: Props) {
 }
 export function TypographySmall({ text, className }: Props) {
   return (
-    <small
-      className={cn(
-        "text-foreground/50 text-sm font-medium leading-none ",
-        className,
-      )}
-    >
+    <small className={cn("text-sm font-medium leading-none ", className)}>
       {text}{" "}
     </small>
   );

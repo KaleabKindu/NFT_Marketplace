@@ -31,7 +31,7 @@ const Profile = (props: Props) => {
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuLabel>
-          <div className="flex gap-3 items-center justify-center p-4">
+          <div className="flex gap-3 items-center justify-center p-3">
             <Avatar />
             <div>
               <div className="scroll-m-20 text-xl font-semibold tracking-tight">
@@ -47,9 +47,9 @@ const Profile = (props: Props) => {
         <DropdownMenuItem className="py-3">
           <Link
             href={`${Routes.USER}/${address}`}
-            className="flex items-center gap-3 w-full"
+            className="flex items-center gap-3 w-full px-3"
           >
-            <FaUserAlt size={30} />
+            <FaUserAlt size={25} />
             <div>Profile</div>
           </Link>
         </DropdownMenuItem>
@@ -57,7 +57,7 @@ const Profile = (props: Props) => {
           className="flex items-center gap-3 py-3 cursor-pointer"
           onClick={() => handleLogout()}
         >
-          <MdLogout size={30} />
+          <MdLogout size={25} className="ml-3" />
           <div>Disconnect</div>
         </DropdownMenuItem>
       </DropdownMenuContent>

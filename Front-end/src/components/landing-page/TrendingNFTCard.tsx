@@ -14,6 +14,8 @@ import { useState } from "react";
 import { Routes } from "@/routes";
 import Link from "next/link";
 import { NFT } from "@/types";
+import { categories } from "@/data";
+import { IconType } from "react-icons";
 
 type Props = {
   asset: NFT;
@@ -33,7 +35,8 @@ const TrendingNFTCard = ({ asset }: Props) => {
   }) => {
     return <>{`${hours}h:${minutes}m:${seconds}s`}</>;
   };
-  const handleLikes = () => {
+  const handleLikes = (e: any) => {
+    e.preventDefault();
     setLiked(!liked);
     if (liked) {
       setLikes(likes - 1);
@@ -41,7 +44,8 @@ const TrendingNFTCard = ({ asset }: Props) => {
       setLikes(likes + 1);
     }
   };
-
+  const Icon = categories.find((cat) => cat.value === asset.category)
+    ?.icon as IconType;
   return (
     <Link href={`${Routes.PRODUCT}/${asset.tokenId}`}>
       <Card className="p-5 bg-accent hover:bg-accent rounded-3xl max-w-[35rem] w-full">
@@ -86,7 +90,7 @@ const TrendingNFTCard = ({ asset }: Props) => {
               </Card>
             </div>
           </div>
-          <Badge className="flex items-center gap-3 absolute top-5 left-5 bg-background/30 text-foreground">
+          <Badge className="flex items-center gap-3 absolute bottom-5 right-5 bg-background/30 text-foreground">
             <Button
               variant="ghost"
               size={"sm"}
@@ -96,6 +100,9 @@ const TrendingNFTCard = ({ asset }: Props) => {
               <FaHeart className={`${liked && "text-red-500"} p-0`} size={20} />
             </Button>
             <TypographySmall text={asset.likes} />
+          </Badge>
+          <Badge className="p-2 absolute top-5 left-5 bg-background/30 hover:bg-background text-foreground">
+            <Icon size={30} />
           </Badge>
         </div>
       </Card>

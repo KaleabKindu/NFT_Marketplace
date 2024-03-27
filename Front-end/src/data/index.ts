@@ -3,6 +3,7 @@ import { MdCamera } from "react-icons/md";
 import { BsSoundwave } from "react-icons/bs";
 import { FaVideo } from "react-icons/fa6";
 import { SiVorondesign } from "react-icons/si";
+import { FaPaintBrush } from "react-icons/fa";
 import { IoBookOutline } from "react-icons/io5";
 import { IoTicketSharp } from "react-icons/io5";
 import { BsBox } from "react-icons/bs";
@@ -101,7 +102,7 @@ export const categories: {
     count: 250,
     image: "art-category.jpg",
     value: CATEGORY.ART,
-    icon: MdCamera,
+    icon: FaPaintBrush,
   },
   {
     name: "Photography",
