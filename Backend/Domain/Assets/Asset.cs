@@ -15,8 +15,8 @@ namespace Domain.Assets
         public AssetCategory Category { get; set; }
         public double Price { get; set; }
         public Auction Auction { get; set; }
-        public Collection Collection { get; set; }
-        public long CollectionId { get; set; }
+        public Collection? Collection { get; set; }
+        public long? CollectionId { get; set; }
         public float Royalty { get; set; }
         public List<Bid> Bids { get; set; }
     }
