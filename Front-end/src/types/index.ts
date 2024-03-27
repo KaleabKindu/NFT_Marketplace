@@ -6,7 +6,7 @@ export interface NFT {
   image: string;
   likes?: number;
   category?: string;
-  price: string;
+  price?: string;
   royalty: number;
   collection?: {
     id: number;
@@ -22,6 +22,7 @@ export interface NFT {
 export interface Auction {
   auctionId?: number;
   auction_end: number;
+  highest_bid: string;
 }
 
 export type Address = `0x${string}`;
@@ -32,7 +33,7 @@ export interface Credentials {
 }
 
 export interface User {
-  userName: string;
+  username: string;
   avatar: string;
   publicAddress: Address;
   bio?: string;

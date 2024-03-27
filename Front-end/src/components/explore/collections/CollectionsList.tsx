@@ -24,7 +24,7 @@ const CollectionsList = (props: Props) => {
             <TableHead>Floor Price</TableHead>
             <TableHead>Volume</TableHead>
             <TableHead>Items</TableHead>
-            <TableHead>Owner</TableHead>
+            <TableHead>Creator</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody className="rounded-3xl">
@@ -52,7 +52,7 @@ const CollectionsList = (props: Props) => {
                   href={`${Routes.USER}/${collection.creator.publicAddress}`}
                 >
                   <Avatar className="mr-3" src={collection.creator.avatar} />
-                  {collection.creator.userName}
+                  {collection.creator.username}
                 </Link>
               </TableCell>
             </TableRow>

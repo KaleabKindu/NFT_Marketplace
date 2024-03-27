@@ -37,7 +37,7 @@ const UserDetail = ({ address }: Props) => {
         />
       </div>
       <div className="flex flex-col items-start gap-5">
-        <TypographyH2 text={user?.userName || "Anthony Stark"} />
+        <TypographyH2 text={user?.username || "Anthony Stark"} />
         <CopyToClipboard
           text={user?.publicAddress || ""}
           onCopy={() =>

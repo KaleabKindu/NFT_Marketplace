@@ -106,7 +106,7 @@ const NFTDetailRight = ({ id }: Props) => {
   return (
     <div className="flex-1 p-3">
       <div className="flex flex-col gap-10">
-        <TypographyH2 text={asset?.name} />
+        <TypographyH2 className="capitalize" text={asset?.name} />
         <div className="flex flex-wrap items-center lg:divide-x-2">
           <Link
             href={`${Routes.USER}/${asset?.creator?.publicAddress}`}
@@ -115,7 +115,7 @@ const NFTDetailRight = ({ id }: Props) => {
             <Avatar className="h-12 w-12" src={asset?.creator?.avatar} />
             <div className="flex flex-col">
               <TypographySmall text="Creator" />
-              <TypographyH4 text={asset?.creator?.userName} />
+              <TypographyH4 text={asset?.creator?.username} />
             </div>
           </Link>
           <Link
@@ -125,7 +125,7 @@ const NFTDetailRight = ({ id }: Props) => {
             <Avatar className="h-12 w-12" src={asset?.owner?.avatar} />
             <div className="flex flex-col">
               <TypographySmall text="Owner" />
-              <TypographyH4 text={asset?.owner?.userName} />
+              <TypographyH4 text={asset?.owner?.username} />
             </div>
           </Link>
           <Link
