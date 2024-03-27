@@ -4,10 +4,9 @@ import {
   TypographyP,
   TypographySmall,
 } from "@/components/common/Typography";
-import ImageUpload from "@/components/mint/ImageUpload";
+import ThumbnailUpload from "@/components/mint/ThumbnailUpload";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import ChooseCollection from "@/components/mint/ChooseCollection";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -54,13 +53,18 @@ import NftAbi from "@/data/abi/MyNFT.json";
 import { useCreateNFTMutation } from "@/store/api";
 import { useRouter } from "next/navigation";
 import { Routes } from "@/routes";
-import MultipleFilesUpload from "../common/MultipleFilesUpload";
+import MultipleFilesUpload from "./MultipleFilesUpload";
+import SelectCategory from "./SelectCategory";
+import AudioFileUpload from "./AudioFileUpload";
+import { CATEGORY } from "@/data";
 
 interface FormInput {
   name: string;
   description: string;
-  image: File | null;
-  files: FileList | null;
+  thumbnail?: File;
+  audio?: File;
+  category: string;
+  files: File[];
   royalty: number;
   price: number;
   collection: string;
@@ -71,8 +75,8 @@ interface FormInput {
 const initialState: FormInput = {
   name: "",
   description: "",
-  image: null,
-  files: null,
+  category: "",
+  files: [],
   price: 0.0,
   auction: false,
   royalty: 0.0,
@@ -82,15 +86,23 @@ const initialState: FormInput = {
 const schema = z.object({
   name: z.string().min(3),
   description: z.string().min(5),
-  image: z
+  thumbnail: z
     .any()
     .refine(
       (file) => file && file.size <= 20 * 1024 * 1024,
       "File size must be less than 20MB.",
     ),
+  audio: z
+    .any()
+    .refine(
+      (file) => file && file.size <= 20 * 1024 * 1024,
+      "Audio file size must be less than 20MB.",
+    )
+    .optional(),
   files: z
     .any()
     .refine((files) => files && files.length > 0, "Files are required"),
+  category: z.string(),
   royalty: z.number().nonnegative().max(10),
   price: z.number().nonnegative(),
   auctionEnd: z.number(),
@@ -103,13 +115,12 @@ type Props = {};
 const MintForm = (props: Props) => {
   const [uploading, setUploading] = useState(false);
   const [uploadSuccess, setUploadSuccess] = useState(false);
-  const [uploadNftSuccess, setUploadNftSuccess] = useState(false);
-  const [uploadNft, setUploadNft] = useState(false);
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const payload = useRef<NFT | undefined>(undefined);
   const { toast } = useToast();
-  const [postNFT] = useCreateNFTMutation();
+  const [postNFT, { isLoading: uploadNft, isSuccess: uploadNftSuccess }] =
+    useCreateNFTMutation();
   const form = useForm<FormInput>({
     resolver: zodResolver(schema),
     defaultValues: initialState,
@@ -119,27 +130,27 @@ const MintForm = (props: Props) => {
     useContext(ContractWriteContext);
 
   const onSubmit = async (values: FormInput) => {
-    const { image, files, ...others } = values;
+    const { thumbnail, audio, files, ...others } = values;
+    const image = thumbnail?.type.startsWith("image") ? thumbnail : undefined;
+    const video = thumbnail?.type.startsWith("video") ? thumbnail : undefined;
     try {
       setOpen(true);
       setUploading(true);
-      const image_cid = await storeAsset(image ? [image] : null);
+      const thumbnail_cid = await storeAsset([image, audio, video] as File[]);
       const files_cid = await storeAsset(files);
-      const metadata = {
-        name: others.name,
-        description: others.description,
-        image: `https://nftstorage.link/ipfs/${image_cid}/${image?.name}`,
-        files: `ipfs://${files_cid}`,
-      };
-      const metadata_json = JSON.stringify(metadata);
-      const metadata_file = new File([metadata_json], "metadata.json", {
-        type: "application/json",
-      });
       const asset_payload: NFT = {
         name: values.name,
         description: values.description,
-        image: `https://nftstorage.link/ipfs/${image_cid}/${image?.name}`,
-        category: "image",
+        image: image
+          ? `https://nftstorage.link/ipfs/${thumbnail_cid}/${image?.name}`
+          : undefined,
+        audio: audio
+          ? `https://nftstorage.link/ipfs/${thumbnail_cid}/${audio?.name}`
+          : undefined,
+        video: video
+          ? `https://nftstorage.link/ipfs/${thumbnail_cid}/${video?.name}`
+          : undefined,
+        category: values.category,
         price: values.price.toString(),
         royalty: values.royalty,
         auction: values.auction
@@ -150,15 +161,13 @@ const MintForm = (props: Props) => {
           : undefined,
       };
       payload.current = asset_payload;
-
-      const metadata_cid = await storeAsset([metadata_file]);
       setUploadSuccess(true);
 
       contractWrite(
         "mintProduct",
         process.env.NEXT_PUBLIC_LISTING_PRICE as string,
         [
-          `ipfs://${metadata_cid}`,
+          `ipfs://${files_cid}`,
           parseEther(others.price.toString(), "wei"),
           others.auction,
           Math.round(others.auctionEnd / 1000),
@@ -181,15 +190,12 @@ const MintForm = (props: Props) => {
   };
   const postAsset = async (asset: NFT) => {
     try {
-      setUploadNft(true);
       const id = await postNFT(asset).unwrap();
-      setUploadNftSuccess(true);
       form.reset(initialState);
       router.push(`${Routes.PRODUCT}/${id}`);
     } catch (error) {
       console.log(error);
     } finally {
-      setUploadNft(false);
       setOpen(false);
     }
   };
@@ -224,14 +230,60 @@ const MintForm = (props: Props) => {
       }
     },
   });
-  console.log(form.getValues("files"));
   return (
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
         className="flex flex-col gap-5"
       >
-        <ImageUpload form={form} />
+        <FormField
+          control={form.control}
+          name="category"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Select Category</FormLabel>
+              <FormControl>
+                <SelectCategory onChange={field.onChange} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="thumbnail"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Thumbnail (Image, GIF or Video)</FormLabel>
+              <FormControl>
+                <ThumbnailUpload onChange={field.onChange} />
+              </FormControl>
+              <FormDescription>
+                File types supported: JPG, JPEG, PNG, GIF, SVG. Max size: 100 MB
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        {form.watch("category") === CATEGORY.AUDIO && (
+          <FormField
+            control={form.control}
+            name="audio"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Audio Thumbnail(optional)</FormLabel>
+                <FormControl>
+                  <AudioFileUpload onChange={field.onChange} />
+                </FormControl>
+                <FormDescription>
+                  Upload Audio thumbnail to showcase your Product
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        )}
         <FormField
           control={form.control}
           name="name"
@@ -299,10 +351,7 @@ const MintForm = (props: Props) => {
                     onClick={() => field.onChange(false)}
                   >
                     <MdOutlineSell size={30} />
-                    <TypographyP
-                      className="text-foregghostround"
-                      text="Fixed"
-                    />
+                    <TypographyP text="Fixed" />
                   </Button>
                   <Button
                     type="button"
@@ -311,7 +360,7 @@ const MintForm = (props: Props) => {
                     onClick={() => field.onChange(true)}
                   >
                     <RiAuctionLine size={30} />
-                    <TypographyP className="text-foreground" text="Auction" />
+                    <TypographyP text="Auction" />
                   </Button>
                 </div>
               </FormControl>
@@ -407,7 +456,6 @@ const MintForm = (props: Props) => {
             </FormItem>
           )}
         />
-        {/* <ChooseCollection/> */}
         <Button
           type="submit"
           disabled={uploading || isLoading}

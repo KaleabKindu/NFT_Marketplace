@@ -1,17 +1,38 @@
+import { CATEGORY } from "@/data";
 import { Collection, NFT, User } from "@/types";
 import { faker } from "@faker-js/faker";
 faker.seed(5);
-
+const categories = [
+  CATEGORY.ART,
+  CATEGORY.AUDIO,
+  CATEGORY.DESIGN,
+  CATEGORY.EBOOK,
+  CATEGORY.PHOTOGRAPHY,
+  CATEGORY.THREE_D,
+  CATEGORY.TICKET,
+  CATEGORY.VIDEO,
+];
 const generateDummyAssets = () => {
   const dummyData = [];
   for (let i = 0; i < 10; i++) {
+    const category = categories[Math.floor(Math.random() * categories.length)];
     const data: NFT = {
       tokenId: i + 1,
       name: faker.word.noun(),
       description: faker.lorem.sentence(),
-      image: faker.image.urlPicsumPhotos(),
+      image: !(category === CATEGORY.VIDEO)
+        ? faker.image.urlPicsumPhotos()
+        : undefined,
+      audio:
+        category === CATEGORY.AUDIO
+          ? "https://bafkreicmqfsldedmrvjsmsc57oy6r7ojugnswjj3wwcgmctp2hyiqgzkp4.ipfs.nftstorage.link/"
+          : undefined,
+      video:
+        category === CATEGORY.VIDEO
+          ? "https://bafybeibfb7hbpkzgm7cguy3eidp4hm7cmmiqpm5cuoucjqpzu7xkr6t2ba.ipfs.nftstorage.link/"
+          : undefined,
       likes: faker.number.int({ min: 0, max: 100 }),
-      category: faker.word.sample(),
+      category: category,
       price:
         i % 3 === 0
           ? faker.number

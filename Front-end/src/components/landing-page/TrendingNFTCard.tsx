@@ -48,7 +48,7 @@ const TrendingNFTCard = ({ asset }: Props) => {
         <div className="relative overflow-clip rounded-3xl h-[30rem]">
           <Image
             className="object-cover rounded-3xl hover:scale-105"
-            src={asset.image}
+            src={asset.image as string}
             fill
             alt=""
           />

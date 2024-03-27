@@ -3,10 +3,10 @@ import { MdCamera } from "react-icons/md";
 import { BsSoundwave } from "react-icons/bs";
 import { FaVideo } from "react-icons/fa6";
 import { SiVorondesign } from "react-icons/si";
-import { FaPaintBrush } from "react-icons/fa";
 import { IoBookOutline } from "react-icons/io5";
 import { IoTicketSharp } from "react-icons/io5";
 import { BsBox } from "react-icons/bs";
+import { IconType } from "react-icons";
 export const discover = [
   {
     name: "NFTs",
@@ -77,7 +77,6 @@ export enum CATEGORY {
   DESIGN = "design",
   EBOOK = "ebook",
   TICKET = "ticket",
-  DRAWING_PAINTING = "drawing_painting",
 }
 
 export enum FILTER {
@@ -90,7 +89,13 @@ export enum FILTER {
   COLLECTION = "collection",
   CREATOR = "creator",
 }
-export const categories = [
+export const categories: {
+  name: string;
+  count: number;
+  image: string;
+  value: CATEGORY;
+  icon: IconType;
+}[] = [
   {
     name: "Art",
     count: 250,
@@ -132,13 +137,6 @@ export const categories = [
     image: "design-category.jpg",
     value: CATEGORY.DESIGN,
     icon: SiVorondesign,
-  },
-  {
-    name: "Drawing & Painting",
-    count: 434,
-    image: "drawing-category.jpg",
-    value: CATEGORY.DRAWING_PAINTING,
-    icon: FaPaintBrush,
   },
   {
     name: "E-Books",
