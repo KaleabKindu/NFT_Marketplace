@@ -37,6 +37,13 @@ import { Avatar } from "../common/Avatar";
 import { Routes } from "@/routes";
 import { useContext, useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
+import { BsThreeDots } from "react-icons/bs";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   Form,
   FormControl,
@@ -52,8 +59,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { MdWallet } from "react-icons/md";
 import { useAccount, useBalance } from "wagmi";
 import { useGetNFTQuery } from "@/store/api";
-import { Skeleton } from "../ui/skeleton";
 import { assets } from "@/utils";
+import { BiTransferAlt } from "react-icons/bi";
+import { MdDelete } from "react-icons/md";
+import { FaDollarSign } from "react-icons/fa6";
 
 type Props = {
   id: string;
@@ -106,7 +115,10 @@ const NFTDetailRight = ({ id }: Props) => {
   return (
     <div className="flex-1 p-3">
       <div className="flex flex-col gap-10">
-        <TypographyH2 className="capitalize" text={asset?.name} />
+        <div className="flex justify-between items-start">
+          <TypographyH2 className="capitalize" text={asset?.name} />
+          <Menu />
+        </div>
         <div className="flex flex-wrap items-center lg:divide-x-2">
           <Link
             href={`${Routes.USER}/${asset?.creator?.publicAddress}`}
@@ -142,7 +154,7 @@ const NFTDetailRight = ({ id }: Props) => {
             </div>
           </Link>
         </div>
-        <div className="flex flex-col gap-5 border rounded-md bg-secondary/50">
+        <div className="flex flex-col gap-5 border rounded-2xl bg-secondary/50">
           {auction && (
             <div className="flex flex-col gap-5 border-b p-5">
               <TypographyH2 text="Auction Ends in:" />
@@ -198,6 +210,34 @@ const NFTDetailRight = ({ id }: Props) => {
 };
 
 export default NFTDetailRight;
+
+type MenuProps = {};
+
+const Menu = (props: MenuProps) => {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button size={"icon"} variant={"ghost"}>
+          <BsThreeDots size={25} />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="w-[200px] rounded-2xl">
+        <DropdownMenuItem className="flex items-center gap-3 py-3 cursor-pointer rounded-xl w-full">
+          <FaDollarSign className="ml-2" size={20} />
+          <div>Change Price</div>
+        </DropdownMenuItem>
+        <DropdownMenuItem className="flex items-center gap-3 py-3 cursor-pointer rounded-xl w-full">
+          <BiTransferAlt className="ml-2" size={20} />
+          <div>Transfer</div>
+        </DropdownMenuItem>
+        <DropdownMenuItem className="flex items-center gap-3 py-3 cursor-pointer rounded-xl w-full">
+          <MdDelete className="ml-2 hover:text-red-500" size={20} />
+          <div>Delete</div>
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+};
 
 export function OffersTable() {
   return (
