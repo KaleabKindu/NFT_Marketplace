@@ -26,6 +26,7 @@ namespace Persistence.Repositories
         {
             var assets = _dbContext.Assets
                 .Include(x => x.Auction)
+                .Where( x => x.Status == AssetStatus.OnSale)
                 .AsQueryable();
 
             if (minPrice != -1)
@@ -107,6 +108,7 @@ namespace Persistence.Repositories
             .Include( asset => asset.Creator)
             .Include(asset => asset.Owner)
             .Include(asset => asset.Auction)
+            .Include( asset => asset.Collection)
             .FirstOrDefaultAsync( asset => asset.Id == id);
         }
     }
