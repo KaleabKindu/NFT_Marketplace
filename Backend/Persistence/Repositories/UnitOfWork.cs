@@ -22,6 +22,7 @@ namespace Persistence.Repositories
         private ITransactionRepository _transactionRepository;
         private IAuctionRepository _AuctionRepository;
         private ICollectionRepository _CollectionRepository;
+        private IProvenanceRepository _ProvenanceRepository;
 
         public UnitOfWork(AppDbContext dbContext, UserManager<AppUser> userManager, IJwtService jwtService, IEthereumCryptoService ethereumCryptoService,IMapper mapper)
         {
@@ -94,6 +95,16 @@ namespace Persistence.Repositories
                 if (_CollectionRepository == null)
                     _CollectionRepository = new CollectionRepository(_dbContext);
                 return _CollectionRepository;
+            }
+        }
+
+        public IProvenanceRepository ProvenanceRepository
+        {
+            get
+            {
+                if (_ProvenanceRepository == null)
+                    _ProvenanceRepository = new ProvenanceRepository(_dbContext);
+                return _ProvenanceRepository;
             }
         }
 

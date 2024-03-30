@@ -6,7 +6,8 @@ using Application.Contracts;
 using Application.Features.Auth.Queries;
 
 
-namespace API.Controllers{
+namespace API.Controllers
+{
     [AllowAnonymous]
     public class AuthController : BaseController
     {
@@ -41,7 +42,7 @@ namespace API.Controllers{
 
 
         [HttpGet("users")]
-        public async Task<IActionResult> GetUsers([FromQuery] int pageNumber, int pageSize)
+        public async Task<IActionResult> GetUsers([FromQuery] int pageNumber = 1, int pageSize = 10)
         {
             return HandleResult(
                 await Mediator.Send(

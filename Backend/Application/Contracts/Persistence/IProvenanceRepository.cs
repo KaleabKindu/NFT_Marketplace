@@ -1,6 +1,10 @@
-﻿namespace Application.Contracts.Persistence;
+﻿using Application.Contracts.Persistance;
+using Application.Responses;
+using Domain.Provenances;
 
-public class IProvenanceRepository
+namespace Application.Contracts.Persistence;
+
+public interface IProvenanceRepository : IRepository<Provenance>
 {
-    
+    Task<PaginatedResponse<Provenance>> GetAssetProvenance(long tokenId, int pageNumber, int pageSize);
 }

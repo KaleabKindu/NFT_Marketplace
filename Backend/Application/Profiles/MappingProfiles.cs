@@ -15,6 +15,8 @@ using Domain.Auctions;
 using Application.Features.Auctions.Dtos;
 using Domain.Collections;
 using Application.Features.Collections.Dtos;
+using Application.Features.Provenances.Dtos;
+using Domain.Provenances;
 
 namespace Application.Profiles
 {
@@ -103,8 +105,16 @@ namespace Application.Profiles
                 .ForMember(dest => dest.UserDto , opt => opt.MapFrom(src => src.Creator));  
             
             #endregion Collections
+            
+            #region Provenances
 
-        
+            CreateMap<Provenance, ProvenanceListDto>()
+                .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.CreatedAt));
+            CreateMap<Provenance, CreateProvenanceDto>();
+
+            #endregion
+
+
         }
 
     }

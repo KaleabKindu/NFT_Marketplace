@@ -5,6 +5,7 @@ using Domain.Bids;
 using Domain.Categories;
 using Domain.Collections;
 using Domain.Offers;
+using Domain.Provenances;
 using Domain.Transactions;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -61,5 +62,6 @@ namespace Persistence
         public DbSet<Auction> Auctions { get; set; }
         public DbSet<Collection> Collections { get; set; }
         public DbSet<Like> Likes { get; set; }
+        public DbSet<Provenance> Provenances { get; set; }
     }
 }

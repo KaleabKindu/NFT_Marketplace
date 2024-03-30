@@ -1,6 +1,26 @@
-﻿namespace API.Controllers;
+﻿using Application.Contracts;
+using Application.Features.Provenances.Queries;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
-public class ProvenanceController
+namespace API.Controllers;
+[AllowAnonymous]
+public class ProvenanceController : BaseController
 {
+    public ProvenanceController(IUserAccessor userAccessor) : base(userAccessor)
+    {
+    }
+
+    [HttpGet("token-id")]
+    public async Task<IActionResult> Get([FromQuery] long tokenId, int pageNumber, int pageSize)
+
+    {
+
+        return HandleResult(await Mediator.Send(new GetProvenanceQuery
+            { TokenId = tokenId, PageNumber = pageNumber, PageSize = pageSize }));
+
+    }
+    
+    
     
 }
