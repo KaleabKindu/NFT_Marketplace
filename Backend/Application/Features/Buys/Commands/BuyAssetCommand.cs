@@ -13,7 +13,7 @@ namespace Application.Features.Buys.Commands
     public class BuyAssetCommand : IRequest<ErrorOr<BaseResponse<Unit>>>
     {
         public BuyAssetDto BuyAsset { get; set; }
-        public string UserPublicAddress { get; set; }
+        public string UserAddress { get; set; }
     }
 
     public class BuyAssetCommandHandler
@@ -33,10 +33,10 @@ namespace Application.Features.Buys.Commands
             CancellationToken cancellationToken
         )
         {
-            if (!await _unitOfWork.UserRepository.PublicAddressExists(request.UserPublicAddress))
+            if (!await _unitOfWork.UserRepository.AddressExists(request.UserAddress))
                 return ErrorFactory.BadRequestError("User","User not found");
 
-            var user = await _unitOfWork.UserRepository.CreateOrFetchUserAsync(request.UserPublicAddress);
+            var user = await _unitOfWork.UserRepository.CreateOrFetchUserAsync(request.UserAddress);
 
             var asset = await _unitOfWork.AssetRepository.GetByIdAsync(request.BuyAsset.AssetId);
 

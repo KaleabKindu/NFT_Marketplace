@@ -16,7 +16,7 @@ namespace Persistence.Repositories
         
             return await _dbContext.Set<Collection>()
                 .Include(entity => entity.Creator)
-                .Where(entity => entity.Creator.PublicAddress == CreatorAddress)
+                .Where(entity => entity.Creator.Address == CreatorAddress)
                 .Where(entity => entity.Category == Category)
                 .Where(entity => entity.FloorPrice >= MinFloorPrice && entity.FloorPrice <= MaxFloorPrice)
                 .OrderByDescending(entity => entity.CreatedAt)
@@ -28,7 +28,7 @@ namespace Persistence.Repositories
         public async Task<int> CountAsync(string Category, double MinFloorPrice, double MaxFloorPrice, string CreatorAddress){
             return await _dbContext.Set<Collection>()
                 .Include(entity => entity.Creator)
-                .Where(entity => entity.Creator.PublicAddress == CreatorAddress)
+                .Where(entity => entity.Creator.Address == CreatorAddress)
                 .Where(entity => entity.Category == Category)
                 .Where(entity => entity.FloorPrice >= MinFloorPrice && entity.FloorPrice <= MaxFloorPrice)
                 .OrderByDescending(entity => entity.CreatedAt)

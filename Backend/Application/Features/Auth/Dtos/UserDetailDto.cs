@@ -6,7 +6,7 @@ namespace Application.Features.Auth.Dtos
         public string Avatar { get; set; }
         public string Bio { get; set; }
 
-        public string EthereumAddress { get; set; }
+        public string Address { get; set; }
         public string ProfileBackgroundImage { get; set; }
         public int TotalSalesCount { get; set; }
 

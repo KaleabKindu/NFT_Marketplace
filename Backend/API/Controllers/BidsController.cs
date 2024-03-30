@@ -32,7 +32,7 @@ namespace API.Controllers
         [Authorize(Roles = "Admin, Trader")]
         public async Task<IActionResult> CreateBid([FromBody] CreateBidDto Bid)
         {
-            return  HandleResult(await Mediator.Send(new CreateBidCommand { Bid = Bid, Bidder= _userAccessor.GetPublicAddress() }));
+            return  HandleResult(await Mediator.Send(new CreateBidCommand { Bid = Bid, Bidder= _userAccessor.GetAddress() }));
         }
 
         [HttpPut]

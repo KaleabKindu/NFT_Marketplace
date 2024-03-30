@@ -31,7 +31,7 @@ public class GetUserDetailQueryHandler: IRequestHandler<GetUserDetailQuery, Erro
             CancellationToken cancellationToken
         )    
         {
-            var User = await _unitOfWork.UserRepository.GetUserByPublicAddress(query.publicAddress);
+            var User = await _unitOfWork.UserRepository.GetUserByAddress(query.publicAddress);
 
             if (User == null) return ErrorFactory.NotFound("User", "User not found");
 

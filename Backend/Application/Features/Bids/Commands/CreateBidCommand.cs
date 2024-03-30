@@ -39,7 +39,7 @@ namespace Application.Features.Bids.Commands
             
             if (bid.Asset == null) return ErrorFactory.NotFound("Asset", "Asset not found");
 
-            bid.Bidder = await _unitOfWork.UserRepository.GetUserByPublicAddress(request.Bidder);
+            bid.Bidder = await _unitOfWork.UserRepository.GetUserByAddress(request.Bidder);
             
             await _unitOfWork.BidRepository.AddAsync(bid);
     
