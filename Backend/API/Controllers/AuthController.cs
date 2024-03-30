@@ -53,5 +53,18 @@ namespace API.Controllers{
         )
         );
     }
+
+    [HttpGet("user/detail")]
+    public async Task<IActionResult> GetUserDetails([FromQuery] string publicAddress)
+    {
+        return HandleResult(
+            await Mediator.Send(
+                new GetUserDetailQuery
+                {
+                    publicAddress = publicAddress
+                }
+            )
+        );
+    }
     }
 }
