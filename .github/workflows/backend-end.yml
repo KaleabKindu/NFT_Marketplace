@@ -4,9 +4,9 @@ name: backend build
 
 on:
   push:
-    branches: [ main, deployment]
+    branches: [ main, prod]
   pull_request:
-    branches: [ main ,deployment]
+    branches: [ main ,prod]
 
 defaults:
   run:
