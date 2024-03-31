@@ -9,7 +9,9 @@ namespace Domain.Assets
         public string Name { get; set; }
         public long TokenId {get; set;}
         public string Description { get; set; }
-        public string Image { get; set; }
+        public string? Image { get; set; }
+        public string? Video { get; set; }
+        public string? Audio { get; set; }
         public AppUser Owner { get; set; }
         public AppUser Creator { get; set; }
         public AssetCategory Category { get; set; }
@@ -19,6 +21,9 @@ namespace Domain.Assets
         public long? CollectionId { get; set; }
         public float Royalty { get; set; }
         public List<Bid> Bids { get; set; }
+        public int Likes { get; set; }
+        public string TransactionHash { get; set; }
+        public AssetStatus Status { get; set; }
     }
 
     public enum  AssetCategory
@@ -30,5 +35,12 @@ namespace Domain.Assets
        ticket,
        design,
        drawing
+    }
+
+    public enum AssetStatus {
+        OnSale,
+        Sold,
+        Auction,
+        NotForSale
     }
 }

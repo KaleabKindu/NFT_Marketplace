@@ -52,7 +52,7 @@ const CollectionCard = ({ collection }: Props) => {
             />
           </div>
         </div>
-        <div className="flex flex-col gap-3 p-5">
+        <div className="flex flex-col gap-3 px-5 py-2">
           <TypographyH3
             className="text-primary/60 capitalize"
             text={collection.name}

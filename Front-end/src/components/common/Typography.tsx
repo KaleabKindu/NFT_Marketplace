@@ -55,21 +55,14 @@ export function TypographyH4({ text, className }: Props) {
   );
 }
 export function TypographyP({ text, className }: Props) {
-  return (
-    <p className={cn("text-foreground/50 leading-7 ", className)}>{text}</p>
-  );
+  return <p className={cn("leading-7 ", className)}>{text}</p>;
 }
 export function TypographyLarge({ text, className }: Props) {
   return <div className={cn("text-lg font-semibold ", className)}>{text}</div>;
 }
 export function TypographySmall({ text, className }: Props) {
   return (
-    <small
-      className={cn(
-        "text-foreground/50 text-sm font-medium leading-none ",
-        className,
-      )}
-    >
+    <small className={cn("text-sm font-medium leading-none ", className)}>
       {text}{" "}
     </small>
   );
