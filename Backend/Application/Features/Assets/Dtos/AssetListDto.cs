@@ -10,9 +10,11 @@ namespace Application.Features.Assets.Dtos
         public string Category { get; set; }
         
         public string Name { get; set; }
-        public string Image { get; set; }
+        public string? Image { get; set; }
+        public string? Video { get; set; }
+        public string? Audio { get; set; }
         public int Likes { get; set; }
-
+        public bool Liked { get; set; }
         public double Price { get; set; }
         public GetAuctionDto Auction { get; set; }
         
