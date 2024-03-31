@@ -3,5 +3,6 @@
     public interface IUserAccessor
     {
         public string GetAddress();
+        public string GetUserId();
     }
 }

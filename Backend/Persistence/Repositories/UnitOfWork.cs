@@ -4,12 +4,14 @@ using Domain;
 using Microsoft.AspNetCore.Identity;
 using Application.Contracts.Services;
 using Application.Contracts.Persistence;
+using AutoMapper;
 
 namespace Persistence.Repositories
 {
     public class UnitOfWork : IUnitOfWork
     {
         private readonly AppDbContext _dbContext;
+        private readonly IMapper _mapper;
         private readonly IServiceProvider _services;
         private UserManager<AppUser> _usermanager;
         private IAssetRepository _assetRepository;
@@ -21,9 +23,10 @@ namespace Persistence.Repositories
         private IAuctionRepository _AuctionRepository;
         private ICollectionRepository _CollectionRepository;
 
-        public UnitOfWork(AppDbContext dbContext, UserManager<AppUser> userManager, IJwtService jwtService, IEthereumCryptoService ethereumCryptoService)
+        public UnitOfWork(AppDbContext dbContext, UserManager<AppUser> userManager, IJwtService jwtService, IEthereumCryptoService ethereumCryptoService,IMapper mapper)
         {
             _dbContext = dbContext;
+            _mapper = mapper;
             _userRepository = new UserRepository(userManager, jwtService, ethereumCryptoService);
         }
                 
@@ -73,7 +76,7 @@ namespace Persistence.Repositories
         public IAssetRepository AssetRepository {
             get{
                 if (_assetRepository == null)
-                    _assetRepository =  new AssetRepository(_dbContext);
+                    _assetRepository =  new AssetRepository(_dbContext,_mapper);
             return _assetRepository;
             }
         }

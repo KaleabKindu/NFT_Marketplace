@@ -60,5 +60,6 @@ namespace Persistence
         public DbSet<Transaction> Transactions { get; set; }
         public DbSet<Auction> Auctions { get; set; }
         public DbSet<Collection> Collections { get; set; }
+        public DbSet<Like> Likes { get; set; }
     }
 }

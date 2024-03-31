@@ -26,6 +26,8 @@ import { IconType } from "react-icons";
 import { categories } from "@/data";
 import VideoPlayer from "../explore/assets/VideoPlayer";
 import AudioPlayer from "../explore/assets/AudioPlayer";
+import Link from "next/link";
+import { Routes } from "@/routes";
 
 type Props = {
   id: string;
@@ -113,8 +115,14 @@ const NFTDetailLeft = ({ id }: Props) => {
                   <TypographyP text={asset?.tokenId} />
                 </div>
                 <div className="flex justify-between items-center">
-                  <TypographyH4 text={"Creator Royality: "} />
+                  <TypographyH4 text={"Royality: "} />
                   <TypographyP text={`${asset?.royalty}%`} />
+                </div>
+                <div className="flex justify-between items-center">
+                  <TypographyH4 text={"Transaction Hash: "} />
+                  <Link href={`${Routes.ETHER_TRANSACTIONS}/${asset?.transactionHash}`}>
+                    <TypographyP text={`${asset?.transactionHash}`} />
+                  </Link>
                 </div>
                 <div className="flex justify-between items-center">
                   <TypographyH4 text={"Files: "} />

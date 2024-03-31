@@ -1,6 +1,11 @@
 using System.Text.RegularExpressions;
+using Application.Common.Errors;
 using Application.Contracts.Presistence;
+using Application.Features.Assets.Dtos;
+using AutoMapper;
 using Domain.Assets;
+using ErrorOr;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace Persistence.Repositories
@@ -8,11 +13,12 @@ namespace Persistence.Repositories
     public class AssetRepository : Repository<Asset>, IAssetRepository
     {
         private readonly AppDbContext _context;
+        private readonly IMapper _mapper;
 
-        public AssetRepository(AppDbContext context) : base(context)
+        public AssetRepository(AppDbContext context,IMapper mapper) : base(context)
         {
             _context = context;
-            
+            _mapper = mapper;
         }
 
         public async Task<IEnumerable<Asset>> GetAssetsWOpenAuct()
@@ -22,17 +28,18 @@ namespace Persistence.Repositories
             return await _dbContext.Assets.Include(asset => asset.Auction).Where(asset => asset.Auction.AuctionEnd > epochTimeInSeconds).ToListAsync();
         }
 
-        public async Task<Tuple<int,IEnumerable<Asset>>> GetFilteredAssets(string? query,double minPrice, double maxPrice, AssetCategory? category, string sortBy, string? saleType, long? collectionId, string? creatorId, int pageNumber, int pageSize)
+        public async Task<ErrorOr<Tuple<int,IEnumerable<AssetListDto>>>> GetFilteredAssets(string userId,string? query,double minPrice, double maxPrice, AssetCategory? category, string sortBy, string? saleType, long? collectionId, string? creatorId, int pageNumber, int pageSize)
         {
             var assets = _dbContext.Assets
                 .Include(x => x.Auction)
+                // .Where( x => x.Status == AssetStatus.OnSale)
                 .AsQueryable();
 
-            if (minPrice != -1)
+            if (minPrice != 0)
             {
                 assets = assets.Where(asset => asset.Price >= minPrice);
             }
-            if (maxPrice != -1)
+            if (maxPrice != 0)
             {
                 assets = assets.Where(asset => asset.Price <= maxPrice);
             }
@@ -62,6 +69,9 @@ namespace Persistence.Repositories
                 assets = assets.Where(asset => asset.Owner.Id == creatorId);
             }
 
+            IEnumerable<AssetListDto> assetsInDto;
+            int count;
+
             if (query != null)
             {
                 var regex = new Regex(Regex.Escape(query), RegexOptions.IgnoreCase);
@@ -72,16 +82,27 @@ namespace Persistence.Repositories
 
                 HandleSort(sortBy,assets);
 
+                count = assetsEnum.Count();
                 var resultEn =  assetsEnum.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
-                return new Tuple<int, IEnumerable<Asset>>(assetsEnum.Count, resultEn);
+                assetsInDto = _mapper.Map<IEnumerable<AssetListDto>>(resultEn);
+            }
+            else{
+
+                HandleSort(sortBy,assets);
+                
+
+                count = await assets.CountAsync();
+                var assetList =  await assets.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+
+                assetsInDto = _mapper.Map<IEnumerable<AssetListDto>>(assetList);
             }
 
-            HandleSort(sortBy,assets);
-            
+            for (int i = 0; i < assetsInDto.Count(); i++)
+            {
+                assetsInDto.ElementAt(i).Liked = await _context.Likes.AnyAsync(x => x.UserId == userId && x.AssetId == assetsInDto.ElementAt(i).Id);
+            }
 
-            var count = await assets.CountAsync();
-            var result =  await assets.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
-            return new Tuple<int, IEnumerable<Asset>>(count, result);
+            return new Tuple<int, IEnumerable<AssetListDto>>(count, assetsInDto);
         }
 
         private IEnumerable<Asset> HandleSort(string sortBy,IEnumerable<Asset> assets){
@@ -102,12 +123,46 @@ namespace Persistence.Repositories
         }
 
 
-        public async Task<Asset> GetAssetWithDetail (long id){
-            return  await _context.Assets
+        public async Task<ErrorOr<AssetDetailDto>> GetAssetWithDetail(long id, string userId){
+            var asset =  await _context.Assets
             .Include( asset => asset.Creator)
             .Include(asset => asset.Owner)
             .Include(asset => asset.Auction)
+            .Include( asset => asset.Collection)
             .FirstOrDefaultAsync( asset => asset.Id == id);
+
+            if ( asset == null ) 
+                return ErrorFactory.NotFound("Asset","Asset Not Found");
+
+            var assetDto =  _mapper.Map<AssetDetailDto>(asset);
+            var liked = _context.Likes.Any(x => x.UserId == userId && x.AssetId == id);
+            assetDto.Liked = liked;
+            return assetDto;
+        }
+
+        public async Task<ErrorOr<Unit>> ToggleAssetLike(long assetId, string userId){
+            var asset = await _context.Assets.SingleOrDefaultAsync(x => x.Id == assetId);
+            if(asset == null) return ErrorFactory.NotFound("Asset","Asset Not Found");
+            
+            var like = await _context.Likes.FirstOrDefaultAsync(x => x.UserId == userId && x.AssetId == assetId);
+            if (like != null){
+                _context.Likes.Remove(like);
+            }
+            else {
+                var newLike = new Like(){
+                    UserId = userId,
+                    AssetId = assetId
+                };
+
+                await _context.Likes.AddAsync(newLike);
+            }
+
+            await _context.SaveChangesAsync();
+      
+            asset.Likes = await _context.Likes.Where(x => x.AssetId == assetId).CountAsync();
+            await _context.SaveChangesAsync();
+            
+            return Unit.Value;
         }
     }
 }

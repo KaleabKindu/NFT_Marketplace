@@ -17,5 +17,9 @@ namespace Infrastructure.Services
         public string GetAddress(){
             return _httpContextAccessor.HttpContext.User.FindFirstValue("Address");
         }
+
+        public string GetUserId(){
+            return _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.PrimarySid);
+        }
     }
 }

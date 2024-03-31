@@ -17,8 +17,6 @@ public class AppUserConfiguration : IEntityTypeConfiguration<AppUser>
             Nonce="ee528136-2f06-41e6-b417-fdd116d36446"
 		};
 
-		builder.HasData(admin);
-
 		var trader1 = new AppUser
 		{
 			Id ="6f09dad5-2268-4410-b755-cf7859927f6g",
@@ -27,7 +25,11 @@ public class AppUserConfiguration : IEntityTypeConfiguration<AppUser>
             Nonce="ff528136-2f06-41e6-b417-fdd116d36446"
 		};
 
-		builder.HasData(trader1);
+		builder.HasData(
+			admin,
+			trader1
+		);
+		
     }
 	
 }
