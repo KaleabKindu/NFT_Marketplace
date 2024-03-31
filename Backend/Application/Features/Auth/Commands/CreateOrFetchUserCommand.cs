@@ -9,7 +9,7 @@ namespace Application.Features.Auth.Commands
 {
     public class CreateOrFetchUserCommand : IRequest<ErrorOr<BaseResponse<UserDto>>>
     {
-        public string PublicAddress { get; set; }
+        public string Address { get; set; }
     }
 
     public class CreateOrFetchUserCommandHandler
@@ -29,7 +29,7 @@ namespace Application.Features.Auth.Commands
             CancellationToken cancellationToken
         )
         {
-            var user = await _unitOfWork.UserRepository.CreateOrFetchUserAsync(command.PublicAddress);
+            var user = await _unitOfWork.UserRepository.CreateOrFetchUserAsync(command.Address);
             return new BaseResponse<UserDto>(){
                 Message="User created successfully",
                 Value=_mapper.Map<UserDto>(user)

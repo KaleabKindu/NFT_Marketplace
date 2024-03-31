@@ -1,22 +1,12 @@
-#nullable enable
-using Microsoft.AspNetCore.Identity;
-namespace Domain
+namespace Application.Features.Auth.Dtos
 {
-    public sealed class AppUser : IdentityUser
+    public class UserDetailDto
     {
-        override
-        public string? UserName { get; set; }
-
-        override
-        public string? Email { get; set; }
-
-        public string? Avatar { get; set; } = "";
-
+        public string UserName { get; set; }
+        public string Avatar { get; set; }
         public string Bio { get; set; }
 
         public string Address { get; set; }
-
-        public string Nonce { get; set; }
         public string ProfileBackgroundImage { get; set; }
         public int TotalSalesCount { get; set; }
 
@@ -25,5 +15,6 @@ namespace Domain
         public string Twitter { get; set; }
         public string YouTube { get; set; }
         public string Telegram { get; set; }
+
     }
 }

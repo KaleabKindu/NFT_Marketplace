@@ -15,7 +15,7 @@ namespace Application.Features.Assets.Command
     public class CreateAssetCommand : IRequest<ErrorOr<BaseResponse<long>>>
     {
         public CreateAssetDto CreateAssetDto { get; set; }
-        public string PublicAddress {get; set;}
+        public string Address {get; set;}
 
         
     }
@@ -37,7 +37,7 @@ namespace Application.Features.Assets.Command
         {
             var response = new BaseResponse<long>();
 
-            var user = await _unitOfWork.UserRepository.GetUserByPublicAddress(request.PublicAddress);
+            var user = await _unitOfWork.UserRepository.GetUserByAddress(request.Address);
 
             if (user == null)
                 return ErrorFactory.NotFound(nameof(user), "user not found");

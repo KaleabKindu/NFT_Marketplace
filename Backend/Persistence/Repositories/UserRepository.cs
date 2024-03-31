@@ -34,14 +34,14 @@ namespace Persistence.Repositories
         // Create
         public async Task<AppUser> CreateOrFetchUserAsync(string publicAddress)
         {
-            var existing_user = await _userManager.Users.FirstOrDefaultAsync(u => u.PublicAddress == publicAddress);
+            var existing_user = await _userManager.Users.FirstOrDefaultAsync(u => u.Address == publicAddress);
             if (existing_user != null)
                 return existing_user;
                 
             var user = new AppUser
             {
                 UserName = _faker.Internet.UserName(),
-                PublicAddress = publicAddress,
+                Address = publicAddress,
                 Nonce = Guid.NewGuid().ToString(),
             };
 
@@ -78,7 +78,7 @@ namespace Persistence.Repositories
         // Delete
         public async Task DeleteUserAsync(string publicAddress)
         {
-            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.PublicAddress == publicAddress);
+            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Address == publicAddress);
             if (user != null)
             {
                 var result = await _userManager.DeleteAsync(user);
@@ -90,14 +90,14 @@ namespace Persistence.Repositories
         }
 
         // Other
-        public async Task<bool> PublicAddressExists(string publicAddress)
+        public async Task<bool> AddressExists(string publicAddress)
         {
-            return await _userManager.Users.AnyAsync(u => u.PublicAddress == publicAddress);
+            return await _userManager.Users.AnyAsync(u => u.Address == publicAddress);
         }
 
         public async Task<ErrorOr<TokenDto>> AuthenticateUserAsync(string publicAddress, string signedNonce)
         {
-            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.PublicAddress == publicAddress);
+            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Address == publicAddress);
             if (user == null)
             {
                 return ErrorFactory.NotFound("User", $"User with public address `{publicAddress}` not found"); 
@@ -129,9 +129,9 @@ namespace Persistence.Repositories
             };
         }
 
-        public async  Task<AppUser> GetUserByPublicAddress(string publicAddress)
+        public async  Task<AppUser> GetUserByAddress(string publicAddress)
         {
-            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.PublicAddress == publicAddress);
+            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Address == publicAddress);
             return user;
 
             

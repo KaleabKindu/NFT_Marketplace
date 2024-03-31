@@ -18,8 +18,8 @@ public interface IUserRepository
 	Task DeleteUserAsync(string publicAddress);
 
     // Other
-	Task<bool> PublicAddressExists(string publicAddress);
+	Task<bool> AddressExists(string publicAddress);
 
-	Task<AppUser> GetUserByPublicAddress(string address);
+	Task<AppUser> GetUserByAddress(string address);
 	Task<ErrorOr<TokenDto>> AuthenticateUserAsync(string publicAddress, string signedNonce);
 }

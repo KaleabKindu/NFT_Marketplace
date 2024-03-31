@@ -15,12 +15,12 @@ namespace API.Controllers{
         }
 
         [HttpPost("users/create-fetch")]
-        public async Task<IActionResult> CreateOrFetch([FromQuery] string PublicAddress)
+        public async Task<IActionResult> CreateOrFetch([FromQuery] string Address)
         {
             return HandleResult(
                 await Mediator.Send(
                     new CreateOrFetchUserCommand(){ 
-                        PublicAddress=PublicAddress 
+                        Address=Address 
                     }
                 )
             );
@@ -32,7 +32,7 @@ namespace API.Controllers{
             return HandleResult(
                 await Mediator.Send(
                     new AuthenticateUserCommand(){ 
-                        PublicAddress=authenticateDto.PublicAddress, 
+                        Address=authenticateDto.Address, 
                         SignedNonce=authenticateDto.SignedNonce
                     }
                 )
@@ -51,6 +51,19 @@ namespace API.Controllers{
                         PageNumber = pageNumber
                     }
         )
+        );
+    }
+
+    [HttpGet("user/detail")]
+    public async Task<IActionResult> GetUserDetails([FromQuery] string publicAddress)
+    {
+        return HandleResult(
+            await Mediator.Send(
+                new GetUserDetailQuery
+                {
+                    publicAddress = publicAddress
+                }
+            )
         );
     }
     }
