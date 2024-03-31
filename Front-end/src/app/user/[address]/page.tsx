@@ -6,6 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Followers from "@/components/user/Followers";
 import UserCollections from "@/components/user/UserCollections";
 import CreatedNFTS from "@/components/user/CreatedNFTs";
+import OwnedNFTS from "@/components/user/OwnedNFTs";
 
 type Props = {
   params: {
@@ -22,6 +23,9 @@ const Page = ({ params }: Props) => {
           <TabsTrigger className="flex-1" value="created">
             Created
           </TabsTrigger>
+          <TabsTrigger className="flex-1" value="owned">
+            Owned
+          </TabsTrigger>
           <TabsTrigger className="flex-1" value="collections">
             Collections
           </TabsTrigger>
@@ -34,6 +38,9 @@ const Page = ({ params }: Props) => {
         </TabsList>
         <TabsContent value="created">
           <CreatedNFTS />
+        </TabsContent>
+        <TabsContent value="owned">
+          <OwnedNFTS />
         </TabsContent>
         <TabsContent value="collections">
           <UserCollections />
