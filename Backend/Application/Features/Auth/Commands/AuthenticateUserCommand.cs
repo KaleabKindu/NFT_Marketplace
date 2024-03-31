@@ -8,7 +8,7 @@ namespace Application.Features.Auth.Commands
 {
     public class AuthenticateUserCommand : IRequest<ErrorOr<BaseResponse<TokenDto>>>
     {
-        public string PublicAddress { get; set; }
+        public string Address { get; set; }
         public string SignedNonce { get; set; }
     }
 
@@ -27,7 +27,7 @@ namespace Application.Features.Auth.Commands
             CancellationToken cancellationToken
         )
         {
-            ErrorOr<TokenDto> result = await _unitOfWork.UserRepository.AuthenticateUserAsync(command.PublicAddress, command.SignedNonce);
+            ErrorOr<TokenDto> result = await _unitOfWork.UserRepository.AuthenticateUserAsync(command.Address, command.SignedNonce);
             if(result.IsError)
                 return ErrorOr<BaseResponse<TokenDto>>.From(result.Errors);
 

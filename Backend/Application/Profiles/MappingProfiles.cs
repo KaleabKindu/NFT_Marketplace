@@ -31,7 +31,7 @@ namespace Application.Profiles
 
             // CreateMap<UpdateOfferDto,Offer>()
             //     .ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null));
-            CreateMap<AppUser, UserListDto>().ForMember(dest => dest.Address, opt => opt.MapFrom(src => src.PublicAddress));
+            CreateMap<AppUser, UserListDto>().ForMember(dest => dest.Address, opt => opt.MapFrom(src => src.Address));
 
             #endregion
 
@@ -54,11 +54,11 @@ namespace Application.Profiles
         
             #region Bid 
             CreateMap<Bid, BidDto>()
-                .ForMember(dest => dest.Bidder, opt => opt.MapFrom(src => src.Bidder.PublicAddress))
+                .ForMember(dest => dest.Bidder, opt => opt.MapFrom(src => src.Bidder.Address))
                 .ForMember(dest => dest.AssetId, opt => opt.MapFrom(src => src.Asset.Id));
 
             CreateMap<Bid, BidsListDto>()
-                .ForMember(dest => dest.Bidder, opt => opt.MapFrom(src => src.Bidder.PublicAddress));
+                .ForMember(dest => dest.Bidder, opt => opt.MapFrom(src => src.Bidder.Address));
 
             CreateMap<CreateBidDto, Bid>();
             CreateMap<UpdateBidDto, Bid>()
@@ -69,14 +69,14 @@ namespace Application.Profiles
 
             #region Assets
             CreateMap<Asset, AssetDto>()
-                .ForMember(dest => dest.Creator, opt => opt.MapFrom(src => src.Creator.PublicAddress))
-                .ForMember(dest => dest.Owner, opt => opt.MapFrom(src => src.Owner.PublicAddress));
+                .ForMember(dest => dest.Creator, opt => opt.MapFrom(src => src.Creator.Address))
+                .ForMember(dest => dest.Owner, opt => opt.MapFrom(src => src.Owner.Address));
 
             CreateMap<Asset, AssetListOpenAuctDto>().ReverseMap();
 
             CreateMap<Asset, AssetDetailDto>()
-                .ForMember(dest => dest.Creator, opt => opt.MapFrom(src => new UserFetchDto{ PublicAddress=src.Creator.PublicAddress, UserName=src.Creator.UserName}))
-                .ForMember(dest => dest.Owner , opt => opt.MapFrom(src => new UserFetchDto{ PublicAddress = src.Owner.PublicAddress, UserName = src.Owner.UserName}));
+                .ForMember(dest => dest.Creator, opt => opt.MapFrom(src => new UserFetchDto{ Address=src.Creator.Address, UserName=src.Creator.UserName}))
+                .ForMember(dest => dest.Owner , opt => opt.MapFrom(src => new UserFetchDto{ Address = src.Owner.Address, UserName = src.Owner.UserName}));
 
             CreateMap<Asset, AssetListDto>().ReverseMap();
             CreateMap<Asset, UpdateAssetDto>().ReverseMap();
