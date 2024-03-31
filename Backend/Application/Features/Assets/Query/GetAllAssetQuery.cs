@@ -11,6 +11,7 @@ namespace Application.Features.Assets.Query
 {
     public sealed class GetAllAssetQuery : PaginatedQuery, IRequest<ErrorOr<PaginatedResponse<AssetListDto>>>
     {
+        public string UserId { get; set; }
         public string Query { get; set; } = "";
         public double MaxPrice { get; set; } = -1;
         public double MinPrice { get; set; } = -1;
@@ -38,12 +39,14 @@ namespace Application.Features.Assets.Query
         {           
             
             var result = await _unitOfWork.AssetRepository
-                .GetFilteredAssets(request.Query,request.MinPrice, request.MaxPrice, request.Category, request.SortBy, request.SaleType, request.CollectionId, request.CreatorId, request.PageNumber, request.PageSize);
+                .GetFilteredAssets(request.UserId,request.Query,request.MinPrice, request.MaxPrice, request.Category, request.SortBy, request.SaleType, request.CollectionId, request.CreatorId, request.PageNumber, request.PageSize);
+            
+            if (result.IsError) return result.Errors;
 
             var response = new PaginatedResponse<AssetListDto>{
                 Message = "Fetch Succesful",
-                Value = _mapper.Map<List<AssetListDto>>(result.Item2),
-                Count = result.Item1,
+                Value = _mapper.Map<List<AssetListDto>>(result.Value.Item2),
+                Count = result.Value.Item1,
                 PageNumber = request.PageNumber,
                 PageSize = request.PageSize
 

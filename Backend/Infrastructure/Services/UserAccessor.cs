@@ -17,5 +17,9 @@ namespace Infrastructure.Services
         public string GetPublicAddress(){
             return _httpContextAccessor.HttpContext.User.FindFirstValue("PublicAddress");
         }
+
+        public string GetUserId(){
+            return _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.PrimarySid);
+        }
     }
 }

@@ -21,6 +21,7 @@ namespace Domain.Assets
         public long? CollectionId { get; set; }
         public float Royalty { get; set; }
         public List<Bid> Bids { get; set; }
+        public int Likes { get; set; }
         public string TransactionHash { get; set; }
         public AssetStatus Status { get; set; }
     }

@@ -19,8 +19,12 @@ namespace API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
+            var userId =  _userAccessor.GetUserId();
 
-            return HandleResult(await Mediator.Send(new GetAssetByIdQuery { Id = id }));
+            if (userId == null)
+                return Unauthorized();
+
+            return HandleResult(await Mediator.Send(new GetAssetByIdQuery { Id = id, UserId = userId }));
         }
         
 
@@ -33,13 +37,19 @@ namespace API.Controllers
             [FromQuery] AssetCategory? category, 
             [FromQuery] string sortBy, 
             [FromQuery] string saleType, 
-            [FromQuery] long collectionId, 
+            [FromQuery] long? collectionId, 
             [FromQuery] string creatorId, 
             [FromQuery] int pageNumber = 1, 
             [FromQuery] int pageSize = 10
         )
         {
+            var userId =  _userAccessor.GetUserId();
+
+            if (userId == null)
+                return Unauthorized();
+
             return HandleResult(await Mediator.Send(new GetAllAssetQuery { 
+                    UserId = userId,
                     Query = query,
                     MinPrice = minPrice,
                     MaxPrice = maxPrice,
@@ -64,7 +74,6 @@ namespace API.Controllers
         }
 
         [HttpPost("mint")]
-
         public async Task<IActionResult> Post([FromBody] CreateAssetDto createAssetDto)
         {
 
@@ -76,6 +85,17 @@ namespace API.Controllers
         {
 
             return HandleResult(await Mediator.Send(new UpdateAssetCommand { UpdateAssetDto = updateAssetDto }));
+        }
+
+        [HttpPut("toggle-like/{id}")]
+        public async Task<IActionResult> ToggleLike(int id)
+        {
+            var userId =  _userAccessor.GetUserId();
+
+            if (userId == null)
+                return Unauthorized();
+
+            return HandleResult(await Mediator.Send(new ToggleLikeAssetCommand { Id = id, UserId = userId}));
         }
 
         [HttpDelete("{id}")]

@@ -15,7 +15,7 @@ namespace Application.Features.Assets.Dtos
         public string Category { get; set; }
         public double Price { get; set; }
         public CreateAuctionDto Auction { get; set; }
-        public long CollectionId { get; set; }
+        public long? CollectionId { get; set; }
         public string TransactionHash { get; set; }
         public float Royalty { get; set; }
         public AssetStatus Status { get; set; } = AssetStatus.OnSale;
