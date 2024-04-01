@@ -32,6 +32,7 @@ const generateDummyAssets = () => {
           ? "https://bafybeibfb7hbpkzgm7cguy3eidp4hm7cmmiqpm5cuoucjqpzu7xkr6t2ba.ipfs.nftstorage.link/"
           : undefined,
       likes: faker.number.int({ min: 0, max: 100 }),
+      liked: faker.datatype.boolean(Math.random()),
       category: category,
       price:
         i % 3 === 0
