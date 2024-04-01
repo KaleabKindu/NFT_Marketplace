@@ -6,6 +6,7 @@ using Application.Features.Assets.Dtos;
 using AutoMapper;
 using Domain.Assets;
 using Domain.Auctions;
+using Domain.Provenances;
 using Domain.Transactions;
 using ErrorOr;
 using MediatR;
@@ -55,6 +56,16 @@ namespace Application.Features.Assets.Command
             };
 
             asset.Auction = auction;
+
+            var provenance = new Provenance
+            {
+                Event = Event.Mint,
+                Asset = asset,
+                From = user,
+                TransactionHash = request.CreateAssetDto.TransactionHash
+
+            };
+            await _unitOfWork.ProvenanceRepository.AddAsync(provenance);
 
             await _unitOfWork.AssetRepository.AddAsync(asset);
 
