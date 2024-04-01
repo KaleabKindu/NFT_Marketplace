@@ -5,15 +5,18 @@ using Application.Responses;
 using Application.Features.Common;
 using Application.Contracts.Persistance;
 using Application.Features.Collections.Dtos;
+using Domain.Assets;
 
 namespace Application.Features.Assets.Query
 {
     public class GetAllCollectionsQuery : PaginatedQuery, IRequest<ErrorOr<PaginatedResponse<CollectionsListDto>>>
     {
-        public string Category { get; set; }
-        public double MinFloorPrice { get; set; }
-        public double MaxFloorPrice { get; set; }
         public string Creator { get; set; }
+        public string Query { get; set; }
+        public AssetCategory Category { get; set; }
+        public double MinVolume { get; set; }
+        public double MaxVolume { get; set; }
+        public string SortBy { get; set; }
     }
 
 
@@ -31,8 +34,8 @@ namespace Application.Features.Assets.Query
  
         public async Task<ErrorOr<PaginatedResponse<CollectionsListDto>>> Handle(GetAllCollectionsQuery query, CancellationToken cancellationToken)
         {
-            var result = await _unitOfWork.CollectionRepository.GetAllAsync(query.Category, query.MinFloorPrice, query.MaxFloorPrice, query.Creator, query.PageNumber, query.PageSize);
-            var count  = await _unitOfWork.CollectionRepository.CountAsync(query.Category, query.MinFloorPrice, query.MaxFloorPrice, query.Creator);
+            var result = await _unitOfWork.CollectionRepository.GetAllAsync(query.Creator, query.Query, query.Category, query.MinVolume, query.MaxVolume, query.SortBy, query.PageNumber, query.PageSize);
+            var count  = await _unitOfWork.CollectionRepository.CountAsync(query.Creator, query.Query, query.Category, query.MinVolume, query.MaxVolume);
 
             var response = new PaginatedResponse<CollectionsListDto>{
                 Message = "Collections Fetched Succesfully",
