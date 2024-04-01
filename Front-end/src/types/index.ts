@@ -31,14 +31,14 @@ export interface Auction {
 export type Address = `0x${string}`;
 
 export interface Credentials {
-  publicAddress: Address;
+  address: Address;
   signedNonce: string;
 }
 
 export interface User {
   username: string;
   avatar: string;
-  publicAddress: Address;
+  address: Address;
   bio?: string;
   profile_background?: string;
   social_media?: SocialMedia;

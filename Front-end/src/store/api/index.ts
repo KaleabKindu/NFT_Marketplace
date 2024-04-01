@@ -17,7 +17,7 @@ export const webApi = createApi({
   endpoints: (builder) => ({
     getNounce: builder.mutation<string, Address>({
       query: (address) => ({
-        url: `auth/users/create-fetch?Address=${address}`,
+        url: `auth/users/create-fetch?address=${address}`,
         method: "POST",
       }),
       transformResponse(baseQueryReturnValue: any, meta, arg) {

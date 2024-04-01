@@ -49,7 +49,7 @@ const CollectionsList = (props: Props) => {
               <TableCell>
                 <Link
                   className="flex items-center"
-                  href={`${Routes.USER}/${collection.creator.publicAddress}`}
+                  href={`${Routes.USER}/${collection.creator.address}`}
                 >
                   <Avatar className="mr-3" src={collection.creator.avatar} />
                   {collection.creator.username}
