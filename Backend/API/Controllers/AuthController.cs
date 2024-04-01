@@ -56,13 +56,13 @@ namespace API.Controllers
     }
 
     [HttpGet("user/detail")]
-    public async Task<IActionResult> GetUserDetails([FromQuery] string publicAddress)
+    public async Task<IActionResult> GetUserDetails([FromQuery] string address)
     {
         return HandleResult(
             await Mediator.Send(
                 new GetUserDetailQuery
                 {
-                    publicAddress = publicAddress
+                    address = address
                 }
             )
         );

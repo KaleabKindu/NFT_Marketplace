@@ -12,7 +12,7 @@ public class ProvenanceController : BaseController
     }
 
     [HttpGet("token-id")]
-    public async Task<IActionResult> Get([FromQuery] long tokenId, int pageNumber, int pageSize)
+    public async Task<IActionResult> Get([FromQuery] long tokenId, int pageNumber=1, int pageSize=10)
 
     {
 

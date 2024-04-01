@@ -33,7 +33,7 @@ namespace Application.Profiles
 
             // CreateMap<UpdateOfferDto,Offer>()
             //     .ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null));
-            CreateMap<AppUser, UserListDto>().ForMember(dest => dest.Address, opt => opt.MapFrom(src => src.Address));
+            CreateMap<AppUser, UserListDto>();
 
             #endregion
 
