@@ -6,7 +6,6 @@ namespace Domain
     {
         override
         public string? UserName { get; set; }
-
         override
         public string? Email { get; set; }
 

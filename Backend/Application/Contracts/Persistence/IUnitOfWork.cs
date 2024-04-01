@@ -13,6 +13,7 @@ namespace Application.Contracts.Persistance
         ITransactionRepository TransactionRepository{ get;}
         IAuctionRepository AuctionRepository{ get; }
         ICollectionRepository CollectionRepository { get; }
+        IProvenanceRepository ProvenanceRepository { get; }
 
         Task<int> SaveAsync();
     }

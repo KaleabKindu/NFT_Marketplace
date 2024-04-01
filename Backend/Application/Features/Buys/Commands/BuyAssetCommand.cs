@@ -6,6 +6,7 @@ using Application.Common.Responses;
 using Application.Features.Busy.Dtos;
 using Application.Common.Errors;
 using Application.Common.Exceptions;
+using Domain.Provenances;
 using Domain.Transactions;
 
 namespace Application.Features.Buys.Commands
@@ -51,6 +52,18 @@ namespace Application.Features.Buys.Commands
                 Amount = request.BuyAsset.Price,
                 BlockchainTxHash = request.BuyAsset.Hash
             };
+            
+            var provenance = new Provenance
+            {
+                Event = Event.Sale,
+                From = asset.Owner,
+                To = user,
+                Price = request.BuyAsset.Price,
+                TransactionHash = request.BuyAsset.Hash
+            };
+
+            await _unitOfWork.ProvenanceRepository.AddAsync(provenance);
+            
             
             await _unitOfWork.TransactionRepository.AddAsync(transaction);
     

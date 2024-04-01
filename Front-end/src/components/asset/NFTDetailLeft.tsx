@@ -40,7 +40,7 @@ const NFTDetailLeft = ({ id }: Props) => {
     ? data
     : assets.find((asset) => asset.tokenId?.toString() === id);
 
-  const [liked, setLiked] = useState(false);
+  const [liked, setLiked] = useState(asset?.liked);
   const [likes, setLikes] = useState(asset?.likes || 0);
   const [showFiles, setShowFiles] = useState(false);
   const handleLikes = () => {

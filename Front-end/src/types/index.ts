@@ -7,6 +7,7 @@ export interface NFT {
   audio?: string;
   video?: string;
   likes?: number;
+  liked?: boolean;
   category?: string;
   price?: string;
   royalty: number;
