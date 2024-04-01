@@ -12,7 +12,7 @@ namespace Domain
 
         public string? Avatar { get; set; } = "";
 
-        public string Bio { get; set; }
+        public string? Bio { get; set; }
 
         public string Address { get; set; }
 
