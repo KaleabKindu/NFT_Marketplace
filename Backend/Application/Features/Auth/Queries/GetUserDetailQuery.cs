@@ -12,7 +12,7 @@ namespace Application.Features.Auth.Queries
 
 public class GetUserDetailQuery : IRequest<ErrorOr<BaseResponse<UserDetailDto>>>
 {
-    public string publicAddress {get; set;}
+    public string address {get; set;}
 }
 
 public class GetUserDetailQueryHandler: IRequestHandler<GetUserDetailQuery, ErrorOr<BaseResponse<UserDetailDto>>>
@@ -31,7 +31,7 @@ public class GetUserDetailQueryHandler: IRequestHandler<GetUserDetailQuery, Erro
             CancellationToken cancellationToken
         )    
         {
-            var User = await _unitOfWork.UserRepository.GetUserByAddress(query.publicAddress);
+            var User = await _unitOfWork.UserRepository.GetUserByAddress(query.address);
 
             if (User == null) return ErrorFactory.NotFound("User", "User not found");
 

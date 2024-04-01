@@ -15,6 +15,8 @@ using Domain.Auctions;
 using Application.Features.Auctions.Dtos;
 using Domain.Collections;
 using Application.Features.Collections.Dtos;
+using Application.Features.Provenances.Dtos;
+using Domain.Provenances;
 
 namespace Application.Profiles
 {
@@ -31,7 +33,7 @@ namespace Application.Profiles
 
             // CreateMap<UpdateOfferDto,Offer>()
             //     .ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null));
-            CreateMap<AppUser, UserListDto>().ForMember(dest => dest.Address, opt => opt.MapFrom(src => src.Address));
+            CreateMap<AppUser, UserListDto>();
 
             #endregion
 
@@ -103,8 +105,16 @@ namespace Application.Profiles
                 .ForMember(dest => dest.UserDto , opt => opt.MapFrom(src => src.Creator));  
             
             #endregion Collections
+            
+            #region Provenances
 
-        
+            CreateMap<Provenance, ProvenanceListDto>()
+                .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.CreatedAt));
+            CreateMap<Provenance, CreateProvenanceDto>();
+
+            #endregion
+
+
         }
 
     }
