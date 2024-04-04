@@ -27,7 +27,6 @@ namespace Domain.Assets
         public AssetStatus Status { get; set; }
     }
 
-    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum  AssetCategory
     {
       
@@ -41,7 +40,6 @@ namespace Domain.Assets
       three_d
     }
     
-    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum AssetStatus {
         OnSale,
         Sold,
