@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using Domain.Auctions;
 using Domain.Bids;
 using Domain.Collections;
@@ -26,6 +27,7 @@ namespace Domain.Assets
         public AssetStatus Status { get; set; }
     }
 
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum  AssetCategory
     {
        image,
@@ -36,7 +38,8 @@ namespace Domain.Assets
        design,
        drawing
     }
-
+    
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum AssetStatus {
         OnSale,
         Sold,
