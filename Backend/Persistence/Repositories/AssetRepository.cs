@@ -28,7 +28,7 @@ namespace Persistence.Repositories
             return await _dbContext.Assets.Include(asset => asset.Auction).Where(asset => asset.Auction.AuctionEnd > epochTimeInSeconds).ToListAsync();
         }
 
-        public async Task<ErrorOr<Tuple<int,IEnumerable<AssetListDto>>>> GetFilteredAssets(string userId,string? query,double minPrice, double maxPrice, AssetCategory? category, string sortBy, string? saleType, long? collectionId, string? creatorId, int pageNumber, int pageSize)
+        public async Task<ErrorOr<Tuple<int,IEnumerable<AssetListDto>>>> GetFilteredAssets(string? userId,string? query,double minPrice, double maxPrice, AssetCategory? category, string sortBy, string? saleType, long? collectionId, string? creatorId, int pageNumber, int pageSize)
         {
             var assets = _dbContext.Assets
                 .Include(x => x.Auction)
@@ -97,9 +97,12 @@ namespace Persistence.Repositories
                 assetsInDto = _mapper.Map<IEnumerable<AssetListDto>>(assetList);
             }
 
-            for (int i = 0; i < assetsInDto.Count(); i++)
-            {
-                assetsInDto.ElementAt(i).Liked = await _context.Likes.AnyAsync(x => x.UserId == userId && x.AssetId == assetsInDto.ElementAt(i).Id);
+
+            if (userId != null){
+                for (int i = 0; i < assetsInDto.Count(); i++)
+                {
+                    assetsInDto.ElementAt(i).Liked = await _context.Likes.AnyAsync(x => x.UserId == userId && x.AssetId == assetsInDto.ElementAt(i).Id);
+                }
             }
 
             return new Tuple<int, IEnumerable<AssetListDto>>(count, assetsInDto);
@@ -123,7 +126,7 @@ namespace Persistence.Repositories
         }
 
 
-        public async Task<ErrorOr<AssetDetailDto>> GetAssetWithDetail(long id, string userId){
+        public async Task<ErrorOr<AssetDetailDto>> GetAssetWithDetail(long id, string? userId){
             var asset =  await _context.Assets
             .Include( asset => asset.Creator)
             .Include(asset => asset.Owner)
@@ -135,8 +138,12 @@ namespace Persistence.Repositories
                 return ErrorFactory.NotFound("Asset","Asset Not Found");
 
             var assetDto =  _mapper.Map<AssetDetailDto>(asset);
-            var liked = _context.Likes.Any(x => x.UserId == userId && x.AssetId == id);
-            assetDto.Liked = liked;
+
+            if (userId != null){
+                var liked = _context.Likes.Any(x => x.UserId == userId && x.AssetId == id);
+                assetDto.Liked = liked;
+            }
+            
             return assetDto;
         }
 
