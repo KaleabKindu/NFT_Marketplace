@@ -25,7 +25,7 @@ type Props = {
 const UserDetail = ({ address }: Props) => {
   const { toast } = useToast();
   const account = useAccount();
-  const user = users.find((user) => user.publicAddress === address);
+  const user = users.find((user) => user.address === address);
   return (
     <div className="relative flex flex-col lg:flex-row gap-8 -mt-[15vh] w-[90%] lg:w-[85%] mx-auto bg-background border z-40 rounded-3xl p-8">
       <div className="relative w-full h-[200px] lg:w-[300px] lg:h-[250px]">
@@ -39,7 +39,7 @@ const UserDetail = ({ address }: Props) => {
       <div className="flex flex-col items-start gap-5">
         <TypographyH2 text={user?.username || "Anthony Stark"} />
         <CopyToClipboard
-          text={user?.publicAddress || ""}
+          text={user?.address || ""}
           onCopy={() =>
             toast({
               title: "Copied to Clipboard",
@@ -52,7 +52,7 @@ const UserDetail = ({ address }: Props) => {
           >
             <TypographyP
               className="truncate text-right select-none"
-              text={user?.publicAddress}
+              text={user?.address}
             />
             <TbCopy size={20} />
           </Badge>

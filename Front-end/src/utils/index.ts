@@ -14,7 +14,7 @@ const categories = [
 ];
 const generateDummyAssets = () => {
   const dummyData = [];
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 20; i++) {
     const category = categories[Math.floor(Math.random() * categories.length)];
     const data: NFT = {
       tokenId: i + 1,
@@ -49,12 +49,12 @@ const generateDummyAssets = () => {
       creator: {
         username: faker.internet.userName(),
         avatar: faker.image.avatar(),
-        publicAddress: `0x${faker.finance.bitcoinAddress()}`,
+        address: `0x${faker.finance.bitcoinAddress()}`,
       },
       owner: {
         username: faker.internet.userName(),
         avatar: faker.image.avatar(),
-        publicAddress: `0x${faker.finance.bitcoinAddress()}`,
+        address: `0x${faker.finance.bitcoinAddress()}`,
       },
       auction:
         i % 3 === 0
@@ -86,7 +86,7 @@ const generateDummyCollections = () => {
       creator: {
         username: faker.internet.userName(),
         avatar: faker.image.avatar(),
-        publicAddress: `0x${faker.finance.bitcoinAddress()}`,
+        address: `0x${faker.finance.bitcoinAddress()}`,
       },
       volume: faker.number
         .float({ min: 1, max: 20, fractionDigits: 4 })
@@ -118,7 +118,7 @@ const generateDummyUsers = () => {
     const data: User = {
       username: faker.internet.userName(),
       avatar: faker.image.avatar(),
-      publicAddress: `0x${faker.finance.bitcoinAddress()}`,
+      address: `0x${faker.finance.bitcoinAddress()}`,
       bio: faker.person.bio(),
       profile_background: faker.image.urlPicsumPhotos(),
       social_media: {
