@@ -120,7 +120,9 @@ const NFTDetailLeft = ({ id }: Props) => {
                 </div>
                 <div className="flex justify-between items-center">
                   <TypographyH4 text={"Transaction Hash: "} />
-                  <Link href={`${Routes.ETHER_TRANSACTIONS}/${asset?.transactionHash}`}>
+                  <Link
+                    href={`${Routes.ETHER_TRANSACTIONS}/${asset?.transactionHash}`}
+                  >
                     <TypographyP text={`${asset?.transactionHash}`} />
                   </Link>
                 </div>
