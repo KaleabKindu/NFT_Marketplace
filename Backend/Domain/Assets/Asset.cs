@@ -30,13 +30,15 @@ namespace Domain.Assets
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum  AssetCategory
     {
-       image,
-       audio,
-       video,
-       art,
-       ticket,
-       design,
-       drawing
+      
+      audio, 
+      video, 
+      art, 
+      photography, 
+      ticket, 
+      design, 
+      ebook, 
+      three_d
     }
     
     [JsonConverter(typeof(JsonStringEnumConverter))]
