@@ -1,4 +1,4 @@
-import { Address, Credentials, NFT } from "@/types";
+import { Address, Credentials, IAssetPage, IFilter, NFT } from "@/types";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import type { RootState } from "..";
 
@@ -17,7 +17,7 @@ export const webApi = createApi({
   endpoints: (builder) => ({
     getNounce: builder.mutation<string, Address>({
       query: (address) => ({
-        url: `auth/users/create-fetch?Address=${address}`,
+        url: `auth/users/create-fetch?address=${address}`,
         method: "POST",
       }),
       transformResponse(baseQueryReturnValue: any, meta, arg) {
@@ -50,6 +50,10 @@ export const webApi = createApi({
         return baseQueryReturnValue.value;
       },
     }),
+    getAssets: builder.query<IAssetPage, IFilter>({
+      query: ({ filter, page, size }) =>
+        `/assets/all?pageNumber=${page}&pageSize=${size}${filter ? `&${filter}` : ""}`,
+    }),
   }),
 });
 
@@ -58,4 +62,5 @@ export const {
   useAuthenticateSignatureMutation,
   useCreateNFTMutation,
   useGetNFTQuery,
+  useGetAssetsQuery,
 } = webApi;

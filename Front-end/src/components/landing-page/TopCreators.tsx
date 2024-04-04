@@ -37,7 +37,7 @@ export const Creator = ({ index, user, showRank = true }: CreatorProps) => {
   const [following, setFollowing] = useState(false);
 
   return (
-    <Link href={`${Routes.USER}/${user.publicAddress}`}>
+    <Link href={`${Routes.USER}/${user.address}`}>
       <Card className="relative flex flex-col rounded-2xl justify-evenly items-center h-[15rem] bg-secondary group">
         <div className="relative rounded-t-2xl overflow-clip w-full h-[75%] ">
           <Image

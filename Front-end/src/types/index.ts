@@ -31,14 +31,14 @@ export interface Auction {
 export type Address = `0x${string}`;
 
 export interface Credentials {
-  publicAddress: Address;
+  address: Address;
   signedNonce: string;
 }
 
 export interface User {
   username: string;
   avatar: string;
-  publicAddress: Address;
+  address: Address;
   bio?: string;
   profile_background?: string;
   social_media?: SocialMedia;
@@ -61,4 +61,17 @@ export interface Collection {
   items: number;
   creator: User;
   images?: string[];
+}
+export interface IFilter {
+  filter?: string;
+  page?: number;
+  size?: number;
+}
+
+export interface IPagination {
+  count: number;
+}
+
+export interface IAssetPage extends IPagination {
+  value: NFT[];
 }
