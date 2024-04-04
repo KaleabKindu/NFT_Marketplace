@@ -14,7 +14,7 @@ namespace Application.Features.Assets.Dtos
         public string? Video { get; set; }
         public string? Audio { get; set; }
         public int Likes { get; set; }
-        public bool Liked { get; set; }
+        public bool Liked { get; set; } = false;
         public double Price { get; set; }
         public GetAuctionDto Auction { get; set; }
         

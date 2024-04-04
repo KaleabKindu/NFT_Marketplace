@@ -20,10 +20,6 @@ namespace API.Controllers
         public async Task<IActionResult> Get(int id)
         {
             var userId =  _userAccessor.GetUserId();
-
-            if (userId == null)
-                return Unauthorized();
-
             return HandleResult(await Mediator.Send(new GetAssetByIdQuery { Id = id, UserId = userId }));
         }
         
@@ -44,9 +40,6 @@ namespace API.Controllers
         )
         {
             var userId =  _userAccessor.GetUserId();
-
-            if (userId == null)
-                return Unauthorized();
 
             return HandleResult(await Mediator.Send(new GetAllAssetQuery { 
                     UserId = userId,

@@ -11,7 +11,7 @@ namespace Application.Features.Assets.Query
 {
     public sealed class GetAllAssetQuery : PaginatedQuery, IRequest<ErrorOr<PaginatedResponse<AssetListDto>>>
     {
-        public string UserId { get; set; }
+        public string? UserId { get; set; }
         public string Query { get; set; } = "";
         public double MaxPrice { get; set; } = -1;
         public double MinPrice { get; set; } = -1;
