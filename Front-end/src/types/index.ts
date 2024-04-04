@@ -62,3 +62,16 @@ export interface Collection {
   creator: User;
   images?: string[];
 }
+export interface IFilter {
+  filter?: string;
+  page?: number;
+  size?: number;
+}
+
+export interface IPagination {
+  count: number;
+}
+
+export interface IAssetPage extends IPagination {
+  value: NFT[];
+}

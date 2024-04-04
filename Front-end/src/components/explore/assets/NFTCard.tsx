@@ -34,7 +34,10 @@ const NFTCard = ({ asset }: Props) => {
   const Icon = categories.find((cat) => cat.value === asset.category)
     ?.icon as IconType;
   return (
-    <Link href={`${Routes.PRODUCT}/${asset.tokenId}`} className="col-span-12 sm:col-span-6 lg:col-span-3">
+    <Link
+      href={`${Routes.PRODUCT}/${asset.tokenId}`}
+      className="col-span-12 sm:col-span-6 lg:col-span-3"
+    >
       <Card className="w-full rounded-3xl group ">
         <div className="relative  min-h-[20rem] h-full rounded-t-3xl overflow-clip">
           {/* Images */}

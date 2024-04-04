@@ -91,19 +91,19 @@ const NFTDetailRight = ({ id }: Props) => {
   }) => {
     return (
       <div className="flex gap-2 lg:w-[70%] flex-wrap">
-        <div className='flex-1 flex flex-col gap-2'>
+        <div className="flex-1 flex flex-col gap-2">
           <div>{days}</div>
           <div>Days</div>
         </div>
-        <div className='flex-1 flex flex-col gap-2'>
+        <div className="flex-1 flex flex-col gap-2">
           <div>{hours}</div>
           <div>Hours</div>
         </div>
-        <div className='flex-1 flex flex-col gap-2'>
+        <div className="flex-1 flex flex-col gap-2">
           <div>{minutes}</div>
           <div>Minutes</div>
         </div>
-        <div className='flex-1 flex flex-col gap-2'>
+        <div className="flex-1 flex flex-col gap-2">
           <div>{seconds}</div>
           <div>Seconds</div>
         </div>
@@ -135,7 +135,7 @@ const NFTDetailRight = ({ id }: Props) => {
             <Avatar className="h-12 w-12" src={asset?.creator?.avatar} />
             <div className="flex flex-col">
               <TypographySmall text="Creator" />
-              <TypographyH4 text={asset?.creator?.address.slice(2,8)} />
+              <TypographyH4 text={asset?.creator?.address.slice(2, 8)} />
             </div>
           </Link>
           <Link
@@ -145,7 +145,7 @@ const NFTDetailRight = ({ id }: Props) => {
             <Avatar className="h-12 w-12" src={asset?.owner?.avatar} />
             <div className="flex flex-col">
               <TypographySmall text="Owner" />
-              <TypographyH4  text={asset?.owner?.address.slice(2,8)}  />
+              <TypographyH4 text={asset?.owner?.address.slice(2, 8)} />
             </div>
           </Link>
           <Link
