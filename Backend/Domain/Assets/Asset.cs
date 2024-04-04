@@ -27,19 +27,19 @@ namespace Domain.Assets
         public AssetStatus Status { get; set; }
     }
 
-    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum  AssetCategory
     {
-       image,
-       audio,
-       video,
-       art,
-       ticket,
-       design,
-       drawing
+      
+      audio, 
+      video, 
+      art, 
+      photography, 
+      ticket, 
+      design, 
+      ebook, 
+      three_d
     }
     
-    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum AssetStatus {
         OnSale,
         Sold,
