@@ -17,5 +17,12 @@ namespace API.Controllers
         {
             return HandleResult(await Mediator.Send(new GetAllCollectionsQuery(){ Creator=Creator, Category=Query, MinFloorPrice=MinFloorPrice, MaxFloorPrice=MaxFloorPrice, PageNumber=PageNumber, PageSize=PageSize }));
         }
+        
+        [HttpGet("trending")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetTrendingCollections( [FromQuery] int PageNumber = 1, [FromQuery] int PageSize = 10)
+        {
+            return HandleResult(await Mediator.Send(new GetTrendingCollectionsQuery(){ PageNumber=PageNumber, PageSize=PageSize }));
+        }
     }
 }
