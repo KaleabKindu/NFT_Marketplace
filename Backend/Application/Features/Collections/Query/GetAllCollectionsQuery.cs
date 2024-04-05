@@ -35,12 +35,11 @@ namespace Application.Features.Assets.Query
         public async Task<ErrorOr<PaginatedResponse<CollectionsListDto>>> Handle(GetAllCollectionsQuery query, CancellationToken cancellationToken)
         {
             var result = await _unitOfWork.CollectionRepository.GetAllAsync(query.Creator, query.Query, query.Category, query.MinVolume, query.MaxVolume, query.SortBy, query.PageNumber, query.PageSize);
-            var count  = await _unitOfWork.CollectionRepository.CountAsync(query.Creator, query.Query, query.Category, query.MinVolume, query.MaxVolume);
 
             var response = new PaginatedResponse<CollectionsListDto>{
                 Message = "Collections Fetched Succesfully",
-                Value = _mapper.Map<List<CollectionsListDto>>(result),
-                Count = count,
+                Value = _mapper.Map<List<CollectionsListDto>>(result.Item2),
+                Count = result.Item1,
                 PageNumber = query.PageNumber,
                 PageSize = query.PageSize
             };
