@@ -44,7 +44,7 @@ namespace Persistence.Repositories
             get
             {
                 if (_bidRepository == null)
-                    _bidRepository = new BidRepository(_dbContext);
+                    _bidRepository = new BidRepository(_dbContext,_mapper);
 
                 return _bidRepository;
             }

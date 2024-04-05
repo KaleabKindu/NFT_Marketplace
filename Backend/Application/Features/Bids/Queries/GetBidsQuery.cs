@@ -10,7 +10,7 @@ namespace Application.Features.Bids.Queries
     public class GetBidsQuery : IRequest<ErrorOr<PaginatedResponse<BidsListDto>>> { 
         public int PageNumber { get; set; } = 1;
         public int PageSize { get; set; } = 10;
-        public int AssetId { get; set; }
+        public int TokenId { get; set; }
     }
 
     public class GetBidsQueryHandler
@@ -30,15 +30,15 @@ namespace Application.Features.Bids.Queries
             CancellationToken cancellationToken
         )
         {
-            var bids = await _unitOfWork.BidRepository.GetAllBidsAsync(query.AssetId, query.PageNumber, query.PageSize);
-            var total_count = await _unitOfWork.BidRepository.Count(query.AssetId);
-
+            var result = await _unitOfWork.BidRepository.GetAllBidsAsync(query.TokenId, query.PageNumber, query.PageSize);
+            if (result.IsError) return result.Errors;
+            
             return new PaginatedResponse<BidsListDto>(){
                 Message="Bid lists fetched successfully",
                 PageNumber=query.PageNumber,
                 PageSize=query.PageSize,
-                Count=total_count,
-                Value=_mapper.Map<List<BidsListDto>>(bids)
+                Count=result.Value.Item1,
+                Value= result.Value.Item2
             };
         }
     }
