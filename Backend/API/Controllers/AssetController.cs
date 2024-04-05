@@ -19,8 +19,8 @@ namespace API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
-
-            return HandleResult(await Mediator.Send(new GetAssetByIdQuery { Id = id }));
+            var userId =  _userAccessor.GetUserId();
+            return HandleResult(await Mediator.Send(new GetAssetByIdQuery { Id = id, UserId = userId }));
         }
         
 
@@ -28,24 +28,27 @@ namespace API.Controllers
         [HttpGet("all")]
         public async Task<IActionResult> GetAll(
             [FromQuery] string query,
-            [FromQuery] double minPrice, 
-            [FromQuery] double maxPrice, 
+            [FromQuery] double min_price, 
+            [FromQuery] double max_price, 
             [FromQuery] AssetCategory? category, 
-            [FromQuery] string sortBy, 
-            [FromQuery] string saleType, 
-            [FromQuery] long collectionId, 
+            [FromQuery] string sort_by, 
+            [FromQuery] string sale_type, 
+            [FromQuery] long? collectionId, 
             [FromQuery] string creatorId, 
             [FromQuery] int pageNumber = 1, 
             [FromQuery] int pageSize = 10
         )
         {
+            var userId =  _userAccessor.GetUserId();
+
             return HandleResult(await Mediator.Send(new GetAllAssetQuery { 
+                    UserId = userId,
                     Query = query,
-                    MinPrice = minPrice,
-                    MaxPrice = maxPrice,
+                    MinPrice = min_price,
+                    MaxPrice = max_price,
                     Category = category,
-                    SortBy = sortBy,
-                    SaleType = saleType,
+                    SortBy = sort_by,
+                    SaleType = sale_type,
                     CollectionId = collectionId,
                     CreatorId = creatorId,
                     PageNumber = pageNumber, 
@@ -64,11 +67,10 @@ namespace API.Controllers
         }
 
         [HttpPost("mint")]
-
         public async Task<IActionResult> Post([FromBody] CreateAssetDto createAssetDto)
         {
 
-            return HandleResult( await Mediator.Send(new CreateAssetCommand { CreateAssetDto = createAssetDto , PublicAddress = _userAccessor.GetPublicAddress() }));
+            return HandleResult( await Mediator.Send(new CreateAssetCommand { CreateAssetDto = createAssetDto , Address = _userAccessor.GetAddress() }));
         }
 
         [HttpPut]
@@ -76,6 +78,17 @@ namespace API.Controllers
         {
 
             return HandleResult(await Mediator.Send(new UpdateAssetCommand { UpdateAssetDto = updateAssetDto }));
+        }
+
+        [HttpPut("toggle-like/{id}")]
+        public async Task<IActionResult> ToggleLike(int id)
+        {
+            var userId =  _userAccessor.GetUserId();
+
+            if (userId == null)
+                return Unauthorized();
+
+            return HandleResult(await Mediator.Send(new ToggleLikeAssetCommand { Id = id, UserId = userId}));
         }
 
         [HttpDelete("{id}")]

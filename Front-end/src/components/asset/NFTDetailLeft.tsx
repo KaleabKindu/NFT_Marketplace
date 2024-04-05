@@ -15,7 +15,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { CiImageOn } from "react-icons/ci";
 import { useGetNFTQuery } from "@/store/api";
 import { assets } from "@/utils";
 import clsx from "clsx";
@@ -23,6 +22,12 @@ import { CopyToClipboard } from "react-copy-to-clipboard";
 import { useToast } from "../ui/use-toast";
 import { LuEye, LuEyeOff } from "react-icons/lu";
 import { TbCopy } from "react-icons/tb";
+import { IconType } from "react-icons";
+import { categories } from "@/data";
+import VideoPlayer from "../explore/assets/VideoPlayer";
+import AudioPlayer from "../explore/assets/AudioPlayer";
+import Link from "next/link";
+import { Routes } from "@/routes";
 
 type Props = {
   id: string;
@@ -35,7 +40,7 @@ const NFTDetailLeft = ({ id }: Props) => {
     ? data
     : assets.find((asset) => asset.tokenId?.toString() === id);
 
-  const [liked, setLiked] = useState(false);
+  const [liked, setLiked] = useState(asset?.liked);
   const [likes, setLikes] = useState(asset?.likes || 0);
   const [showFiles, setShowFiles] = useState(false);
   const handleLikes = () => {
@@ -51,15 +56,28 @@ const NFTDetailLeft = ({ id }: Props) => {
       setLikes(data.likes as number);
     }
   }, [data]);
+  const Icon = categories.find((cat) => cat.value === asset?.category)
+    ?.icon as IconType;
   return (
     <div className="flex-1 flex flex-col gap-10">
       <div className="relative h-[25rem] lg:h-[50rem]">
-        <Image
-          className="object-cover rounded-lg"
-          src={asset?.image as string}
-          fill
-          alt=""
-        />
+        {/* Image */}
+        {asset?.image && (
+          <Image
+            className="object-cover rounded-3xl"
+            src={asset.image}
+            fill
+            alt=""
+          />
+        )}
+        {/* Videos */}
+        {asset?.video && (
+          <VideoPlayer className="rounded-3xl" url={asset.video} />
+        )}
+
+        {/* Audios */}
+        {asset?.audio && <AudioPlayer url={asset.audio} />}
+
         <Badge className="flex items-center gap-3 absolute top-5 right-5 bg-background/30 hover:bg-background text-foreground">
           <Button
             variant="ghost"
@@ -67,12 +85,12 @@ const NFTDetailLeft = ({ id }: Props) => {
             className="rounded-full h-auto p-2"
             onClick={handleLikes}
           >
-            <FaHeart className={`${liked && "text-red-500"} p-0`} size={20} />
+            <FaHeart className={`${liked && "text-red-500"} p-0`} size={25} />
           </Button>
           <TypographySmall text={likes} />
         </Badge>
         <Badge className="p-2 absolute top-5 left-5 bg-background/30 hover:bg-background text-foreground">
-          <CiImageOn size={25} />
+          <Icon size={30} />
         </Badge>
       </div>
       <div>
@@ -97,8 +115,16 @@ const NFTDetailLeft = ({ id }: Props) => {
                   <TypographyP text={asset?.tokenId} />
                 </div>
                 <div className="flex justify-between items-center">
-                  <TypographyH4 text={"Creator Royality: "} />
+                  <TypographyH4 text={"Royality: "} />
                   <TypographyP text={`${asset?.royalty}%`} />
+                </div>
+                <div className="flex justify-between items-center">
+                  <TypographyH4 text={"Transaction Hash: "} />
+                  <Link
+                    href={`${Routes.ETHER_TRANSACTIONS}/${asset?.transactionHash}`}
+                  >
+                    <TypographyP text={`${asset?.transactionHash}`} />
+                  </Link>
                 </div>
                 <div className="flex justify-between items-center">
                   <TypographyH4 text={"Files: "} />

@@ -21,10 +21,7 @@ const MoreFromCreator = () => {
           <ScrollArea>
             <div className="flex gap-5">
               {assets.map((asset, index) => (
-                <div
-                  key={index}
-                  className="shrink-0 w-full md:w-[50%] lg:w-[25%]"
-                >
+                <div key={index} className="shrink-0 w-[20%]">
                   <NFTCard asset={asset} />
                 </div>
               ))}

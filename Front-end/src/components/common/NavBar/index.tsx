@@ -59,7 +59,7 @@ const NavBar = (props: Props) => {
 
       const signature = await signMessageAsync({ message: nonce });
       const token = await authenticateSignature({
-        publicAddress: address as Address,
+        address: address as Address,
         signedNonce: signature,
       }).unwrap();
       dispatch(setSession(token));

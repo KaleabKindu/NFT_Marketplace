@@ -9,9 +9,11 @@ const TrendingNFTSection = (props: Props) => {
       <TypographyH2 text="Discover More NFTs" />
       <TypographyH4 text="Explore New Trending NFTs" />
       <div className="grid grid-cols-1  md:grid-cols-2 lg:grid-cols-3 items-center gap-5">
-        {assets.slice(0, 6).map((asset, index) => (
-          <TrendingNFTCard asset={asset} key={index} />
-        ))}
+        {assets
+          .filter((asset) => !!asset.auction && !!asset.image)
+          .map((asset, index) => (
+            <TrendingNFTCard asset={asset} key={index} />
+          ))}
       </div>
     </div>
   );

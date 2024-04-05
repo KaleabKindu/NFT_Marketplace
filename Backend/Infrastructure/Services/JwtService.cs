@@ -23,7 +23,7 @@ namespace Infrastructure.Services
         {
             var claims = new List<Claim>{
                 new(ClaimTypes.PrimarySid, user.Id),
-                new("PublicAddress", user.PublicAddress)
+                new("Address", user.Address)
             };
             claims.AddRange(
                 from role in roles

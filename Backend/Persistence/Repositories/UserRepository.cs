@@ -32,16 +32,16 @@ namespace Persistence.Repositories
         }
 
         // Create
-        public async Task<AppUser> CreateOrFetchUserAsync(string publicAddress)
+        public async Task<AppUser> CreateOrFetchUserAsync(string address)
         {
-            var existing_user = await _userManager.Users.FirstOrDefaultAsync(u => u.PublicAddress == publicAddress);
+            var existing_user = await _userManager.Users.FirstOrDefaultAsync(u => u.Address == address);
             if (existing_user != null)
                 return existing_user;
                 
             var user = new AppUser
             {
                 UserName = _faker.Internet.UserName(),
-                PublicAddress = publicAddress,
+                Address = address,
                 Nonce = Guid.NewGuid().ToString(),
             };
 
@@ -76,9 +76,9 @@ namespace Persistence.Repositories
         }
 
         // Delete
-        public async Task DeleteUserAsync(string publicAddress)
+        public async Task DeleteUserAsync(string address)
         {
-            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.PublicAddress == publicAddress);
+            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Address == address);
             if (user != null)
             {
                 var result = await _userManager.DeleteAsync(user);
@@ -90,22 +90,22 @@ namespace Persistence.Repositories
         }
 
         // Other
-        public async Task<bool> PublicAddressExists(string publicAddress)
+        public async Task<bool> AddressExists(string address)
         {
-            return await _userManager.Users.AnyAsync(u => u.PublicAddress == publicAddress);
+            return await _userManager.Users.AnyAsync(u => u.Address == address);
         }
 
-        public async Task<ErrorOr<TokenDto>> AuthenticateUserAsync(string publicAddress, string signedNonce)
+        public async Task<ErrorOr<TokenDto>> AuthenticateUserAsync(string address, string signedNonce)
         {
-            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.PublicAddress == publicAddress);
+            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Address == address);
             if (user == null)
             {
-                return ErrorFactory.NotFound("User", $"User with public address `{publicAddress}` not found"); 
+                return ErrorFactory.NotFound("User", $"User with public address `{address}` not found"); 
             }
 
             var roles = await _userManager.GetRolesAsync(user);
 
-            bool isSignatureValid = _ethereumService.VerifyMessage(user.Nonce, signedNonce, publicAddress);
+            bool isSignatureValid = _ethereumService.VerifyMessage(user.Nonce, signedNonce, address);
 
             if (!isSignatureValid)
             {
@@ -129,9 +129,9 @@ namespace Persistence.Repositories
             };
         }
 
-        public async  Task<AppUser> GetUserByPublicAddress(string publicAddress)
+        public async  Task<AppUser> GetUserByAddress(string address)
         {
-            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.PublicAddress == publicAddress);
+            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Address == address);
             return user;
 
             

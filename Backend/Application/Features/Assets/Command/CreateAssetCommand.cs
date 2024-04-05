@@ -6,6 +6,7 @@ using Application.Features.Assets.Dtos;
 using AutoMapper;
 using Domain.Assets;
 using Domain.Auctions;
+using Domain.Provenances;
 using Domain.Transactions;
 using ErrorOr;
 using MediatR;
@@ -15,7 +16,7 @@ namespace Application.Features.Assets.Command
     public class CreateAssetCommand : IRequest<ErrorOr<BaseResponse<long>>>
     {
         public CreateAssetDto CreateAssetDto { get; set; }
-        public string PublicAddress {get; set;}
+        public string Address {get; set;}
 
         
     }
@@ -37,7 +38,7 @@ namespace Application.Features.Assets.Command
         {
             var response = new BaseResponse<long>();
 
-            var user = await _unitOfWork.UserRepository.GetUserByPublicAddress(request.PublicAddress);
+            var user = await _unitOfWork.UserRepository.GetUserByAddress(request.Address);
 
             if (user == null)
                 return ErrorFactory.NotFound(nameof(user), "user not found");
@@ -55,6 +56,16 @@ namespace Application.Features.Assets.Command
             };
 
             asset.Auction = auction;
+
+            var provenance = new Provenance
+            {
+                Event = Event.Mint,
+                Asset = asset,
+                From = user,
+                TransactionHash = request.CreateAssetDto.TransactionHash
+
+            };
+            await _unitOfWork.ProvenanceRepository.AddAsync(provenance);
 
             await _unitOfWork.AssetRepository.AddAsync(asset);
 

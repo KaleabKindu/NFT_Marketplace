@@ -6,7 +6,8 @@ using Application.Contracts;
 using Application.Features.Auth.Queries;
 
 
-namespace API.Controllers{
+namespace API.Controllers
+{
     [AllowAnonymous]
     public class AuthController : BaseController
     {
@@ -15,12 +16,12 @@ namespace API.Controllers{
         }
 
         [HttpPost("users/create-fetch")]
-        public async Task<IActionResult> CreateOrFetch([FromQuery] string PublicAddress)
+        public async Task<IActionResult> CreateOrFetch([FromQuery] string Address)
         {
             return HandleResult(
                 await Mediator.Send(
                     new CreateOrFetchUserCommand(){ 
-                        PublicAddress=PublicAddress 
+                        Address=Address 
                     }
                 )
             );
@@ -32,7 +33,7 @@ namespace API.Controllers{
             return HandleResult(
                 await Mediator.Send(
                     new AuthenticateUserCommand(){ 
-                        PublicAddress=authenticateDto.PublicAddress, 
+                        Address=authenticateDto.Address, 
                         SignedNonce=authenticateDto.SignedNonce
                     }
                 )
@@ -41,7 +42,7 @@ namespace API.Controllers{
 
 
         [HttpGet("users")]
-        public async Task<IActionResult> GetUsers([FromQuery] int pageNumber, int pageSize)
+        public async Task<IActionResult> GetUsers([FromQuery] int pageNumber = 1, int pageSize = 10)
         {
             return HandleResult(
                 await Mediator.Send(
@@ -51,6 +52,19 @@ namespace API.Controllers{
                         PageNumber = pageNumber
                     }
         )
+        );
+    }
+
+    [HttpGet("user/detail")]
+    public async Task<IActionResult> GetUserDetails([FromQuery] string address)
+    {
+        return HandleResult(
+            await Mediator.Send(
+                new GetUserDetailQuery
+                {
+                    address = address
+                }
+            )
         );
     }
     }

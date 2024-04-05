@@ -14,10 +14,10 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin, Trader")]
-        public async Task<IActionResult> GetBids([FromQuery] int PageNumber = 1, [FromQuery] int PageSize = 10, [FromQuery] int AssetId = default)
+        [AllowAnonymous]
+        public async Task<IActionResult> GetBids([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10, [FromQuery] int tokenId = default)
         {
-            return HandleResult(await Mediator.Send(new GetBidsQuery() { PageNumber = PageNumber, PageSize = PageSize, AssetId=AssetId }));
+            return HandleResult(await Mediator.Send(new GetBidsQuery() { PageNumber = pageNumber, PageSize = pageSize, TokenId= tokenId }));
         }
 
 
@@ -32,7 +32,7 @@ namespace API.Controllers
         [Authorize(Roles = "Admin, Trader")]
         public async Task<IActionResult> CreateBid([FromBody] CreateBidDto Bid)
         {
-            return  HandleResult(await Mediator.Send(new CreateBidCommand { Bid = Bid, Bidder= _userAccessor.GetPublicAddress() }));
+            return  HandleResult(await Mediator.Send(new CreateBidCommand { Bid = Bid, Bidder= _userAccessor.GetAddress() }));
         }
 
         [HttpPut]

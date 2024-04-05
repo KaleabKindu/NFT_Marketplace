@@ -17,10 +17,10 @@ type Props = {
 const CollectionCard = ({ collection }: Props) => {
   return (
     <Link href={`${Routes.COLLECTION}/${collection.id}`}>
-      <Card className="flex flex-col gap-2 bg-accent hover:bg-accent/70  h-[25rem] w-full group">
-        <div className="relative overflow-clip h-[55%] ">
+      <Card className="flex flex-col gap-2 rounded-3xl bg-accent hover:bg-accent/70  h-[25rem] w-full group">
+        <div className="relative overflow-clip rounded-t-3xl h-[55%] ">
           <Image
-            className="object-cover rounded-t-lg group-hover:scale-105"
+            className="object-cover rounded-t-3xl group-hover:scale-105"
             src={collection?.images?.[0] || ""}
             fill
             alt=""
@@ -52,23 +52,26 @@ const CollectionCard = ({ collection }: Props) => {
             />
           </div>
         </div>
-        <div className="flex justify-between items-center p-5">
-          <div className="flex flex-col gap-3">
-            <TypographyH3
-              className="text-primary/60 capitalize"
-              text={collection.name}
-            />
+        <div className="flex flex-col gap-3 px-5 py-2">
+          <TypographyH3
+            className="text-primary/60 capitalize"
+            text={collection.name}
+          />
+          <div className="flex justify-between">
             <div className="flex items-center gap-3">
               <Avatar className="h-8 w-8" src={collection.creator.avatar} />
-              <TypographySmall text={collection.creator.userName} />
+              <TypographySmall text={collection.creator.username} />
             </div>
+            <Card className="relative p-2 bg-primary/5 border-4">
+              <Badge variant={"secondary"} className="absolute -top-3 left-1">
+                Volume
+              </Badge>
+              <TypographyH4
+                className="text-primary/60"
+                text={`${collection.volume}ETH`}
+              />
+            </Card>
           </div>
-          <Badge variant="outline" className="self-start border-2 rounded-md">
-            <TypographyH4
-              className="text-primary/60"
-              text={`${collection.volume}ETH`}
-            />
-          </Badge>
         </div>
       </Card>
     </Link>

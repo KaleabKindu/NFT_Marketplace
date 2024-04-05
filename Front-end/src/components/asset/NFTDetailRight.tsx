@@ -37,6 +37,13 @@ import { Avatar } from "../common/Avatar";
 import { Routes } from "@/routes";
 import { useContext, useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
+import { BsThreeDots } from "react-icons/bs";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   Form,
   FormControl,
@@ -52,8 +59,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { MdWallet } from "react-icons/md";
 import { useAccount, useBalance } from "wagmi";
 import { useGetNFTQuery } from "@/store/api";
-import { Skeleton } from "../ui/skeleton";
 import { assets } from "@/utils";
+import { BiTransferAlt } from "react-icons/bi";
+import { MdDelete } from "react-icons/md";
+import { FaDollarSign } from "react-icons/fa6";
 
 type Props = {
   id: string;
@@ -81,15 +90,23 @@ const NFTDetailRight = ({ id }: Props) => {
     seconds: number;
   }) => {
     return (
-      <div className="grid grid-cols-4 gap-2 lg:w-[70%]">
-        <div>{days}</div>
-        <div>{hours}</div>
-        <div>{minutes}</div>
-        <div>{seconds}</div>
-        <div>Days</div>
-        <div>Hours</div>
-        <div>Minutes</div>
-        <div>Seconds</div>
+      <div className="flex gap-2 lg:w-[70%] flex-wrap">
+        <div className="flex-1 flex flex-col gap-2">
+          <div>{days}</div>
+          <div>Days</div>
+        </div>
+        <div className="flex-1 flex flex-col gap-2">
+          <div>{hours}</div>
+          <div>Hours</div>
+        </div>
+        <div className="flex-1 flex flex-col gap-2">
+          <div>{minutes}</div>
+          <div>Minutes</div>
+        </div>
+        <div className="flex-1 flex flex-col gap-2">
+          <div>{seconds}</div>
+          <div>Seconds</div>
+        </div>
       </div>
     );
   };
@@ -106,43 +123,46 @@ const NFTDetailRight = ({ id }: Props) => {
   return (
     <div className="flex-1 p-3">
       <div className="flex flex-col gap-10">
-        <TypographyH2 text={asset?.name} />
+        <div className="flex justify-between items-start p-5">
+          <TypographyH2 className="capitalize" text={asset?.name} />
+          <Menu />
+        </div>
         <div className="flex flex-wrap items-center lg:divide-x-2">
           <Link
-            href={`${Routes.USER}/${asset?.creator?.publicAddress}`}
-            className="flex lg:min-w-[25%] items-center gap-3 p-5"
+            href={`${Routes.USER}/${asset?.creator?.address}`}
+            className="flex flex-1 items-center gap-3 p-5"
           >
             <Avatar className="h-12 w-12" src={asset?.creator?.avatar} />
             <div className="flex flex-col">
               <TypographySmall text="Creator" />
-              <TypographyH4 text={asset?.creator?.userName} />
+              <TypographyH4 text={asset?.creator?.address.slice(2, 8)} />
             </div>
           </Link>
           <Link
-            href={`${Routes.USER}/${asset?.owner?.publicAddress}`}
-            className="flex lg:min-w-[25%] items-center gap-3 p-5"
+            href={`${Routes.USER}/${asset?.owner?.address}`}
+            className="flex flex-1 items-center gap-3 p-5"
           >
             <Avatar className="h-12 w-12" src={asset?.owner?.avatar} />
             <div className="flex flex-col">
               <TypographySmall text="Owner" />
-              <TypographyH4 text={asset?.owner?.userName} />
+              <TypographyH4 text={asset?.owner?.address.slice(2, 8)} />
             </div>
           </Link>
           <Link
             href={`${Routes.COLLECTION}/${asset?.collection?.id}`}
-            className="flex items-center gap-3 p-5"
+            className="flex flex-1 items-center gap-3 p-5"
           >
             <Avatar
               className="h-12 w-12"
               src={asset?.collection?.avatar || "/collection/collection.png"}
             />
-            <div className="flex flex-col">
+            <div className="flex flex-col truncate">
               <TypographySmall text="Collection" />
               <TypographyH4 text={asset?.collection?.name} />
             </div>
           </Link>
         </div>
-        <div className="flex flex-col gap-5 border rounded-md bg-secondary/50">
+        <div className="flex flex-col gap-5 ">
           {auction && (
             <div className="flex flex-col gap-5 border-b p-5">
               <TypographyH2 text="Auction Ends in:" />
@@ -198,6 +218,34 @@ const NFTDetailRight = ({ id }: Props) => {
 };
 
 export default NFTDetailRight;
+
+type MenuProps = {};
+
+const Menu = (props: MenuProps) => {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button size={"icon"} variant={"ghost"}>
+          <BsThreeDots size={25} />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="w-[200px] rounded-2xl">
+        <DropdownMenuItem className="flex items-center gap-3 py-3 cursor-pointer rounded-xl w-full">
+          <FaDollarSign className="ml-2" size={20} />
+          <div>Change Price</div>
+        </DropdownMenuItem>
+        <DropdownMenuItem className="flex items-center gap-3 py-3 cursor-pointer rounded-xl w-full">
+          <BiTransferAlt className="ml-2" size={20} />
+          <div>Transfer</div>
+        </DropdownMenuItem>
+        <DropdownMenuItem className="flex items-center gap-3 py-3 cursor-pointer rounded-xl w-full">
+          <MdDelete className="ml-2 hover:text-red-500" size={20} />
+          <div>Delete</div>
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+};
 
 export function OffersTable() {
   return (

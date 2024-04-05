@@ -4,14 +4,13 @@ using MediatR;
 using AutoMapper;
 using Application.Contracts.Persistance;
 using ErrorOr;
-using Application.Common.Errors;
-using Microsoft.Extensions.Logging;
 
 namespace Application.Features.Assets.Query
 {
     public class GetAssetByIdQuery : IRequest<ErrorOr<BaseResponse<AssetDetailDto>>>
     {
         public int Id {get; set;}
+        public string? UserId { get; set; }
         
     }
 
@@ -20,13 +19,11 @@ namespace Application.Features.Assets.Query
 
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly ILogger<GetAssetByIdQuery> _logger;
 
-        public GetAssetByIdQueryHandler(IMapper mapper, IUnitOfWork unitOfwork, ILogger<GetAssetByIdQuery> logger)
+        public GetAssetByIdQueryHandler(IMapper mapper, IUnitOfWork unitOfwork)
         {
             _mapper = mapper;
             _unitOfWork = unitOfwork;
-            _logger = logger;
         }
 
         public async Task<ErrorOr<BaseResponse<AssetDetailDto>>> Handle(GetAssetByIdQuery request, CancellationToken cancellationToken)
@@ -34,20 +31,12 @@ namespace Application.Features.Assets.Query
 
             var response = new BaseResponse<AssetDetailDto>();
 
-            var asset = await _unitOfWork.AssetRepository.GetAssetWithDetail(request.Id);
-
-            if (asset == null)
-                return ErrorFactory.NotFound("Asset","Asset not found");
-
-            var auction = await _unitOfWork.AuctionRepository.GetByIdAsync(asset.Auction.Id);
+            var asset = await _unitOfWork.AssetRepository.GetAssetWithDetail(request.Id,request.UserId);
+            if (asset.IsError) return asset.Errors;
 
             response.Message = "Fetch Successful";
-            response.Value = _mapper.Map<AssetDetailDto>(asset);
+            response.Value = asset.Value;
 
-            _logger.LogInformation(auction.HighestBid.ToString());
-            _logger.LogInformation(auction.AuctionEnd.ToString());
-            _logger.LogInformation(asset.Auction.HighestBid.ToString());
-            _logger.LogInformation(response.Value.Auction.HighestBid);
             return response;
         }
     }

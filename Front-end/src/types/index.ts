@@ -3,10 +3,13 @@ export interface NFT {
   tokenId?: number;
   name: string;
   description: string;
-  image: string;
+  image?: string;
+  audio?: string;
+  video?: string;
   likes?: number;
+  liked?: boolean;
   category?: string;
-  price: string;
+  price?: string;
   royalty: number;
   collection?: {
     id: number;
@@ -22,19 +25,20 @@ export interface NFT {
 export interface Auction {
   auctionId?: number;
   auction_end: number;
+  highest_bid: string;
 }
 
 export type Address = `0x${string}`;
 
 export interface Credentials {
-  publicAddress: Address;
+  address: Address;
   signedNonce: string;
 }
 
 export interface User {
-  userName: string;
+  username: string;
   avatar: string;
-  publicAddress: Address;
+  address: Address;
   bio?: string;
   profile_background?: string;
   social_media?: SocialMedia;
@@ -57,4 +61,17 @@ export interface Collection {
   items: number;
   creator: User;
   images?: string[];
+}
+export interface IFilter {
+  filter?: string;
+  page?: number;
+  size?: number;
+}
+
+export interface IPagination {
+  count: number;
+}
+
+export interface IAssetPage extends IPagination {
+  value: NFT[];
 }

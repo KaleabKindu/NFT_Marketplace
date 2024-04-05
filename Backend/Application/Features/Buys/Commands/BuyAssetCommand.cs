@@ -6,6 +6,7 @@ using Application.Common.Responses;
 using Application.Features.Busy.Dtos;
 using Application.Common.Errors;
 using Application.Common.Exceptions;
+using Domain.Provenances;
 using Domain.Transactions;
 
 namespace Application.Features.Buys.Commands
@@ -13,7 +14,7 @@ namespace Application.Features.Buys.Commands
     public class BuyAssetCommand : IRequest<ErrorOr<BaseResponse<Unit>>>
     {
         public BuyAssetDto BuyAsset { get; set; }
-        public string UserPublicAddress { get; set; }
+        public string UserAddress { get; set; }
     }
 
     public class BuyAssetCommandHandler
@@ -33,10 +34,10 @@ namespace Application.Features.Buys.Commands
             CancellationToken cancellationToken
         )
         {
-            if (!await _unitOfWork.UserRepository.PublicAddressExists(request.UserPublicAddress))
+            if (!await _unitOfWork.UserRepository.AddressExists(request.UserAddress))
                 return ErrorFactory.BadRequestError("User","User not found");
 
-            var user = await _unitOfWork.UserRepository.CreateOrFetchUserAsync(request.UserPublicAddress);
+            var user = await _unitOfWork.UserRepository.CreateOrFetchUserAsync(request.UserAddress);
 
             var asset = await _unitOfWork.AssetRepository.GetByIdAsync(request.BuyAsset.AssetId);
 
@@ -51,6 +52,18 @@ namespace Application.Features.Buys.Commands
                 Amount = request.BuyAsset.Price,
                 BlockchainTxHash = request.BuyAsset.Hash
             };
+            
+            var provenance = new Provenance
+            {
+                Event = Event.Sale,
+                From = asset.Owner,
+                To = user,
+                Price = request.BuyAsset.Price,
+                TransactionHash = request.BuyAsset.Hash
+            };
+
+            await _unitOfWork.ProvenanceRepository.AddAsync(provenance);
+            
             
             await _unitOfWork.TransactionRepository.AddAsync(transaction);
     
