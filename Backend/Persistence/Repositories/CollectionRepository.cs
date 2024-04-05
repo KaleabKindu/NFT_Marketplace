@@ -18,7 +18,7 @@ namespace Persistence.Repositories
 
             var query = _dbContext.Set<Collection>()
                 .Include(entity => entity.Creator)
-                .Where(entity => string.IsNullOrEmpty(CreatorAddress) || entity.Creator.PublicAddress == CreatorAddress)
+                .Where(entity => string.IsNullOrEmpty(CreatorAddress) || entity.Creator.Address == CreatorAddress)
                 .Where(entity => Regex.IsMatch(entity.Name.ToLower(), string.IsNullOrEmpty(Query) ? ".*" : Regex.Escape(Query.ToLower())))
                 .Where(entity => Category == default || entity.Category == Category.ToString())
                 .Where(entity => entity.Volume >= MinVolume && entity.Volume <= MaxVolume)
@@ -37,7 +37,7 @@ namespace Persistence.Repositories
         public async Task<int> CountAsync(string CreatorAddress, string Query, AssetCategory Category, double MinVolume, double MaxVolume){
             return await _dbContext.Set<Collection>()
                 .Include(entity => entity.Creator)
-                .Where(entity => string.IsNullOrEmpty(CreatorAddress) || entity.Creator.PublicAddress == CreatorAddress)
+                .Where(entity => string.IsNullOrEmpty(CreatorAddress) || entity.Creator.Address == CreatorAddress)
                 .Where(entity => Regex.IsMatch(entity.Name.ToLower(), string.IsNullOrEmpty(Query) ? ".*" : Regex.Escape(Query.ToLower())))
                 .Where(entity => Category == default || entity.Category == Category.ToString())
                 .Where(entity => entity.Volume >= MinVolume && entity.Volume <= MaxVolume)
