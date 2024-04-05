@@ -60,7 +60,7 @@ namespace Application.Profiles
                 .ForMember(dest => dest.AssetId, opt => opt.MapFrom(src => src.Asset.Id));
 
             CreateMap<Bid, BidsListDto>()
-                .ForMember(dest => dest.Bidder, opt => opt.MapFrom(src => src.Bidder.Address));
+                .ForMember(dest => dest.From, opt => opt.MapFrom(src => src.Bidder));
 
             CreateMap<CreateBidDto, Bid>();
             CreateMap<UpdateBidDto, Bid>()
@@ -77,8 +77,8 @@ namespace Application.Profiles
             CreateMap<Asset, AssetListOpenAuctDto>().ReverseMap();
 
             CreateMap<Asset, AssetDetailDto>()
-                .ForMember(dest => dest.Creator, opt => opt.MapFrom(src => new UserFetchDto{ Address=src.Creator.Address, UserName=src.Creator.UserName}))
-                .ForMember(dest => dest.Owner , opt => opt.MapFrom(src => new UserFetchDto{ Address = src.Owner.Address, UserName = src.Owner.UserName}));
+                .ForMember(dest => dest.Creator, opt => opt.MapFrom(src => new UserFetchDto{ Address=src.Creator.Address, Username=src.Creator.UserName}))
+                .ForMember(dest => dest.Owner , opt => opt.MapFrom(src => new UserFetchDto{ Address = src.Owner.Address, Username = src.Owner.UserName}));
 
             CreateMap<Asset, AssetListDto>().ReverseMap();
             CreateMap<Asset, UpdateAssetDto>().ReverseMap();
