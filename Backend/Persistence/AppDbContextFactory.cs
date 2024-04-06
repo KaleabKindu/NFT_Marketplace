@@ -13,7 +13,7 @@ namespace Persistence
               .Build();
 
             var builder = new DbContextOptionsBuilder<AppDbContext>();
-            string connectionString = configuration.GetConnectionString("AppConnectionString");
+            string connectionString = configuration.GetConnectionString("AppConnectionStringRemote");
             builder.UseNpgsql(connectionString);
 
             return new AppDbContext(builder.Options);
