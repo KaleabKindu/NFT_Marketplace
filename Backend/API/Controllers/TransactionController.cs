@@ -19,5 +19,11 @@ namespace API.Controllers
         {
             return HandleResult(await Mediator.Send(new GetAllTransactionsQuery() { PageNumber = pageNumber, PageSize = pageSize, AssetId = assetId }));
         }
+
+        [HttpGet("users/top-creators")]
+        public async Task<IActionResult> GetTopCreators([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
+        {
+            return HandleResult(await Mediator.Send(new GetTopCreatorsQuery() { PageNumber = pageNumber, PageSize = pageSize }));
+        }
     }
 }
