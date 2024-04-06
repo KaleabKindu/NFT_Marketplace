@@ -2,6 +2,7 @@ using Application.Contracts;
 using Microsoft.AspNetCore.Mvc;
 using Application.Features.Assets.Query;
 using Microsoft.AspNetCore.Authorization;
+using Domain.Assets;
 
 namespace API.Controllers
 {
@@ -13,9 +14,18 @@ namespace API.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> GetAllCollections([FromQuery] string Creator, [FromQuery] string Query, [FromQuery] double MinFloorPrice, [FromQuery] double MaxFloorPrice, [FromQuery] int PageNumber = 1, [FromQuery] int PageSize = 10)
+        public async Task<IActionResult> GetAllCollections([FromQuery] string Creator, [FromQuery] string Query, [FromQuery] AssetCategory Category = default, [FromQuery] double MinVolume = 0, [FromQuery] double MaxVolume = 1000.0d, [FromQuery] string SortBy = "date_added", [FromQuery] int PageNumber = 1, [FromQuery] int PageSize = 10)
         {
-            return HandleResult(await Mediator.Send(new GetAllCollectionsQuery(){ Creator=Creator, Category=Query, MinFloorPrice=MinFloorPrice, MaxFloorPrice=MaxFloorPrice, PageNumber=PageNumber, PageSize=PageSize }));
+            return HandleResult(await Mediator.Send(new GetAllCollectionsQuery { Creator=Creator, Query=Query, Category=Category, MinVolume=MinVolume, MaxVolume=MaxVolume, SortBy=SortBy, PageNumber=PageNumber, PageSize=PageSize }));
         }
+
+        [AllowAnonymous]
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get(int id)
+        {
+
+            return HandleResult(await Mediator.Send(new GetCollectionDetailsQuery { Id = id }));
+        }
+        
     }
 }
