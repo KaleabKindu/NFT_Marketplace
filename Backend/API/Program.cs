@@ -17,7 +17,6 @@ builder.Services.ConfigurePersistenceServices(builder.Configuration);
 builder.Services.ConfigureInfrastructureServices(builder.Configuration);
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
 
-
 builder.Services.AddSwaggerGenNewtonsoftSupport(); 
 builder.Services.AddControllers().AddNewtonsoftJson(opts =>
 {

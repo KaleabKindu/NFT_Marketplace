@@ -104,6 +104,10 @@ namespace Application.Profiles
             CreateMap<Collection, CollectionsListDto>()
                 .ForMember(dest => dest.UserDto , opt => opt.MapFrom(src => src.Creator));  
             
+            CreateMap<Collection, CollectionDetailsDto>()
+                .ForMember(dest => dest.Latest_price , opt => opt.MapFrom(src => src.LatestPrice)) 
+                .ForMember(dest => dest.Floor_price , opt => opt.MapFrom(src => src.FloorPrice));  
+            
             #endregion Collections
             
             #region Provenances
