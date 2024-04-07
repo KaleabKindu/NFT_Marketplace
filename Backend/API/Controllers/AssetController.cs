@@ -57,6 +57,22 @@ namespace API.Controllers
                 }));
         }
         
+        [AllowAnonymous]
+        [HttpGet("trending")]
+        public async Task<IActionResult> GetTrending(
+            [FromQuery] int pageNumber = 1, 
+            [FromQuery] int pageSize = 10
+        )
+        {
+            var userId =  _userAccessor.GetUserId();
+
+            return HandleResult(await Mediator.Send(new GetTrendingAssetQuery() { 
+                UserId = userId,
+                PageNumber = pageNumber, 
+                PageSize = pageSize 
+            }));
+        }
+        
 
         [AllowAnonymous]
         [HttpGet("open-auction")]
