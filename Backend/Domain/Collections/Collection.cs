@@ -1,4 +1,6 @@
 
+using Domain.Assets;
+
 namespace Domain.Collections
 {
     public class Collection : BaseClass
@@ -13,5 +15,6 @@ namespace Domain.Collections
         public long Items { get; set; }
         public double FloorPrice { get; set; }
         public double LatestPrice { get; set; }
+        public ICollection<Asset> Assets { get; set; }
     }
 }
