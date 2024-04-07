@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Application.Contracts;
 using Microsoft.AspNetCore.Authorization;
 using Domain.Assets;
+using Application.Features.Categories.Queries;
 
 
 namespace API.Controllers
@@ -96,6 +97,13 @@ namespace API.Controllers
         {
 
             return HandleResult(await Mediator.Send(new DeleteAssetCommand { Id = id }));
+        }
+
+
+        [HttpGet("assets/{categoryName}")]
+        public async Task<IActionResult> GetAssetsCount([FromQuery] AssetCategory categoryName)
+        {
+            return HandleResult(await Mediator.Send(new GetAssetCountByCategoryQuery { CategoryName = categoryName }));
         }
 
     }
