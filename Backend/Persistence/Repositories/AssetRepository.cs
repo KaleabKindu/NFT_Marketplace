@@ -27,12 +27,38 @@ namespace Persistence.Repositories
             long epochTimeInSeconds = (long)(DateTime.Now - epochStart).TotalSeconds;
             return await _dbContext.Assets.Include(asset => asset.Auction).Where(asset => asset.Auction.AuctionEnd > epochTimeInSeconds).ToListAsync();
         }
+        
+        public async Task<ErrorOr<Tuple<int,IEnumerable<AssetListDto>>>> GetTrendingAssets(string userId,int pageNumber, int pageSize)
+        {
+            var thresholdDateTime = DateTime.UtcNow.AddHours(-24);
+            var assets = _dbContext.Assets
+                .Where( x => x.Status == AssetStatus.OnSale)
+                .Include(x => x.Bids.Where(bd => bd.CreatedAt > thresholdDateTime )) 
+                .Include(x => x.Auction)
+                .OrderByDescending(ast => ast.Bids.Count())
+                .AsQueryable();
+            
+
+            var count = await assets.CountAsync();
+            var assetList =  await assets.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+
+            var assetsInDto = _mapper.Map<List<AssetListDto>>(assetList);
+            
+            if (userId != null){
+                for (int i = 0; i < assetsInDto.Count(); i++)
+                {
+                    assetsInDto.ElementAt(i).Liked = await _context.Likes.AnyAsync(x => x.UserId == userId && x.AssetId == assetsInDto.ElementAt(i).Id);
+                }
+            }
+
+            return new Tuple<int, IEnumerable<AssetListDto>>(count, assetsInDto);
+        }
 
         public async Task<ErrorOr<Tuple<int,IEnumerable<AssetListDto>>>> GetFilteredAssets(string? userId,string? query,double minPrice, double maxPrice, AssetCategory? category, string sortBy, string? saleType, long? collectionId, string? creatorId, int pageNumber, int pageSize)
         {
             var assets = _dbContext.Assets
+                .Where( x => x.Status == AssetStatus.OnSale)
                 .Include(x => x.Auction)
-                // .Where( x => x.Status == AssetStatus.OnSale)
                 .AsQueryable();
 
             if (minPrice != 0)
