@@ -5,23 +5,41 @@ import { Card } from "../ui/card";
 import { Avatar } from "../common/Avatar";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { users } from "@/utils";
 import { Routes } from "@/routes";
 import { User } from "@/types";
 import Link from "next/link";
+import { useGetTopCreatorsQuery } from "@/store/api";
+import UsersShimmers from "../common/shimmers/UsersShimmers";
+import Error from "../common/Error";
+import NoData from "../common/NoData";
 
 type Props = {};
 
 const TopCreators = (props: Props) => {
+  const { data, isFetching, isLoading, isError } = useGetTopCreatorsQuery({
+    page: 1,
+    size: 8,
+  });
   return (
     <div className="flex flex-col gap-5">
       <TypographyH2 text="Top Creators" />
       <TypographyH4 text="Checkout Top Rated Creators" />
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 items-center gap-5">
-        {users.map((user, index) => (
-          <Creator key={index} index={index} user={user} />
-        ))}
+      <div className="grid grid-cols-12 items-center justify-center gap-5">
+        {isLoading ? (
+          <UsersShimmers elements={8} />
+        ) : false ? (
+          <Error />
+        ) : users && users.length > 0 ? (
+          users
+            .slice(0, 8)
+            .map((user, index) => (
+              <Creator key={index} user={user} index={index} showRank={false} />
+            ))
+        ) : (
+          <NoData message="No assets found" />
+        )}
       </div>
     </div>
   );

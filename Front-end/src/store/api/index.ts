@@ -8,6 +8,8 @@ import {
   NFT,
   IBidPage,
   IProvenancePage,
+  User,
+  IUser,
 } from "@/types";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import type { RootState } from "..";
@@ -114,6 +116,36 @@ export const webApi = createApi({
     >({
       query: ({ address, type }) => `users/network/${address}?type=${type}`,
     }),
+    getTopCreators: builder.query<IUsersPage, { page: number; size: number }>({
+      query: ({ page, size }) =>
+        `users/top-creators?pageNumber=${page}&pageSize=${size}`,
+      transformResponse: (baseQueryReturnValue: any) => {
+        return baseQueryReturnValue.value;
+      },
+    }),
+    getCategoryCount: builder.query<{ name: string; count: number }[], void>({
+      query: () => `category`,
+    }),
+    getTrendingAssets: builder.query<
+      IAssetsPage,
+      { page: number; size: number }
+    >({
+      query: ({ page, size }) =>
+        `assets/trending?pageNumber=${page}&pageSize=${size}`,
+      transformResponse: (baseQueryReturnValue: any) => {
+        return baseQueryReturnValue.value;
+      },
+    }),
+    getTrendingCollections: builder.query<
+      ICollectionsPage,
+      { page: number; size: number }
+    >({
+      query: ({ page, size }) =>
+        `collections/trending?pageNumber=${page}&pageSize=${size}`,
+      transformResponse: (baseQueryReturnValue: any) => {
+        return baseQueryReturnValue.value;
+      },
+    }),
   }),
 });
 
@@ -130,4 +162,8 @@ export const {
   useGetCollectionDetailsQuery,
   useGetUsersQuery,
   useGetUserNetworksQuery,
+  useGetTopCreatorsQuery,
+  useGetCategoryCountQuery,
+  useGetTrendingAssetsQuery,
+  useGetTrendingCollectionsQuery,
 } = webApi;
