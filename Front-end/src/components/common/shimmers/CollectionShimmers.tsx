@@ -6,14 +6,14 @@ type Props = {
   elements: number;
 };
 
-const AssetsShimmers = ({ elements, className = "" }: Props) => {
+const CollectionsShimmers = ({ elements, className = "" }: Props) => {
   return (
     <>
       {Array.from({ length: elements }).map((_, index) => (
         <Skeleton
           key={index}
           className={clsx(
-            "sm:col-span-2 md:col-span-3 rounded-3xl h-96",
+            "col-span-1 md:col-span-2 lg:col-span-3 rounded-3xl h-96",
             className,
           )}
         />
@@ -22,4 +22,4 @@ const AssetsShimmers = ({ elements, className = "" }: Props) => {
   );
 };
 
-export default AssetsShimmers;
+export default CollectionsShimmers;
