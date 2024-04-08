@@ -16,7 +16,10 @@ type Props = {
 
 const CollectionCard = ({ collection }: Props) => {
   return (
-    <Link href={`${Routes.COLLECTION}/${collection.id}`}>
+    <Link
+      href={`${Routes.COLLECTION}/${collection.id}`}
+      className="col-span-1 md:col-span-2 lg:col-span-3"
+    >
       <Card className="flex flex-col gap-2 rounded-3xl bg-accent hover:bg-accent/70  h-[25rem] w-full group">
         <div className="relative overflow-clip rounded-t-3xl h-[55%] ">
           <Image
@@ -60,7 +63,9 @@ const CollectionCard = ({ collection }: Props) => {
           <div className="flex justify-between">
             <div className="flex items-center gap-3">
               <Avatar className="h-8 w-8" src={collection.creator.avatar} />
-              <TypographySmall text={collection.creator.username} />
+              <TypographySmall
+                text={collection.creator.username.slice(0, 10)}
+              />
             </div>
             <Card className="relative p-2 bg-primary/5 border-4">
               <Badge variant={"secondary"} className="absolute -top-3 left-1">

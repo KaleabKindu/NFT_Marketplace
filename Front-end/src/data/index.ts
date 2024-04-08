@@ -8,6 +8,7 @@ import { IoBookOutline } from "react-icons/io5";
 import { IoTicketSharp } from "react-icons/io5";
 import { BsBox } from "react-icons/bs";
 import { IconType } from "react-icons";
+import { IBid, IProvenance } from "@/types";
 export const discover = [
   {
     name: "NFTs",
@@ -74,7 +75,7 @@ export enum CATEGORY {
   PHOTOGRAPHY = "photography",
   AUDIO = "audio",
   VIDEO = "video",
-  THREE_D = "3d",
+  THREE_D = "three_d",
   DESIGN = "design",
   EBOOK = "ebook",
   TICKET = "ticket",
@@ -152,148 +153,6 @@ export const categories: {
     image: "tickets-category.jpg",
     value: CATEGORY.TICKET,
     icon: IoTicketSharp,
-  },
-];
-
-export const provenances = [
-  {
-    event: "Sale",
-    from: "bing",
-    price: "$250.00",
-    to: "geller",
-    date: new Date().toLocaleDateString(),
-  },
-  {
-    event: "Transfer",
-    from: "ross",
-    price: "$150.00",
-    to: "bing",
-    date: new Date().toLocaleDateString(),
-  },
-  {
-    event: "Transfer",
-    from: "barnes",
-    price: "$350.00",
-    to: "ross",
-    date: new Date().toLocaleDateString(),
-  },
-  {
-    event: "Sale",
-    from: "rogers",
-    price: "$450.00",
-    to: "barnes",
-    date: new Date().toLocaleDateString(),
-  },
-  {
-    event: "Sale",
-    from: "banner",
-    price: "$550.00",
-    to: "rogers",
-    date: new Date().toLocaleDateString(),
-  },
-  {
-    event: "Sale",
-    from: "stark",
-    price: "$200.00",
-    to: "banner",
-    date: new Date().toLocaleDateString(),
-  },
-  {
-    event: "Mint",
-    from: "nulladdress",
-    price: "$300.00",
-    to: "stark",
-    date: new Date().toLocaleDateString(),
-  },
-];
-
-export const offers = [
-  {
-    from: "potts",
-    price: "0.25",
-    usd_price: "250.00",
-    date: new Date().toLocaleDateString(),
-  },
-  {
-    from: "banner",
-    price: "0.15",
-    usd_price: "150.00",
-    date: new Date().toLocaleDateString(),
-  },
-  {
-    from: "rogers",
-    price: "0.22",
-    usd_price: "350.00",
-    date: new Date().toLocaleDateString(),
-  },
-  {
-    from: "romanoff",
-    price: "0.55",
-    usd_price: "450.00",
-    date: new Date().toLocaleDateString(),
-  },
-  {
-    from: "thanos",
-    price: "0.21",
-    usd_price: "550.00",
-    date: new Date().toLocaleDateString(),
-  },
-  {
-    from: "odinson",
-    price: "0.75",
-    usd_price: "200.00",
-    date: new Date().toLocaleDateString(),
-  },
-  {
-    from: "stark",
-    price: "0.05",
-    usd_price: "300.00",
-    date: new Date().toLocaleDateString(),
-  },
-];
-
-export const bids = [
-  {
-    from: "potts",
-    bid_price: "0.25",
-    bid_usd_price: "250.00",
-    date: new Date().toLocaleDateString(),
-  },
-  {
-    from: "banner",
-    bid_price: "0.15",
-    bid_usd_price: "150.00",
-    date: new Date().toLocaleDateString(),
-  },
-  {
-    from: "rogers",
-    bid_price: "0.22",
-    bid_usd_price: "350.00",
-    date: new Date().toLocaleDateString(),
-  },
-  {
-    from: "romanoff",
-    bid_price: "0.55",
-    bid_usd_price: "450.00",
-    date: new Date().toLocaleDateString(),
-  },
-  {
-    from: "thanos",
-    bid_price: "0.21",
-    bid_usd_price: "550.00",
-    date: new Date().toLocaleDateString(),
-  },
-  {
-    from: "odinson",
-    bid_price: "0.75",
-    bid_usd_price: "200.00",
-    date: new Date().toLocaleDateString(),
-  },
-  {
-    from: "stark",
-    bid_price: "0.05",
-    bid_usd_price: "300.00",
-    date: new Date().toLocaleDateString(),
   },
 ];
 

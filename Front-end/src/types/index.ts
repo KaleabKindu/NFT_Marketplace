@@ -63,15 +63,61 @@ export interface Collection {
   images?: string[];
 }
 export interface IFilter {
-  filter?: string;
-  page?: number;
-  size?: number;
+  search?: string;
+  category?: string;
+  min_price?: string;
+  max_price?: string;
+  min_volume?: string;
+  max_volume?: string;
+  sale_type?: string;
+  collection?: string;
+  creator?: string;
+  owner?: string;
+  sort_by?: string;
+  pageNumber?: number;
+  pageSize?: number;
 }
 
 export interface IPagination {
   count: number;
 }
+export interface IUser {
+  username: string;
+  avatar: string;
+  address: string;
+}
+export interface IProvenance {
+  event: string;
+  from: IUser;
+  to: IUser;
+  price: string;
+  hash: string;
+  date: number;
+}
 
-export interface IAssetPage extends IPagination {
+export interface IBid {
+  from: IUser;
+  price: string;
+  hash: string;
+  date: number;
+}
+
+export interface IAssetsPage extends IPagination {
   value: NFT[];
+}
+
+export interface ICollectionsPage extends IPagination {
+  value: Collection[];
+}
+
+export interface IUsersPage extends IPagination {
+  value: User[];
+}
+
+export interface IProvenancePage extends IPagination {
+  value: IProvenance[];
+}
+
+export interface IBidPage extends IPagination {
+  value: IBid[];
 }

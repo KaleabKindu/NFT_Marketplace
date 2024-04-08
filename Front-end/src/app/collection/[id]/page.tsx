@@ -15,7 +15,6 @@ const Page = ({ params }: Props) => {
       <CollectionDetail id={params.id} />
       <Filters />
       <CollectionNFTs />
-      <TopCollections />
     </div>
   );
 };
