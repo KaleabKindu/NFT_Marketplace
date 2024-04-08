@@ -1,5 +1,5 @@
 import { CATEGORY } from "@/data";
-import { Collection, NFT, User } from "@/types";
+import { Collection, IBid, IProvenance, NFT, User } from "@/types";
 import { faker } from "@faker-js/faker";
 faker.seed(5);
 const categories = [
@@ -135,3 +135,54 @@ const generateDummyUsers = () => {
 };
 
 export const users = generateDummyUsers();
+
+const events = ["sale", "tranfer", "mint"];
+const generateDummyProvenance = () => {
+  const dummyData = [];
+  for (let i = 0; i < 10; i++) {
+    const data: IProvenance = {
+      event: events[Math.floor(Math.random() * events.length)],
+      from: {
+        username: faker.internet.userName(),
+        avatar: faker.image.avatar(),
+        address: `0x${faker.finance.bitcoinAddress()}`,
+      },
+      to: {
+        username: faker.internet.userName(),
+        avatar: faker.image.avatar(),
+        address: `0x${faker.finance.bitcoinAddress()}`,
+      },
+      price: faker.number
+        .float({ min: 1, max: 20, fractionDigits: 4 })
+        .toString(),
+      hash: `0x${faker.finance.litecoinAddress()}`,
+      date: new Date(faker.date.future()).getTime(),
+    };
+    dummyData.push(data);
+  }
+  return dummyData;
+};
+
+export const provenances = generateDummyProvenance();
+
+const generateDummyBids = () => {
+  const dummyData = [];
+  for (let i = 0; i < 10; i++) {
+    const data: IBid = {
+      from: {
+        username: faker.internet.userName(),
+        avatar: faker.image.avatar(),
+        address: `0x${faker.finance.bitcoinAddress()}`,
+      },
+      price: faker.number
+        .float({ min: 1, max: 20, fractionDigits: 4 })
+        .toString(),
+      hash: `0x${faker.finance.litecoinAddress()}`,
+      date: new Date(faker.date.future()).getTime(),
+    };
+    dummyData.push(data);
+  }
+  return dummyData;
+};
+
+export const bids = generateDummyBids();

@@ -52,7 +52,6 @@ const Page = ({ params }: Props) => {
           <Followings />
         </TabsContent>
       </Tabs>
-      <PopularUsers />
     </div>
   );
 };

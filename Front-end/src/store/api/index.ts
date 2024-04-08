@@ -1,6 +1,17 @@
-import { Address, Credentials, IAssetPage, IFilter, NFT } from "@/types";
+import {
+  Address,
+  Credentials,
+  IAssetsPage,
+  IUsersPage,
+  ICollectionsPage,
+  IFilter,
+  NFT,
+  IBidPage,
+  IProvenancePage,
+} from "@/types";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import type { RootState } from "..";
+import queryString from "query-string";
 
 export const webApi = createApi({
   reducerPath: "webApi",
@@ -45,14 +56,63 @@ export const webApi = createApi({
       },
     }),
     getNFT: builder.query<NFT, string>({
-      query: (id) => `/assets/${id}`,
+      query: (id) => `assets/${id}`,
       transformResponse(baseQueryReturnValue: any, meta, arg) {
         return baseQueryReturnValue.value;
       },
     }),
-    getAssets: builder.query<IAssetPage, IFilter>({
-      query: ({ filter, page, size }) =>
-        `/assets/all?pageNumber=${page}&pageSize=${size}${filter ? `&${filter}` : ""}`,
+    getAssets: builder.query<IAssetsPage, IFilter>({
+      query: (params) => {
+        const filter = queryString.stringify(params, {
+          skipNull: true,
+          skipEmptyString: true,
+        });
+        return `assets/all?${filter.toString()}`;
+      },
+    }),
+    getUserDetails: builder.query<void, string>({
+      query: (address) => `users/${address}`,
+    }),
+    getProvenance: builder.query<
+      IProvenancePage,
+      { id: string; pageNumber: number; pageSize: number }
+    >({
+      query: ({ id, pageNumber, pageSize }) =>
+        `provenance/${id}?pageNumber=${pageNumber}&pageSize=${pageSize}`,
+    }),
+    getBids: builder.query<
+      IBidPage,
+      { id: string; pageNumber: number; pageSize: number }
+    >({
+      query: ({ id, pageNumber, pageSize }) =>
+        `bids/${id}?pageNumber=${pageNumber}&pageSize=${pageSize}`,
+    }),
+    getCollections: builder.query<ICollectionsPage, IFilter>({
+      query: (params) => {
+        const filter = queryString.stringify(params, {
+          skipNull: true,
+          skipEmptyString: true,
+        });
+        return `collections?${filter.toString()}`;
+      },
+    }),
+    getCollectionDetails: builder.query<void, string>({
+      query: (id) => `collections/${id}`,
+    }),
+    getUsers: builder.query<IUsersPage, IFilter>({
+      query: (params) => {
+        const filter = queryString.stringify(params, {
+          skipNull: true,
+          skipEmptyString: true,
+        });
+        return `users?${filter.toString()}`;
+      },
+    }),
+    getUserNetworks: builder.query<
+      IUsersPage,
+      { address: string; type: string; pageNumber: number; pageSize: number }
+    >({
+      query: ({ address, type }) => `users/network/${address}?type=${type}`,
     }),
   }),
 });
@@ -63,4 +123,11 @@ export const {
   useCreateNFTMutation,
   useGetNFTQuery,
   useGetAssetsQuery,
+  useGetUserDetailsQuery,
+  useGetProvenanceQuery,
+  useGetBidsQuery,
+  useGetCollectionsQuery,
+  useGetCollectionDetailsQuery,
+  useGetUsersQuery,
+  useGetUserNetworksQuery,
 } = webApi;

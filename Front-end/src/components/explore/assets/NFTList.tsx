@@ -9,6 +9,7 @@ import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { NFT } from "@/types";
 import Pagination from "@/components/common/Pagination";
+import { FILTER } from "@/data";
 type Props = {};
 
 const NFTList = (props: Props) => {
@@ -17,9 +18,16 @@ const NFTList = (props: Props) => {
   const [total, setTotal] = useState(0);
   const [size, setSize] = useState(12);
   const { data, isFetching, isError } = useGetAssetsQuery({
-    filter: params.toString(),
-    page: page,
-    size: size,
+    search: params.get(FILTER.SEARCH) as string,
+    category: params.get(FILTER.CATEGORY) as string,
+    min_price: params.get(FILTER.MIN_PRICE) as string,
+    max_price: params.get(FILTER.MAX_PRICE) as string,
+    sale_type: params.get(FILTER.SALE) as string,
+    sort_by: params.get(FILTER.SORT_BY) as string,
+    collection: params.get(FILTER.COLLECTION) as string,
+    creator: params.get(FILTER.CREATOR) as string,
+    pageNumber: page,
+    pageSize: size,
   });
   const [assets, setAssets] = useState<NFT[]>(assetsData);
   useEffect(() => {
@@ -33,7 +41,7 @@ const NFTList = (props: Props) => {
       <div className="grid grid-cols-12 items-center justify-center gap-5">
         {isFetching ? (
           <AssetsShimmers elements={size} />
-        ) : isError ? (
+        ) : false ? (
           <Error />
         ) : assets && assets.length > 0 ? (
           <>
