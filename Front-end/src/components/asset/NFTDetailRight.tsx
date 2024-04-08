@@ -9,12 +9,7 @@ import {
 import Link from "next/link";
 import CountDown from "count-down-react";
 import { Button } from "../ui/button";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+
 import { ContractWriteContext } from "@/context/ContractWrite";
 import {
   Dialog,
@@ -24,15 +19,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { bids, nft_detail, offers } from "@/data";
+import { nft_detail } from "@/data";
 import { Avatar } from "../common/Avatar";
 import { Routes } from "@/routes";
 import { useContext, useEffect, useState } from "react";
@@ -58,18 +45,19 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { MdWallet } from "react-icons/md";
 import { useAccount, useBalance } from "wagmi";
-import { useGetNFTQuery } from "@/store/api";
-import { assets } from "@/utils";
 import { BiTransferAlt } from "react-icons/bi";
 import { MdDelete } from "react-icons/md";
 import { FaDollarSign } from "react-icons/fa6";
+import NFTRightShimmer from "../common/shimmers/NFTRightShimmer";
+import { NFT } from "@/types";
+import NFTBids from "./NFTBids";
 
 type Props = {
-  id: string;
+  asset?: NFT;
+  isLoading?: boolean;
 };
 
-const NFTDetailRight = ({ id }: Props) => {
-  const { data } = useGetNFTQuery(id);
+const NFTDetailRight = ({ asset, isLoading }: Props) => {
   const [auction, setAuction] = useState(false);
   const {
     isLoading: writing,
@@ -110,110 +98,108 @@ const NFTDetailRight = ({ id }: Props) => {
       </div>
     );
   };
-  const asset = data
-    ? data
-    : assets.find((asset) => asset.tokenId?.toString() === id);
+
   useEffect(() => {
-    if (data) {
-      setAuction(data.auction?.auctionId !== 0);
+    if (asset) {
+      setAuction(asset.auction?.auctionId !== 0);
     } else {
       setAuction(true);
     }
-  }, [data]);
+  }, [asset]);
   return (
-    <div className="flex-1 p-3">
-      <div className="flex flex-col gap-10">
-        <div className="flex justify-between items-start p-5">
-          <TypographyH2 className="capitalize" text={asset?.name} />
-          <Menu />
-        </div>
-        <div className="flex flex-wrap items-center lg:divide-x-2">
-          <Link
-            href={`${Routes.USER}/${asset?.creator?.address}`}
-            className="flex flex-1 items-center gap-3 p-5"
-          >
-            <Avatar className="h-12 w-12" src={asset?.creator?.avatar} />
-            <div className="flex flex-col">
-              <TypographySmall text="Creator" />
-              <TypographyH4 text={asset?.creator?.address.slice(2, 8)} />
+    <>
+      {isLoading ? (
+        <NFTRightShimmer />
+      ) : (
+        <div className="flex-1 p-3">
+          <div className="flex flex-col gap-10">
+            <div className="flex justify-between items-start p-5">
+              <TypographyH2 className="capitalize" text={asset?.name} />
+              <Menu />
             </div>
-          </Link>
-          <Link
-            href={`${Routes.USER}/${asset?.owner?.address}`}
-            className="flex flex-1 items-center gap-3 p-5"
-          >
-            <Avatar className="h-12 w-12" src={asset?.owner?.avatar} />
-            <div className="flex flex-col">
-              <TypographySmall text="Owner" />
-              <TypographyH4 text={asset?.owner?.address.slice(2, 8)} />
+            <div className="flex flex-wrap items-center lg:divide-x-2">
+              <Link
+                href={`${Routes.USER}/${asset?.creator?.address}`}
+                className="flex flex-1 items-center gap-3 p-5"
+              >
+                <Avatar className="h-12 w-12" src={asset?.creator?.avatar} />
+                <div className="flex flex-col">
+                  <TypographySmall text="Creator" />
+                  <TypographyH4 text={asset?.creator?.address.slice(2, 8)} />
+                </div>
+              </Link>
+              <Link
+                href={`${Routes.USER}/${asset?.owner?.address}`}
+                className="flex flex-1 items-center gap-3 p-5"
+              >
+                <Avatar className="h-12 w-12" src={asset?.owner?.avatar} />
+                <div className="flex flex-col">
+                  <TypographySmall text="Owner" />
+                  <TypographyH4 text={asset?.owner?.address.slice(2, 8)} />
+                </div>
+              </Link>
+              <Link
+                href={`${Routes.COLLECTION}/${asset?.collection?.id}`}
+                className="flex flex-1 items-center gap-3 p-5"
+              >
+                <Avatar
+                  className="h-12 w-12"
+                  src={
+                    asset?.collection?.avatar || "/collection/collection.png"
+                  }
+                />
+                <div className="flex flex-col truncate">
+                  <TypographySmall text="Collection" />
+                  <TypographyH4 text={asset?.collection?.name} />
+                </div>
+              </Link>
             </div>
-          </Link>
-          <Link
-            href={`${Routes.COLLECTION}/${asset?.collection?.id}`}
-            className="flex flex-1 items-center gap-3 p-5"
-          >
-            <Avatar
-              className="h-12 w-12"
-              src={asset?.collection?.avatar || "/collection/collection.png"}
-            />
-            <div className="flex flex-col truncate">
-              <TypographySmall text="Collection" />
-              <TypographyH4 text={asset?.collection?.name} />
-            </div>
-          </Link>
-        </div>
-        <div className="flex flex-col gap-5 ">
-          {auction && (
-            <div className="flex flex-col gap-5 border-b p-5">
-              <TypographyH2 text="Auction Ends in:" />
-              <TypographyH3
-                className="text-primary/60"
-                text={
-                  <CountDown
-                    date={
-                      new Date(
-                        asset?.auction?.auction_end ||
-                          nft_detail.auction.auctionEnd,
-                      )
+            <div className="flex flex-col gap-5 ">
+              {auction && (
+                <div className="flex flex-col gap-5 border-b p-5">
+                  <TypographyH2 text="Auction Ends in:" />
+                  <TypographyH3
+                    className="text-primary/60"
+                    text={
+                      <CountDown
+                        date={
+                          new Date(
+                            asset?.auction?.auction_end ||
+                              nft_detail.auction.auctionEnd,
+                          )
+                        }
+                        renderer={onRender}
+                      />
                     }
-                    renderer={onRender}
                   />
-                }
-              />
-            </div>
-          )}
-          <div className="flex flex-col gap-10 p-5">
-            <div>
-              <TypographyP text="Current Price" />
-              <div className="flex gap-2 items-end">
-                <TypographyH2 text={`${asset?.price || 0.394} ETH`} />
-                <TypographyP className="text-primary/60" text={`$${807.07}`} />
+                </div>
+              )}
+              <div className="flex flex-col gap-10 p-5">
+                <div>
+                  <TypographyP text="Current Price" />
+                  <div className="flex gap-2 items-end">
+                    <TypographyH2 text={`${asset?.price || 0.394} ETH`} />
+                    <TypographyP
+                      className="text-primary/60"
+                      text={`$${807.07}`}
+                    />
+                  </div>
+                </div>
+                {auction ? (
+                  <BidModal auctionId={asset?.auction?.auctionId as number} />
+                ) : (
+                  <SaleModal
+                    tokenId={asset?.tokenId as number}
+                    price={asset?.price as string}
+                  />
+                )}
               </div>
             </div>
-            {auction ? (
-              <BidModal auctionId={asset?.auction?.auctionId as number} />
-            ) : (
-              <SaleModal
-                tokenId={asset?.tokenId as number}
-                price={asset?.price as string}
-              />
-            )}
+            {auction && <NFTBids />}
           </div>
         </div>
-        {auction && (
-          <Accordion type="single" collapsible defaultValue="item-1">
-            <AccordionItem value="item-2">
-              <AccordionTrigger className="bg-accent text-accent-foreground px-5 rounded-t-md">
-                Bids
-              </AccordionTrigger>
-              <AccordionContent className="">
-                <BidsTable />
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
-        )}
-      </div>
-    </div>
+      )}
+    </>
   );
 };
 
@@ -246,60 +232,6 @@ const Menu = (props: MenuProps) => {
     </DropdownMenu>
   );
 };
-
-export function OffersTable() {
-  return (
-    <Table className="border">
-      <TableHeader>
-        <TableRow>
-          <TableHead>Price</TableHead>
-          <TableHead>USD Price</TableHead>
-          <TableHead>From</TableHead>
-          <TableHead>Date</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {offers.map((offer, index) => (
-          <TableRow key={index}>
-            <TableCell className="font-medium">{`${offer.price} WETH`}</TableCell>
-            <TableCell>{`$${offer.usd_price}`}</TableCell>
-            <TableCell>
-              <Link href={""}>{offer.from}</Link>
-            </TableCell>
-            <TableCell>{offer.date}</TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
-  );
-}
-
-export function BidsTable() {
-  return (
-    <Table className="border">
-      <TableHeader>
-        <TableRow>
-          <TableHead>Bid</TableHead>
-          <TableHead>Bid in USD</TableHead>
-          <TableHead>From</TableHead>
-          <TableHead>Date</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {bids.map((bid, index) => (
-          <TableRow key={index}>
-            <TableCell className="font-medium">{`${bid.bid_price} WETH`}</TableCell>
-            <TableCell>{`$${bid.bid_usd_price}`}</TableCell>
-            <TableCell>
-              <Link href={""}>{bid.from}</Link>
-            </TableCell>
-            <TableCell>{bid.date}</TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
-  );
-}
 
 const initialState = {
   price: 0.0,
