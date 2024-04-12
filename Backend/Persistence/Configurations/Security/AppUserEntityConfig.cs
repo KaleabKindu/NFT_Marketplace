@@ -24,13 +24,21 @@ public class AppUserConfiguration : IEntityTypeConfiguration<AppUser>
 		{
 			Id ="6f09dad5-2268-4410-b755-cf7859927f6g",
 			Address = "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC",
-            Nonce="ff528136-2f06-41e6-b417-fdd116d36446",
-            ProfileId = 2
+            Nonce="ff528136-2f06-41e6-b417-fdd116d36446"
+		};
+
+		var trader2 = new AppUser()
+		{
+			Id = "c0c13752-c7ee-47c8-ae52-b26c73f259ee",
+			UserName = "tedblackson",
+			Address = "0x68D4615BF34060Eab52106ad82516aD37eBC558d",
+			Nonce = "cc087913-7f8b-4794-aa74-1b04442506a8"
 		};
 
 		builder.HasData(
 			admin,
 			trader1,
+			trader2,
 			new AppUser
             {
                 Id = "123e4567-e89b-12d3-a456-426614174000",

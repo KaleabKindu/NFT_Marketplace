@@ -2,6 +2,7 @@ using System.Text.Json.Serialization;
 using Domain.Auctions;
 using Domain.Bids;
 using Domain.Collections;
+using Domain.Transactions;
 
 namespace Domain.Assets
 {
@@ -27,6 +28,7 @@ namespace Domain.Assets
         public List<Bid> Bids { get; set; }
         public int Likes { get; set; }
         public string TransactionHash { get; set; }
+        public List<Transaction> Transactions { get; set; }
         public AssetStatus Status { get; set; }
     }
 
