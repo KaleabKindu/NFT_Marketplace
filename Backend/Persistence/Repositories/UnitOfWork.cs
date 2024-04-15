@@ -17,7 +17,6 @@ namespace Persistence.Repositories
         private IAssetRepository _assetRepository;
         private IUserRepository _userRepository;
         private IBidRepository _bidRepository;
-        private ITransactionRepository _transactionRepository;
         private IAuctionRepository _AuctionRepository;
         private ICollectionRepository _CollectionRepository;
         private IProvenanceRepository _ProvenanceRepository;
@@ -45,14 +44,6 @@ namespace Persistence.Repositories
                     _bidRepository = new BidRepository(_dbContext,_mapper);
 
                 return _bidRepository;
-            }
-        }
-
-        public ITransactionRepository TransactionRepository
-        {
-            get {
-                _transactionRepository ??= new TransactionRepository(_dbContext);
-                return _transactionRepository;
             }
         }
 

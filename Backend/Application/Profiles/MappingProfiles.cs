@@ -5,8 +5,6 @@ using Domain;
 using Application.Features.Auth.Dtos;
 using Domain.Bids;
 using Domain.Assets;
-using Domain.Transactions;
-using Application.Features.Transactions.Dtos;
 using Domain.Auctions;
 using Application.Features.Auctions.Dtos;
 using Domain.Collections;
@@ -59,12 +57,6 @@ namespace Application.Profiles
             CreateMap<Asset, UpdateAssetDto>().ReverseMap();
             CreateMap<Asset, CreateAssetDto>().ReverseMap();
             #endregion Assets
-
-            #region Transaction
-            CreateMap<Transaction, TransactionDto>()
-                    .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.Type.ToString())); 
-            #endregion Transaction
-
 
             #region Auction
 
