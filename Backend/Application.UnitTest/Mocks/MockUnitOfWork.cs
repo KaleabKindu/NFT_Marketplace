@@ -9,9 +9,6 @@ namespace Application.UnitTest.Mocks
         {
             var mockUow = new Mock<IUnitOfWork>();
             var mockUserManager = MockUserManager.GetUserManager();
-            var mockOfferRepository = MockOfferRepository.GetOfferRepository();
-            // mockUow.Setup(m => m.UserManager).Returns(mockUserManager.Object);
-            mockUow.Setup(m =>m.OfferRepository).Returns(mockOfferRepository.Object);
 
             mockUow.Setup(r => r.SaveAsync()).ReturnsAsync(1);
 

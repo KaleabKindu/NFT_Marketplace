@@ -11,6 +11,7 @@ namespace Domain.Collections
         public string Avatar { get; set; }
         public string Category { get; set; }
         public AppUser Creator { get; set; }
+        public string CreatorId { get; set; }
         public double Volume { get; set; }
         public long Items { get; set; }
         public double FloorPrice { get; set; }

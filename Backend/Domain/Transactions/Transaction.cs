@@ -20,8 +20,11 @@ namespace Domain.Transactions
     {
         public TransactionType Type { get; set; }
         public AppUser Buyer { get; set; }
+        public string BuyerId { get; set; }
         public AppUser Seller { get; set; }
+        public string SellerId { get; set; }
         public Asset Asset { get; set; }
+        public long AssetId { get; set; }
         public double Amount { get; set; }
         public TransactionStatus Status { get; set; } = TransactionStatus.Pending;
         public string BlockchainTxHash { get; set; }

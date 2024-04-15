@@ -14,10 +14,13 @@ namespace Domain.Assets
         public string? Video { get; set; }
         public string? Audio { get; set; }
         public AppUser Owner { get; set; }
+        public string OwnerId { get; set; }
         public AppUser Creator { get; set; }
+        public string CreatorId { get; set; }
         public AssetCategory Category { get; set; }
         public double Price { get; set; }
-        public Auction Auction { get; set; }
+        public Auction? Auction { get; set; }
+        public long? AuctionId { get; set; }
         public Collection? Collection { get; set; }
         public long? CollectionId { get; set; }
         public float Royalty { get; set; }
