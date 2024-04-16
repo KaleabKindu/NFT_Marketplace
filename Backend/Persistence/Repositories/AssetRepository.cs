@@ -197,5 +197,17 @@ namespace Persistence.Repositories
             
             return Unit.Value;
         }
+
+        public async Task<IEnumerable<Asset>> GetByAssetAsync(AssetCategory? category)
+        {
+            IQueryable<Asset> assets = _context.Assets;
+
+            if (category.HasValue)
+            {
+                assets = assets.Where(asset => asset.Category == category);
+            }
+
+            return await assets.ToListAsync();
+        }
     }
 }
