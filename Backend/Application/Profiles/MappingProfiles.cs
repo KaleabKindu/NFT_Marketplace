@@ -20,10 +20,14 @@ namespace Application.Profiles
         {
             #region AppUser 
             CreateMap<AppUser, UserDto>().ReverseMap();
-            CreateMap<AppUser, UserFetchDto>().ReverseMap();
-            CreateMap<AppUser, UserProfile>()
-            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id));
-            CreateMap<AppUser, UserListDto>();
+            CreateMap<AppUser, UserFetchDto>()
+                .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.Profile.UserName))
+                .ForMember(dest => dest.Avatar, opt => opt.MapFrom(src => src.Profile.Avatar));
+
+            CreateMap<AppUser, UserListDto>()
+                .ForMember(dest => dest.Background, opt => opt.MapFrom(src => src.Profile.ProfileBackgroundImage))
+                .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.Profile.UserName))
+                .ForMember(dest => dest.Avatar, opt => opt.MapFrom(src => src.Profile.Avatar));
 
             #endregion
         
