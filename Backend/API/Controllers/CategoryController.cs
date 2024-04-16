@@ -12,7 +12,6 @@ namespace API.Controllers
         public CategoriesController(IUserAccessor userAccessor) : base(userAccessor)
         {
         }
-
         [HttpPost]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateCategory([FromBody] CreateCategoryDto categoryDto)
