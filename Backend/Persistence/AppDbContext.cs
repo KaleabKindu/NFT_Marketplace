@@ -2,11 +2,8 @@
 using Domain.Assets;
 using Domain.Auctions;
 using Domain.Bids;
-using Domain.Categories;
 using Domain.Collections;
-using Domain.Offers;
 using Domain.Provenances;
-using Domain.Transactions;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -54,11 +51,8 @@ namespace Persistence
             base.OnModelCreating(modelBuilder);
         }
 
-        public DbSet<Offer> Offers { get; set; }
-        public DbSet<Category> Category { get; set; }
         public DbSet<Bid> Bids { get; set; }
         public DbSet<Asset> Assets{ get; set; }
-        public DbSet<Transaction> Transactions { get; set; }
         public DbSet<Auction> Auctions { get; set; }
         public DbSet<Collection> Collections { get; set; }
         public DbSet<Like> Likes { get; set; }

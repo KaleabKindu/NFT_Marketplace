@@ -7,7 +7,6 @@ using Application.Features.Busy.Dtos;
 using Application.Common.Errors;
 using Application.Common.Exceptions;
 using Domain.Provenances;
-using Domain.Transactions;
 
 namespace Application.Features.Buys.Commands
 {
@@ -43,16 +42,6 @@ namespace Application.Features.Buys.Commands
 
             asset.Owner = user;
         
-            var transaction  = new Transaction()
-            {
-                Type = TransactionType.Sell,
-                Asset = asset,
-                Buyer = user,
-                Seller = asset.Owner,
-                Amount = request.BuyAsset.Price,
-                BlockchainTxHash = request.BuyAsset.Hash
-            };
-            
             var provenance = new Provenance
             {
                 Event = Event.Sale,
@@ -63,10 +52,7 @@ namespace Application.Features.Buys.Commands
             };
 
             await _unitOfWork.ProvenanceRepository.AddAsync(provenance);
-            
-            
-            await _unitOfWork.TransactionRepository.AddAsync(transaction);
-    
+                
             if (await _unitOfWork.SaveAsync() == 0) 
                 throw new DbAccessException("Unable to save to database");
             

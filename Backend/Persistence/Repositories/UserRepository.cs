@@ -16,6 +16,7 @@ namespace Persistence.Repositories
 {
     public class UserRepository : IUserRepository
     {
+        private readonly DbContext _dbContext;
         private readonly UserManager<AppUser> _userManager;
         private readonly IJwtService _jwtService;
         private readonly IEthereumCryptoService _ethereumService;
@@ -24,14 +25,14 @@ namespace Persistence.Repositories
         public UserRepository(
             UserManager<AppUser> userManager,
             IJwtService jwtService,
-            IEthereumCryptoService ethereumService)
+            IEthereumCryptoService ethereumService
+        )
         {
             _userManager = userManager;
             _jwtService = jwtService;
             _ethereumService = ethereumService;
         }
 
-        // Create
         public async Task<AppUser> CreateOrFetchUserAsync(string address)
         {
             var existing_user = await _userManager.Users.FirstOrDefaultAsync(u => u.Address == address);
@@ -43,6 +44,7 @@ namespace Persistence.Repositories
                 UserName = _faker.Internet.UserName(),
                 Address = address,
                 Nonce = Guid.NewGuid().ToString(),
+                Profile = new UserProfile() { UserName = _faker.Internet.UserName() }
             };
 
             var result = await _userManager.CreateAsync(user);
@@ -53,11 +55,8 @@ namespace Persistence.Repositories
             }
 
             return user;
-        }
+        }        
 
-        
-
-        // Read
         public async Task<List<AppRole>> GetUserRolesAsync(AppUser user)
         {
             return (await _userManager.GetRolesAsync(user)).Select(role => new AppRole { Name = role }).ToList();
@@ -65,7 +64,11 @@ namespace Persistence.Repositories
 
         public async Task<PaginatedResponse<AppUser>> GetAllUsersAsync(int pageNumber = 1, int pageSize = 10)
         {
-            var users = await _userManager.Users.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+            var users = await _userManager.Users
+                .Include(user => user.Profile)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
             return new PaginatedResponse<AppUser>
             {
                 Value = users,
@@ -75,7 +78,6 @@ namespace Persistence.Repositories
             };
         }
 
-        // Delete
         public async Task DeleteUserAsync(string address)
         {
             var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Address == address);
@@ -89,7 +91,6 @@ namespace Persistence.Repositories
             }
         }
 
-        // Other
         public async Task<bool> AddressExists(string address)
         {
             return await _userManager.Users.AnyAsync(u => u.Address == address);
@@ -131,10 +132,10 @@ namespace Persistence.Repositories
 
         public async  Task<AppUser> GetUserByAddress(string address)
         {
-            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Address == address);
-            return user;
-
-            
+            var user = await _userManager.Users
+                .Include(user => user.Profile)
+                .FirstOrDefaultAsync(u => u.Address == address);
+            return user;            
         }
     }
 }

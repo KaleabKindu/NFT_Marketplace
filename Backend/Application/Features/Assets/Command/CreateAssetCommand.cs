@@ -7,7 +7,6 @@ using AutoMapper;
 using Domain.Assets;
 using Domain.Auctions;
 using Domain.Provenances;
-using Domain.Transactions;
 using ErrorOr;
 using MediatR;
 
@@ -68,17 +67,6 @@ namespace Application.Features.Assets.Command
             await _unitOfWork.ProvenanceRepository.AddAsync(provenance);
 
             await _unitOfWork.AssetRepository.AddAsync(asset);
-
-            await _unitOfWork.TransactionRepository.AddAsync(new Transaction
-            {
-                Asset = asset,
-                Buyer = null,
-                Seller = null,
-                Amount = request.CreateAssetDto.Price,
-                Type = TransactionType.Mint,
-                BlockchainTxHash = request.CreateAssetDto.TransactionHash,
-                Status = TransactionStatus.Completed
-            });
 
             if (await _unitOfWork.SaveAsync() == 0)
                 throw new DbAccessException("Database Error: Unable To Save");

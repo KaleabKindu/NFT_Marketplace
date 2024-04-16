@@ -17,9 +17,6 @@ namespace Persistence.Repositories
         private IAssetRepository _assetRepository;
         private IUserRepository _userRepository;
         private IBidRepository _bidRepository;
-        private IOfferRepository _offerRepository;
-        private ICategoryRepository _CategoryRepository;
-        private ITransactionRepository _transactionRepository;
         private IAuctionRepository _AuctionRepository;
         private ICollectionRepository _CollectionRepository;
         private IProvenanceRepository _ProvenanceRepository;
@@ -47,30 +44,6 @@ namespace Persistence.Repositories
                     _bidRepository = new BidRepository(_dbContext,_mapper);
 
                 return _bidRepository;
-            }
-        }
-
-        public IOfferRepository OfferRepository
-        {
-            get {                
-                _offerRepository ??= new OfferRepository(_dbContext);
-                return _offerRepository;
-            }
-        }
-
-        public ICategoryRepository CategoryRepository
-        {
-            get {                
-                _CategoryRepository ??= new CategoryRepository(_dbContext);
-                return _CategoryRepository;
-            }
-        }
-
-        public ITransactionRepository TransactionRepository
-        {
-            get {
-                _transactionRepository ??= new TransactionRepository(_dbContext);
-                return _transactionRepository;
             }
         }
 

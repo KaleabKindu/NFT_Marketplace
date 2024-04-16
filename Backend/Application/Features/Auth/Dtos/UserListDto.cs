@@ -8,7 +8,4 @@ public class UserListDto
     public string Address { get; set; }
     public string Sales { get; set; } = "34eth";
     public Boolean Following { get; set; } = true;
-
-
-
 }

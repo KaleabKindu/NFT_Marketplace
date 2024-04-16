@@ -1,7 +1,3 @@
-using System;
-using Domain;
-using Domain.Categories;
-
 namespace Application.Features.Assets.Dtos
 {
     public class AssetDto
