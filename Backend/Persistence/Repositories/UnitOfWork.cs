@@ -1,21 +1,30 @@
-﻿using Domain;
+﻿using Application.Contracts.Persistance;
+using Application.Contracts.Presistence;
+using Domain;
 using Microsoft.AspNetCore.Identity;
 using Application.Contracts.Services;
-using Application.Contracts.Persistance;
+using Application.Contracts.Persistence;
+using AutoMapper;
 
 namespace Persistence.Repositories
 {
     public class UnitOfWork : IUnitOfWork
     {
         private readonly AppDbContext _dbContext;
+        private readonly IMapper _mapper;
+        private readonly IServiceProvider _services;
+        private UserManager<AppUser> _usermanager;
+        private IAssetRepository _assetRepository;
         private IUserRepository _userRepository;
         private IBidRepository _bidRepository;
-        private IOfferRepository _offerRepository;
-        private ICategoryRepository _CategoryRepository;
+        private IAuctionRepository _AuctionRepository;
+        private ICollectionRepository _CollectionRepository;
+        private IProvenanceRepository _ProvenanceRepository;
 
-        public UnitOfWork(AppDbContext dbContext, UserManager<AppUser> userManager, IJwtService jwtService, IEthereumCryptoService ethereumCryptoService)
+        public UnitOfWork(AppDbContext dbContext, UserManager<AppUser> userManager, IJwtService jwtService, IEthereumCryptoService ethereumCryptoService,IMapper mapper)
         {
             _dbContext = dbContext;
+            _mapper = mapper;
             _userRepository = new UserRepository(userManager, jwtService, ethereumCryptoService);
         }
                 
@@ -32,25 +41,43 @@ namespace Persistence.Repositories
             get
             {
                 if (_bidRepository == null)
-                    _bidRepository = new BidRepository(_dbContext);
+                    _bidRepository = new BidRepository(_dbContext,_mapper);
 
                 return _bidRepository;
             }
         }
 
-        public IOfferRepository OfferRepository
-        {
-            get {                
-                _offerRepository ??= new OfferRepository(_dbContext);
-                return _offerRepository;
+        public IAssetRepository AssetRepository {
+            get{
+                if (_assetRepository == null)
+                    _assetRepository =  new AssetRepository(_dbContext,_mapper);
+            return _assetRepository;
             }
         }
 
-        public ICategoryRepository CategoryRepository
+        public IAuctionRepository AuctionRepository{
+            get {
+                if (_AuctionRepository == null)
+                    _AuctionRepository = new AuctionRepository(_dbContext);
+                return _AuctionRepository;
+            }
+        }
+
+        public ICollectionRepository CollectionRepository{
+            get {
+                if (_CollectionRepository == null)
+                    _CollectionRepository = new CollectionRepository(_dbContext);
+                return _CollectionRepository;
+            }
+        }
+
+        public IProvenanceRepository ProvenanceRepository
         {
-            get {                
-                _CategoryRepository ??= new CategoryRepository(_dbContext);
-                return _CategoryRepository;
+            get
+            {
+                if (_ProvenanceRepository == null)
+                    _ProvenanceRepository = new ProvenanceRepository(_dbContext);
+                return _ProvenanceRepository;
             }
         }
 

@@ -30,7 +30,7 @@ namespace Application.Features.Bids.Queries
             CancellationToken cancellationToken
         )
         {
-            var Bid = await _unitOfWork.BidRepository.GetByIdAsync(query.Id);
+            var Bid = await _unitOfWork.BidRepository.GetBidByIdAsync(query.Id);
 
             if (Bid == null) return ErrorFactory.NotFound("Bid","Bid not found");
             

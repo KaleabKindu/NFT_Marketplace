@@ -11,14 +11,14 @@ export default function Home() {
   return (
     <Container>
       <div className="flex flex-col gap-8 lg:gap-16">
-        <HeroSection/>
-        <HowItWorkSection/>
-        <BrowseCategorySection/>
-        <TopCreators/>
-        <TrendingNFTSection/>
-        <TrendingCollectionsSection/>
-        <SubscribeSection/>
+        <HeroSection />
+        <HowItWorkSection />
+        <BrowseCategorySection />
+        <TopCreators />
+        <TrendingNFTSection />
+        <TrendingCollectionsSection />
+        <SubscribeSection />
       </div>
     </Container>
-  )
+  );
 }

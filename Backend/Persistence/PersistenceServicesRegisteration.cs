@@ -11,7 +11,7 @@ namespace Persistence
         public static IServiceCollection ConfigurePersistenceServices(this IServiceCollection services, IConfiguration configuration) 
         {
             services.AddDbContext<AppDbContext>(options => options.UseNpgsql(
-                configuration["PostgreSQL:ConnectionString"]));
+                configuration.GetConnectionString("AppConnectionStringRemote")));
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             return services;
         }

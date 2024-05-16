@@ -9,9 +9,9 @@ namespace API.MiddleWares
     public class ExceptionHandler
     {
 
-        public readonly RequestDelegate _next;
-        public readonly IHostEnvironment _env;
-        public readonly ILogger<ExceptionHandler> _logger;
+        private readonly RequestDelegate _next;
+        private readonly IHostEnvironment _env;
+        private readonly ILogger<ExceptionHandler> _logger;
         public static JsonSerializerOptions options = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
         private ErrorOr<Unit> response { get; set; }
    
@@ -26,7 +26,7 @@ namespace API.MiddleWares
         public async Task InvokeAsync(HttpContext context)
         {
             bool failed = false;
-            
+
             try
             {
                 await _next(context);

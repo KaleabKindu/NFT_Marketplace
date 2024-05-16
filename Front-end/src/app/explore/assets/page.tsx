@@ -1,21 +1,25 @@
-import NFTList from "@/components/explore/assets/NFTList"
-import SearchBar from "@/components/explore/assets/SearchBar"
-import Filter from "@/components/explore/assets/Filter"
-import { Metadata } from "next/types"
+import NFTList from "@/components/explore/assets/NFTList";
+import Filters from "@/components/explore/assets/Filters";
+import { Metadata } from "next/types";
+import { SearchInput } from "@/components/common/SearchFilters";
+import { MdArrowForward } from "react-icons/md";
 
-type Props = {}
+type Props = {};
 export const metadata: Metadata = {
-  title: 'Explore All NFTS | NFT Marketplace',
-}
+  title: "Explore All NFTS | NFT Marketplace",
+};
 
 const Page = (props: Props) => {
   return (
     <div className="flex flex-col gap-10">
-        <SearchBar className="mt-[10vh] w-[60%] mx-auto"/>
-        <Filter/>
-        <NFTList/>
+      <SearchInput
+        className="mt-[2vh] w-[60%] mx-auto"
+        postIcon={<MdArrowForward size={30} />}
+      />
+      <Filters />
+      <NFTList />
     </div>
-  )
-}
+  );
+};
 
-export default Page
+export default Page;

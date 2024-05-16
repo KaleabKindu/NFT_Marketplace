@@ -1,19 +1,22 @@
-import CollectionDetail from "@/components/collection/CollectionDetail"
-import SearchFilter from "@/components/collection/SearchFilter"
-import TopCollections from "@/components/collection/TopCollections"
-import CollectionNFTs from "@/components/collection/CollectionNFTs"
+import CollectionDetail from "@/components/collection/CollectionDetail";
+import Filters from "@/components/collection/Filters";
+import TopCollections from "@/components/collection/TopCollections";
+import CollectionNFTs from "@/components/collection/CollectionNFTs";
 
-type Props = {}
+type Props = {
+  params: {
+    id: string;
+  };
+};
 
-const page = (props: Props) => {
-  return ( 
+const Page = ({ params }: Props) => {
+  return (
     <div className="flex flex-col gap-10">
-        <CollectionDetail/>
-        <SearchFilter/>
-        <CollectionNFTs/>
-        <TopCollections/>
+      <CollectionDetail id={params.id} />
+      <Filters />
+      <CollectionNFTs />
     </div>
-  )
-}
+  );
+};
 
-export default page
+export default Page;

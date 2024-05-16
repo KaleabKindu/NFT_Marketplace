@@ -1,17 +1,68 @@
-import NFTCard from './NFTCard'
-
-type Props = {}
+"use client";
+import { assets as assetsData } from "@/utils";
+import NFTCard from "./NFTCard";
+import NoData from "@/components/common/NoData";
+import Error from "@/components/common/Error";
+import { useGetAssetsQuery } from "@/store/api";
+import AssetsShimmers from "@/components/common/shimmers/AssetsShimmers";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { NFT } from "@/types";
+import Pagination from "@/components/common/Pagination";
+import { FILTER } from "@/data";
+type Props = {};
 
 const NFTList = (props: Props) => {
+  const params = useSearchParams();
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(0);
+  const [size, setSize] = useState(12);
+  const { data, isFetching, isError } = useGetAssetsQuery({
+    search: params.get(FILTER.SEARCH) as string,
+    category: params.get(FILTER.CATEGORY) as string,
+    min_price: params.get(FILTER.MIN_PRICE) as string,
+    max_price: params.get(FILTER.MAX_PRICE) as string,
+    sale_type: params.get(FILTER.SALE) as string,
+    sort_by: params.get(FILTER.SORT_BY) as string,
+    collection: params.get(FILTER.COLLECTION) as string,
+    creator: params.get(FILTER.CREATOR) as string,
+    pageNumber: page,
+    pageSize: size,
+  });
+  const [assets, setAssets] = useState<NFT[]>(assetsData);
+  useEffect(() => {
+    if (data) {
+      setAssets([...assets, ...data.value]);
+      setTotal(data.count);
+    }
+  }, [data]);
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 items-center justify-center gap-5">
-      {
-        Array.from({length:12}).map((_, index) => 
-          <NFTCard key={index}/>
-        )
-      }
-    </div>
-  )
-}
+    <>
+      <div className="grid grid-cols-12 items-center justify-center gap-5">
+        {isFetching ? (
+          <AssetsShimmers elements={size} />
+        ) : false ? (
+          <Error />
+        ) : assets && assets.length > 0 ? (
+          <>
+            {assets.slice(0, size).map((asset, index) => (
+              <NFTCard key={index} asset={asset} />
+            ))}
+            <Pagination
+              total={100}
+              currentPage={page}
+              setPage={(a: number) => {
+                setPage(a);
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }}
+            />
+          </>
+        ) : (
+          <NoData message="No assets found" />
+        )}
+      </div>
+    </>
+  );
+};
 
-export default NFTList
+export default NFTList;

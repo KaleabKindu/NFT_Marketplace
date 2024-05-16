@@ -1,0 +1,38 @@
+# Define the trigger for the workflow
+
+name: backend build
+
+on:
+  push:
+    branches: [ main, prod]
+  pull_request:
+    branches: [ main ,prod]
+
+defaults:
+  run:
+    working-directory: ./Backend
+
+
+env:
+  # Set CI environment variable (global for all jobs)
+  CI: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+
+      # Build .NET application
+      - name: Use .NET 7
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 7.0.x  # Adjust .NET version as needed
+
+      - name: Restore dependencies
+        run: dotnet restore ./NFT_API.sln
+
+      - name: Build solution
+        run: dotnet build ./NFT_API.sln --configuration Release
+

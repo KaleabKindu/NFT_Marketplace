@@ -8,16 +8,18 @@ namespace Application.Contracts.Persistance;
 public interface IUserRepository
 {
     // Create
-	Task<AppUser> CreateOrFetchUserAsync(string publicAddress);
+	Task<AppUser> CreateOrFetchUserAsync(string address);
 
     // Read
 	Task<List<AppRole>> GetUserRolesAsync(AppUser user);
 	Task<PaginatedResponse<AppUser>> GetAllUsersAsync( int pageNumber = 1, int pageSize = 10);
 
     // Delete
-	Task DeleteUserAsync(string publicAddress);
+	Task DeleteUserAsync(string address);
 
     // Other
-	Task<bool> PublicAddressExists(string publicAddress);
-	Task<ErrorOr<TokenDto>> AuthenticateUserAsync(string publicAddress, string signedNonce);
+	Task<bool> AddressExists(string address);
+
+	Task<AppUser> GetUserByAddress(string address);
+	Task<ErrorOr<TokenDto>> AuthenticateUserAsync(string address, string signedNonce);
 }

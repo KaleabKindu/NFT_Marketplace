@@ -8,7 +8,7 @@ namespace Application.UnitTest.Mocks
     {
         public static  Mock<UserManager<AppUser>> GetUserManager()
         {
-            var Users = new List<AppUser> {
+            var users = new List<AppUser> {
                 new AppUser
                 {
                     Id = Guid.NewGuid().ToString(),
@@ -33,7 +33,7 @@ namespace Application.UnitTest.Mocks
             mgr.Object.PasswordValidators.Add(new PasswordValidator<AppUser>());
 
             mgr.Setup(x => x.DeleteAsync(It.IsAny<AppUser>())).ReturnsAsync(IdentityResult.Success);
-            mgr.Setup(x => x.CreateAsync(It.IsAny<AppUser>(), It.IsAny<string>())).ReturnsAsync(IdentityResult.Success).Callback<AppUser, string>((x, y) => Users.Add(x));
+            mgr.Setup(x => x.CreateAsync(It.IsAny<AppUser>(), It.IsAny<string>())).ReturnsAsync(IdentityResult.Success).Callback<AppUser, string>((x, y) => users.Add(x));
             mgr.Setup(x => x.UpdateAsync(It.IsAny<AppUser>())).ReturnsAsync(IdentityResult.Success);
 
             return mgr;

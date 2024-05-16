@@ -7,14 +7,15 @@ namespace Persistence
     {
         public AppDbContext CreateDbContext(string[] args)
         {
-            IConfigurationRoot configuration = new ConfigurationBuilder()
-                 .SetBasePath(Directory.GetCurrentDirectory())
-                 .AddJsonFile("appsettings.json")
-                 .Build();
+ 
+            var configuration = new ConfigurationBuilder()
+              .AddEnvironmentVariables("NFT_MARKET_")
+              .Build();
 
             var builder = new DbContextOptionsBuilder<AppDbContext>();
-            var connectionString = configuration.GetConnectionString("AppConnectionString");
+            string connectionString = configuration.GetConnectionString("AppConnectionStringRemote");
             builder.UseNpgsql(connectionString);
+
             return new AppDbContext(builder.Options);
         }
     }

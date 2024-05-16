@@ -456,3 +456,6 @@ $RECYCLE.BIN/
 
 ## Migrations
 */Migrations/*
+
+# Docker build
+out/

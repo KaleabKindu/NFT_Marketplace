@@ -2,6 +2,7 @@
 {
     public interface IUserAccessor
     {
-        public string GetPublicAddress();
+        public string GetAddress();
+        public string GetUserId();
     }
 }

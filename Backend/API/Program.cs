@@ -3,8 +3,13 @@ using Persistence;
 using Infrastructure;
 using API.MiddleWares;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json.Converters;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Configuration.AddEnvironmentVariables("NFT_MARKET_");
+
+//NFT_MARKET_ConnectionStrings__AppConnectionString
 
 // Add services to the container.
 builder.Services.ConfigureApplicationServices();
@@ -12,7 +17,11 @@ builder.Services.ConfigurePersistenceServices(builder.Configuration);
 builder.Services.ConfigureInfrastructureServices(builder.Configuration);
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
 
-builder.Services.AddControllers();
+builder.Services.AddSwaggerGenNewtonsoftSupport(); 
+builder.Services.AddControllers().AddNewtonsoftJson(opts =>
+{
+    opts.SerializerSettings.Converters.Add(new StringEnumConverter());
+});
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c => {
@@ -55,6 +64,8 @@ builder.Services.AddSwaggerGen(c => {
     });
 
 });
+
+
 
 builder.Services.AddCors(o =>
 {
