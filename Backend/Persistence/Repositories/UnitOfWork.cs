@@ -25,7 +25,7 @@ namespace Persistence.Repositories
         {
             _dbContext = dbContext;
             _mapper = mapper;
-            _userRepository = new UserRepository(userManager, jwtService, ethereumCryptoService);
+            _userRepository = new UserRepository(_dbContext, userManager, jwtService, ethereumCryptoService);
         }
                 
         public IUserRepository UserRepository 

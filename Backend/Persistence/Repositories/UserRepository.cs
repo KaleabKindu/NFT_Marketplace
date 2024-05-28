@@ -16,18 +16,19 @@ namespace Persistence.Repositories
 {
     public class UserRepository : IUserRepository
     {
-        private readonly DbContext _dbContext;
+        private readonly AppDbContext _dbContext;
         private readonly UserManager<AppUser> _userManager;
         private readonly IJwtService _jwtService;
         private readonly IEthereumCryptoService _ethereumService;
         private static readonly Faker _faker = new();
 
         public UserRepository(
+            AppDbContext dbContext,
             UserManager<AppUser> userManager,
             IJwtService jwtService,
-            IEthereumCryptoService ethereumService
-        )
+            IEthereumCryptoService ethereumService)
         {
+            _dbContext = dbContext;
             _userManager = userManager;
             _jwtService = jwtService;
             _ethereumService = ethereumService;
@@ -35,7 +36,7 @@ namespace Persistence.Repositories
 
         public async Task<AppUser> CreateOrFetchUserAsync(string address)
         {
-            var existing_user = await _userManager.Users.FirstOrDefaultAsync(u => u.Address == address);
+            var existing_user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Address == address);
             if (existing_user != null)
                 return existing_user;
                 
@@ -101,28 +102,28 @@ namespace Persistence.Repositories
             var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Address == address);
             if (user == null)
             {
-                return ErrorFactory.NotFound("User", $"User with public address `{address}` not found"); 
+                return ErrorFactory.NotFound("User", $"User with public address `{address}` not found");
             }
-
-            var roles = await _userManager.GetRolesAsync(user);
 
             bool isSignatureValid = _ethereumService.VerifyMessage(user.Nonce, signedNonce, address);
 
             if (!isSignatureValid)
             {
-                await _userManager.DeleteAsync(user);
-                return ErrorFactory.BadRequestError("User", "Invalid signed message"); 
+                return ErrorFactory.BadRequestError("User", "Invalid signed message");
             }
 
+            var roles = await _userManager.GetRolesAsync(user);
             user.Nonce = Guid.NewGuid().ToString();
-            var updateResult = await _userManager.UpdateAsync(user);
-            if (!updateResult.Succeeded)
+
+            _dbContext.Entry(user).State = EntityState.Modified;
+
+            var UpdateResult = await _dbContext.SaveChangesAsync();
+            if(UpdateResult == 0)
             {
-                throw new DbAccessException("Unable to update user nonce");
+                throw new DbAccessException($"Unable to update user nonce");
             }
 
             var tokenInfo = _jwtService.GenerateToken(user, roles);
-
             return new TokenDto
             {
                 AccessToken = tokenInfo.Item1,

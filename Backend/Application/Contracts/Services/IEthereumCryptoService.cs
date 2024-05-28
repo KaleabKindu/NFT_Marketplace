@@ -1,7 +1,3 @@
-using System.Text;
-using Nethereum.Signer;
-using Nethereum.Util;
-
 namespace Application.Contracts.Services;
 
 public interface IEthereumCryptoService
