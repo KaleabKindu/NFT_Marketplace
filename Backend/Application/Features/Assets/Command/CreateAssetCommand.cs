@@ -15,9 +15,9 @@ namespace Application.Features.Assets.Command
     public class CreateAssetCommand : IRequest<ErrorOr<BaseResponse<long>>>
     {
         public CreateAssetDto CreateAssetDto { get; set; }
-        public string Address {get; set;}
+        public string Address { get; set; }
 
-        
+
     }
 
     public class CreateAssetCommandHandler : IRequestHandler<CreateAssetCommand, ErrorOr<BaseResponse<long>>>
@@ -44,17 +44,21 @@ namespace Application.Features.Assets.Command
             var asset = _mapper.Map<Asset>(request.CreateAssetDto);
             asset.Creator = user;
             asset.Owner = user;
-            var auction = new Auction{
-                AuctionId = request.CreateAssetDto.Auction.AuctionId,
-                TokenId = request.CreateAssetDto.TokenId,
-                Seller = user,
-                FloorPrice = request.CreateAssetDto.Price,
-                AuctionEnd = request.CreateAssetDto.Auction.AuctionEnd,
-                HighestBid = request.CreateAssetDto.Price,
-                
-            };
 
-            asset.Auction = auction;
+            if (request.CreateAssetDto.Auction != null)
+            {
+                var auction = new Auction
+                {
+                    AuctionId = request.CreateAssetDto.Auction.AuctionId,
+                    TokenId = request.CreateAssetDto.TokenId,
+                    Seller = user,
+                    FloorPrice = request.CreateAssetDto.Price,
+                    AuctionEnd = request.CreateAssetDto.Auction.AuctionEnd,
+                    HighestBid = request.CreateAssetDto.Price,
+                };
+
+                asset.Auction = auction;
+            }
 
             var provenance = new Provenance
             {
@@ -78,5 +82,5 @@ namespace Application.Features.Assets.Command
         }
     }
 
-    
+
 }

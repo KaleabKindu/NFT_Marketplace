@@ -1,4 +1,5 @@
 using System.Text;
+using Nethereum.Hex.HexConvertors.Extensions;
 using Nethereum.Signer;
 using Nethereum.Util;
 using Nethereum.Web3;
@@ -20,7 +21,7 @@ public class EthereumCryptoService: IEthereumCryptoService
         bool valid;
         try{
             var signatureECDS = EthECDSASignatureFactory.ExtractECDSASignature(signature);
-            byte[] messageHash = _keccackHasher.CalculateHash(Encoding.UTF8.GetBytes(message));
+            byte[] messageHash = _keccackHasher.CalculateHash(message.HexToByteArray());
 
             var ethEcKey = EthECKey.RecoverFromSignature(signatureECDS, messageHash);
             valid = ethEcKey.Verify(messageHash, signatureECDS);
