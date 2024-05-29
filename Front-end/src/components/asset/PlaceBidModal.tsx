@@ -26,35 +26,36 @@ import { Input } from "@/components/ui/input";
 import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { MdWallet } from "react-icons/md";
+import { useAccount, useBalance } from "wagmi";
 import useContractWriteMutation from "@/hooks/useContractWriteMutation";
-import { BiTransferAlt } from "react-icons/bi";
+
 const initialState = {
-  address: "",
+  price: 0.0,
 };
 const schema = z.object({
-  address: z.string(),
+  price: z.number().nonnegative(),
 });
 
-type TransferModalProps = {
-  tokenId: number;
+type PlaceBidModalProps = {
+  auctionId: number;
 };
-export const TransferModal = ({ tokenId }: TransferModalProps) => {
+export const PlaceBidModal = ({ auctionId }: PlaceBidModalProps) => {
   const [open, setOpen] = useState(false);
+  const { address } = useAccount();
+  const { data: balance } = useBalance({ address: address });
   const {
     isLoading,
-    waitingForTransaction,
-    transactionSuccess,
-    writing,
     writeSuccess,
     contractWrite,
   } = useContractWriteMutation();
-  const form = useForm<{ address: string }>({
+  const form = useForm<{ price: number }>({
     resolver: zodResolver(schema),
     defaultValues: initialState,
   });
   const handleClose = () => setOpen(false);
-  const onSubmit = (values: { address: string }) => {
-    contractWrite("transferAsset", undefined, [tokenId, values.address]);
+  const onSubmit = (values: { price: number }) => {
+    contractWrite("placeBid", values.price.toString(), [auctionId]);
   };
   useEffect(() => {
     if (writeSuccess) {
@@ -64,36 +65,46 @@ export const TransferModal = ({ tokenId }: TransferModalProps) => {
   return (
     <Dialog open={open} onOpenChange={(a) => setOpen(a)}>
       <DialogTrigger asChild>
-        <Button
-          variant={"ghost"}
-          className="flex gap-3 justify-start font-medium items-center w-full"
-        >
-          <BiTransferAlt size={20} />
-          <div>Transfer</div>
+        <Button type="button" className="flex-1 lg:w-[50%] w-full">
+          Place Bid
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Transfer Asset</DialogTitle>
+          <DialogTitle>Place Bid</DialogTitle>
           <DialogDescription className="flex flex-col gap-5 pt-10">
             <Form {...form}>
+              <div className="flex items-center justify-between p-2 rounded-lg ">
+                <div className="flex gap-3 items-center">
+                  <MdWallet size={35} />
+                  <TypographyP className="font-bold" text="Balance" />
+                </div>
+                <TypographyP
+                  className="font-bold"
+                  text={`${parseFloat(balance?.formatted as string).toFixed(2) ?? "0"} ${balance?.symbol ?? "ETH"}`}
+                />
+              </div>
               <form
                 onSubmit={form.handleSubmit(onSubmit)}
                 className="flex flex-col gap-5"
               >
                 <FormField
                   control={form.control}
-                  name="address"
+                  name="price"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Transfer to</FormLabel>
+                      <FormLabel>Bid Price</FormLabel>
                       <FormControl className="flex">
                         <div className="relative flex items-stretch">
                           <Input
-                            id="address"
-                            placeholder="Enter Address"
+                            id="price"
+                            placeholder="Enter Bid Price"
                             className="h-auto"
                             {...field}
+                            value={field.value > 0 ? field.value : undefined}
+                            onChange={(e) =>
+                              field.onChange(parseFloat(e.target.value))
+                            }
                           />
                           <TypographyP
                             className="absolute border-l-2 right-0 px-2 py-1 font-bold"
@@ -114,10 +125,10 @@ export const TransferModal = ({ tokenId }: TransferModalProps) => {
                   {isLoading ? (
                     <>
                       <Loader2 className="mr-2 h-6 w-6 animate-spin" />
-                      Transfering
+                      Bidding
                     </>
                   ) : (
-                    "Transfer"
+                    "Bid"
                   )}
                 </Button>
               </form>

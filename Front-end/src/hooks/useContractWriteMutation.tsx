@@ -78,6 +78,7 @@ const useContractWriteMutation = () => {
         description: err.name,
         action: <ToastAction altText="Try Again">Try Again</ToastAction>,
       });
+      resetState();
     },
     onSuccess(data) {
       console.log("Transaction Success", data);

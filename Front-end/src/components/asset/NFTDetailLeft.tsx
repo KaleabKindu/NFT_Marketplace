@@ -128,7 +128,9 @@ const NFTDetailLeft = ({ asset, isLoading }: Props) => {
                       <Link
                         href={`${Routes.ETHER_TRANSACTIONS}/${asset?.transactionHash}`}
                       >
-                        <TypographyP text={`${asset?.transactionHash}`} />
+                        <TypographyP
+                          text={`${asset?.transactionHash?.slice(0, 30)}...`}
+                        />
                       </Link>
                     </div>
                     <div className="flex justify-between items-center">

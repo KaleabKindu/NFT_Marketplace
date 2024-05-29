@@ -68,6 +68,7 @@ const AudioPlayer = ({ url }: Props) => {
       <audio
         ref={audioRef}
         className="hidden"
+        crossOrigin="anonymous"
         src={url}
         onTimeUpdate={(a) => setCurrentTime(a.currentTarget.currentTime)}
       />

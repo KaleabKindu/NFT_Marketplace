@@ -27,34 +27,36 @@ import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import useContractWriteMutation from "@/hooks/useContractWriteMutation";
-import { BiTransferAlt } from "react-icons/bi";
+import { FaDollarSign } from "react-icons/fa6";
+import { parseEther } from "viem";
+
 const initialState = {
-  address: "",
+  new_price: 0.0,
 };
 const schema = z.object({
-  address: z.string(),
+  new_price: z.number().nonnegative(),
 });
 
-type TransferModalProps = {
+type ChangePriceModalProps = {
   tokenId: number;
 };
-export const TransferModal = ({ tokenId }: TransferModalProps) => {
+export const ChangePriceModal = ({ tokenId }: ChangePriceModalProps) => {
   const [open, setOpen] = useState(false);
+  const handleClose = () => setOpen(false);
   const {
     isLoading,
-    waitingForTransaction,
-    transactionSuccess,
-    writing,
     writeSuccess,
     contractWrite,
   } = useContractWriteMutation();
-  const form = useForm<{ address: string }>({
+  const form = useForm<{ new_price: number }>({
     resolver: zodResolver(schema),
     defaultValues: initialState,
   });
-  const handleClose = () => setOpen(false);
-  const onSubmit = (values: { address: string }) => {
-    contractWrite("transferAsset", undefined, [tokenId, values.address]);
+  const onSubmit = (values: { new_price: number }) => {
+    contractWrite("changePrice", undefined, [
+      tokenId,
+      parseEther(values.new_price.toString(), "wei"),
+    ]);
   };
   useEffect(() => {
     if (writeSuccess) {
@@ -68,13 +70,13 @@ export const TransferModal = ({ tokenId }: TransferModalProps) => {
           variant={"ghost"}
           className="flex gap-3 justify-start font-medium items-center w-full"
         >
-          <BiTransferAlt size={20} />
-          <div>Transfer</div>
+          <FaDollarSign size={20} />
+          <div>Change Price</div>
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Transfer Asset</DialogTitle>
+          <DialogTitle>Change Price</DialogTitle>
           <DialogDescription className="flex flex-col gap-5 pt-10">
             <Form {...form}>
               <form
@@ -83,17 +85,21 @@ export const TransferModal = ({ tokenId }: TransferModalProps) => {
               >
                 <FormField
                   control={form.control}
-                  name="address"
+                  name="new_price"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Transfer to</FormLabel>
+                      <FormLabel>New Price</FormLabel>
                       <FormControl className="flex">
                         <div className="relative flex items-stretch">
                           <Input
-                            id="address"
-                            placeholder="Enter Address"
+                            id="new_price"
+                            placeholder="Enter New Price"
                             className="h-auto"
                             {...field}
+                            value={field.value > 0 ? field.value : undefined}
+                            onChange={(e) =>
+                              field.onChange(parseFloat(e.target.value))
+                            }
                           />
                           <TypographyP
                             className="absolute border-l-2 right-0 px-2 py-1 font-bold"
@@ -114,10 +120,10 @@ export const TransferModal = ({ tokenId }: TransferModalProps) => {
                   {isLoading ? (
                     <>
                       <Loader2 className="mr-2 h-6 w-6 animate-spin" />
-                      Transfering
+                      Changing
                     </>
                   ) : (
-                    "Transfer"
+                    "Change Price"
                   )}
                 </Button>
               </form>

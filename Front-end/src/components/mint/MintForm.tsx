@@ -151,7 +151,7 @@ const MintForm = (props: Props) => {
         process.env.NEXT_PUBLIC_LISTING_PRICE as string,
         [
           `ipfs://${files_cid}`,
-          parseEther(others.price.toString(), "wei"),
+          parseEther(others.price, "wei"),
           others.auction,
           Math.round(others.auctionEnd / 1000),
           others.royalty,
@@ -212,22 +212,22 @@ const MintForm = (props: Props) => {
   };
 
   useEffect(() => {
-    if (writeSuccess && payload) {
-      const [tokenId, auctionId, address] = data;
+    if (data && writeSuccess && payload) {
+      const [tokenId, auctionId] = data;
       const _payload: NFT = {
         tokenId: parseInt((tokenId as bigint).toString()),
         ...payload,
         auction: payload.auction
           ? {
               ...payload.auction,
-              auctionId: auctionId,
+              auctionId: parseInt((auctionId as bigint).toString()),
             }
           : undefined,
         transactionHash: transactionHash,
       };
       postAsset(_payload);
     }
-  }, [writeSuccess, payload]);
+  }, [writeSuccess, payload, data]);
 
   useEffect(() => {
     if (isError) {
@@ -403,7 +403,11 @@ const MintForm = (props: Props) => {
                       <Calendar
                         mode="single"
                         selected={new Date(field.value)}
-                        onSelect={(d) => field.onChange(d?.getTime())}
+                        onSelect={(d) => {
+                          const date = new Date(d?.getTime() as number);
+                          date.setHours(23, 59, 59, 999);
+                          field.onChange(date.getTime());
+                        }}
                         initialFocus
                       />
                     </PopoverContent>

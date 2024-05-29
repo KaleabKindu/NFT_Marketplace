@@ -130,6 +130,12 @@ contract Marketplace is ERC721URIStorage, Ownable {
         _productsSold.decrement();
         emit ResellAsset(tokenId, auction, price, auctionEnd);
     }
+    function changePrice(uint256 tokenId, uint256 newPrice) public onlyOwner {
+        uint256 price = idToProduct[tokenId].price;
+        console.log("NFT Original Price %s", price);
+        idToProduct[tokenId].price = newPrice;
+        console.log("NFT New Price %s", idToProduct[tokenId].price);
+    }
 
     function buyAsset( uint256 tokenId) public payable {
         uint256 price = idToProduct[tokenId].price;
@@ -161,16 +167,16 @@ contract Marketplace is ERC721URIStorage, Ownable {
 
         emit AssetSold(tokenId, msg.sender);
     }
-    function transferAsset(uint256 tokenId) public onlyOwner {
+    function transferAsset(uint256 tokenId, address to) public onlyOwner {
         console.log("NFT Transfer Begin - Owner %s", ownerOf(tokenId));
-        _transfer(ownerOf(tokenId), msg.sender, tokenId);
+        _transfer(ownerOf(tokenId), to, tokenId);
         console.log("NFT Transfer Complete - Owner %s", ownerOf(tokenId));
-        emit TransferAsset(tokenId, msg.sender);
+        emit TransferAsset(tokenId, to);
     }
     function deleteAsset(uint256 tokenId) public onlyOwner {
         console.log("NFT Burn Begin - Owner %s", ownerOf(tokenId));
         _burn(tokenId);
-    
+        console.log("NFT Burn Complete - Asset Burnt %s", _exists(tokenId));   
         if(idToProduct[tokenId].auctionId != 0){
             delete idToAuction[idToProduct[tokenId].auctionId];
         }
