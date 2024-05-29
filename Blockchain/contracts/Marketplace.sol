@@ -8,7 +8,7 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "hardhat/console.sol";
 
-contract MyNFT is ERC721URIStorage, Ownable {
+contract Marketplace is ERC721URIStorage, Ownable {
     using Counters for Counters.Counter;
 
     Counters.Counter private _tokenIds;
@@ -19,9 +19,6 @@ contract MyNFT is ERC721URIStorage, Ownable {
 
     mapping(uint256 => Product) public idToProduct;
     mapping(uint256 => Auction) public idToAuction;
-
-
-    Product[] public Products;
 
     struct Product {
         uint256 tokenId;
@@ -40,13 +37,6 @@ contract MyNFT is ERC721URIStorage, Ownable {
         uint256 auctionEnd;
     }
 
-    event ProductCreated(
-        uint256 tokenId,
-        address payable creator,
-        uint256 price,
-        uint256 auctionId,
-        uint256 royalty
-    );
     event AuctionCreated(
         uint256 indexed auctionId,
         uint256 tokenId,
@@ -56,11 +46,13 @@ contract MyNFT is ERC721URIStorage, Ownable {
     );
 
     event BidPlaced(uint256 indexed auctionId, address bidder, uint256 amount);
-    event AuctionEnded(uint256 indexed auctionId, address winner, uint256 amount);
+    event AuctionEnded(uint256 indexed auctionId, address winner);
+    event AssetSold(uint256 indexed tokenId, address to);
+    event ResellAsset(uint256 indexed tokenId, bool auction, uint256 price, uint256 auctionEnd);
     event TransferAsset(uint256 indexed tokenId, address newOwner);
     event DeleteAsset(uint256 tokenid);
 
-    constructor() ERC721("NFT Token", "MTK")
+    constructor() ERC721("Asset", "AST")
     {
         Ownable(msg.sender);
     }
@@ -79,20 +71,19 @@ contract MyNFT is ERC721URIStorage, Ownable {
         bool auction,
         uint256 auctionEnd,
         uint256 royalty
-        ) public payable returns(uint256) {
+        ) public payable returns(uint256, uint256) {
 
         require(price > 0, 'Price must greater than 0');
         require(msg.value == _listingPrice, 'Listing Payment must be equal to listing price');
         require(royalty <= 10, 'Royalty percentage must be between 0 and 10');
-
         _tokenIds.increment();
         
         uint256 nextTokenId =_tokenIds.current();
         _safeMint(msg.sender, nextTokenId);
         _setTokenURI(nextTokenId, uri);
-
-        createProduct(
+        uint256 auctionId = listProduct(
             nextTokenId,
+            msg.sender,
             price,
             auction,
             auctionEnd,
@@ -100,36 +91,29 @@ contract MyNFT is ERC721URIStorage, Ownable {
         );
 
 
-        return nextTokenId;
+        return (nextTokenId, auctionId);
     }
 
-    function createProduct(
+    function listProduct(
         uint256 tokenId, 
+        address creator,
         uint256 price,
         bool auction,
         uint256 auctionEnd,
         uint256 royalty
-        ) private {
+        ) private returns(uint256) {
         uint256 auctionId = 0;
         if (auction) {
             auctionId = createAuction(tokenId, price, auctionEnd);
         }
         idToProduct[tokenId] = Product(
              tokenId,
-             payable(msg.sender),
+             payable(creator),
              price,
              auctionId,
              royalty
         );
-        Products.push(idToProduct[tokenId]);
-
-        emit ProductCreated(
-            tokenId,
-            payable(msg.sender),
-            price,
-            auctionId,
-            royalty
-        );
+        return auctionId;
     }
 
     function resellProduct(uint256 tokenId, uint256 price, bool auction, uint256 auctionEnd) public payable{
@@ -140,35 +124,42 @@ contract MyNFT is ERC721URIStorage, Ownable {
         idToProduct[tokenId].price = price;
 
         if(auction){
-            restartAuction(idToProduct[tokenId].auctionId, price, auctionEnd);
+            idToAuction[idToProduct[tokenId].auctionId].floorPrice = price;
+            idToAuction[idToProduct[tokenId].auctionId].auctionEnd = auctionEnd;
         }
         _productsSold.decrement();
+        emit ResellAsset(tokenId, auction, price, auctionEnd);
     }
 
     function buyAsset( uint256 tokenId) public payable {
         uint256 price = idToProduct[tokenId].price;
-        uint256 royaltyAmount = (price * idToProduct[tokenId].royalty) / 100;
+        uint256 royalty = (price * idToProduct[tokenId].royalty) / 100;
         console.log("Price %s - Value %s - Equal %s", price, msg.value, msg.value == price);
         require(msg.value == price, "Please Top up the asking price to purchase the product");
-        console.log("Price %s and Royalty %s", price, royaltyAmount);
+        console.log("Price %s and Royalty %s", price, royalty);
         _productsSold.increment();
 
-        if(idToProduct[tokenId].creator != ownerOf(tokenId)){
-            console.log("Transfer %s Ether to %s", price - royaltyAmount, ownerOf(tokenId));
-            payable(ownerOf(tokenId)).transfer(price - royaltyAmount);
+        address owner = ownerOf(tokenId);
+        address creator = idToProduct[tokenId].creator;
+
+        if(creator != owner){
+            console.log("Transfer %s Ether to %s", price - royalty, owner);
+            payable(owner).transfer(price - royalty);
             console.log("Transfer Complete");
-            console.log("Royalty Transfer %s Ether to %s", royaltyAmount, idToProduct[tokenId].creator);
-            payable(idToProduct[tokenId].creator).transfer(royaltyAmount); 
+            console.log("Royalty Transfer %s Ether to %s", royalty, creator);
+            payable(creator).transfer(royalty); 
             console.log("Transfer Complete");
         }else{
-            console.log("Transfer %s Ether to %s", price, ownerOf(tokenId));
-            payable(ownerOf(tokenId)).transfer(price);
+            console.log("Transfer %s Ether to %s", price, owner);
+            payable(owner).transfer(price);
             console.log("Transfer Complete");  
         }
 
         console.log("NFT Transfer Begin - Owner %s", ownerOf(tokenId));
         _transfer(ownerOf(tokenId), msg.sender, tokenId);
         console.log("NFT Transfer Complete - Owner %s", ownerOf(tokenId));
+
+        emit AssetSold(tokenId, msg.sender);
     }
     function transferAsset(uint256 tokenId) public onlyOwner {
         console.log("NFT Transfer Begin - Owner %s", ownerOf(tokenId));
@@ -185,10 +176,6 @@ contract MyNFT is ERC721URIStorage, Ownable {
         }
         delete idToProduct[tokenId];
         emit DeleteAsset(tokenId);
-    }
-
-    function fetchMarketProducts() public view returns(Product[] memory){
-        return Products;
     }
 
 
@@ -237,15 +224,6 @@ contract MyNFT is ERC721URIStorage, Ownable {
         emit BidPlaced(_auctionId, msg.sender, msg.value);
     }
 
-    function restartAuction(
-        uint256 _auctionId,
-        uint256 _floorPrice,
-        uint256 auctionEnd
-    ) public onlyOwner {
-        idToAuction[_auctionId].floorPrice = _floorPrice;
-        idToAuction[_auctionId].auctionEnd = auctionEnd;
-    }
-
     function endAuction(uint256 _auctionId) external {
         Auction storage auction = idToAuction[_auctionId];
         Product storage product = idToProduct[auction.tokenId];
@@ -272,7 +250,7 @@ contract MyNFT is ERC721URIStorage, Ownable {
         _transfer(ownerOf(auction.tokenId), auction.highestBidder, auction.tokenId);
         console.log('NFT Transfer Complete');
         
-        emit AuctionEnded(_auctionId, auction.seller, auction.floorPrice);
+        emit AuctionEnded(_auctionId, auction.highestBidder);
     }
 
 }

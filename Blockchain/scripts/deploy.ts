@@ -5,7 +5,7 @@ async function main() {
 
   console.log("Deploying contracts with the account:", deployer.address);
   
-  const contract = await ethers.deployContract("MyNFT");
+  const contract = await ethers.deployContract("Marketplace");
 
   await contract.waitForDeployment();
 
