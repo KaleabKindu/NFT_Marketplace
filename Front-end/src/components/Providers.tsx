@@ -6,7 +6,6 @@ import { persistor, store } from "../store";
 import Layout from "./common/Layout";
 import { ThemeProvider } from "./theme-provider";
 import { Web3Modal } from "@/context/Web3Modal";
-import ContractWrite from "@/context/ContractWrite";
 import { PersistGate } from "redux-persist/integration/react";
 type Props = {
   children: ReactNode;
@@ -23,9 +22,7 @@ const Providers = ({ children }: Props) => {
           disableTransitionOnChange
         >
           <Web3Modal>
-            <ContractWrite>
-              <Layout>{children}</Layout>
-            </ContractWrite>
+            <Layout>{children}</Layout>
           </Web3Modal>
         </ThemeProvider>
       </PersistGate>

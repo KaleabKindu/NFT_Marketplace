@@ -10,7 +10,6 @@ import Link from "next/link";
 import CountDown from "count-down-react";
 import { Button } from "../ui/button";
 
-import { ContractWriteContext } from "@/context/ContractWrite";
 import {
   Dialog,
   DialogContent,
@@ -22,7 +21,7 @@ import {
 import { nft_detail } from "@/data";
 import { Avatar } from "../common/Avatar";
 import { Routes } from "@/routes";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
 import { BsThreeDots } from "react-icons/bs";
 import {
@@ -51,6 +50,7 @@ import { FaDollarSign } from "react-icons/fa6";
 import NFTRightShimmer from "../common/shimmers/NFTRightShimmer";
 import { NFT } from "@/types";
 import NFTBids from "./NFTBids";
+import useContractWriteMutation from "@/hooks/useContractWriteMutation";
 
 type Props = {
   asset?: NFT;
@@ -64,7 +64,7 @@ const NFTDetailRight = ({ asset, isLoading }: Props) => {
     isError,
     transactionSuccess,
     contractWrite,
-  } = useContext(ContractWriteContext);
+  } = useContractWriteMutation();
 
   const onRender = ({
     days,
@@ -252,7 +252,7 @@ export const BidModal = ({ auctionId }: BidModalProps) => {
     writing,
     writeSuccess,
     contractWrite,
-  } = useContext(ContractWriteContext);
+  } = useContractWriteMutation();
   const form = useForm<{ price: number }>({
     resolver: zodResolver(schema),
     defaultValues: initialState,
@@ -355,7 +355,7 @@ export const SaleModal = ({ tokenId, price }: SaleModalProps) => {
     writing,
     writeSuccess,
     contractWrite,
-  } = useContext(ContractWriteContext);
+  } = useContractWriteMutation();
 
   const handleBuy = () => {
     contractWrite("buyAsset", price, [tokenId]);

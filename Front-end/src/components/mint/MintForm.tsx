@@ -28,12 +28,11 @@ import {
 } from "@/components/ui/dialog";
 
 import { IoCheckmarkCircle } from "react-icons/io5";
-import { ContractWriteContext } from "@/context/ContractWrite";
 import { ToastAction } from "../ui/toast";
 
 import { File } from "nft.storage";
 import { cn, storeAsset } from "@/lib/utils";
-import { Auction, NFT } from "@/types";
+import { NFT } from "@/types";
 import { CalendarIcon, Loader2 } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { RiAuctionLine } from "react-icons/ri";
@@ -46,10 +45,8 @@ import {
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { Button } from "../ui/button";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { parseEther } from "viem";
-import { useContractEvent } from "wagmi";
-import NftAbi from "@/data/abi/MyNFT.json";
 import { useCreateNFTMutation } from "@/store/api";
 import { useRouter } from "next/navigation";
 import { Routes } from "@/routes";
@@ -57,6 +54,7 @@ import MultipleFilesUpload from "./MultipleFilesUpload";
 import SelectCategory from "./SelectCategory";
 import AudioFileUpload from "./AudioFileUpload";
 import { CATEGORY } from "@/data";
+import useContractWriteMutation from "@/hooks/useContractWriteMutation";
 
 interface FormInput {
   name: string;
@@ -65,8 +63,8 @@ interface FormInput {
   audio?: File;
   category: string;
   files: File[];
-  royalty: number;
-  price: number;
+  royalty: string;
+  price: string;
   collection: string;
   auction: boolean;
   auctionEnd: number;
@@ -77,9 +75,9 @@ const initialState: FormInput = {
   description: "",
   category: "",
   files: [],
-  price: 0.0,
+  price: "",
   auction: false,
-  royalty: 0.0,
+  royalty: "",
   collection: "",
   auctionEnd: 0.0,
 };
@@ -103,8 +101,8 @@ const schema = z.object({
     .any()
     .refine((files) => files && files.length > 0, "Files are required"),
   category: z.string(),
-  royalty: z.number().nonnegative().max(10),
-  price: z.number().nonnegative(),
+  royalty: z.string(),
+  price: z.string(),
   auctionEnd: z.number(),
   collection: z.string(),
   auction: z.boolean(),
@@ -117,7 +115,7 @@ const MintForm = (props: Props) => {
   const [uploadSuccess, setUploadSuccess] = useState(false);
   const router = useRouter();
   const [open, setOpen] = useState(false);
-  const payload = useRef<NFT | undefined>(undefined);
+  const [payload, setPayload] = useState<NFT | undefined>(undefined);
   const { toast } = useToast();
   const [postNFT, { isLoading: uploadNft, isSuccess: uploadNftSuccess }] =
     useCreateNFTMutation();
@@ -126,8 +124,15 @@ const MintForm = (props: Props) => {
     defaultValues: initialState,
   });
 
-  const { isLoading, isError, transactionSuccess, contractWrite } =
-    useContext(ContractWriteContext);
+  const {
+    data,
+    isLoading,
+    isError,
+    transactionHash,
+    contractWrite,
+    writing,
+    writeSuccess,
+  } = useContractWriteMutation();
 
   const onSubmit = async (values: FormInput) => {
     const { thumbnail, audio, files, ...others } = values;
@@ -138,29 +143,7 @@ const MintForm = (props: Props) => {
       setUploading(true);
       const thumbnail_cid = await storeAsset([image, audio, video] as File[]);
       const files_cid = await storeAsset(files);
-      const asset_payload: NFT = {
-        name: values.name,
-        description: values.description,
-        image: image
-          ? `https://nftstorage.link/ipfs/${thumbnail_cid}/${image?.name}`
-          : undefined,
-        audio: audio
-          ? `https://nftstorage.link/ipfs/${thumbnail_cid}/${audio?.name}`
-          : undefined,
-        video: video
-          ? `https://nftstorage.link/ipfs/${thumbnail_cid}/${video?.name}`
-          : undefined,
-        category: values.category,
-        price: values.price.toString(),
-        royalty: values.royalty,
-        auction: values.auction
-          ? {
-              auction_end: Math.round(values.auctionEnd / 1000),
-              highest_bid: "0",
-            }
-          : undefined,
-      };
-      payload.current = asset_payload;
+      setUploading(false);
       setUploadSuccess(true);
 
       contractWrite(
@@ -174,7 +157,30 @@ const MintForm = (props: Props) => {
           others.royalty,
         ],
       );
-      form.reset(initialState);
+      const payload: NFT = {
+        name: values.name,
+        description: values.description,
+        image: image
+          ? `https://nftstorage.link/ipfs/${thumbnail_cid}/${image?.name}`
+          : undefined,
+        audio: audio
+          ? `https://nftstorage.link/ipfs/${thumbnail_cid}/${audio?.name}`
+          : undefined,
+        video: video
+          ? `https://nftstorage.link/ipfs/${thumbnail_cid}/${video?.name}`
+          : undefined,
+        category: values.category,
+        price: values.price,
+        royalty: parseInt(values.royalty),
+        auction: values.auction
+          ? {
+              auction_end: Math.round(values.auctionEnd / 1000),
+              highest_bid: "0",
+            }
+          : undefined,
+        transactionHash: transactionHash,
+      };
+      setPayload(payload);
     } catch (error) {
       toast({
         variant: "destructive",
@@ -182,10 +188,8 @@ const MintForm = (props: Props) => {
         description: "There was a problem with uploading your files.",
         action: <ToastAction altText="Try again">Try again</ToastAction>,
       });
-      setOpen(false);
       console.log("error", error);
-    } finally {
-      setUploading(false);
+      setOpen(false);
     }
   };
   const postAsset = async (asset: NFT) => {
@@ -194,6 +198,13 @@ const MintForm = (props: Props) => {
       form.reset(initialState);
       router.push(`${Routes.PRODUCT}/${id}`);
     } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description:
+          "There was a problem with uploading your metadata to server.",
+        action: <ToastAction altText="Try again">Try again</ToastAction>,
+      });
       console.log(error);
     } finally {
       setOpen(false);
@@ -201,35 +212,28 @@ const MintForm = (props: Props) => {
   };
 
   useEffect(() => {
+    if (writeSuccess && payload) {
+      const [tokenId, auctionId, address] = data;
+      const _payload: NFT = {
+        tokenId: parseInt((tokenId as bigint).toString()),
+        ...payload,
+        auction: payload.auction
+          ? {
+              ...payload.auction,
+              auctionId: auctionId,
+            }
+          : undefined,
+        transactionHash: transactionHash,
+      };
+      postAsset(_payload);
+    }
+  }, [writeSuccess, payload]);
+
+  useEffect(() => {
     if (isError) {
       setOpen(false);
     }
   }, [isError]);
-
-  useContractEvent({
-    address: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as `0x${string}`,
-    abi: NftAbi,
-    eventName: "ProductCreated",
-    listener: (logs: any) => {
-      const event = logs[0];
-      const product = event.args;
-      console.log("event", product);
-      const _payload = payload.current;
-      const asset: NFT = {
-        ...(_payload as NFT),
-        tokenId: parseInt((product.tokenId as bigint).toString()),
-        auction: {
-          ...(_payload?.auction as Auction),
-          auctionId: parseInt((product.auctionId as bigint).toString()),
-        },
-        transactionHash: event.transactionHash,
-      };
-      if (_payload) {
-        console.log("asset", asset);
-        postAsset(asset);
-      }
-    },
-  });
   return (
     <Form {...form}>
       <form
@@ -419,11 +423,16 @@ const MintForm = (props: Props) => {
               <FormControl>
                 <Input
                   id="price"
-                  type="number"
                   placeholder="Enter Price (ETH)"
                   {...field}
-                  value={field.value > 0 ? field.value : undefined}
-                  onChange={(e) => field.onChange(parseFloat(e.target.value))}
+                  value={field.value}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    const newValue = value
+                      .replace(/[^0-9.]+/g, "")
+                      .replace(/(\.\d*)\.+/g, "$1");
+                    field.onChange(newValue);
+                  }}
                 />
               </FormControl>
               <FormDescription>
@@ -445,8 +454,12 @@ const MintForm = (props: Props) => {
                   type="number"
                   placeholder="Enter Royalty Percentage"
                   {...field}
-                  value={field.value > 0 ? field.value : undefined}
-                  onChange={(e) => field.onChange(parseFloat(e.target.value))}
+                  value={field.value}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    const newValue = value.replace(/[^0-9]+/g, "");
+                    field.onChange(newValue);
+                  }}
                 />
               </FormControl>
               <FormDescription>
@@ -462,103 +475,65 @@ const MintForm = (props: Props) => {
           className="rounded-full self-end"
           size="lg"
         >
-          {uploading || isLoading ? (
-            <>
-              <Loader2 className="mr-2 h-6 w-6 animate-spin" />
-              Minting
-            </>
-          ) : (
-            "Mint Product"
-          )}
+          Mint Product
         </Button>
       </form>
-      <MintingProgress
-        open={open}
-        openModal={(a) => setOpen(a)}
-        uploading={uploading}
-        uploadSuccess={uploadSuccess}
-        uploadNft={uploadNft}
-        uploadNftSuccess={uploadNftSuccess}
-      />
+      <Dialog open={open} onOpenChange={(open) => setOpen(open)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Minting Your Assets</DialogTitle>
+            <DialogDescription className="flex flex-col gap-5 pt-10">
+              <div className="flex items-center gap-5">
+                <div className="flex justify-center items-center rounded-full bg-secondary p-2 h-[3.5rem] w-[3.5rem]">
+                  {uploading ? (
+                    <Loader2 className="h-8 w-8 animate-spin" />
+                  ) : uploadSuccess ? (
+                    <IoCheckmarkCircle size={40} />
+                  ) : (
+                    <TypographyH4 text="1" />
+                  )}
+                </div>
+                <div className="flex flex-col">
+                  <TypographyH4 text="Uploading Files to Decentralized Storage" />
+                  <TypographySmall text="This might take a few minutes" />
+                </div>
+              </div>
+              <div className="flex items-center gap-5">
+                <div className="flex justify-center items-center rounded-full bg-secondary p-2 h-[3.5rem] w-[3.5rem]">
+                  {writing ? (
+                    <Loader2 className="h-8 w-8 animate-spin" />
+                  ) : writeSuccess ? (
+                    <IoCheckmarkCircle size={40} />
+                  ) : (
+                    <TypographyH4 text="2" />
+                  )}
+                </div>
+                <div className="flex flex-col">
+                  <TypographyH4 text="Go to your wallet to approve this transaction" />
+                  <TypographySmall text="A blockchain transaction is required to mint your NFT." />
+                </div>
+              </div>
+              <div className="flex items-center gap-5">
+                <div className="flex justify-center items-center rounded-full bg-secondary p-2 h-[3.5rem] w-[3.5rem]">
+                  {uploadNft ? (
+                    <Loader2 className="h-8 w-8 animate-spin" />
+                  ) : uploadNftSuccess ? (
+                    <IoCheckmarkCircle size={40} />
+                  ) : (
+                    <TypographyH4 text="3" />
+                  )}
+                </div>
+                <div className="flex flex-col">
+                  <TypographyH4 text="Uploading Your Assets to Server" />
+                  <TypographySmall text="Your asset metadata is stored on our server" />
+                </div>
+              </div>
+            </DialogDescription>
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
     </Form>
   );
 };
 
 export default MintForm;
-
-type ProgressProps = {
-  open: boolean;
-  openModal: (a: boolean) => void;
-  uploading: boolean;
-  uploadSuccess: boolean;
-  uploadNft: boolean;
-  uploadNftSuccess: boolean;
-};
-
-export const MintingProgress = ({
-  open,
-  openModal,
-  uploading,
-  uploadSuccess,
-  uploadNft,
-  uploadNftSuccess,
-}: ProgressProps) => {
-  const { waitingForTransaction, transactionSuccess, writing, writeSuccess } =
-    useContext(ContractWriteContext);
-  return (
-    <Dialog open={open} onOpenChange={(open) => openModal(open)}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Minting Your Assets</DialogTitle>
-          <DialogDescription className="flex flex-col gap-5 pt-10">
-            <div className="flex items-center gap-5">
-              <div className="flex justify-center items-center rounded-full bg-secondary p-2 h-[3.5rem] w-[3.5rem]">
-                {uploading ? (
-                  <Loader2 className="h-8 w-8 animate-spin" />
-                ) : uploadSuccess ? (
-                  <IoCheckmarkCircle size={40} />
-                ) : (
-                  <TypographyH4 text="1" />
-                )}
-              </div>
-              <div className="flex flex-col">
-                <TypographyH4 text="Uploading Files to Decentralized Storage" />
-                <TypographySmall text="This might take a few minutes" />
-              </div>
-            </div>
-            <div className="flex items-center gap-5">
-              <div className="flex justify-center items-center rounded-full bg-secondary p-2 h-[3.5rem] w-[3.5rem]">
-                {writing ? (
-                  <Loader2 className="h-8 w-8 animate-spin" />
-                ) : writeSuccess ? (
-                  <IoCheckmarkCircle size={40} />
-                ) : (
-                  <TypographyH4 text="2" />
-                )}
-              </div>
-              <div className="flex flex-col">
-                <TypographyH4 text="Go to your wallet to approve this transaction" />
-                <TypographySmall text="A blockchain transaction is required to mint your NFT." />
-              </div>
-            </div>
-            <div className="flex items-center gap-5">
-              <div className="flex justify-center items-center rounded-full bg-secondary p-2 h-[3.5rem] w-[3.5rem]">
-                {uploadNft ? (
-                  <Loader2 className="h-8 w-8 animate-spin" />
-                ) : uploadNftSuccess ? (
-                  <IoCheckmarkCircle size={40} />
-                ) : (
-                  <TypographyH4 text="3" />
-                )}
-              </div>
-              <div className="flex flex-col">
-                <TypographyH4 text="Uploading Your Assets to Server" />
-                <TypographySmall text="Your asset metadata is stored on our server" />
-              </div>
-            </div>
-          </DialogDescription>
-        </DialogHeader>
-      </DialogContent>
-    </Dialog>
-  );
-};

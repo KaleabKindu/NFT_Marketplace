@@ -1,4 +1,4 @@
-import { ReactNode, createContext, useEffect, useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { parseEther } from "viem";
 import {
   useContractWrite,
@@ -9,38 +9,24 @@ import { useToast } from "@/components/ui/use-toast";
 import { ToastAction } from "@/components/ui/toast";
 import Link from "next/link";
 import { Routes } from "@/routes";
-import NftAbi from "@/data/abi/MyNFT.json";
+import NftAbi from "@/data/abi/marketplace.json";
 
-interface ContractWriteContextProps {
-  isLoading: boolean;
-  isError: boolean;
-  waitingForTransaction: boolean;
-  transactionSuccess: boolean;
-  writing: boolean;
-  writeSuccess: boolean;
-  contractWrite: (a: string, b?: string, d?: any[]) => void;
-}
-
-export const ContractWriteContext = createContext<ContractWriteContextProps>({
-  isLoading: false,
-  isError: false,
-  waitingForTransaction: false,
-  transactionSuccess: false,
-  writing: false,
-  writeSuccess: false,
-  contractWrite: (a: string, b?: string, d?: any[]) => {},
-});
-
-type Props = {
-  children: ReactNode;
-};
-
-const ContractWrite = ({ children }: Props) => {
+const useContractWriteMutation = () => {
   const { toast } = useToast();
   const [prepare, setPrepare] = useState(false);
   const [args, setArgs] = useState<any[] | undefined>(undefined);
   const [functionName, setFunctionName] = useState("");
   const [value, setValue] = useState<string | undefined>(undefined);
+  const [response, setResponse] = useState<any | undefined>(undefined);
+
+  const resetState = useCallback(() => {
+    setPrepare(false);
+    setArgs(undefined);
+    setFunctionName("");
+    setValue(undefined);
+    setResponse(undefined);
+  }, []);
+
   const {
     config,
     isLoading: preparing,
@@ -61,8 +47,15 @@ const ContractWrite = ({ children }: Props) => {
         description: err.name,
         action: <ToastAction altText="Try Again">Try Again</ToastAction>,
       });
+      resetState();
+    },
+
+    onSuccess(data) {
+      console.log("preparation success", data);
+      setResponse(data.result);
     },
   });
+
   const {
     data,
     isLoading: writing,
@@ -101,42 +94,40 @@ const ContractWrite = ({ children }: Props) => {
           </ToastAction>
         ),
       });
+      resetState();
     },
   });
   useEffect(() => {
     if (prepared) {
       write?.();
-      console.log("ready", args);
     }
-  }, [prepared, write]);
+  }, [prepared]);
+
+  const isLoading = writing || preparing || waitingForTransaction;
+  const isError = writeError || preparingError || transactionError;
+
   const contractWrite = (
     functionName: string,
     value?: string,
     args?: any[],
   ) => {
+    resetState();
     setPrepare(true);
     setValue(value);
     setFunctionName(functionName);
     setArgs(args);
   };
-  const isLoading = writing || preparing || waitingForTransaction;
-  const isError = writeError || preparingError || transactionError;
-
-  return (
-    <ContractWriteContext.Provider
-      value={{
-        isLoading: isLoading,
-        isError: isError,
-        waitingForTransaction: waitingForTransaction,
-        transactionSuccess: transactionSuccess,
-        writing: writing,
-        writeSuccess: writeSuccess,
-        contractWrite: contractWrite,
-      }}
-    >
-      {children}
-    </ContractWriteContext.Provider>
-  );
+  return {
+    isLoading: isLoading,
+    isError: isError,
+    waitingForTransaction: waitingForTransaction,
+    transactionSuccess: transactionSuccess,
+    writing: writing,
+    writeSuccess: writeSuccess,
+    data: response,
+    transactionHash: data?.hash,
+    contractWrite: contractWrite,
+  };
 };
 
-export default ContractWrite;
+export default useContractWriteMutation;
