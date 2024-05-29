@@ -6,7 +6,7 @@ namespace Application.UnitTest.Mocks
 {
     public class MockUserManager
     {
-        public static  Mock<UserManager<AppUser>> GetUserManager()
+        public static Mock<UserManager<AppUser>> GetUserManager()
         {
             var users = new List<AppUser> {
                 new AppUser
@@ -14,6 +14,7 @@ namespace Application.UnitTest.Mocks
                     Id = Guid.NewGuid().ToString(),
                     UserName = "myUserName1",
                     Email = "email1@gmail.com",
+                    Address = "address1"
                     // Password = "password",
                     // FullName  = "this is may name "
                 },
@@ -22,11 +23,12 @@ namespace Application.UnitTest.Mocks
                     Id = Guid.NewGuid().ToString(),
                     UserName = "myUserName2",
                     Email = "email2@gmail.com",
+                    Address = "address2",
                     // Password = "password",
                     // FullName  = "this is may name "
                 }
             };
-                
+
             var store = new Mock<IUserStore<AppUser>>();
             var mgr = new Mock<UserManager<AppUser>>(store.Object, null, null, null, null, null, null, null, null);
             mgr.Object.UserValidators.Add(new UserValidator<AppUser>());

@@ -60,6 +60,25 @@
       {
         "indexed": true,
         "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
+      }
+    ],
+    "name": "AssetSold",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
         "name": "auctionId",
         "type": "uint256"
       },
@@ -105,12 +124,6 @@
         "internalType": "address",
         "name": "winner",
         "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
       }
     ],
     "name": "AuctionEnded",
@@ -209,16 +222,16 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "uint256",
         "name": "tokenId",
         "type": "uint256"
       },
       {
         "indexed": false,
-        "internalType": "address payable",
-        "name": "creator",
-        "type": "address"
+        "internalType": "bool",
+        "name": "auction",
+        "type": "bool"
       },
       {
         "indexed": false,
@@ -229,17 +242,11 @@
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "auctionId",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "royalty",
+        "name": "auctionEnd",
         "type": "uint256"
       }
     ],
-    "name": "ProductCreated",
+    "name": "ResellAsset",
     "type": "event"
   },
   {
@@ -285,45 +292,6 @@
     ],
     "name": "TransferAsset",
     "type": "event"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "name": "Products",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "tokenId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "address payable",
-        "name": "creator",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "price",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "auctionId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "royalty",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
   },
   {
     "inputs": [
@@ -399,46 +367,6 @@
     "name": "endAuction",
     "outputs": [],
     "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "fetchMarketProducts",
-    "outputs": [
-      {
-        "components": [
-          {
-            "internalType": "uint256",
-            "name": "tokenId",
-            "type": "uint256"
-          },
-          {
-            "internalType": "address payable",
-            "name": "creator",
-            "type": "address"
-          },
-          {
-            "internalType": "uint256",
-            "name": "price",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "auctionId",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "royalty",
-            "type": "uint256"
-          }
-        ],
-        "internalType": "struct MyNFT.Product[]",
-        "name": "",
-        "type": "tuple[]"
-      }
-    ],
-    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -619,6 +547,11 @@
         "internalType": "uint256",
         "name": "",
         "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
       }
     ],
     "stateMutability": "payable",
@@ -715,29 +648,6 @@
     "name": "resellProduct",
     "outputs": [],
     "stateMutability": "payable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_auctionId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_floorPrice",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "auctionEnd",
-        "type": "uint256"
-      }
-    ],
-    "name": "restartAuction",
-    "outputs": [],
-    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
