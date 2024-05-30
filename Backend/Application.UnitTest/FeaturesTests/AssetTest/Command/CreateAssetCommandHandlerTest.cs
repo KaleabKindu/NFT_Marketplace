@@ -43,7 +43,7 @@ namespace ApplicationUnitTest.FeaturesTests.AssetTest.Command
                 Video = "https://example.com/videos/art-piece1.mp4",
                 Audio = "https://example.com/audio/art-piece1.mp3",
 
-                Category = AssetCategory.art.ToString(),
+                Category = AssetCategory.art,
                 Price = 250.0,
                 // Auction = new Auction { Id = 1, StartTime = DateTime.Now, EndTime = DateTime.Now.AddDays(7) },
                 // AuctionId = 1,
