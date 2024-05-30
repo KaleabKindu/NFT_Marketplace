@@ -1,19 +1,19 @@
 ﻿using Domain;
-using Infrastructure.Services;
-using Microsoft.Extensions.DependencyInjection;
 using Persistence;
 using System.Text;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.Extensions.Configuration;
-using Application.Contracts;
-using Application.Contracts.Services;
-using System.Security.Claims;
-using Infrastructure.Services.Events;
-using Application.Events;
-using Application.Events.Handlers;
 using RabbitMQ.Client;
+using Application.Contracts;
+using System.Security.Claims;
+using Infrastructure.Services;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
+using Application.Contracts.Services;
+using Application.Features.Bids.Dtos;
+using Application.Features.Assets.Dtos;
+using Application.Features.Auctions.Dtos;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace Infrastructure
 {
@@ -53,11 +53,7 @@ namespace Infrastructure
             services.AddScoped<IJwtService, JwtService>();
             services.AddScoped<IUserAccessor, UserAccessor>();
             services.AddScoped<IEthereumCryptoService, EthereumCryptoService>();
-
-            // Register event handlers
-            services.AddTransient<IEventHandler<ValueSetEvent>, ValueSetEventHandler>();
-
-            services.AddSingleton<IConnection>(sp =>
+            services.AddSingleton(sp =>
                 {
                     var factory = new ConnectionFactory
                     {
@@ -69,32 +65,22 @@ namespace Infrastructure
                 .AddHealthChecks()
                 .AddRabbitMQ();
 
-            // Register message queue (e.g., RabbitMQ)
-            services.AddSingleton<RabbitMqService>();
+            services.AddSingleton(sp =>
+            {
+                var connection = sp.GetRequiredService<IConnection>();
+                var queues = new List<string>{
+                    $"{typeof(AuctionCreatedEventDto)}", $"{typeof(BidPlacedEventDto)}", $"{typeof(AuctionEndedEventDto)}", 
+                    $"{typeof(AssetSoldEventDto)}", $"{typeof(ResellAssetEventDto)}", $"{typeof(TransferAssetEventDto)}", 
+                    $"{typeof(DeleteAssetEventDto)}"
+                };
+                return new RabbitMqService(connection, queues);
+            });
 
-            #region ValueSet Event
-            /***
-                Register and host `ValueSet` event listening service
-                to handle `ValueSet` events emitted from the smart contract
-            ***/ 
-
-            // Register and host valueset event listening service
-            services.AddTransient<EventListeningService<ValueSetEvent>>();
-            services.AddHostedService(provider => provider.GetRequiredService<EventListeningService<ValueSetEvent>>());
+            services.AddTransient<EventListeningService>();
+            services.AddHostedService(provider => provider.GetRequiredService<EventListeningService>());
                         
-            // Register and host valueset event processing service
-            services.AddTransient<EventProcessingService<ValueSetEvent>>();
-            services.AddHostedService(provider => provider.GetRequiredService<EventProcessingService<ValueSetEvent>>());
-            
-            #endregion ValueSet Event
-
-
-            #region Other Event
-            /***
-                Register and host `Other` event listening service
-                to handle `Other` events emitted from the smart contract
-            ***/ 
-            #endregion Other Event
+            services.AddTransient<EventProcessingService>();
+            services.AddHostedService(provider => provider.GetRequiredService<EventProcessingService>());
 
             services.AddLogging(builder =>
             {

@@ -1,8 +1,7 @@
-using System.Text;
-using Nethereum.Hex.HexConvertors.Extensions;
-using Nethereum.Signer;
 using Nethereum.Util;
 using Nethereum.Web3;
+using Nethereum.Signer;
+using Nethereum.Hex.HexConvertors.Extensions;
 
 namespace Application.Contracts.Services;
 

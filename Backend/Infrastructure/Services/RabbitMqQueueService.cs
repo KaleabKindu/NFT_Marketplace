@@ -1,37 +1,31 @@
-using RabbitMQ.Client;
 using System.Text;
-using RabbitMQ.Client.Events;
-using Microsoft.Extensions.Configuration;
-
+using RabbitMQ.Client;
 namespace Infrastructure.Services
 ;
 public class RabbitMqService
 {
-    private readonly IConnection _connection;
+    private readonly IModel _channel;
 
-    public RabbitMqService(IConnection connection)
+    public RabbitMqService(IConnection connection, List<string> queues)
     {
-        _connection = connection;
+        _channel = connection.CreateModel();
+        foreach (string queueName in queues)
+        {
+            _channel.QueueDeclare(queue: queueName, durable: false, exclusive: false, autoDelete: true, arguments: null);
+        }
     }
 
     public void EnqueueAsync<T>(T message, string queueName)
     {
-        using var channel = _connection.CreateModel();
-        channel.QueueDeclare(queue: queueName, durable: false, exclusive: false, autoDelete: false, arguments: null);
-
         var jsonMessage = Newtonsoft.Json.JsonConvert.SerializeObject(message);
         var body = Encoding.UTF8.GetBytes(jsonMessage);
 
-        channel.BasicPublish(exchange: "", routingKey: queueName, basicProperties: null, body: body);
+        _channel.BasicPublish(exchange: "", routingKey: queueName, basicProperties: null, body: body);
     }
 
     public T DequeueAsync<T>(string queueName)
     {
-        using var channel = _connection.CreateModel();
-        channel.QueueDeclare(queue: queueName, durable: false, exclusive: false, autoDelete: false, arguments: null);
-
-        var consumer = new EventingBasicConsumer(channel);
-        BasicGetResult result = channel.BasicGet(queueName, autoAck: true);
+        BasicGetResult result = _channel.BasicGet(queueName, autoAck: true);
         
         if (result == null)
         {
@@ -46,6 +40,6 @@ public class RabbitMqService
     }
 
     public void Close(){
-        _connection.Close();
+        _channel.Close();
     }
 }

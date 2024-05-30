@@ -6,9 +6,9 @@ using Domain.Assets;
 
 namespace API.Controllers
 {
-    public class CollectionController : BaseController
+    public class CollectionsController : BaseController
     {
-        public CollectionController(IUserAccessor userAccessor) : base(userAccessor)
+        public CollectionsController(IUserAccessor userAccessor) : base(userAccessor)
         {
         }
 
