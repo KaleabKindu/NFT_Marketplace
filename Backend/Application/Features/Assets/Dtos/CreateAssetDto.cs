@@ -11,9 +11,9 @@ namespace Application.Features.Assets.Dtos
         public string? Image { get; set; }
         public string? Video { get; set; }
         public string? Audio { get; set; }
-        public string Category { get; set; }
+        public AssetCategory Category { get; set; }
         public double Price { get; set; }
-        public CreateAuctionDto Auction { get; set; }
+        public CreateAuctionDto? Auction { get; set; }
         public long? CollectionId { get; set; }
         public string TransactionHash { get; set; }
         public float Royalty { get; set; }

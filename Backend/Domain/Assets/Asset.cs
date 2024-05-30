@@ -2,7 +2,6 @@ using System.Text.Json.Serialization;
 using Domain.Auctions;
 using Domain.Bids;
 using Domain.Collections;
-
 namespace Domain.Assets
 {
     public class Asset : BaseClass
