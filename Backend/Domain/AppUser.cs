@@ -3,6 +3,8 @@ namespace Domain
 {
     public sealed class AppUser : IdentityUser
     {
+        public override string? UserName { get; set; }
+        public override string? Email { get; set; }
         public string Address { get; set; }
         public string Nonce { get; set; }
         public UserProfile Profile { get; set; }
