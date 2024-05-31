@@ -1,16 +1,18 @@
-using System.Text;
-using Nethereum.Hex.HexConvertors.Extensions;
-using Nethereum.Signer;
 using Nethereum.Util;
+using Nethereum.Web3;
+using Nethereum.Signer;
+using Nethereum.Hex.HexConvertors.Extensions;
 
 namespace Application.Contracts.Services;
 
 public class EthereumCryptoService: IEthereumCryptoService
 {
+    private readonly Web3 _web3;
     private readonly Sha3Keccack _keccackHasher;
 
     public EthereumCryptoService(){
         _keccackHasher = new Sha3Keccack();
+        _web3 = new Web3();
     }
 
     public bool VerifyMessage(string message, string signature, string signerAddress)
