@@ -1,14 +1,19 @@
 ﻿using Domain;
-using Infrastructure.Services;
-using Microsoft.Extensions.DependencyInjection;
 using Persistence;
 using System.Text;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.Extensions.Configuration;
+using RabbitMQ.Client;
 using Application.Contracts;
-using Application.Contracts.Services;
 using System.Security.Claims;
+using Infrastructure.Services;
+using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
+using Application.Contracts.Services;
+using Application.Features.Bids.Dtos;
+using Application.Features.Assets.Dtos;
+using Application.Features.Auctions.Dtos;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace Infrastructure
 {
@@ -48,7 +53,41 @@ namespace Infrastructure
             services.AddScoped<IJwtService, JwtService>();
             services.AddScoped<IUserAccessor, UserAccessor>();
             services.AddScoped<IEthereumCryptoService, EthereumCryptoService>();
+            services.AddSingleton(sp =>
+                {
+                    var factory = new ConnectionFactory
+                    {
+                        Uri = new Uri(configuration["RabbitMQ:ConnectionString"]),
+                        AutomaticRecoveryEnabled = true
+                    };
+                    return  factory.CreateConnection();
+                })
+                .AddHealthChecks()
+                .AddRabbitMQ();
 
+            services.AddSingleton(sp =>
+            {
+                var connection = sp.GetRequiredService<IConnection>();
+                var queues = new List<string>{
+                    $"{typeof(AuctionCreatedEventDto)}", $"{typeof(BidPlacedEventDto)}", $"{typeof(AuctionEndedEventDto)}", 
+                    $"{typeof(AssetSoldEventDto)}", $"{typeof(ResellAssetEventDto)}", $"{typeof(TransferAssetEventDto)}", 
+                    $"{typeof(DeleteAssetEventDto)}"
+                };
+                return new RabbitMqService(connection, queues);
+            });
+
+            services.AddTransient<EventListeningService>();
+            services.AddHostedService(provider => provider.GetRequiredService<EventListeningService>());
+                        
+            services.AddTransient<EventProcessingService>();
+            services.AddHostedService(provider => provider.GetRequiredService<EventProcessingService>());
+
+            services.AddLogging(builder =>
+            {
+                builder.SetMinimumLevel(LogLevel.Debug);
+                builder.AddConsole(); 
+            });
+            
             return services;
         }
     }

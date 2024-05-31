@@ -1,6 +1,5 @@
-using System;
-using Application.Features.Auctions.Dtos;
 using Domain.Assets;
+using Application.Features.Auctions.Dtos;
 
 namespace Application.Features.Assets.Dtos
 {

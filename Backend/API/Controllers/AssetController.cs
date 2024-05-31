@@ -111,14 +111,6 @@ namespace API.Controllers
             return HandleResult(await Mediator.Send(new ToggleLikeAssetCommand { Id = id, UserId = userId }));
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
-        {
-
-            return HandleResult(await Mediator.Send(new DeleteAssetCommand { Id = id }));
-        }
-
-
         [HttpGet("assets/{categoryName}")]
         public async Task<IActionResult> GetAssetsCount([FromQuery] AssetCategory categoryName)
         {
