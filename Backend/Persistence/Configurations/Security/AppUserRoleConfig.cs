@@ -11,98 +11,98 @@ public class UserRoleConfiguration : IEntityTypeConfiguration<IdentityUserRole<s
 
     public void Configure(EntityTypeBuilder<IdentityUserRole<string>> builder)
     {
-        builder.HasData(
-            new IdentityUserRole<string>
-            {
-                RoleId = AdminRoleId,
-                UserId = "6f09dad5-2268-4410-b755-cf7859927e5f"
-            },
-            
-            new IdentityUserRole<string>()
-            {
-                RoleId = AdminRoleId,
-                UserId = "c0c13752-c7ee-47c8-ae52-b26c73f259ee"
-            },
-            new IdentityUserRole<string>
-            {
-                RoleId = TraderRoleId,
-                UserId = "6f09dad5-2268-4410-b755-cf7859927f6g"
-            },
-            new IdentityUserRole<string>
-            {
-                RoleId = TraderRoleId,
-                UserId = "123e4567-e89b-12d3-a456-426614174000"
-            },
-            new IdentityUserRole<string>
-            {
-                RoleId = TraderRoleId,
-                UserId = "111e2222-e89b-12d3-a456-426614174001"
-            },
-            new IdentityUserRole<string>
-            {
-                RoleId = TraderRoleId,
-                UserId = "333e4444-e89b-12d3-a456-426614174002"
-            },
-            new IdentityUserRole<string>
-            {
-                RoleId = TraderRoleId,
-                UserId = "444e5555-e89b-12d3-a456-426614174003"
-            },
-            new IdentityUserRole<string>
-            {
-                RoleId = TraderRoleId,
-                UserId = "555e6666-e89b-12d3-a456-426614174004"
-            },
-            new IdentityUserRole<string>
-            {
-                RoleId = TraderRoleId,
-                UserId = "666e7777-e89b-12d3-a456-426614174005"
-            },
-            new IdentityUserRole<string>
-            {
-                RoleId = TraderRoleId,
-                UserId = "777e8888-e89b-12d3-a456-426614174006"
-            },
-            new IdentityUserRole<string>
-            {
-                RoleId = TraderRoleId,
-                UserId = "888e9999-e89b-12d3-a456-426614174007"
-            },
-            new IdentityUserRole<string>
-            {
-                RoleId = TraderRoleId,
-                UserId = "999e0000-e89b-12d3-a456-426614174008"
-            },
-            new IdentityUserRole<string>
-            {
-                RoleId = TraderRoleId,
-                UserId = "000e1111-e89b-12d3-a456-426614174009"
-            },
-            new IdentityUserRole<string>
-            {
-                RoleId = TraderRoleId,
-                UserId = "111e2222-e89b-12d3-a456-426614174010"
-            },
-            new IdentityUserRole<string>
-            {
-                RoleId = TraderRoleId,
-                UserId = "222e3333-e89b-12d3-a456-426614174011"
-            },
-            new IdentityUserRole<string>
-            {
-                RoleId = TraderRoleId,
-                UserId = "333e4444-e89b-12d3-a456-426614174012"
-            },
-            new IdentityUserRole<string>
-            {
-                RoleId = TraderRoleId,
-                UserId = "444e5555-e89b-12d3-a456-426614174013"
-            },
-            new IdentityUserRole<string>
-            {
-                RoleId = TraderRoleId,
-                UserId = "555e6666-e89b-12d3-a456-426614174014"
-            }     
-        );
+        // builder.HasData(
+        // new IdentityUserRole<string>
+        // {
+        //     RoleId = AdminRoleId,
+        //     UserId = "6f09dad5-2268-4410-b755-cf7859927e5f"
+        // },
+
+        // new IdentityUserRole<string>()
+        // {
+        //     RoleId = AdminRoleId,
+        //     UserId = "c0c13752-c7ee-47c8-ae52-b26c73f259ee"
+        // },
+        // new IdentityUserRole<string>
+        // {
+        //     RoleId = TraderRoleId,
+        //     UserId = "6f09dad5-2268-4410-b755-cf7859927f6g"
+        // },
+        // new IdentityUserRole<string>
+        // {
+        //     RoleId = TraderRoleId,
+        //     UserId = "123e4567-e89b-12d3-a456-426614174000"
+        // },
+        // new IdentityUserRole<string>
+        // {
+        //     RoleId = TraderRoleId,
+        //     UserId = "111e2222-e89b-12d3-a456-426614174001"
+        // },
+        // new IdentityUserRole<string>
+        // {
+        //     RoleId = TraderRoleId,
+        //     UserId = "333e4444-e89b-12d3-a456-426614174002"
+        // },
+        // new IdentityUserRole<string>
+        // {
+        //     RoleId = TraderRoleId,
+        //     UserId = "444e5555-e89b-12d3-a456-426614174003"
+        // },
+        // new IdentityUserRole<string>
+        // {
+        //     RoleId = TraderRoleId,
+        //     UserId = "555e6666-e89b-12d3-a456-426614174004"
+        // },
+        // new IdentityUserRole<string>
+        // {
+        //     RoleId = TraderRoleId,
+        //     UserId = "666e7777-e89b-12d3-a456-426614174005"
+        // },
+        // new IdentityUserRole<string>
+        // {
+        //     RoleId = TraderRoleId,
+        //     UserId = "777e8888-e89b-12d3-a456-426614174006"
+        // },
+        // new IdentityUserRole<string>
+        // {
+        //     RoleId = TraderRoleId,
+        //     UserId = "888e9999-e89b-12d3-a456-426614174007"
+        // },
+        // new IdentityUserRole<string>
+        // {
+        //     RoleId = TraderRoleId,
+        //     UserId = "999e0000-e89b-12d3-a456-426614174008"
+        // },
+        // new IdentityUserRole<string>
+        // {
+        //     RoleId = TraderRoleId,
+        //     UserId = "000e1111-e89b-12d3-a456-426614174009"
+        // },
+        // new IdentityUserRole<string>
+        // {
+        //     RoleId = TraderRoleId,
+        //     UserId = "111e2222-e89b-12d3-a456-426614174010"
+        // },
+        // new IdentityUserRole<string>
+        // {
+        //     RoleId = TraderRoleId,
+        //     UserId = "222e3333-e89b-12d3-a456-426614174011"
+        // },
+        // new IdentityUserRole<string>
+        // {
+        //     RoleId = TraderRoleId,
+        //     UserId = "333e4444-e89b-12d3-a456-426614174012"
+        // },
+        // new IdentityUserRole<string>
+        // {
+        //     RoleId = TraderRoleId,
+        //     UserId = "444e5555-e89b-12d3-a456-426614174013"
+        // },
+        // new IdentityUserRole<string>
+        // {
+        //     RoleId = TraderRoleId,
+        //     UserId = "555e6666-e89b-12d3-a456-426614174014"
+        // }     
+        // );
     }
 }
