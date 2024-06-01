@@ -49,7 +49,7 @@ namespace Infrastructure
                 }
             );
             services.AddAuthorization();
-            
+
             services.AddScoped<IJwtService, JwtService>();
             services.AddScoped<IUserAccessor, UserAccessor>();
             services.AddScoped<IEthereumCryptoService, EthereumCryptoService>();
@@ -60,7 +60,7 @@ namespace Infrastructure
                         Uri = new Uri(configuration["RabbitMQ:ConnectionString"]),
                         AutomaticRecoveryEnabled = true
                     };
-                    return  factory.CreateConnection();
+                    return factory.CreateConnection();
                 })
                 .AddHealthChecks()
                 .AddRabbitMQ();
@@ -69,25 +69,25 @@ namespace Infrastructure
             {
                 var connection = sp.GetRequiredService<IConnection>();
                 var queues = new List<string>{
-                    $"{typeof(AuctionCreatedEventDto)}", $"{typeof(BidPlacedEventDto)}", $"{typeof(AuctionEndedEventDto)}", 
-                    $"{typeof(AssetSoldEventDto)}", $"{typeof(ResellAssetEventDto)}", $"{typeof(TransferAssetEventDto)}", 
+                    $"{typeof(AuctionCreatedEventDto)}", $"{typeof(BidPlacedEventDto)}", $"{typeof(AuctionEndedEventDto)}",
+                    $"{typeof(AssetSoldEventDto)}", $"{typeof(ResellAssetEventDto)}", $"{typeof(TransferAssetEventDto)}",
                     $"{typeof(DeleteAssetEventDto)}"
                 };
                 return new RabbitMqService(connection, queues);
             });
 
-            services.AddTransient<EventListeningService>();
-            services.AddHostedService(provider => provider.GetRequiredService<EventListeningService>());
-                        
-            services.AddTransient<EventProcessingService>();
-            services.AddHostedService(provider => provider.GetRequiredService<EventProcessingService>());
+            // services.AddTransient<EventListeningService>();
+            // services.AddHostedService(provider => provider.GetRequiredService<EventListeningService>());
+
+            // services.AddTransient<EventProcessingService>();
+            // services.AddHostedService(provider => provider.GetRequiredService<EventProcessingService>());
 
             services.AddLogging(builder =>
             {
                 builder.SetMinimumLevel(LogLevel.Debug);
-                builder.AddConsole(); 
+                builder.AddConsole();
             });
-            
+
             return services;
         }
     }
