@@ -16,14 +16,14 @@ services:
 
   frontend:
     build:
-      context: ./front-end
+      context: ./Front-end
       dockerfile: Dockerfile
     depends_on:
       - backend
   
   backend:
     build:
-      context: ./backend
+      context: ./Backend
       dockerfile: Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
@@ -38,10 +38,10 @@ services:
 
   blockchain:
     build:
-      context: ./blockchain
+      context: ./Blockchain
       dockerfile: Dockerfile
     volumes:
-      - ./blockchain/health_check.sh:/usr/local/bin/bc_health_check.sh
+      - ./Blockchain/health_check.sh:/usr/local/bin/bc_health_check.sh
     healthcheck:
       test: ["CMD-SHELL", "sh /usr/local/bin/bc_health_check.sh"]
       interval: 30s
