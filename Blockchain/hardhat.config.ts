@@ -17,7 +17,7 @@ const config: HardhatUserConfig = {
   },
   networks:{
     hardhat:{
-      chainId:1337,
+      chainId:1338,
     },
     sepolia: {
       chainId:11155111,

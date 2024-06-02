@@ -10,8 +10,7 @@ namespace Persistence
     {
         public static IServiceCollection ConfigurePersistenceServices(this IServiceCollection services, IConfiguration configuration) 
         {
-            services.AddDbContext<AppDbContext>(options => options.UseNpgsql(
-                configuration.GetConnectionString("AppConnectionString")));
+            services.AddDbContext<AppDbContext>(options => options.UseNpgsql(configuration["PostgreSQL:ConnectionString"]));
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             return services;
         }

@@ -36,6 +36,10 @@ builder.Services.AddSwaggerGen(c => {
         },
     });
 
+    c.AddServer(new OpenApiServer
+    {
+        Url = "http://localhost/api/"
+    });
     
     c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
