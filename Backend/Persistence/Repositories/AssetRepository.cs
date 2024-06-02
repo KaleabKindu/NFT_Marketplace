@@ -1,3 +1,4 @@
+using System.Numerics;
 using System.Text.RegularExpressions;
 using Application.Common.Errors;
 using Application.Contracts.Presistence;
@@ -218,6 +219,57 @@ namespace Persistence.Repositories
             }
 
             return await assets.ToListAsync();
+        }
+
+        public async Task<ErrorOr<Asset>> SellAsset(BigInteger tokenId)
+        {
+
+            var asset = await _context.Assets.FirstOrDefaultAsync(x => x.TokenId == tokenId);
+            if (asset == null) return ErrorFactory.NotFound("Asset", "Asset Not Found");
+
+            asset.Status = AssetStatus.NotOnSale;
+
+            return asset;
+        }
+
+        public async Task<ErrorOr<Unit>> ResellAsset(ResellAssetEventDto resellAssetEventDto)
+        {
+            var asset = await _context.Assets.Include(x => x.Auction)
+                .FirstOrDefaultAsync(x => x.TokenId == resellAssetEventDto.TokenId);
+
+            if (asset == null) return ErrorFactory.NotFound("Asset", "Asset Not Found");
+
+            asset.Price = (double)resellAssetEventDto.Price;
+
+            if (resellAssetEventDto.Auction && resellAssetEventDto.AuctionId != 0 && resellAssetEventDto.AuctionEnd == null)
+            {
+                asset.Auction.AuctionId = (long)resellAssetEventDto.AuctionId;
+                asset.AuctionId = asset.Auction.AuctionId;
+                asset.Auction.AuctionEnd = (long)resellAssetEventDto.AuctionEnd;
+
+                asset.Status = AssetStatus.OnAuction;
+            }
+            else
+            {
+                asset.Status = AssetStatus.OnFixedSale;
+            }
+
+            return Unit.Value;
+        }
+
+        public async Task<ErrorOr<Tuple<string, Asset>>> TransferAsset(TransferAssetEventDto transferAssetEventDto)
+        {
+            var asset = await _context.Assets.FirstOrDefaultAsync(x => x.TokenId == transferAssetEventDto.TokenId);
+            if (asset == null) return ErrorFactory.NotFound("Asset", "Asset Not Found");
+
+            var newOwner = await _context.Users.FirstOrDefaultAsync(x => x.Address == transferAssetEventDto.NewOwner);
+            if (newOwner == null) return ErrorFactory.NotFound("User", "User Not Found");
+            var oldOwnerId = asset.OwnerId;
+            asset.Owner = newOwner;
+            asset.OwnerId = newOwner.Id;
+
+            return new Tuple<string, Asset>(oldOwnerId, asset);
+
         }
     }
 }
