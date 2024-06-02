@@ -6,8 +6,8 @@ namespace Persistence.Configurations.Security;
 
 public class AssetEntityConfiguration : IEntityTypeConfiguration<Asset>
 {
-	public void Configure(EntityTypeBuilder<Asset> builder)
-	{
+    public void Configure(EntityTypeBuilder<Asset> builder)
+    {
 
         builder.HasData(
             new Asset
@@ -28,7 +28,7 @@ public class AssetEntityConfiguration : IEntityTypeConfiguration<Asset>
                 Royalty = 0.1f,
                 Likes = 10,
                 TransactionHash = "hash1",
-                Status = AssetStatus.Auction
+                Status = AssetStatus.OnAuction
             },
             new Asset
             {
@@ -48,7 +48,7 @@ public class AssetEntityConfiguration : IEntityTypeConfiguration<Asset>
                 Royalty = 0.2f,
                 Likes = 20,
                 TransactionHash = "hash2",
-                Status = AssetStatus.Auction
+                Status = AssetStatus.OnAuction
             },
             new Asset
             {
@@ -68,7 +68,7 @@ public class AssetEntityConfiguration : IEntityTypeConfiguration<Asset>
                 Royalty = 0.3f,
                 Likes = 30,
                 TransactionHash = "hash3",
-                Status = AssetStatus.Auction
+                Status = AssetStatus.OnAuction
             },
             new Asset
             {
@@ -88,7 +88,7 @@ public class AssetEntityConfiguration : IEntityTypeConfiguration<Asset>
                 Royalty = 0.4f,
                 Likes = 40,
                 TransactionHash = "hash4",
-                Status = AssetStatus.Auction
+                Status = AssetStatus.OnAuction
             },
             new Asset
             {
@@ -108,7 +108,7 @@ public class AssetEntityConfiguration : IEntityTypeConfiguration<Asset>
                 Royalty = 0.5f,
                 Likes = 50,
                 TransactionHash = "hash5",
-                Status = AssetStatus.Auction
+                Status = AssetStatus.OnAuction
             },
             new Asset
             {
@@ -128,7 +128,7 @@ public class AssetEntityConfiguration : IEntityTypeConfiguration<Asset>
                 Royalty = 0.6f,
                 Likes = 60,
                 TransactionHash = "hash6",
-                Status = AssetStatus.Auction
+                Status = AssetStatus.OnAuction
             },
             new Asset
             {
@@ -148,7 +148,7 @@ public class AssetEntityConfiguration : IEntityTypeConfiguration<Asset>
                 Royalty = 0.7f,
                 Likes = 70,
                 TransactionHash = "hash7",
-                Status = AssetStatus.Auction
+                Status = AssetStatus.OnAuction
             },
             new Asset
             {
@@ -168,7 +168,7 @@ public class AssetEntityConfiguration : IEntityTypeConfiguration<Asset>
                 Royalty = 0.8f,
                 Likes = 80,
                 TransactionHash = "hash8",
-                Status = AssetStatus.Auction
+                Status = AssetStatus.OnAuction
             },
             new Asset
             {
@@ -188,7 +188,7 @@ public class AssetEntityConfiguration : IEntityTypeConfiguration<Asset>
                 Royalty = 0.9f,
                 Likes = 90,
                 TransactionHash = "hash9",
-                Status = AssetStatus.Auction
+                Status = AssetStatus.OnAuction
             },
             new Asset
             {
@@ -208,7 +208,7 @@ public class AssetEntityConfiguration : IEntityTypeConfiguration<Asset>
                 Royalty = 1.0f,
                 Likes = 100,
                 TransactionHash = "hash10",
-                Status = AssetStatus.Auction
+                Status = AssetStatus.OnAuction
             },
             new Asset
             {
@@ -228,7 +228,7 @@ public class AssetEntityConfiguration : IEntityTypeConfiguration<Asset>
                 Royalty = 0.11f,
                 Likes = 110,
                 TransactionHash = "hash11",
-                Status = AssetStatus.Auction
+                Status = AssetStatus.OnAuction
             },
             new Asset
             {
@@ -248,7 +248,7 @@ public class AssetEntityConfiguration : IEntityTypeConfiguration<Asset>
                 Royalty = 0.12f,
                 Likes = 120,
                 TransactionHash = "hash12",
-                Status = AssetStatus.Auction
+                Status = AssetStatus.OnAuction
             },
             new Asset
             {
@@ -268,7 +268,7 @@ public class AssetEntityConfiguration : IEntityTypeConfiguration<Asset>
                 Royalty = 0.13f,
                 Likes = 130,
                 TransactionHash = "hash13",
-                Status = AssetStatus.Auction
+                Status = AssetStatus.OnAuction
             },
             new Asset
             {
@@ -288,7 +288,7 @@ public class AssetEntityConfiguration : IEntityTypeConfiguration<Asset>
                 Royalty = 0.14f,
                 Likes = 140,
                 TransactionHash = "hash14",
-                Status = AssetStatus.Auction
+                Status = AssetStatus.OnAuction
             },
             new Asset
             {
@@ -308,7 +308,7 @@ public class AssetEntityConfiguration : IEntityTypeConfiguration<Asset>
                 Royalty = 0.15f,
                 Likes = 150,
                 TransactionHash = "hash15",
-                Status = AssetStatus.Auction
+                Status = AssetStatus.OnAuction
             },
             new Asset
             {
@@ -328,7 +328,7 @@ public class AssetEntityConfiguration : IEntityTypeConfiguration<Asset>
                 Royalty = 0.16f,
                 Likes = 160,
                 TransactionHash = "hash16",
-                Status = AssetStatus.OnSale
+                Status = AssetStatus.NotOnSale
             },
             new Asset
             {
@@ -348,7 +348,7 @@ public class AssetEntityConfiguration : IEntityTypeConfiguration<Asset>
                 Royalty = 0.17f,
                 Likes = 170,
                 TransactionHash = "hash17",
-                Status = AssetStatus.Sold
+                Status = AssetStatus.NotOnSale
             },
             new Asset
             {
@@ -368,7 +368,7 @@ public class AssetEntityConfiguration : IEntityTypeConfiguration<Asset>
                 Royalty = 0.18f,
                 Likes = 180,
                 TransactionHash = "hash18",
-                Status = AssetStatus.NotForSale
+                Status = AssetStatus.NotOnSale
             },
             new Asset
             {
@@ -388,7 +388,7 @@ public class AssetEntityConfiguration : IEntityTypeConfiguration<Asset>
                 Royalty = 0.19f,
                 Likes = 190,
                 TransactionHash = "hash19",
-                Status = AssetStatus.OnSale
+                Status = AssetStatus.NotOnSale
             },
             new Asset
             {
@@ -408,7 +408,7 @@ public class AssetEntityConfiguration : IEntityTypeConfiguration<Asset>
                 Royalty = 0.20f,
                 Likes = 200,
                 TransactionHash = "hash20",
-                Status = AssetStatus.Sold
+                Status = AssetStatus.NotOnSale
             },
             new Asset
             {
@@ -428,7 +428,7 @@ public class AssetEntityConfiguration : IEntityTypeConfiguration<Asset>
                 Royalty = 0.21f,
                 Likes = 210,
                 TransactionHash = "hash21",
-                Status = AssetStatus.OnSale
+                Status = AssetStatus.NotOnSale
             },
             new Asset
             {
@@ -448,7 +448,7 @@ public class AssetEntityConfiguration : IEntityTypeConfiguration<Asset>
                 Royalty = 0.22f,
                 Likes = 220,
                 TransactionHash = "hash22",
-                Status = AssetStatus.Sold
+                Status = AssetStatus.NotOnSale
             },
             new Asset
             {
@@ -468,7 +468,7 @@ public class AssetEntityConfiguration : IEntityTypeConfiguration<Asset>
                 Royalty = 0.23f,
                 Likes = 230,
                 TransactionHash = "hash23",
-                Status = AssetStatus.NotForSale
+                Status = AssetStatus.NotOnSale
             },
             new Asset
             {
@@ -488,7 +488,7 @@ public class AssetEntityConfiguration : IEntityTypeConfiguration<Asset>
                 Royalty = 0.24f,
                 Likes = 240,
                 TransactionHash = "hash24",
-                Status = AssetStatus.OnSale
+                Status = AssetStatus.NotOnSale
             },
             new Asset
             {
@@ -508,7 +508,7 @@ public class AssetEntityConfiguration : IEntityTypeConfiguration<Asset>
                 Royalty = 0.25f,
                 Likes = 250,
                 TransactionHash = "hash25",
-                Status = AssetStatus.Sold
+                Status = AssetStatus.NotOnSale
             },
             new Asset
             {
@@ -528,7 +528,7 @@ public class AssetEntityConfiguration : IEntityTypeConfiguration<Asset>
                 Royalty = 0.26f,
                 Likes = 260,
                 TransactionHash = "hash26",
-                Status = AssetStatus.OnSale
+                Status = AssetStatus.NotOnSale
             },
             new Asset
             {
@@ -548,7 +548,7 @@ public class AssetEntityConfiguration : IEntityTypeConfiguration<Asset>
                 Royalty = 0.27f,
                 Likes = 270,
                 TransactionHash = "hash27",
-                Status = AssetStatus.Sold
+                Status = AssetStatus.NotOnSale
             },
             new Asset
             {
@@ -568,7 +568,7 @@ public class AssetEntityConfiguration : IEntityTypeConfiguration<Asset>
                 Royalty = 0.28f,
                 Likes = 280,
                 TransactionHash = "hash28",
-                Status = AssetStatus.NotForSale
+                Status = AssetStatus.NotOnSale
             },
             new Asset
             {
@@ -588,7 +588,7 @@ public class AssetEntityConfiguration : IEntityTypeConfiguration<Asset>
                 Royalty = 0.29f,
                 Likes = 290,
                 TransactionHash = "hash29",
-                Status = AssetStatus.OnSale
+                Status = AssetStatus.NotOnSale
             },
             new Asset
             {
@@ -608,8 +608,8 @@ public class AssetEntityConfiguration : IEntityTypeConfiguration<Asset>
                 Royalty = 0.30f,
                 Likes = 300,
                 TransactionHash = "hash30",
-                Status = AssetStatus.Sold
+                Status = AssetStatus.NotOnSale
             }
-        );		
-    }	
+        );
+    }
 }
