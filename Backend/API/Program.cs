@@ -38,7 +38,7 @@ builder.Services.AddSwaggerGen(c => {
 
     c.AddServer(new OpenApiServer
     {
-        Url = "http://localhost/api/"
+        Url = "http://ec2-3-127-57-15.eu-central-1.compute.amazonaws.com/api/"
     });
     
     c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
