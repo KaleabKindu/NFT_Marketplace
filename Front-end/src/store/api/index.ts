@@ -18,7 +18,7 @@ import queryString from "query-string";
 export const webApi = createApi({
   reducerPath: "webApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://ec2-3-127-57-15.eu-central-1.compute.amazonaws.com/api/",
+    baseUrl: "https://nft-gebeya.com/api/",
     prepareHeaders: (headers, { getState }) => {
       const token = (getState() as RootState).auth.session as string;
       if (token) {
