@@ -42,8 +42,6 @@ services:
     build:
       context: ./Blockchain
       dockerfile: Dockerfile
-    ports:
-      - "8545:8545"
     volumes:
       - ./Blockchain/health_check.sh:/usr/local/bin/bc_health_check.sh
     healthcheck:
