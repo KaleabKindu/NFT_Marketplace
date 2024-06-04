@@ -36,6 +36,10 @@ builder.Services.AddSwaggerGen(c => {
         },
     });
 
+    c.AddServer(new OpenApiServer
+    {
+        Url = "https://nft-gebeya.com/api/"
+    });
     
     c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
