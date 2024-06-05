@@ -9,7 +9,7 @@ namespace API.Controllers
 {
     [ApiController]
     [Authorize]
-    [Route("nft-gebeya/api/v1/[controller]")]
+    [Route("[controller]")]
     public class BaseController : ControllerBase
     {
         private IMediator _mediatr;

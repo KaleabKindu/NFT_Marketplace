@@ -58,6 +58,11 @@ namespace Application.Features.Assets.Command
                 };
 
                 asset.Auction = auction;
+                asset.Status = AssetStatus.OnAuction;
+            }
+            else
+            {
+                asset.Status = AssetStatus.OnFixedSale;
             }
 
             var provenance = new Provenance

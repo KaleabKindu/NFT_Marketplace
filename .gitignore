@@ -1,0 +1,7 @@
+.nginx/certs/
+*.pem
+*.key
+*.crt
+config.bat
+node_modules
+.env
