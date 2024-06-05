@@ -17,12 +17,6 @@ public class UserRoleConfiguration : IEntityTypeConfiguration<IdentityUserRole<s
                 RoleId = AdminRoleId,
                 UserId = "6f09dad5-2268-4410-b755-cf7859927e5f"
             },
-            
-            new IdentityUserRole<string>()
-            {
-                RoleId = AdminRoleId,
-                UserId = "c0c13752-c7ee-47c8-ae52-b26c73f259ee"
-            },
             new IdentityUserRole<string>
             {
                 RoleId = TraderRoleId,
