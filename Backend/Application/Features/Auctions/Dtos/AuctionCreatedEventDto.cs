@@ -1,10 +1,11 @@
 using System.Numerics;
+using Application.Common;
 using Nethereum.ABI.FunctionEncoding.Attributes;
 
 namespace Application.Features.Auctions.Dtos
 {
     [Event("AuctionCreated")]
-    public class AuctionCreatedEventDto : IEventDTO
+    public class AuctionCreatedEventDto : EventDto
     {
         [Parameter("uint256", "auctionId", 1, true)]
         public BigInteger AuctionId { get; set; }

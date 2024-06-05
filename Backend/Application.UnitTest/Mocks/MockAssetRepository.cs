@@ -44,7 +44,7 @@ namespace ApplicationUnitTest.Mocks
                     // },
                     Likes = 150,
                     TransactionHash = "0x123456789abcdef",
-                    Status = AssetStatus.OnSale
+                    Status = AssetStatus.OnAuction
                 },
                 new Asset
                 {
@@ -72,7 +72,7 @@ namespace ApplicationUnitTest.Mocks
                     // },
                     Likes = 200,
                     TransactionHash = "0xabcdef123456789",
-                    Status = AssetStatus.OnSale
+                    Status = AssetStatus.OnFixedSale
                 },
                 new Asset
                 {
@@ -100,7 +100,7 @@ namespace ApplicationUnitTest.Mocks
                     // },
                     Likes = 250,
                     TransactionHash = "0x789abcdef123456",
-                    Status = AssetStatus.Sold
+                    Status = AssetStatus.NotOnSale
                 }
             };
 

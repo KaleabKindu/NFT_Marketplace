@@ -43,7 +43,7 @@ namespace Application.Contracts.Services
             var transferAssetFilter = await transferAssetEventHandler.CreateFilterAsync();
             var deleteAssetEventHandler = _contract.GetEvent<DeleteAssetEventDto>();
             var deleteAssetFilter = await deleteAssetEventHandler.CreateFilterAsync();
-            
+
             _logger.LogInformation("Listening for SmartContract Events...");
             while (!stoppingToken.IsCancellationRequested)
             {
@@ -53,7 +53,15 @@ namespace Application.Contracts.Services
                 {
                     _logger.LogInformation($"Retrieved AuctionCreated Events...");
                     // Dispatch events to the message queue
-                    DispatchEventsToQueue(auctionCreatedEvents.Select(evnt => evnt.Event).ToArray());
+                    DispatchEventsToQueue(auctionCreatedEvents.Select(evnt => new AuctionCreatedEventDto
+                    {
+                        AuctionId = evnt.Event.AuctionId,
+                        TokenId = evnt.Event.TokenId,
+                        Seller = evnt.Event.Seller,
+                        FloorPrice = evnt.Event.FloorPrice,
+                        AuctionEnd = evnt.Event.AuctionEnd,
+                        TransactionHash = evnt.Log.TransactionHash,
+                    }).ToArray());
                 }
 
                 // BidPlaced Event
@@ -62,7 +70,13 @@ namespace Application.Contracts.Services
                 {
                     _logger.LogInformation($"Retrieved BidPlaced Events...");
                     // Dispatch events to the message queue
-                    DispatchEventsToQueue(bidPlacedEvents.Select(evnt => evnt.Event).ToArray());
+                    DispatchEventsToQueue(bidPlacedEvents.Select(evnt => new BidPlacedEventDto
+                    {
+                        AuctionId = evnt.Event.AuctionId,
+                        Bidder = evnt.Event.Bidder,
+                        Amount = evnt.Event.Amount,
+                        TransactionHash = evnt.Log.TransactionHash,
+                    }).ToArray());
                 }
 
                 // AuctionEnded Event
@@ -70,7 +84,12 @@ namespace Application.Contracts.Services
                 if (auctionEndedEvents.Count > 0)
                 {
                     _logger.LogInformation($"Retrieved AuctionEnded Events...");
-                    DispatchEventsToQueue(auctionEndedEvents.Select(evnt => evnt.Event).ToArray());
+                    DispatchEventsToQueue(auctionEndedEvents.Select(evnt => new AuctionEndedEventDto
+                    {
+                        AuctionId = evnt.Event.AuctionId,
+                        Winner = evnt.Event.Winner,
+                        TransactionHash = evnt.Log.TransactionHash,
+                    }).ToArray());
                 }
 
                 // AssetSold Event
@@ -78,7 +97,12 @@ namespace Application.Contracts.Services
                 if (assetSoldEvents.Count > 0)
                 {
                     _logger.LogInformation("Retrieved AssetSold Events...");
-                    DispatchEventsToQueue(assetSoldEvents.Select(evnt => evnt.Event).ToArray());
+                    DispatchEventsToQueue(assetSoldEvents.Select(evnt => new AssetSoldEventDto
+                    {
+                        TokenId = evnt.Event.TokenId,
+                        To = evnt.Event.To,
+                        TransactionHash = evnt.Log.TransactionHash,
+                    }).ToArray());
                 }
 
                 // ResellAsset Event
@@ -94,7 +118,12 @@ namespace Application.Contracts.Services
                 if (transferAssetEvents.Count > 0)
                 {
                     _logger.LogInformation("Retrieved TransferAsset Events...");
-                    DispatchEventsToQueue(transferAssetEvents.Select(evnt => evnt.Event).ToArray());
+                    DispatchEventsToQueue(transferAssetEvents.Select(evnt => new TransferAssetEventDto
+                    {
+                        TokenId = evnt.Event.TokenId,
+                        NewOwner = evnt.Event.NewOwner,
+                        TransactionHash = evnt.Log.TransactionHash,
+                    }).ToArray());
                 }
 
                 // DeleteAsset Event

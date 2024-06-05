@@ -170,7 +170,7 @@ contract Marketplace is ERC721URIStorage, Ownable {
     function deleteAsset(uint256 tokenId) public onlyOwner {
         console.log("NFT Burn Begin - Owner %s", ownerOf(tokenId));
         _burn(tokenId);
-        console.log("NFT Burn Complete - Owner %s", ownerOf(tokenId));   
+    
         if(idToProduct[tokenId].auctionId != 0){
             delete idToAuction[idToProduct[tokenId].auctionId];
         }

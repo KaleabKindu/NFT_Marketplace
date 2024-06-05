@@ -28,6 +28,8 @@ namespace Application.Features.Auctions.Commands
             CancellationToken cancellationToken
         )
         {
+            await _unitOfWork.AssetRepository.ResellAsset(command._event);
+            await _unitOfWork.SaveAsync();
             _logger.LogInformation($"\nResellAssetEvent\nTokenID: {command._event.TokenId}\nAuction: {command._event.Auction}\nPrice: {command._event.Price}\nAuctionEnd: {command._event.AuctionEnd}\n");
             return true;
         }
