@@ -7,7 +7,7 @@ namespace Domain.Assets
     public class Asset : BaseClass
     {
         public string Name { get; set; }
-        public long TokenId {get; set;}
+        public long TokenId { get; set; }
         public string Description { get; set; }
         public string? Image { get; set; }
         public string? Video { get; set; }
@@ -29,23 +29,23 @@ namespace Domain.Assets
         public AssetStatus Status { get; set; }
     }
 
-    public enum  AssetCategory
+    public enum AssetCategory
     {
-      
-      audio, 
-      video, 
-      art, 
-      photography, 
-      ticket, 
-      design, 
-      ebook, 
-      three_d
+
+        audio,
+        video,
+        art,
+        photography,
+        ticket,
+        design,
+        ebook,
+        three_d
     }
-    
-    public enum AssetStatus {
-        OnSale,
-        Sold,
-        Auction,
-        NotForSale
+
+    public enum AssetStatus
+    {
+        OnFixedSale,
+        OnAuction,
+        NotOnSale
     }
 }

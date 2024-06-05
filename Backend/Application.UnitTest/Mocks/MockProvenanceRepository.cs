@@ -34,7 +34,7 @@ namespace ApplicationUnitTest.Mocks
                         Royalty = 10.5f,
                         Likes = 150,
                         TransactionHash = "0x123456789abcdef",
-                        Status = AssetStatus.OnSale
+                        Status = AssetStatus.OnAuction
                     },
                     AssetId = 1,
                     Event = Event.Mint,
@@ -60,7 +60,7 @@ namespace ApplicationUnitTest.Mocks
                         Royalty = 15.0f,
                         Likes = 200,
                         TransactionHash = "0xabcdef1234567891",
-                        Status = AssetStatus.OnSale
+                        Status = AssetStatus.OnFixedSale
                     },
                     AssetId = 2,
                     Event = Event.Sale,
@@ -90,7 +90,7 @@ namespace ApplicationUnitTest.Mocks
                         Royalty = 12.0f,
                         Likes = 250,
                         TransactionHash = "0x789abcdef123456",
-                        Status = AssetStatus.Sold
+                        Status = AssetStatus.NotOnSale
                     },
                     AssetId = 3,
                     Event = Event.Sale,

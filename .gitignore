@@ -1,0 +1,5 @@
+.nginx/certs/
+*.pem
+*.key
+*.crt
+config.bat
