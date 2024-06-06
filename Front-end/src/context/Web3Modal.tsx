@@ -1,7 +1,7 @@
 "use client";
 import { createWeb3Modal, defaultWagmiConfig } from "@web3modal/wagmi/react";
 
-import { WagmiConfig } from "wagmi";
+import { Chain, WagmiConfig } from "wagmi";
 import { ReactNode } from "react";
 import {
   arbitrum,
@@ -15,11 +15,31 @@ import {
   polygon,
 } from "wagmi/chains";
 
+const awsnode: Chain = {
+  id: 1337,
+  name: "nft-gebeya",
+  network: "nft-gebeya",
+  nativeCurrency: {
+    name: "Ether",
+    symbol: "ETH",
+    decimals: 18,
+  },
+  rpcUrls: {
+    default:{
+      http:["https://nodes.nft-gebeya.com"],
+    },
+    public:{
+      http:["https://nodes.nft-gebeya.com"]
+    } 
+  },
+  testnet: true,
+};
+
 const chains = [
   mainnet,
   polygon,
   avalanche,
-  localhost,
+  awsnode,
   arbitrum,
   bsc,
   optimism,
