@@ -6,6 +6,7 @@ using Application.Features.Assets.Dtos;
 using AutoMapper;
 using Domain.Assets;
 using Domain.Auctions;
+using Domain.Collections;
 using Domain.Provenances;
 using ErrorOr;
 using MediatR;
@@ -41,9 +42,29 @@ namespace Application.Features.Assets.Command
 
             if (user == null)
                 return ErrorFactory.NotFound(nameof(user), "user not found");
+
+
+
             var asset = _mapper.Map<Asset>(request.CreateAssetDto);
             asset.Creator = user;
             asset.Owner = user;
+
+            Collection collection;
+
+
+            if (request.CreateAssetDto.CollectionId != null)
+            {
+                collection = await _unitOfWork.CollectionRepository.GetByIdAsync(request.CreateAssetDto.CollectionId ?? 0);
+
+                if (collection == null)
+                    return ErrorFactory.NotFound(nameof(collection), "collection not found");
+
+                collection.Volume += asset.Price;
+                collection.Items += 1;
+                collection.FloorPrice = collection.FloorPrice == 0 ? asset.Price : Math.Min(collection.FloorPrice, asset.Price);
+
+                _unitOfWork.CollectionRepository.UpdateAsync(collection);
+            }
 
             if (request.CreateAssetDto.Auction != null)
             {
