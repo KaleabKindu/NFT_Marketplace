@@ -25,12 +25,12 @@ const awsnode: Chain = {
     decimals: 18,
   },
   rpcUrls: {
-    default:{
-      http:["https://nodes.nft-gebeya.com"],
+    default: {
+      http: ["https://nodes.nft-gebeya.com"],
     },
-    public:{
-      http:["https://nodes.nft-gebeya.com"]
-    } 
+    public: {
+      http: ["https://nodes.nft-gebeya.com"],
+    },
   },
   testnet: true,
 };

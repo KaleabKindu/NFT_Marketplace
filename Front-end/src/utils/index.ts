@@ -61,8 +61,8 @@ const generateDummyAssets = () => {
           ? undefined
           : {
               auctionId: faker.number.int(),
-              auction_end: new Date(faker.date.future()).getTime(),
-              highest_bid: faker.number
+              auctionEnd: new Date(faker.date.future()).getTime(),
+              highestBid: faker.number
                 .float({ min: 0.00001, max: 1, fractionDigits: 4 })
                 .toString(),
             },
@@ -92,10 +92,10 @@ const generateDummyCollections = () => {
         .float({ min: 1, max: 20, fractionDigits: 4 })
         .toString(),
       items: faker.number.int({ min: 5, max: 50 }),
-      floor_price: faker.number
+      floorPrice: faker.number
         .float({ min: 1, max: 20, fractionDigits: 4 })
         .toString(),
-      latest_price: faker.number
+      latestPrice: faker.number
         .float({ min: 1, max: 20, fractionDigits: 4 })
         .toString(),
       images: [
@@ -174,7 +174,7 @@ const generateDummyBids = () => {
         avatar: faker.image.avatar(),
         address: `0x${faker.finance.bitcoinAddress()}`,
       },
-      price: faker.number
+      bid: faker.number
         .float({ min: 1, max: 20, fractionDigits: 4 })
         .toString(),
       hash: `0x${faker.finance.litecoinAddress()}`,

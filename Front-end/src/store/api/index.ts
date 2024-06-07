@@ -74,13 +74,16 @@ export const webApi = createApi({
     }),
     getUserDetails: builder.query<User, string>({
       query: (address) => `auth/user/detail?address=${address}`,
+      transformResponse(baseQueryReturnValue: any, meta, arg) {
+        return baseQueryReturnValue.value;
+      },
     }),
     getProvenance: builder.query<
       IProvenancePage,
       { id: string; pageNumber: number; pageSize: number }
     >({
       query: ({ id, pageNumber, pageSize }) =>
-        `provenance?tokenId=${id}&pageNumber=${pageNumber}&pageSize=${pageSize}`,
+        `provenance/${id}?pageNumber=${pageNumber}&pageSize=${pageSize}`,
     }),
     getBids: builder.query<
       IBidPage,
@@ -100,6 +103,9 @@ export const webApi = createApi({
     }),
     getCollectionDetails: builder.query<ICollection, string>({
       query: (id) => `collections/${id}`,
+      transformResponse(baseQueryReturnValue: any, meta, arg) {
+        return baseQueryReturnValue.value;
+      },
     }),
     getUsers: builder.query<IUsersPage, IFilter>({
       query: (params) => {

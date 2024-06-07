@@ -95,7 +95,7 @@ const NFTCard = ({ asset }: Props) => {
               />
               <TypographyH4
                 className="text-primary/60"
-                text={`${asset.auction ? asset.auction.highest_bid : asset.price}ETH`}
+                text={`${asset.auction ? asset.auction.highestBid : asset.price}ETH`}
               />
             </div>
             <div className="flex-1 w-[50%] flex flex-col items-end">
@@ -103,7 +103,7 @@ const NFTCard = ({ asset }: Props) => {
                 <div className="flex gap-1 items-center">
                   <GoClock className="text-foreground/50" size={20} />
                   <TypographySmall
-                    text={`${moment(new Date(asset.auction.auction_end)).toNow(true)} left`}
+                    text={`${moment(new Date(asset.auction.auctionEnd * 1000)).toNow(true)} left`}
                   />
                 </div>
               )}

@@ -54,14 +54,16 @@ const CollectionNFTs = (props: Props) => {
           {assets.slice(0, size).map((asset, index) => (
             <NFTCard key={index} asset={asset} />
           ))}
-          <Pagination
-            total={100}
-            currentPage={page}
-            setPage={(a: number) => {
-              setPage(a);
-              window.scrollTo({ top: 500, behavior: "smooth" });
-            }}
-          />
+          {total > page * size && (
+            <Pagination
+              total={total}
+              currentPage={page}
+              setPage={(a: number) => {
+                setPage(a);
+                window.scrollTo({ top: 500, behavior: "smooth" });
+              }}
+            />
+          )}
         </>
       ) : (
         <NoData message="No assets found" />

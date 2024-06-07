@@ -28,6 +28,7 @@ import { TransferModal } from "./TransferModal";
 import { DeleteAssetModal } from "./DeleteAssetModal";
 import { ChangePriceModal } from "./ChangePriceModal";
 import { useAccount } from "wagmi";
+import { useMemo } from "react";
 
 type Props = {
   asset?: NFT;
@@ -68,6 +69,14 @@ const NFTDetailRight = ({ asset, isLoading }: Props) => {
       </div>
     );
   };
+  const auctionEndDate = useMemo(() => {
+    const timestamp = asset?.auction?.auctionEnd;
+    if (timestamp && !isNaN(timestamp)) {
+      const date = new Date(timestamp * 1000);
+      return date;
+    }
+    return null;
+  }, [asset?.auction]);
   return (
     <>
       {isLoading ? (
@@ -127,10 +136,9 @@ const NFTDetailRight = ({ asset, isLoading }: Props) => {
                   <TypographyH3
                     className="text-primary/60"
                     text={
-                      <CountDown
-                        date={new Date(asset?.auction?.auction_end * 1000)}
-                        renderer={onRender}
-                      />
+                      auctionEndDate && (
+                        <CountDown date={auctionEndDate} renderer={onRender} />
+                      )
                     }
                   />
                 </div>

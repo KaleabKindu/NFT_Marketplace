@@ -75,15 +75,21 @@ export default function NFTBids() {
                 <>
                   {bids.map((bid, index) => (
                     <TableRow key={index}>
-                      <TableCell className="font-medium">{`${bid.price} WETH`}</TableCell>
-                      <TableCell>{`$${parseInt(bid.price) * 100}`}</TableCell>
+                      <TableCell className="font-medium">{`${bid.bid} WETH`}</TableCell>
+                      <TableCell>{`$${parseInt(bid.bid) * 3000}`}</TableCell>
                       <TableCell>
                         <Link
                           href={`${Routes.USER}/${bid.from.address}`}
                           className="flex gap-2 items-center"
                         >
                           <Avatar src={bid.from.avatar} />
-                          <TypographyP text={bid.from.username.slice(0, 10)} />
+                          <TypographyP
+                            text={
+                              bid.from.username
+                                ? bid.from.username.slice(0, 10)
+                                : bid.from.address.slice(2, 7)
+                            }
+                          />
                         </Link>
                       </TableCell>
                       <TableCell>{moment(bid.date).format("ll")}</TableCell>

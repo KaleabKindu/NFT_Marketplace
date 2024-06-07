@@ -76,7 +76,13 @@ export const Creator = ({ index, user, showRank = true }: CreatorProps) => {
         </div>
         <div className="flex gap-3 items-center justify-around w-full p-3">
           <div>
-            <TypographyH4 text={user.username.slice(0, 10)} />
+            <TypographyH4
+              text={
+                user.username
+                  ? user.username.slice(0, 10)
+                  : user.address.slice(2, 7)
+              }
+            />
             <div className="flex items-center gap-3">
               <TypographyP
                 className="font-semibold text-primary/80"

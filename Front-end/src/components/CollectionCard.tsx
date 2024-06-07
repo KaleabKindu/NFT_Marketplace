@@ -1,4 +1,5 @@
-import Image from "next/image";
+"use client";
+import Image, { ImageProps } from "next/image";
 import { Card } from "./ui/card";
 import {
   TypographyH3,
@@ -10,6 +11,8 @@ import { Avatar } from "./common/Avatar";
 import Link from "next/link";
 import { Routes } from "@/routes";
 import { ICollection } from "@/types";
+import { useState } from "react";
+import CustomImage from "./common/CustomImage";
 type Props = {
   collection: ICollection;
 };
@@ -21,8 +24,8 @@ const CollectionCard = ({ collection }: Props) => {
       className="col-span-1 md:col-span-2 lg:col-span-3"
     >
       <Card className="flex flex-col gap-2 rounded-3xl bg-accent hover:bg-accent/70  h-[25rem] w-full group">
-        <div className="relative overflow-clip rounded-t-3xl h-[55%] ">
-          <Image
+        <div className="relative overflow-clip rounded-t-3xl h-[75%] ">
+          <CustomImage
             className="object-cover rounded-t-3xl group-hover:scale-105"
             src={collection?.images?.[0] || ""}
             fill
@@ -31,7 +34,7 @@ const CollectionCard = ({ collection }: Props) => {
         </div>
         <div className="flex gap-2 h-[20%]">
           <div className="relative flex-1">
-            <Image
+            <CustomImage
               className="object-cover hover:scale-105"
               src={collection?.images?.[1] || ""}
               fill
@@ -39,7 +42,7 @@ const CollectionCard = ({ collection }: Props) => {
             />
           </div>
           <div className="relative flex-1">
-            <Image
+            <CustomImage
               className="object-cover hover:scale-105"
               src={collection?.images?.[2] || ""}
               fill
@@ -47,7 +50,7 @@ const CollectionCard = ({ collection }: Props) => {
             />
           </div>
           <div className="relative flex-1">
-            <Image
+            <CustomImage
               className="object-cover hover:scale-105"
               src={collection?.images?.[3] || ""}
               fill
@@ -64,7 +67,11 @@ const CollectionCard = ({ collection }: Props) => {
             <div className="flex items-center gap-3">
               <Avatar className="h-8 w-8" src={collection.creator.avatar} />
               <TypographySmall
-                text={collection.creator.username.slice(0, 10)}
+                text={
+                  collection.creator.username
+                    ? collection.creator.username.slice(0, 10)
+                    : collection.creator.address.slice(2, 7)
+                }
               />
             </div>
             <Card className="relative p-2 bg-primary/5 border-4">

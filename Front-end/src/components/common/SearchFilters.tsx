@@ -70,7 +70,7 @@ export const SearchInput = ({ className, postIcon }: SearchProps) => {
       />
       {postIcon && (
         <Button
-          className="absolute top-0 bottom-0 my-auto right-2 rounded-full"
+          className="absolute top-0 bottom-0 my-auto right-0 rounded-full"
           size={"icon"}
         >
           {postIcon}
@@ -579,7 +579,13 @@ export const UsersFilter = () => {
           <LuUser2 size={25} />
           <TypographySmall
             className="text-foreground"
-            text={value ? currentUser?.username : "Creators"}
+            text={
+              value
+                ? currentUser?.username
+                  ? currentUser?.username.slice(0, 10)
+                  : currentUser?.address.slice(2, 7)
+                : "Creators"
+            }
           />
           {value ? (
             <IoMdCloseCircle
@@ -616,7 +622,9 @@ export const UsersFilter = () => {
                   )}
                 />
                 <Avatar className="h-5 w-5 mr-2" />
-                {user.username}
+                {user.username
+                  ? user.username.slice(0, 10)
+                  : user.address.slice(2, 7)}
               </CommandItem>
             ))}
           </CommandGroup>
