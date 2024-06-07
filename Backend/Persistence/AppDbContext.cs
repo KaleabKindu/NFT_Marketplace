@@ -9,9 +9,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Persistence
 {
-    public class AppDbContext:IdentityDbContext<AppUser, AppRole, string>
+    public class AppDbContext : IdentityDbContext<AppUser, AppRole, string>
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options):base(options)
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
             AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
             AppContext.SetSwitch("Npgsql.DisableDateTimeInfinityConversions", true);
@@ -52,10 +52,11 @@ namespace Persistence
         }
 
         public DbSet<Bid> Bids { get; set; }
-        public DbSet<Asset> Assets{ get; set; }
+        public DbSet<Asset> Assets { get; set; }
         public DbSet<Auction> Auctions { get; set; }
         public DbSet<Collection> Collections { get; set; }
         public DbSet<Like> Likes { get; set; }
         public DbSet<Provenance> Provenances { get; set; }
+        public DbSet<UserProfile> UserProfiles { get; set; }
     }
 }
