@@ -41,6 +41,17 @@ namespace Application.Features.Auctions.Commands
 
             var asset = assetResponse.Value;
 
+            if (asset.CollectionId != null)
+            {
+                var collection = await _unitOfWork.CollectionRepository.GetByIdAsync(asset.CollectionId ?? 0);
+
+                if (collection != null)
+                {
+                    collection.LatestPrice = asset.Price;
+                    _unitOfWork.CollectionRepository.UpdateAsync(collection);
+                }
+            }
+
             // create provinance
             var provenance = new Provenance
             {

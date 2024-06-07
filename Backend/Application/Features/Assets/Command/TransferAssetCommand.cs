@@ -49,6 +49,8 @@ namespace Application.Features.Auctions.Commands
                 TransactionHash = command._event.TransactionHash
             };
 
+            await _unitOfWork.ProvenanceRepository.AddAsync(provenance);
+
             await _unitOfWork.SaveAsync();
             _logger.LogInformation($"\nTransferAssetEvent\nTokenID: {command._event.TokenId}\nNewOwner: {command._event.NewOwner}");
             return true;
