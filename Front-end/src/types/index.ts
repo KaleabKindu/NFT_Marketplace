@@ -50,7 +50,7 @@ export interface SocialMedia {
   youtube: string;
   telegram: string;
 }
-export interface Collection {
+export interface ICollection {
   id: string;
   avatar: string;
   name: string;
@@ -107,7 +107,7 @@ export interface IAssetsPage extends IPagination {
 }
 
 export interface ICollectionsPage extends IPagination {
-  value: Collection[];
+  value: ICollection[];
 }
 
 export interface IUsersPage extends IPagination {

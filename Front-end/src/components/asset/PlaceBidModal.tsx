@@ -29,6 +29,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { MdWallet } from "react-icons/md";
 import { useAccount, useBalance } from "wagmi";
 import useContractWriteMutation from "@/hooks/useContractWriteMutation";
+import { useAppSelector } from "@/store/hooks";
+import { useWeb3Modal } from "@web3modal/wagmi/react";
 
 const initialState = {
   price: 0.0,
@@ -41,20 +43,23 @@ type PlaceBidModalProps = {
   auctionId: number;
 };
 export const PlaceBidModal = ({ auctionId }: PlaceBidModalProps) => {
-  const [open, setOpen] = useState(false);
+  const session = useAppSelector((state) => state.auth.session);
+  const { open } = useWeb3Modal();
+
+  const [showModal, setShowModal] = useState(false);
   const { address } = useAccount();
   const { data: balance } = useBalance({ address: address });
-  const {
-    isLoading,
-    writeSuccess,
-    contractWrite,
-  } = useContractWriteMutation();
+  const { isLoading, writeSuccess, contractWrite } = useContractWriteMutation();
   const form = useForm<{ price: number }>({
     resolver: zodResolver(schema),
     defaultValues: initialState,
   });
-  const handleClose = () => setOpen(false);
+  const handleClose = () => setShowModal(false);
   const onSubmit = (values: { price: number }) => {
+    if (!session) {
+      open();
+      return;
+    }
     contractWrite("placeBid", values.price.toString(), [auctionId]);
   };
   useEffect(() => {
@@ -63,7 +68,7 @@ export const PlaceBidModal = ({ auctionId }: PlaceBidModalProps) => {
     }
   }, [writeSuccess]);
   return (
-    <Dialog open={open} onOpenChange={(a) => setOpen(a)}>
+    <Dialog open={showModal} onOpenChange={(a) => setShowModal(a)}>
       <DialogTrigger asChild>
         <Button type="button" className="flex-1 lg:w-[50%] w-full">
           Place Bid

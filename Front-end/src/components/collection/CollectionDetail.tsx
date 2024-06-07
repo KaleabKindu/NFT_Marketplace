@@ -6,21 +6,27 @@ import {
   TypographyP,
   TypographySmall,
 } from "../common/Typography";
-import { collections } from "@/utils";
 import { useGetCollectionDetailsQuery } from "@/store/api";
 import { Skeleton } from "../ui/skeleton";
+import Error from "../common/Error";
 
 type Props = {
   id: string;
 };
 
 const CollectionDetail = ({ id }: Props) => {
-  const { data, isLoading } = useGetCollectionDetailsQuery(id);
-  const collection = collections.find((collection) => collection.id === id);
+  const {
+    data: collection,
+    isLoading,
+    isError,
+    refetch,
+  } = useGetCollectionDetailsQuery(id);
   return (
     <div className="relative flex flex-col lg:flex-row gap-8 -mt-[15vh] w-[90%] lg:w-[85%] mx-auto bg-background border z-40 rounded-3xl p-8">
       {isLoading ? (
         <Skeleton className="w-full h-80 rounded-3xl" />
+      ) : isError ? (
+        <Error retry={refetch} />
       ) : (
         <>
           <div className="relative w-full h-[300px] lg:w-[350px] lg:h-[300px]">

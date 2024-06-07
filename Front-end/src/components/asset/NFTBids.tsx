@@ -12,12 +12,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { bids as bidsData } from "@/utils";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import NoData from "../common/NoData";
-import Error from "../common/NoData";
+import Error from "../common/Error";
 import ProvenanceShimmers from "../common/shimmers/ProvenanceShimmers";
 import { useGetBidsQuery } from "@/store/api";
 import Link from "next/link";
@@ -32,16 +31,16 @@ export default function NFTBids() {
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
   const [size, setSize] = useState(12);
-  const { data, isLoading, isFetching, isError } = useGetBidsQuery({
+  const { data, isLoading, isFetching, isError, refetch } = useGetBidsQuery({
     id: params.id as string,
     pageNumber: page,
     pageSize: size,
   });
-  const [bids, setBids] = useState<IBid[]>(bidsData);
+  const [bids, setBids] = useState<IBid[]>([]);
   const { ref, inView } = useInView({ threshold: 0.3 });
 
   useEffect(() => {
-    if (data) {
+    if (data && page * size > bids.length) {
       setBids([...bids, ...data.value]);
       setTotal(data.count);
     }
@@ -57,7 +56,7 @@ export default function NFTBids() {
         <AccordionTrigger className="bg-accent text-accent-foreground px-5 rounded-t-md">
           Bids
         </AccordionTrigger>
-        <AccordionContent className="h-80 overflow-y-auto">
+        <AccordionContent className="h-80 overflow-y-auto hide-scrollbar">
           <Table className="border">
             <TableHeader>
               <TableRow>
@@ -70,8 +69,8 @@ export default function NFTBids() {
             <TableBody>
               {isLoading ? (
                 <ProvenanceShimmers />
-              ) : false ? (
-                <Error />
+              ) : isError ? (
+                <Error retry={refetch} />
               ) : bids.length > 0 ? (
                 <>
                   {bids.map((bid, index) => (

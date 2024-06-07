@@ -10,7 +10,6 @@ import Link from "next/link";
 import CountDown from "count-down-react";
 import { Button } from "../ui/button";
 
-import { nft_detail } from "@/data";
 import { Avatar } from "../common/Avatar";
 import { Routes } from "@/routes";
 import { BsThreeDots } from "react-icons/bs";
@@ -28,6 +27,7 @@ import { BuyModal } from "./BuyModal";
 import { TransferModal } from "./TransferModal";
 import { DeleteAssetModal } from "./DeleteAssetModal";
 import { ChangePriceModal } from "./ChangePriceModal";
+import { useAccount } from "wagmi";
 
 type Props = {
   asset?: NFT;
@@ -35,6 +35,7 @@ type Props = {
 };
 
 const NFTDetailRight = ({ asset, isLoading }: Props) => {
+  const { address } = useAccount();
   const onRender = ({
     days,
     hours,
@@ -76,12 +77,14 @@ const NFTDetailRight = ({ asset, isLoading }: Props) => {
           <div className="flex flex-col gap-10">
             <div className="flex justify-between items-start p-5">
               <TypographyH2 className="capitalize" text={asset?.name} />
-              <Menu asset={asset as NFT} />
+              {address && asset?.owner?.address === address && (
+                <Menu asset={asset as NFT} />
+              )}
             </div>
             <div className="flex flex-wrap items-center lg:divide-x-2">
               <Link
                 href={`${Routes.USER}/${asset?.creator?.address}`}
-                className="flex flex-1 items-center gap-3 p-5"
+                className="flex w-[30%] items-center gap-3 p-5"
               >
                 <Avatar className="h-12 w-12" src={asset?.creator?.avatar} />
                 <div className="flex flex-col">
@@ -91,7 +94,7 @@ const NFTDetailRight = ({ asset, isLoading }: Props) => {
               </Link>
               <Link
                 href={`${Routes.USER}/${asset?.owner?.address}`}
-                className="flex flex-1 items-center gap-3 p-5"
+                className="flex w-[30%] items-center gap-3 p-5"
               >
                 <Avatar className="h-12 w-12" src={asset?.owner?.avatar} />
                 <div className="flex flex-col">
@@ -99,21 +102,23 @@ const NFTDetailRight = ({ asset, isLoading }: Props) => {
                   <TypographyH4 text={asset?.owner?.address.slice(2, 8)} />
                 </div>
               </Link>
-              <Link
-                href={`${Routes.COLLECTION}/${asset?.collection?.id}`}
-                className="flex flex-1 items-center gap-3 p-5"
-              >
-                <Avatar
-                  className="h-12 w-12"
-                  src={
-                    asset?.collection?.avatar || "/collection/collection.png"
-                  }
-                />
-                <div className="flex flex-col truncate">
-                  <TypographySmall text="Collection" />
-                  <TypographyH4 text={asset?.collection?.name} />
-                </div>
-              </Link>
+              {asset?.collection && (
+                <Link
+                  href={`${Routes.COLLECTION}/${asset?.collection?.id}`}
+                  className="flex w-[30%] items-center gap-3 p-5"
+                >
+                  <Avatar
+                    className="h-12 w-12"
+                    src={
+                      asset?.collection?.avatar || "/collection/collection.png"
+                    }
+                  />
+                  <div className="flex flex-col truncate">
+                    <TypographySmall text="Collection" />
+                    <TypographyH4 text={asset?.collection?.name} />
+                  </div>
+                </Link>
+              )}
             </div>
             <div className="flex flex-col gap-5 ">
               {asset?.auction && (

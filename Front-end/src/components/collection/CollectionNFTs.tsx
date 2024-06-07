@@ -1,5 +1,4 @@
 "use client";
-import { assets as assetsData } from "@/utils";
 import NFTCard from "../explore/assets/NFTCard";
 import { useInView } from "react-intersection-observer";
 import { useState, useEffect } from "react";
@@ -20,7 +19,7 @@ const CollectionNFTs = (props: Props) => {
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
   const [size, setSize] = useState(12);
-  const { data, isLoading, isFetching, isError } = useGetAssetsQuery({
+  const { data, isLoading, isFetching, isError, refetch } = useGetAssetsQuery({
     search: params.get(FILTER.SEARCH) as string,
     category: params.get(FILTER.CATEGORY) as string,
     min_price: params.get(FILTER.MIN_PRICE) as string,
@@ -31,10 +30,10 @@ const CollectionNFTs = (props: Props) => {
     pageNumber: page,
     pageSize: size,
   });
-  const [assets, setAssets] = useState<NFT[]>(assetsData);
+  const [assets, setAssets] = useState<NFT[]>([]);
   const { ref, inView } = useInView({ threshold: 0.3 });
   useEffect(() => {
-    if (data) {
+    if (data && page * size > assets.length) {
       setAssets([...assets, ...data.value]);
       setTotal(data.count);
     }
@@ -48,8 +47,8 @@ const CollectionNFTs = (props: Props) => {
     <div className="grid grid-cols-12 items-center justify-center gap-5">
       {isFetching ? (
         <AssetsShimmers elements={size} />
-      ) : false ? (
-        <Error />
+      ) : isError ? (
+        <Error retry={refetch} />
       ) : assets && assets.length > 0 ? (
         <>
           {assets.slice(0, size).map((asset, index) => (

@@ -17,7 +17,7 @@ const NFTList = (props: Props) => {
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
   const [size, setSize] = useState(12);
-  const { data, isFetching, isError } = useGetAssetsQuery({
+  const { data, isFetching, isError, refetch } = useGetAssetsQuery({
     search: params.get(FILTER.SEARCH) as string,
     category: params.get(FILTER.CATEGORY) as string,
     min_price: params.get(FILTER.MIN_PRICE) as string,
@@ -29,10 +29,10 @@ const NFTList = (props: Props) => {
     pageNumber: page,
     pageSize: size,
   });
-  const [assets, setAssets] = useState<NFT[]>(assetsData);
+  const [assets, setAssets] = useState<NFT[]>([]);
   useEffect(() => {
     if (data) {
-      setAssets([...assets, ...data.value]);
+      setAssets([...data.value]);
       setTotal(data.count);
     }
   }, [data]);
@@ -41,21 +41,24 @@ const NFTList = (props: Props) => {
       <div className="grid grid-cols-12 items-center justify-center gap-5">
         {isFetching ? (
           <AssetsShimmers elements={size} />
-        ) : false ? (
-          <Error />
+        ) : isError ? (
+          <Error retry={refetch} />
         ) : assets && assets.length > 0 ? (
           <>
             {assets.slice(0, size).map((asset, index) => (
               <NFTCard key={index} asset={asset} />
             ))}
-            <Pagination
-              total={100}
-              currentPage={page}
-              setPage={(a: number) => {
-                setPage(a);
-                window.scrollTo({ top: 0, behavior: "smooth" });
-              }}
-            />
+            {total > size && (
+              <Pagination
+                total={total}
+                currentPage={page}
+                offset={size}
+                setPage={(a: number) => {
+                  setPage(a);
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }}
+              />
+            )}
           </>
         ) : (
           <NoData message="No assets found" />

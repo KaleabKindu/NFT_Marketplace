@@ -17,7 +17,7 @@ import { useGetCollectionsQuery } from "@/store/api";
 import CollectionsTableShimmers from "@/components/common/shimmers/CollectionsTableShimmers";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Collection } from "@/types";
+import { ICollection } from "@/types";
 import Pagination from "@/components/common/Pagination";
 import { FILTER } from "@/data";
 type Props = {};
@@ -27,7 +27,7 @@ const CollectionsList = (props: Props) => {
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
   const [size, setSize] = useState(12);
-  const { data, isFetching, isError } = useGetCollectionsQuery({
+  const { data, isFetching, isError, refetch } = useGetCollectionsQuery({
     search: params.get(FILTER.SEARCH) as string,
     min_volume: params.get(FILTER.MIN_PRICE) as string,
     max_volume: params.get(FILTER.MAX_PRICE) as string,
@@ -35,7 +35,7 @@ const CollectionsList = (props: Props) => {
     pageNumber: page,
     pageSize: size,
   });
-  const [collections, setCollections] = useState<Collection[]>(collectionsData);
+  const [collections, setCollections] = useState<ICollection[]>([]);
   useEffect(() => {
     if (data) {
       setCollections([...collections, ...data.value]);
@@ -58,8 +58,12 @@ const CollectionsList = (props: Props) => {
         <TableBody className="rounded-3xl">
           {isFetching ? (
             <CollectionsTableShimmers elements={size} />
-          ) : false ? (
-            <Error />
+          ) : isError ? (
+            <TableRow>
+              <TableCell colSpan={6} className="pt-10">
+                <Error retry={refetch} />
+              </TableCell>
+            </TableRow>
           ) : collections && collections.length > 0 ? (
             <>
               {collections.map((collection, index) => (
@@ -101,6 +105,7 @@ const CollectionsList = (props: Props) => {
                   <Pagination
                     total={100}
                     currentPage={page}
+                    offset={size}
                     setPage={(a: number) => {
                       setPage(a);
                       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -110,9 +115,12 @@ const CollectionsList = (props: Props) => {
               </TableRow>
             </>
           ) : (
-            <NoData message="No assets found" />
+            <TableRow>
+              <TableCell colSpan={6} className="pt-10">
+                <NoData message="No Collections found" />
+              </TableCell>
+            </TableRow>
           )}
-          {}
         </TableBody>
       </Table>
     </div>

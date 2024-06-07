@@ -7,9 +7,12 @@ import { Button } from "@/components/ui/button";
 
 type Props = {
   url: string;
+  width?: number;
 };
 
-const AudioPlayer = ({ url }: Props) => {
+const AudioPlayer = ({ url, width }: Props) => {
+  const [audioWidth, setAudioWidth] = useState(250);
+  const buttonRef = useRef<HTMLButtonElement>(null);
   const [playing, setPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [blob, setBlob] = useState<Blob | null>(null);
@@ -52,12 +55,18 @@ const AudioPlayer = ({ url }: Props) => {
       audioRef.current?.removeEventListener("ended", handleEnded);
     };
   }, []);
+  useEffect(() => {
+    if (width && buttonRef.current) {
+      setAudioWidth(width - buttonRef.current.offsetWidth - 15);
+    }
+  }, [width, buttonRef]);
+  console.log("audio", width, audioWidth);
   return (
     <div className="absolute flex bg-background/30 rounded-full justify-between items-center bottom-1 left-1/2 -translate-x-1/2 px-2">
       <AudioVisualizer
         blob={blob}
         src
-        width={250}
+        width={audioWidth}
         height={75}
         currentTime={currentTime}
         barWidth={1}
@@ -73,6 +82,7 @@ const AudioPlayer = ({ url }: Props) => {
         onTimeUpdate={(a) => setCurrentTime(a.currentTarget.currentTime)}
       />
       <Button
+        ref={buttonRef}
         variant={"ghost"}
         className="rounded-full h-16 w-16 bg-background/30"
         onClick={(e) => {

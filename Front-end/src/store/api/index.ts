@@ -9,7 +9,7 @@ import {
   IBidPage,
   IProvenancePage,
   User,
-  IUser,
+  ICollection,
 } from "@/types";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import type { RootState } from "..";
@@ -18,7 +18,7 @@ import queryString from "query-string";
 export const webApi = createApi({
   reducerPath: "webApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "https://nft-gebeya.com/api/",
+    baseUrl: process.env.NEXT_PUBLIC_BASE_URL,
     prepareHeaders: (headers, { getState }) => {
       const token = (getState() as RootState).auth.session as string;
       if (token) {
@@ -72,22 +72,22 @@ export const webApi = createApi({
         return `assets/all?${filter.toString()}`;
       },
     }),
-    getUserDetails: builder.query<void, string>({
-      query: (address) => `users/${address}`,
+    getUserDetails: builder.query<User, string>({
+      query: (address) => `auth/user/detail?address=${address}`,
     }),
     getProvenance: builder.query<
       IProvenancePage,
       { id: string; pageNumber: number; pageSize: number }
     >({
       query: ({ id, pageNumber, pageSize }) =>
-        `provenance/${id}?pageNumber=${pageNumber}&pageSize=${pageSize}`,
+        `provenance?tokenId=${id}&pageNumber=${pageNumber}&pageSize=${pageSize}`,
     }),
     getBids: builder.query<
       IBidPage,
       { id: string; pageNumber: number; pageSize: number }
     >({
       query: ({ id, pageNumber, pageSize }) =>
-        `bids/${id}?pageNumber=${pageNumber}&pageSize=${pageSize}`,
+        `bids?tokenId=${id}&pageNumber=${pageNumber}&pageSize=${pageSize}`,
     }),
     getCollections: builder.query<ICollectionsPage, IFilter>({
       query: (params) => {
@@ -98,7 +98,7 @@ export const webApi = createApi({
         return `collections?${filter.toString()}`;
       },
     }),
-    getCollectionDetails: builder.query<void, string>({
+    getCollectionDetails: builder.query<ICollection, string>({
       query: (id) => `collections/${id}`,
     }),
     getUsers: builder.query<IUsersPage, IFilter>({
@@ -107,14 +107,15 @@ export const webApi = createApi({
           skipNull: true,
           skipEmptyString: true,
         });
-        return `users?${filter.toString()}`;
+        return `auth/users?${filter.toString()}`;
       },
     }),
     getUserNetworks: builder.query<
       IUsersPage,
       { address: string; type: string; pageNumber: number; pageSize: number }
     >({
-      query: ({ address, type }) => `users/network/${address}?type=${type}`,
+      query: ({ address, type, pageNumber, pageSize }) =>
+        `users/network/${address}?type=${type}&pageNumber=${pageNumber}&pageSize=${pageSize}`,
     }),
     getTopCreators: builder.query<IUsersPage, { page: number; size: number }>({
       query: ({ page, size }) =>
@@ -125,11 +126,11 @@ export const webApi = createApi({
     }),
     getCategoryCount: builder.query<{ name: string; count: number }[], void>({
       query: () => `category`,
+      transformResponse: (baseQueryReturnValue: any) => {
+        return baseQueryReturnValue.value;
+      },
     }),
-    getTrendingAssets: builder.query<
-      IAssetsPage,
-      { page: number; size: number }
-    >({
+    getTrendingAssets: builder.query<NFT[], { page: number; size: number }>({
       query: ({ page, size }) =>
         `assets/trending?pageNumber=${page}&pageSize=${size}`,
       transformResponse: (baseQueryReturnValue: any) => {
@@ -137,11 +138,11 @@ export const webApi = createApi({
       },
     }),
     getTrendingCollections: builder.query<
-      ICollectionsPage,
+      ICollection[],
       { page: number; size: number }
     >({
       query: ({ page, size }) =>
-        `collections/trending?pageNumber=${page}&pageSize=${size}`,
+        `collection/trending?pageNumber=${page}&pageSize=${size}`,
       transformResponse: (baseQueryReturnValue: any) => {
         return baseQueryReturnValue.value;
       },

@@ -1,5 +1,5 @@
 import { CATEGORY } from "@/data";
-import { Collection, IBid, IProvenance, NFT, User } from "@/types";
+import { ICollection, IBid, IProvenance, NFT, User } from "@/types";
 import { faker } from "@faker-js/faker";
 faker.seed(5);
 const categories = [
@@ -78,7 +78,7 @@ export const assets = generateDummyAssets();
 const generateDummyCollections = () => {
   const dummyData = [];
   for (let i = 0; i < 10; i++) {
-    const data: Collection = {
+    const data: ICollection = {
       id: (i + 1).toString(),
       name: faker.word.noun(),
       description: faker.lorem.sentence(),

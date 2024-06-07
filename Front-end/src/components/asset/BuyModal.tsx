@@ -13,29 +13,38 @@ import {
 import { useEffect } from "react";
 import { Loader2 } from "lucide-react";
 import useContractWriteMutation from "@/hooks/useContractWriteMutation";
+import { useAppSelector } from "@/store/hooks";
+import { useWeb3Modal } from "@web3modal/wagmi/react";
+import { useState } from "react";
 
 type SaleModalProps = {
   tokenId: number;
   price: string;
 };
 export const BuyModal = ({ tokenId, price }: SaleModalProps) => {
+  const [showModal, setShowModal] = useState(false);
+
+  const session = useAppSelector((state) => state.auth.session);
+  const { open } = useWeb3Modal();
+
   const { address } = useAccount();
   const { data: balance } = useBalance({ address: address });
-  const {
-    writing,
-    writeSuccess,
-    contractWrite,
-  } = useContractWriteMutation();
+  const { writing, writeSuccess, contractWrite } = useContractWriteMutation();
+  const handleClose = () => setShowModal(false);
   const handleBuy = () => {
+    if (!session) {
+      open();
+      return;
+    }
     contractWrite("buyAsset", price, [tokenId]);
   };
   useEffect(() => {
     if (writeSuccess) {
-      close();
+      handleClose();
     }
   }, [writeSuccess]);
   return (
-    <Dialog>
+    <Dialog open={showModal} onOpenChange={(a) => setShowModal(a)}>
       <DialogTrigger asChild>
         <Button className="flex-1 lg:w-[50%] w-full">Buy Now</Button>
       </DialogTrigger>

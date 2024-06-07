@@ -1,6 +1,5 @@
 "use client";
 import { Creator } from "@/components/landing-page/TopCreators";
-import { users as usersData } from "@/utils";
 import NoData from "@/components/common/NoData";
 import Error from "@/components/common/Error";
 import { useGetUserNetworksQuery, useGetUsersQuery } from "@/store/api";
@@ -16,13 +15,14 @@ const Followings = (props: Props) => {
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
   const [size, setSize] = useState(12);
-  const { data, isFetching, isLoading, isError } = useGetUserNetworksQuery({
-    type: "followings",
-    address: params.address as string,
-    pageNumber: page,
-    pageSize: size,
-  });
-  const [users, setUsers] = useState<User[]>(usersData);
+  const { data, isFetching, isLoading, isError, refetch } =
+    useGetUserNetworksQuery({
+      type: "followings",
+      address: params.address as string,
+      pageNumber: page,
+      pageSize: size,
+    });
+  const [users, setUsers] = useState<User[]>([]);
   const { ref, inView } = useInView({ threshold: 0.3 });
 
   useEffect(() => {
@@ -41,8 +41,8 @@ const Followings = (props: Props) => {
       <div className="grid grid-cols-12 items-center justify-center gap-5">
         {isLoading ? (
           <UsersShimmers elements={size} />
-        ) : false ? (
-          <Error />
+        ) : isError ? (
+          <Error retry={refetch} />
         ) : users && users.length > 0 ? (
           <>
             {users.map((user, index) => (

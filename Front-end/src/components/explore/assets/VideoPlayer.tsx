@@ -10,6 +10,7 @@ type Props = {
 };
 
 const VideoPlayer = ({ url, className }: Props) => {
+  const [src, setSrc] = useState(url);
   const [playing, setPlaying] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -24,12 +25,16 @@ const VideoPlayer = ({ url, className }: Props) => {
       videoRef.current?.removeEventListener("pause", handlePause);
     };
   }, []);
+  const handleError = () => {
+    setSrc("/video-placeholder.gif");
+  };
 
   return (
     <>
       <video
         ref={videoRef}
-        src={url}
+        src={src}
+        onError={handleError}
         className={clsx("absolute w-full h-full object-cover", className)}
         controls={false}
       />

@@ -1,7 +1,6 @@
 "use client";
 import TrendingNFTCard from "./TrendingNFTCard";
 import { TypographyH2, TypographyH4 } from "../common/Typography";
-import { assets } from "@/utils";
 import { useGetTrendingAssetsQuery } from "@/store/api";
 import TrendingNFTShimmers from "../common/shimmers/TrendingNFTShimmers";
 import Error from "../common/Error";
@@ -9,7 +8,12 @@ import NoData from "../common/NoData";
 type Props = {};
 
 const TrendingNFTSection = (props: Props) => {
-  const { data, isLoading, isError } = useGetTrendingAssetsQuery({
+  const {
+    data: assets,
+    isLoading,
+    isError,
+    refetch,
+  } = useGetTrendingAssetsQuery({
     page: 1,
     size: 6,
   });
@@ -20,15 +24,12 @@ const TrendingNFTSection = (props: Props) => {
       <div className="grid grid-cols-1  md:grid-cols-2 lg:grid-cols-3 items-center gap-5">
         {isLoading ? (
           <TrendingNFTShimmers elements={6} />
-        ) : false ? (
-          <Error />
+        ) : isError ? (
+          <Error retry={refetch} />
         ) : assets && assets.length > 0 ? (
-          assets
-            .filter((asset) => !!asset.auction && !!asset.image)
-            .slice(0, 6)
-            .map((asset, index) => (
-              <TrendingNFTCard asset={asset} key={index} />
-            ))
+          assets.map((asset, index) => (
+            <TrendingNFTCard asset={asset} key={index} />
+          ))
         ) : (
           <NoData message="No assets found" />
         )}

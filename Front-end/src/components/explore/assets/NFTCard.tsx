@@ -5,7 +5,7 @@ import { TypographyH4, TypographySmall } from "../../common/Typography";
 import { Button } from "../../ui/button";
 import { FaHeart } from "react-icons/fa";
 import { Badge } from "../../ui/badge";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { Routes } from "@/routes";
 import { NFT } from "@/types";
@@ -20,8 +20,11 @@ type Props = {
 };
 
 const NFTCard = ({ asset }: Props) => {
+  const cardRef = useRef<HTMLDivElement>(null);
   const [liked, setLiked] = useState(asset?.liked as boolean);
   const [likes, setLikes] = useState(asset?.likes as number);
+  const [imgSrc, setImgSrc] = useState(asset.image as string);
+  const [audioWidth, setAudioWidth] = useState(0);
   const handleLikes = (e: any) => {
     e.preventDefault();
     setLiked(!liked);
@@ -33,18 +36,25 @@ const NFTCard = ({ asset }: Props) => {
   };
   const Icon = categories.find((cat) => cat.value === asset.category)
     ?.icon as IconType;
+  const handleImageError = () => {
+    setImgSrc("/image-placeholder.png");
+  };
+  useEffect(() => {
+    if (cardRef.current) setAudioWidth(cardRef.current.offsetWidth as number);
+  }, [cardRef]);
   return (
     <Link
       href={`${Routes.PRODUCT}/${asset.tokenId}`}
       className="col-span-12 sm:col-span-6 lg:col-span-3"
     >
-      <Card className="w-full rounded-3xl group ">
+      <Card ref={cardRef} className="w-full rounded-3xl group ">
         <div className="relative  min-h-[20rem] h-full rounded-t-3xl overflow-clip">
           {/* Images */}
           {asset.image && (
             <Image
               className="object-cover rounded-t-3xl group-hover:scale-105"
-              src={asset.image}
+              src={imgSrc}
+              onError={handleImageError}
               fill
               alt=""
             />
@@ -56,7 +66,7 @@ const NFTCard = ({ asset }: Props) => {
           )}
 
           {/* Audios */}
-          {asset.audio && <AudioPlayer url={asset.audio} />}
+          {asset.audio && <AudioPlayer url={asset.audio} width={audioWidth} />}
 
           <Badge className="flex items-center gap-3 absolute top-5 right-5 bg-background/30 hover:bg-background text-foreground">
             <Button

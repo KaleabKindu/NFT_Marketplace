@@ -1,4 +1,3 @@
-import clsx from "clsx";
 import {
   Pagination,
   PaginationContent,
@@ -8,29 +7,25 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 
 type Props = {
-  column?: boolean;
   setPage: (a: number) => void;
   total: number;
   currentPage: number;
   offset?: number;
 };
 export default function CPagination({
-  column,
   setPage,
   total,
   currentPage,
   offset = 10,
 }: Props) {
   const pages = Math.ceil(total / offset);
-  const page = Math.ceil(currentPage / offset);
   const forward = () => {
-    setPage(currentPage + offset);
+    setPage(currentPage + 1);
   };
   const backward = () => {
-    setPage(currentPage - offset);
+    setPage(currentPage - 1);
   };
 
   return (
@@ -43,23 +38,22 @@ export default function CPagination({
               <PageNumber
                 key={index}
                 setPage={setPage}
-                offset={offset}
-                active={page === index + 1}
+                active={currentPage === index + 1}
               >{`${index + 1}`}</PageNumber>
             ))}
           </>
-        ) : page <= 4 ? (
+        ) : currentPage <= 4 ? (
           <>
-            <PageNumber setPage={setPage} active={page === 1} offset={offset}>
+            <PageNumber setPage={setPage} active={currentPage === 1}>
               1
             </PageNumber>
-            <PageNumber setPage={setPage} active={page === 2} offset={offset}>
+            <PageNumber setPage={setPage} active={currentPage === 2}>
               2
             </PageNumber>
-            <PageNumber setPage={setPage} active={page === 3} offset={offset}>
+            <PageNumber setPage={setPage} active={currentPage === 3}>
               3
             </PageNumber>
-            <PageNumber setPage={setPage} active={page === 4} offset={offset}>
+            <PageNumber setPage={setPage} active={currentPage === 4}>
               4
             </PageNumber>
             <PaginationItem>
@@ -67,13 +61,12 @@ export default function CPagination({
             </PaginationItem>
             <PageNumber
               setPage={setPage}
-              active={page === pages}
-              offset={offset}
+              active={currentPage === pages}
             >{`${pages}`}</PageNumber>
           </>
-        ) : page >= pages - 3 ? (
+        ) : currentPage >= pages - 3 ? (
           <>
-            <PageNumber setPage={setPage} active={page === 1} offset={offset}>
+            <PageNumber setPage={setPage} active={currentPage === 1}>
               1
             </PageNumber>
             <PaginationItem>
@@ -81,28 +74,24 @@ export default function CPagination({
             </PaginationItem>
             <PageNumber
               setPage={setPage}
-              active={page === pages - 3}
-              offset={offset}
+              active={currentPage === pages - 3}
             >{`${pages - 3}`}</PageNumber>
             <PageNumber
               setPage={setPage}
-              active={page === pages - 2}
-              offset={offset}
+              active={currentPage === pages - 2}
             >{`${pages - 2}`}</PageNumber>
             <PageNumber
               setPage={setPage}
-              active={page === pages - 1}
-              offset={offset}
+              active={currentPage === pages - 1}
             >{`${pages - 1}`}</PageNumber>
             <PageNumber
               setPage={setPage}
-              active={page === pages}
-              offset={offset}
+              active={currentPage === pages}
             >{`${pages}`}</PageNumber>
           </>
         ) : (
           <>
-            <PageNumber setPage={setPage} active={page === 1} offset={offset}>
+            <PageNumber setPage={setPage} active={currentPage === 1}>
               1
             </PageNumber>
             <PaginationItem>
@@ -110,26 +99,22 @@ export default function CPagination({
             </PaginationItem>
             <PageNumber
               setPage={setPage}
-              active={page === page - 1}
-              offset={offset}
-            >{`${page - 1}`}</PageNumber>
+              active={currentPage === currentPage - 1}
+            >{`${currentPage - 1}`}</PageNumber>
             <PageNumber
               setPage={setPage}
-              active={page === page}
-              offset={offset}
-            >{`${page}`}</PageNumber>
+              active={currentPage === currentPage}
+            >{`${currentPage}`}</PageNumber>
             <PageNumber
               setPage={setPage}
-              active={page === page + 1}
-              offset={offset}
-            >{`${page + 1}`}</PageNumber>
+              active={currentPage === currentPage + 1}
+            >{`${currentPage + 1}`}</PageNumber>
             <PaginationItem>
               <PaginationEllipsis />
             </PaginationItem>
             <PageNumber
               setPage={setPage}
-              active={page === pages}
-              offset={offset}
+              active={currentPage === pages}
             >{`${pages}`}</PageNumber>
           </>
         )}
@@ -142,14 +127,11 @@ export default function CPagination({
 type PageType = {
   children: string;
   active: boolean;
-  offset: number;
   setPage: (a: number) => void;
 };
-const PageNumber = ({ children, active, offset, setPage }: PageType) => {
+const PageNumber = ({ children, active, setPage }: PageType) => {
   return (
-    <PaginationItem
-      onClick={() => setPage((parseInt(children) - 1) * offset + 1)}
-    >
+    <PaginationItem onClick={() => setPage(parseInt(children))}>
       <PaginationLink isActive={active}>{children}</PaginationLink>
     </PaginationItem>
   );

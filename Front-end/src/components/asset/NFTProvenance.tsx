@@ -15,7 +15,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { provenances as provenanceData } from "@/utils";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import ProvenanceShimmers from "../common/shimmers/ProvenanceShimmers";
@@ -36,16 +35,17 @@ const NFTProvenance = () => {
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
   const [size, setSize] = useState(12);
-  const { data, isLoading, isFetching, isError } = useGetProvenanceQuery({
-    id: params.id as string,
-    pageNumber: page,
-    pageSize: size,
-  });
-  const [provenances, setProvenances] = useState<IProvenance[]>(provenanceData);
+  const { data, isLoading, isFetching, isError, refetch } =
+    useGetProvenanceQuery({
+      id: params.id as string,
+      pageNumber: page,
+      pageSize: size,
+    });
+  const [provenances, setProvenances] = useState<IProvenance[]>([]);
   const { ref, inView } = useInView({ threshold: 0.3 });
 
   useEffect(() => {
-    if (data) {
+    if (data && page * size > provenances.length) {
       setProvenances([...provenances, ...data.value]);
       setTotal(data.count);
     }
@@ -61,7 +61,7 @@ const NFTProvenance = () => {
         <AccordionTrigger className="bg-accent text-accent-foreground px-5 rounded-t-md">
           Provenance
         </AccordionTrigger>
-        <AccordionContent className="h-96 overflow-y-auto">
+        <AccordionContent className="h-96 overflow-y-auto hide-scrollbar">
           <Table className="border">
             <TableHeader>
               <TableRow>
@@ -75,10 +75,10 @@ const NFTProvenance = () => {
             <TableBody>
               {isLoading ? (
                 <ProvenanceShimmers />
-              ) : false ? (
+              ) : isError ? (
                 <TableRow>
                   <TableCell colSpan={5}>
-                    <Error />
+                    <Error retry={refetch} />
                   </TableCell>
                 </TableRow>
               ) : provenances.length > 0 ? (

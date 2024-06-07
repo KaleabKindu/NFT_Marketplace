@@ -6,7 +6,6 @@ import { Avatar } from "../common/Avatar";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
 import { useEffect, useState } from "react";
-import { users } from "@/utils";
 import { Routes } from "@/routes";
 import { User } from "@/types";
 import Link from "next/link";
@@ -18,9 +17,15 @@ import NoData from "../common/NoData";
 type Props = {};
 
 const TopCreators = (props: Props) => {
-  const { data, isFetching, isLoading, isError } = useGetTopCreatorsQuery({
+  const { data, isLoading, isError, refetch } = useGetTopCreatorsQuery({
     page: 1,
     size: 8,
+  });
+  const [creators, setCreators] = useState<User[]>([]);
+  useEffect(() => {
+    if (data) {
+      setCreators([...data.value]);
+    }
   });
   return (
     <div className="flex flex-col gap-5">
@@ -29,16 +34,14 @@ const TopCreators = (props: Props) => {
       <div className="grid grid-cols-12 items-center justify-center gap-5">
         {isLoading ? (
           <UsersShimmers elements={8} />
-        ) : false ? (
-          <Error />
-        ) : users && users.length > 0 ? (
-          users
-            .slice(0, 8)
-            .map((user, index) => (
-              <Creator key={index} user={user} index={index} showRank={false} />
-            ))
+        ) : isError ? (
+          <Error retry={refetch} />
+        ) : creators && creators.length > 0 ? (
+          creators.map((user, index) => (
+            <Creator key={index} user={user} index={index} showRank={false} />
+          ))
         ) : (
-          <NoData message="No assets found" />
+          <NoData message="No Creators found" />
         )}
       </div>
     </div>
@@ -73,7 +76,7 @@ export const Creator = ({ index, user, showRank = true }: CreatorProps) => {
         </div>
         <div className="flex gap-3 items-center justify-around w-full p-3">
           <div>
-            <TypographyH4 text={user.username} />
+            <TypographyH4 text={user.username.slice(0, 10)} />
             <div className="flex items-center gap-3">
               <TypographyP
                 className="font-semibold text-primary/80"

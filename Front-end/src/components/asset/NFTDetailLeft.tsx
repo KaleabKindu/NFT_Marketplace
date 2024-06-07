@@ -15,8 +15,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { useGetNFTQuery } from "@/store/api";
-import { assets } from "@/utils";
 import clsx from "clsx";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { useToast } from "../ui/use-toast";
@@ -37,7 +35,7 @@ type Props = {
 
 const NFTDetailLeft = ({ asset, isLoading }: Props) => {
   const { toast } = useToast();
-
+  const [imgSrc, setImgSrc] = useState(asset?.image as string);
   const [liked, setLiked] = useState(asset?.liked);
   const [likes, setLikes] = useState(asset?.likes || 0);
   const [showFiles, setShowFiles] = useState(false);
@@ -56,6 +54,9 @@ const NFTDetailLeft = ({ asset, isLoading }: Props) => {
   }, [asset]);
   const Icon = categories.find((cat) => cat.value === asset?.category)
     ?.icon as IconType;
+  const handleError = () => {
+    setImgSrc("/image-placeholder.png");
+  };
   return (
     <>
       {isLoading ? (
@@ -67,7 +68,8 @@ const NFTDetailLeft = ({ asset, isLoading }: Props) => {
             {asset?.image && (
               <Image
                 className="object-cover rounded-3xl"
-                src={asset.image}
+                src={imgSrc}
+                onError={handleError}
                 fill
                 alt=""
               />
@@ -126,6 +128,7 @@ const NFTDetailLeft = ({ asset, isLoading }: Props) => {
                     <div className="flex justify-between items-center">
                       <TypographyH4 text={"Transaction Hash: "} />
                       <Link
+                        className="hover:text-primary"
                         href={`${Routes.ETHER_TRANSACTIONS}/${asset?.transactionHash}`}
                       >
                         <TypographyP
@@ -156,9 +159,7 @@ const NFTDetailLeft = ({ asset, isLoading }: Props) => {
                           >
                             <TypographyP
                               className="truncate text-right select-none"
-                              text={
-                                "ipfs://614917f589593189ac27ac8b81064cbe450c35e3"
-                              }
+                              text={`${"ipfs://614917f589593189ac27ac8b81064cbe450c35e3".slice(0, 30)}...`}
                             />
                             <TbCopy size={20} />
                           </Badge>

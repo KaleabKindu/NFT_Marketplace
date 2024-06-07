@@ -9,9 +9,9 @@ import { Badge } from "./ui/badge";
 import { Avatar } from "./common/Avatar";
 import Link from "next/link";
 import { Routes } from "@/routes";
-import { Collection } from "@/types";
+import { ICollection } from "@/types";
 type Props = {
-  collection: Collection;
+  collection: ICollection;
 };
 
 const CollectionCard = ({ collection }: Props) => {

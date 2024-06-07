@@ -43,11 +43,7 @@ type ChangePriceModalProps = {
 export const ChangePriceModal = ({ tokenId }: ChangePriceModalProps) => {
   const [open, setOpen] = useState(false);
   const handleClose = () => setOpen(false);
-  const {
-    isLoading,
-    writeSuccess,
-    contractWrite,
-  } = useContractWriteMutation();
+  const { isLoading, writeSuccess, contractWrite } = useContractWriteMutation();
   const form = useForm<{ new_price: number }>({
     resolver: zodResolver(schema),
     defaultValues: initialState,

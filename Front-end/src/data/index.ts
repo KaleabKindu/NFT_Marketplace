@@ -8,7 +8,6 @@ import { IoBookOutline } from "react-icons/io5";
 import { IoTicketSharp } from "react-icons/io5";
 import { BsBox } from "react-icons/bs";
 import { IconType } from "react-icons";
-import { IBid, IProvenance } from "@/types";
 export const discover = [
   {
     name: "NFTs",

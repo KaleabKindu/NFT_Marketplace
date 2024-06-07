@@ -98,4 +98,18 @@
   input[type="number"] {
     -moz-appearance: textfield;
   }
+
+  /* Apply these styles to the container you want to hide the scrollbar for */
+  .hide-scrollbar {
+    /* Hide scrollbar for Internet Explorer and Edge */
+    -ms-overflow-style: none;
+
+    /* Hide scrollbar for Firefox */
+    scrollbar-width: none;
+  }
+
+  /* Hide scrollbar for Webkit browsers (Chrome, Safari) */
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
 }

@@ -2,15 +2,7 @@ import Image from "next/image";
 import { TypographyH2, TypographyP } from "../common/Typography";
 import { TbCopy } from "react-icons/tb";
 import { Button } from "../ui/button";
-import { BsThreeDots } from "react-icons/bs";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { BsTwitterX, BsFacebook, BsTelegram, BsYoutube } from "react-icons/bs";
-import { users } from "@/utils";
 import Link from "next/link";
 import CopyToClipboard from "react-copy-to-clipboard";
 import { Badge } from "../ui/badge";
@@ -19,6 +11,8 @@ import { useAccount } from "wagmi";
 import { MdEdit } from "react-icons/md";
 import { useGetUserDetailsQuery } from "@/store/api";
 import { Skeleton } from "../ui/skeleton";
+import { Routes } from "@/routes";
+import Error from "../common/Error";
 
 type Props = {
   address: string;
@@ -27,12 +21,18 @@ type Props = {
 const UserDetail = ({ address }: Props) => {
   const { toast } = useToast();
   const account = useAccount();
-  const { data, isLoading, isError } = useGetUserDetailsQuery(address);
-  const user = users.find((user) => user.address === address);
+  const {
+    data: user,
+    isLoading,
+    isError,
+    refetch,
+  } = useGetUserDetailsQuery(address);
   return (
     <div className="relative flex flex-col lg:flex-row gap-8 -mt-[15vh] w-[90%] lg:w-[85%] mx-auto bg-background border z-40 rounded-3xl p-8">
       {isLoading ? (
         <Skeleton className="w-full h-80 rounded-3xl" />
+      ) : isError ? (
+        <Error retry={refetch} />
       ) : (
         <>
           <div className="relative w-full h-[200px] lg:w-[300px] lg:h-[250px]">
@@ -111,7 +111,7 @@ const UserDetail = ({ address }: Props) => {
           </div>
           <div className="self-start flex items-center gap-5 ml-auto">
             {account.address === address ? (
-              <Link href="">
+              <Link href={Routes.EDIT_PROFILE}>
                 <Button
                   variant={"ghost"}
                   size={"icon"}

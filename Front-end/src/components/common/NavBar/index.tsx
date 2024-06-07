@@ -12,7 +12,6 @@ import HelpCenter from "./HelpCenter";
 import Link from "next/link";
 import { Routes } from "@/routes";
 import { useWeb3Modal } from "@web3modal/wagmi/react";
-import useWeb3Status from "@/hooks/useWeb3Status";
 import useWebTheme from "@/hooks/useWebTheme";
 import { useAccount, useSignMessage } from "wagmi";
 import {
@@ -25,6 +24,8 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { useToast } from "@/components/ui/use-toast";
 import { ToastAction } from "@/components/ui/toast";
 import { setSession } from "@/store/slice/auth";
+import { useDisconnect } from "wagmi";
+
 type Props = {};
 
 const NavBar = (props: Props) => {
@@ -43,6 +44,7 @@ const NavBar = (props: Props) => {
   const [authenticateSignature] = useAuthenticateSignatureMutation();
   const [loading, setLoading] = useState(false);
   const { signMessageAsync } = useSignMessage();
+  const { disconnect } = useDisconnect();
   const { open } = useWeb3Modal();
   const handleLogin = () => {
     if (isConnected) {
@@ -64,6 +66,7 @@ const NavBar = (props: Props) => {
       }).unwrap();
       dispatch(setSession(token));
     } catch (error) {
+      disconnect();
       console.log(error);
       toast({
         variant: "destructive",

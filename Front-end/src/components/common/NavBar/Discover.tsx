@@ -9,12 +9,16 @@ import {
 import { Button } from "@/components/ui/button";
 import { discover } from "@/data";
 import { MdOutlineKeyboardArrowDown } from "react-icons/md";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 type Props = {};
 
 const Discover = (props: Props) => {
+  const router = useRouter();
+  const [isOpen, setIsOpen] = useState(false);
   return (
-    <DropdownMenu>
+    <DropdownMenu open={isOpen} onOpenChange={(a) => setIsOpen(a)}>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="rounded-full" size="lg">
           Discover
@@ -23,10 +27,12 @@ const Discover = (props: Props) => {
       </DropdownMenuTrigger>
       <DropdownMenuContent className="rounded-xl">
         {discover.map((option, index) => (
-          <DropdownMenuItem key={index} className="w-[200px] px-5 py-3">
-            <Link href={option.route} className="w-full">
-              {option.name}
-            </Link>
+          <DropdownMenuItem
+            key={index}
+            className="w-[200px] px-5 py-3 cursor-pointer"
+            onClick={() => router.push(option.route)}
+          >
+            {option.name}
           </DropdownMenuItem>
         ))}
       </DropdownMenuContent>

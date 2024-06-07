@@ -22,12 +22,8 @@ export const DeleteAssetModal = ({ tokenId }: SaleModalProps) => {
   const [open, setOpen] = useState(false);
   const { address } = useAccount();
   const { data: balance } = useBalance({ address: address });
-  const {
-    isLoading,
-    writing,
-    writeSuccess,
-    contractWrite,
-  } = useContractWriteMutation();
+  const { isLoading, writing, writeSuccess, contractWrite } =
+    useContractWriteMutation();
   const handleClose = () => setOpen(false);
   const handleDelete = () => {
     contractWrite("deleteAsset", undefined, [tokenId]);

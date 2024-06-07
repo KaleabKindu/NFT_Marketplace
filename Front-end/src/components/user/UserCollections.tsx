@@ -3,8 +3,7 @@ import { useParams } from "next/navigation";
 import { useInView } from "react-intersection-observer";
 import { useEffect, useState } from "react";
 import { useGetCollectionsQuery } from "@/store/api";
-import { Collection } from "@/types";
-import { collections as collectionsData } from "@/utils";
+import { ICollection } from "@/types";
 import NoData from "@/components/common/NoData";
 import Error from "@/components/common/Error";
 import CollectionsShimmers from "../common/shimmers/CollectionShimmers";
@@ -16,12 +15,13 @@ const UserCollections = (props: Props) => {
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
   const [size, setSize] = useState(12);
-  const { data, isLoading, isFetching, isError } = useGetCollectionsQuery({
-    creator: address as string,
-    pageNumber: page,
-    pageSize: size,
-  });
-  const [collections, setCollections] = useState<Collection[]>(collectionsData);
+  const { data, isLoading, isFetching, isError, refetch } =
+    useGetCollectionsQuery({
+      creator: address as string,
+      pageNumber: page,
+      pageSize: size,
+    });
+  const [collections, setCollections] = useState<ICollection[]>([]);
   const { ref, inView } = useInView({ threshold: 0.3 });
 
   useEffect(() => {
@@ -40,8 +40,8 @@ const UserCollections = (props: Props) => {
       <div className="grid grid-cols-12 justify-center items-center gap-5">
         {isLoading ? (
           <CollectionsShimmers elements={size} />
-        ) : false ? (
-          <Error />
+        ) : isError ? (
+          <Error retry={refetch} />
         ) : collections && collections.length > 0 ? (
           <>
             {collections.map((collection, index) => (
@@ -50,7 +50,7 @@ const UserCollections = (props: Props) => {
             {isFetching && <CollectionsShimmers elements={size} />}
           </>
         ) : (
-          <NoData message="No assets found" />
+          <NoData message="No Collections found" />
         )}
       </div>
       <div ref={ref} />

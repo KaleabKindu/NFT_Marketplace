@@ -8,7 +8,6 @@ import {
 } from "@/components/ui/accordion";
 import NFTCard from "../explore/assets/NFTCard";
 import { ScrollArea, ScrollBar } from "../ui/scroll-area";
-import { assets as assetsData } from "@/utils";
 import { useState, useEffect } from "react";
 import { NFT } from "@/types";
 import { useGetAssetsQuery } from "@/store/api";
@@ -21,15 +20,15 @@ type Props = {
   address?: string;
 };
 const MoreFromCreator = ({ address }: Props) => {
-  const { data, isLoading, isError } = useGetAssetsQuery({
+  const { data, isLoading, isError, refetch } = useGetAssetsQuery({
     creator: address as string,
     pageNumber: 1,
     pageSize: 12,
   });
-  const [assets, setAssets] = useState<NFT[]>(assetsData);
+  const [assets, setAssets] = useState<NFT[]>([]);
   useEffect(() => {
     if (data) {
-      setAssets([...assets, ...data.value]);
+      setAssets([...data.value]);
     }
   }, [data]);
   return (
@@ -44,7 +43,7 @@ const MoreFromCreator = ({ address }: Props) => {
               {isLoading ? (
                 <AssetsShimmers elements={12} className="w-[400px]" />
               ) : isError ? (
-                <Error />
+                <Error retry={refetch} />
               ) : assets && assets.length > 0 ? (
                 assets.slice(0, 12).map((asset, index) => (
                   <div key={index} className="shrink-0 w-[400px]">

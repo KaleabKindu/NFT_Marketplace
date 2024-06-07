@@ -6,14 +6,7 @@ import { Button } from "../ui/button";
 import { IoMdCloseCircle } from "react-icons/io";
 import { Slider } from "@/components/ui/slider";
 import { BiSortAlt2, BiCategory } from "react-icons/bi";
-import {
-  FILTER,
-  categories,
-  collections,
-  sale_types,
-  sort_types,
-  users,
-} from "@/data";
+import { FILTER, categories, sale_types, sort_types } from "@/data";
 import { Checkbox } from "../ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -40,6 +33,8 @@ import {
 import { Avatar } from "../common/Avatar";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useDebounce } from "use-debounce";
+import { useGetCollectionsQuery, useGetUsersQuery } from "@/store/api";
+import { ICollection, User } from "@/types";
 
 type SearchProps = {
   className?: string;
@@ -450,11 +445,18 @@ export const SortFilter = () => {
 };
 
 export const CollectionsFilter = () => {
+  const [collections, setCollections] = useState<ICollection[]>([]);
+  const [query, setQuery] = useState("");
+  const [value, setValue] = useState("");
+  const { data } = useGetCollectionsQuery({
+    search: value,
+    pageNumber: 1,
+    pageSize: 5,
+  });
   const router = useRouter();
   const pathname = usePathname();
   const params = useSearchParams();
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState("");
   const handleClear = (e: any) => {
     e.preventDefault();
     setValue("");
@@ -471,6 +473,11 @@ export const CollectionsFilter = () => {
   useEffect(() => {
     updateQueryParameter(value, FILTER.COLLECTION);
   }, [value]);
+  useEffect(() => {
+    if (data) {
+      setCollections([...data.value]);
+    }
+  }, [data]);
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger>
@@ -480,9 +487,8 @@ export const CollectionsFilter = () => {
             className="text-foreground"
             text={
               value
-                ? collections.find(
-                    (collection) => collection.name.toLowerCase() === value,
-                  )?.name
+                ? collections.find((collection) => collection.id === value)
+                    ?.name
                 : "Collections"
             }
           />
@@ -499,7 +505,10 @@ export const CollectionsFilter = () => {
       </PopoverTrigger>
       <PopoverContent className="w-[300px] p-1 rounded-xl">
         <Command>
-          <CommandInput placeholder="Search Collections..." />
+          <CommandInput
+            placeholder="Search Collections..."
+            onInput={(e) => setQuery((e.target as HTMLInputElement).value)}
+          />
           <CommandEmpty>No Collection found.</CommandEmpty>
           <CommandGroup>
             {collections.map((collection) => (
@@ -514,12 +523,10 @@ export const CollectionsFilter = () => {
                 <Check
                   className={cn(
                     "mr-2 h-4 w-4",
-                    value === collection.name.toLowerCase()
-                      ? "opacity-100"
-                      : "opacity-0",
+                    value === collection.id ? "opacity-100" : "opacity-0",
                   )}
                 />
-                <Avatar src={collection.profile_pic} className="h-5 w-5 mr-2" />
+                <Avatar className="h-5 w-5 mr-2" />
                 {collection.name}
               </CommandItem>
             ))}
@@ -531,11 +538,18 @@ export const CollectionsFilter = () => {
 };
 
 export const UsersFilter = () => {
+  const [query, setQuery] = useState("");
+  const [users, setUsers] = useState<User[]>([]);
+  const { data } = useGetUsersQuery({
+    search: query,
+    pageNumber: 1,
+    pageSize: 5,
+  });
+  const [value, setValue] = useState("");
   const router = useRouter();
   const pathname = usePathname();
   const params = useSearchParams();
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState("");
   const handleClear = (e: any) => {
     e.preventDefault();
     setValue("");
@@ -548,10 +562,16 @@ export const UsersFilter = () => {
     },
     [params],
   );
+  const currentUser = users?.find((user) => user.address === value);
 
   useEffect(() => {
     updateQueryParameter(value, FILTER.CREATOR);
   }, [value]);
+  useEffect(() => {
+    if (data) {
+      setUsers([...data.value]);
+    }
+  }, [data]);
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger>
@@ -559,11 +579,7 @@ export const UsersFilter = () => {
           <LuUser2 size={25} />
           <TypographySmall
             className="text-foreground"
-            text={
-              value
-                ? users.find((user) => user.name.toLowerCase() === value)?.name
-                : "Creators"
-            }
+            text={value ? currentUser?.username : "Creators"}
           />
           {value ? (
             <IoMdCloseCircle
@@ -578,13 +594,16 @@ export const UsersFilter = () => {
       </PopoverTrigger>
       <PopoverContent className="w-fit p-1 rounded-xl">
         <Command>
-          <CommandInput placeholder="Search Users..." />
+          <CommandInput
+            placeholder="Search Users..."
+            onInput={(e) => setQuery((e.target as HTMLInputElement).value)}
+          />
           <CommandEmpty>No User found.</CommandEmpty>
           <CommandGroup>
             {users.map((user) => (
               <CommandItem
-                key={user.id}
-                value={user.name}
+                key={user.address}
+                value={user.address}
                 onSelect={(currentValue) => {
                   setValue(currentValue === value ? "" : currentValue);
                   setOpen(false);
@@ -593,13 +612,11 @@ export const UsersFilter = () => {
                 <Check
                   className={cn(
                     "mr-2 h-4 w-4",
-                    value === user.name.toLowerCase()
-                      ? "opacity-100"
-                      : "opacity-0",
+                    value === user.address ? "opacity-100" : "opacity-0",
                   )}
                 />
                 <Avatar className="h-5 w-5 mr-2" />
-                {user.name}
+                {user.username}
               </CommandItem>
             ))}
           </CommandGroup>

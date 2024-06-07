@@ -17,15 +17,15 @@ const UsersList = (props: Props) => {
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
   const [size, setSize] = useState(12);
-  const { data, isFetching, isError } = useGetUsersQuery({
+  const { data, isFetching, isError, refetch } = useGetUsersQuery({
     search: params.get(FILTER.SEARCH) as string,
     pageNumber: page,
     pageSize: size,
   });
-  const [users, setUsers] = useState<User[]>(usersData);
+  const [users, setUsers] = useState<User[]>([]);
   useEffect(() => {
     if (data) {
-      setUsers([...users, ...data.value]);
+      setUsers([...data.value]);
       setTotal(data.count);
     }
   }, [data]);
@@ -34,24 +34,27 @@ const UsersList = (props: Props) => {
       <div className="grid grid-cols-12 items-center justify-center gap-5">
         {isFetching ? (
           <UsersShimmers elements={size} />
-        ) : false ? (
-          <Error />
+        ) : isError ? (
+          <Error retry={refetch} />
         ) : users && users.length > 0 ? (
           <>
             {users.map((user, index) => (
               <Creator key={index} user={user} index={index} showRank={false} />
             ))}
-            <Pagination
-              total={100}
-              currentPage={page}
-              setPage={(a: number) => {
-                setPage(a);
-                window.scrollTo({ top: 0, behavior: "smooth" });
-              }}
-            />
+            {total > size && (
+              <Pagination
+                total={total}
+                offset={size}
+                currentPage={page}
+                setPage={(a: number) => {
+                  setPage(a);
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }}
+              />
+            )}
           </>
         ) : (
-          <NoData message="No assets found" />
+          <NoData message="No Users found" />
         )}
       </div>
     </>
