@@ -13,25 +13,32 @@ namespace Persistence.Repositories
         private readonly AppDbContext _dbContext;
         private readonly IMapper _mapper;
         private readonly IServiceProvider _services;
-        private UserManager<AppUser> _usermanager;
+        private readonly UserManager<AppUser> _usermanager;
         private IAssetRepository _assetRepository;
         private IUserRepository _userRepository;
         private IBidRepository _bidRepository;
         private IAuctionRepository _AuctionRepository;
         private ICollectionRepository _CollectionRepository;
         private IProvenanceRepository _ProvenanceRepository;
+        private IUserProfileRepository _UserProfileRepository;
+        private readonly IJwtService _jwtService;
+        private readonly IEthereumCryptoService _ethereumCryptoService;
 
-        public UnitOfWork(AppDbContext dbContext, UserManager<AppUser> userManager, IJwtService jwtService, IEthereumCryptoService ethereumCryptoService,IMapper mapper)
+
+        public UnitOfWork(AppDbContext dbContext, UserManager<AppUser> userManager, IJwtService jwtService, IEthereumCryptoService ethereumCryptoService, IMapper mapper)
         {
             _dbContext = dbContext;
             _mapper = mapper;
-            _userRepository = new UserRepository(_dbContext, userManager, jwtService, ethereumCryptoService);
+            _jwtService = jwtService;
+            _ethereumCryptoService = ethereumCryptoService;
+            _usermanager = userManager;
         }
-                
-        public IUserRepository UserRepository 
+
+        public IUserRepository UserRepository
         {
             get
             {
+                _userRepository ??= new UserRepository(_dbContext, _usermanager, _jwtService, _ethereumCryptoService);
                 return _userRepository;
             }
         }
@@ -40,33 +47,35 @@ namespace Persistence.Repositories
         {
             get
             {
-                if (_bidRepository == null)
-                    _bidRepository = new BidRepository(_dbContext,_mapper);
+                _bidRepository ??= new BidRepository(_dbContext, _mapper);
 
                 return _bidRepository;
             }
         }
 
-        public IAssetRepository AssetRepository {
-            get{
-                if (_assetRepository == null)
-                    _assetRepository =  new AssetRepository(_dbContext,_mapper);
-            return _assetRepository;
+        public IAssetRepository AssetRepository
+        {
+            get
+            {
+                _assetRepository ??= new AssetRepository(_dbContext, _mapper);
+                return _assetRepository;
             }
         }
 
-        public IAuctionRepository AuctionRepository{
-            get {
-                if (_AuctionRepository == null)
-                    _AuctionRepository = new AuctionRepository(_dbContext);
+        public IAuctionRepository AuctionRepository
+        {
+            get
+            {
+                _AuctionRepository ??= new AuctionRepository(_dbContext);
                 return _AuctionRepository;
             }
         }
 
-        public ICollectionRepository CollectionRepository{
-            get {
-                if (_CollectionRepository == null)
-                    _CollectionRepository = new CollectionRepository(_dbContext);
+        public ICollectionRepository CollectionRepository
+        {
+            get
+            {
+                _CollectionRepository ??= new CollectionRepository(_dbContext);
                 return _CollectionRepository;
             }
         }
@@ -75,11 +84,21 @@ namespace Persistence.Repositories
         {
             get
             {
-                if (_ProvenanceRepository == null)
-                    _ProvenanceRepository = new ProvenanceRepository(_dbContext);
+                _ProvenanceRepository ??= new ProvenanceRepository(_dbContext);
                 return _ProvenanceRepository;
             }
         }
+
+        public IUserProfileRepository UserProfileRepository
+        {
+            get
+            {
+                _UserProfileRepository ??= new UserProfileRepository(_dbContext, _usermanager);
+                return _UserProfileRepository;
+            }
+        }
+
+        public IEthereumCryptoService EthereumCryptoService { get; }
 
         public void Dispose()
         {

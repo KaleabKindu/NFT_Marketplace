@@ -13,14 +13,13 @@ namespace Application.Features.Assets.Query
     {
         public string Creator { get; set; }
         public string Query { get; set; }
-        public AssetCategory Category { get; set; }
         public double MinVolume { get; set; }
         public double MaxVolume { get; set; }
         public string SortBy { get; set; }
     }
 
 
-     public class GetAllCollectionsQueryHandler : IRequestHandler<GetAllCollectionsQuery, ErrorOr<PaginatedResponse<CollectionsListDto>>>
+    public class GetAllCollectionsQueryHandler : IRequestHandler<GetAllCollectionsQuery, ErrorOr<PaginatedResponse<CollectionsListDto>>>
     {
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
@@ -29,14 +28,15 @@ namespace Application.Features.Assets.Query
         {
             _mapper = mapper;
             _unitOfWork = unitOfwork;
-            
-        } 
- 
+
+        }
+
         public async Task<ErrorOr<PaginatedResponse<CollectionsListDto>>> Handle(GetAllCollectionsQuery query, CancellationToken cancellationToken)
         {
-            var result = await _unitOfWork.CollectionRepository.GetAllAsync(query.Creator, query.Query, query.Category, query.MinVolume, query.MaxVolume, query.SortBy, query.PageNumber, query.PageSize);
+            var result = await _unitOfWork.CollectionRepository.GetAllAsync(query.Creator, query.Query, query.MinVolume, query.MaxVolume, query.SortBy, query.PageNumber, query.PageSize);
 
-            var response = new PaginatedResponse<CollectionsListDto>{
+            var response = new PaginatedResponse<CollectionsListDto>
+            {
                 Message = "Collections Fetched Succesfully",
                 Value = _mapper.Map<List<CollectionsListDto>>(result.Item2),
                 Count = result.Item1,

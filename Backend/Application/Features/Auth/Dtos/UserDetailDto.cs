@@ -7,7 +7,7 @@ namespace Application.Features.Auth.Dtos
         public string Email { get; set; }
         public string Avatar { get; set; }
         public string Bio { get; set; }
-        public string ProfileBackgroundImage { get; set; }
+        public string BackgroundImage { get; set; }
         public int TotalSalesCount { get; set; }
         public List<string> Followers { get; set; }
         public string Facebook { get; set; }

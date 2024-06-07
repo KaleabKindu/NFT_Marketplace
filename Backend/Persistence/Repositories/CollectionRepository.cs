@@ -13,15 +13,15 @@ namespace Persistence.Repositories
         {
         }
 
-        public async Task<Tuple<int, IEnumerable<Collection>>> GetAllAsync(string CreatorAddress, string Query, AssetCategory Category, double MinVolume, double MaxVolume, string SortBy, int page = 1, int limit = 10)
+        public async Task<Tuple<int, IEnumerable<Collection>>> GetAllAsync(string CreatorAddress, string Query, double MinVolume, double MaxVolume, string SortBy, int page = 1, int limit = 10)
         {
             int skip = (page - 1) * limit;
 
-            var query = _dbContext.Set<Collection>()
+            var query = _dbContext.Collections
                 .Include(entity => entity.Creator)
+                .ThenInclude(entity => entity.Profile)
                 .Where(entity => string.IsNullOrEmpty(CreatorAddress) || entity.Creator.Address == CreatorAddress)
                 .Where(entity => Regex.IsMatch(entity.Name.ToLower(), string.IsNullOrEmpty(Query) ? ".*" : Regex.Escape(Query.ToLower())))
-                .Where(entity => Category == default || entity.Category == Category.ToString())
                 .Where(entity => entity.Volume >= MinVolume && entity.Volume <= MaxVolume)
                 .OrderByDescending(entity => entity.CreatedAt);
 
