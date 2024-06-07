@@ -1,7 +1,9 @@
 ﻿using Domain;
+using Hangfire;
 using Persistence;
 using System.Text;
 using RabbitMQ.Client;
+using Hangfire.PostgreSql;
 using Application.Contracts;
 using System.Security.Claims;
 using Infrastructure.Services;
@@ -53,6 +55,7 @@ namespace Infrastructure
             services.AddScoped<IJwtService, JwtService>();
             services.AddScoped<IUserAccessor, UserAccessor>();
             services.AddScoped<IEthereumCryptoService, EthereumCryptoService>();
+            services.AddScoped<IAuctionManagementService, AuctionManagementService>();
             services.AddSingleton(sp =>
                 {
                     var factory = new ConnectionFactory
@@ -87,6 +90,9 @@ namespace Infrastructure
                 builder.SetMinimumLevel(LogLevel.Debug);
                 builder.AddConsole(); 
             });
+
+            services.AddHangfire(options => options.UsePostgreSqlStorage(configuration["PostgreSQL:ConnectionString"]));
+            services.AddHangfireServer();
             
             return services;
         }
