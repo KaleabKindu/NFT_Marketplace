@@ -14,10 +14,14 @@ import { Routes } from "@/routes";
 import { useDisconnect } from "wagmi";
 import useWeb3Status from "@/hooks/useWeb3Status";
 import { persistor } from "@/store";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 type Props = {};
 
 const Profile = (props: Props) => {
+  const router = useRouter();
+  const [isOpen, setIsOpen] = useState(false);
   const { disconnect } = useDisconnect();
   const { address } = useWeb3Status();
   const handleLogout = () => {
@@ -25,7 +29,7 @@ const Profile = (props: Props) => {
     persistor.purge();
   };
   return (
-    <DropdownMenu>
+    <DropdownMenu open={isOpen} onOpenChange={(a) => setIsOpen(a)}>
       <DropdownMenuTrigger className="rounded-full">
         <Avatar />
       </DropdownMenuTrigger>
@@ -44,14 +48,12 @@ const Profile = (props: Props) => {
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem className="py-3">
-          <Link
-            href={`${Routes.USER}/${address}`}
-            className="flex items-center gap-3 w-full px-3"
-          >
-            <FaUserAlt size={25} />
-            <div>Profile</div>
-          </Link>
+        <DropdownMenuItem
+          className="flex items-center gap-3 w-full px-3 py-3 cursor-pointer"
+          onClick={() => router.push(`${Routes.USER}/${address}`)}
+        >
+          <FaUserAlt size={25} />
+          <div>Profile</div>
         </DropdownMenuItem>
         <DropdownMenuItem
           className="flex items-center gap-3 py-3 cursor-pointer"

@@ -15,7 +15,7 @@ const CollectionsTableShimmers = ({ elements }: Props) => {
           </TableCell>
           <TableCell>
             <div className="flex gap-3 items-center">
-              <Skeleton className="w-24 h-16 rounded-md" />
+              <Skeleton className="w-24 h-12 rounded-md" />
               <Skeleton className="w-full h-12" />
             </div>
           </TableCell>

@@ -1,5 +1,4 @@
 "use client";
-import Image from "next/image";
 import {
   TypographyH4,
   TypographyP,
@@ -28,6 +27,7 @@ import Link from "next/link";
 import { Routes } from "@/routes";
 import NFTLeftShimmer from "../common/shimmers/NFTLeftShimmer";
 import { NFT } from "@/types";
+import CustomImage from "../common/CustomImage";
 type Props = {
   asset?: NFT;
   isLoading?: boolean;
@@ -66,7 +66,7 @@ const NFTDetailLeft = ({ asset, isLoading }: Props) => {
           <div className="relative h-[25rem] lg:h-[50rem]">
             {/* Image */}
             {asset?.image && (
-              <Image
+              <CustomImage
                 className="object-cover rounded-3xl"
                 src={imgSrc}
                 onError={handleError}

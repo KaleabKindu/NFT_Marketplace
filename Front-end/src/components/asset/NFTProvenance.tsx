@@ -96,7 +96,11 @@ const NFTProvenance = () => {
                         >
                           <Avatar src={provenance.from.avatar} />
                           <TypographyP
-                            text={provenance.from.username.slice(0, 10)}
+                            text={
+                              provenance.from.username
+                                ? provenance.from.username.slice(0, 10)
+                                : provenance.from.address.slice(2, 7)
+                            }
                           />
                         </Link>
                       </TableCell>
@@ -107,7 +111,11 @@ const NFTProvenance = () => {
                         >
                           <Avatar src={provenance.to.avatar} />
                           <TypographyP
-                            text={provenance.to.username.slice(0, 10)}
+                            text={
+                              provenance.to.username
+                                ? provenance.to.username.slice(0, 10)
+                                : provenance.to.address.slice(2, 7)
+                            }
                           />
                         </Link>
                       </TableCell>

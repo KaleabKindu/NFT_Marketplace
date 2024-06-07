@@ -24,8 +24,8 @@ export interface NFT {
 
 export interface Auction {
   auctionId?: number;
-  auction_end: number;
-  highest_bid: string;
+  auctionEnd: number;
+  highestBid: string;
 }
 
 export type Address = `0x${string}`;
@@ -56,8 +56,8 @@ export interface ICollection {
   name: string;
   description: string;
   volume: string;
-  floor_price: string;
-  latest_price: string;
+  floorPrice: string;
+  latestPrice: string;
   items: number;
   creator: User;
   images?: string[];
@@ -97,7 +97,7 @@ export interface IProvenance {
 
 export interface IBid {
   from: IUser;
-  price: string;
+  bid: string;
   hash: string;
   date: number;
 }

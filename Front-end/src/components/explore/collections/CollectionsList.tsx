@@ -83,7 +83,7 @@ const CollectionsList = (props: Props) => {
                       {collection.name}
                     </Link>
                   </TableCell>
-                  <TableCell>{collection.floor_price} ETH</TableCell>
+                  <TableCell>{collection.floorPrice} ETH</TableCell>
                   <TableCell>{collection.volume} ETH</TableCell>
                   <TableCell>{collection.items}</TableCell>
                   <TableCell>
@@ -95,24 +95,28 @@ const CollectionsList = (props: Props) => {
                         className="mr-3"
                         src={collection.creator.avatar}
                       />
-                      {collection.creator.username}
+                      {collection.creator.username
+                        ? collection.creator.username
+                        : collection.creator.address.slice(2, 7)}
                     </Link>
                   </TableCell>
                 </TableRow>
               ))}
-              <TableRow>
-                <TableCell colSpan={6} className="pt-10">
-                  <Pagination
-                    total={100}
-                    currentPage={page}
-                    offset={size}
-                    setPage={(a: number) => {
-                      setPage(a);
-                      window.scrollTo({ top: 0, behavior: "smooth" });
-                    }}
-                  />
-                </TableCell>
-              </TableRow>
+              {total > page * size && (
+                <TableRow>
+                  <TableCell colSpan={6} className="pt-10">
+                    <Pagination
+                      total={total}
+                      currentPage={page}
+                      offset={size}
+                      setPage={(a: number) => {
+                        setPage(a);
+                        window.scrollTo({ top: 0, behavior: "smooth" });
+                      }}
+                    />
+                  </TableCell>
+                </TableRow>
+              )}
             </>
           ) : (
             <TableRow>
