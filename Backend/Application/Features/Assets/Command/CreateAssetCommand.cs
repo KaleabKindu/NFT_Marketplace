@@ -2,6 +2,7 @@ using Application.Common.Errors;
 using Application.Common.Exceptions;
 using Application.Common.Responses;
 using Application.Contracts.Persistance;
+using Application.Contracts.Services;
 using Application.Features.Assets.Dtos;
 using AutoMapper;
 using Domain.Assets;
@@ -25,13 +26,13 @@ namespace Application.Features.Assets.Command
     {
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IAuctionManagementService _auctionManager;
 
-
-        public CreateAssetCommandHandler(IMapper mapper, IUnitOfWork unitOfwork)
+        public CreateAssetCommandHandler(IMapper mapper, IUnitOfWork unitOfwork, IAuctionManagementService auctionManager)
         {
             _mapper = mapper;
             _unitOfWork = unitOfwork;
-
+            _auctionManager = auctionManager;
         }
 
         public async Task<ErrorOr<BaseResponse<long>>> Handle(CreateAssetCommand request, CancellationToken cancellationToken)
@@ -100,6 +101,10 @@ namespace Application.Features.Assets.Command
 
             if (await _unitOfWork.SaveAsync() == 0)
                 throw new DbAccessException("Database Error: Unable To Save");
+
+            if (request.CreateAssetDto.Auction != null){
+                _auctionManager.Schedule(request.Address, asset.Auction.AuctionId, asset.Auction.AuctionEnd);
+            }
 
             response.Message = "Creation Succesful";
             response.Value = asset.Id;

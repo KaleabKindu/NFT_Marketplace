@@ -48,6 +48,15 @@ namespace Persistence
                 entity.Ignore(u => u.NormalizedUserName);
             });
 
+            var entityTypes = modelBuilder.Model.GetEntityTypes();
+            foreach (var entityType in entityTypes){
+                var createdAtProperty = entityType.FindProperty("CreatedAt");
+                createdAtProperty?.SetColumnType("timestamptz");
+                
+                var updatedAtProperty = entityType.FindProperty("UpdatedAt");
+                updatedAtProperty?.SetColumnType("timestamptz");
+            }
+            
             base.OnModelCreating(modelBuilder);
         }
 
