@@ -89,10 +89,7 @@ namespace Application.Profiles
             #region Collections
 
             CreateMap<Collection, CollectionsListDto>();
-            CreateMap<Collection, CollectionDetailsDto>()
-                .ForMember(dest => dest.Latest_price, opt => opt.MapFrom(src => src.LatestPrice))
-                .ForMember(dest => dest.Floor_price, opt => opt.MapFrom(src => src.FloorPrice));
-
+            CreateMap<Collection, CollectionDetailsDto>();
             CreateMap<CreateCollectionsDto, Collection>();
             CreateMap<Collection, CollectionDto>();
 
