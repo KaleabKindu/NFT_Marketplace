@@ -62,7 +62,7 @@ namespace Application.Features.Auctions.Commands
                 Price = asset.Price,
                 TransactionHash = command._event.TransactionHash
             };
-
+            await _unitOfWork.UserRepository.UpdateVolume(asset.OwnerId, asset.Price);
             await _unitOfWork.ProvenanceRepository.AddAsync(provenance);
             await _unitOfWork.SaveAsync();
             _logger.LogInformation($"\nAssetSoldEvent\nTokenID: {command._event.TokenId}\nTo: {command._event.To}");

@@ -42,7 +42,6 @@ namespace Persistence.Repositories
                 
             var user = new AppUser
             {
-                UserName = _faker.Internet.UserName(),
                 Address = address,
                 Nonce = Guid.NewGuid().ToString(),
                 Profile = new UserProfile() { UserName = _faker.Internet.UserName() }
@@ -137,6 +136,70 @@ namespace Persistence.Repositories
                 .Include(user => user.Profile)
                 .FirstOrDefaultAsync(u => u.Address == address);
             return user;            
+        }
+
+        public async Task<PaginatedResponse<AppUser>> GetFollowersAsync(string address, int pageNumber = 1, int pageSize = 10)
+        {
+            var user = await _userManager.Users
+                .Where(user => user.Address == address)
+                .Include(user => user.Profile)
+                .FirstOrDefaultAsync();
+
+            var query = _userManager.Users
+                .Where(user => user.Profile.Followers.Contains(user.Address));
+
+            var followers = await query
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return new PaginatedResponse<AppUser>
+            {
+                Value = followers,
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                Count = await query.CountAsync()
+            };
+        }
+
+        public async Task<PaginatedResponse<AppUser>> GetFollowingsAsync(string address, int pageNumber = 1, int pageSize = 10)
+        {
+            var query = _userManager.Users
+                .Include(user => user.Profile)
+                .Where(user => user.Profile.Followers.Contains(address));
+            
+            var followings = await query
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return new PaginatedResponse<AppUser>
+            {
+                Value = followings,
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                Count = await query.CountAsync()
+            };
+        }
+
+        public async Task<bool> IsFollowing(string address, string targetAddress)
+        {
+            var user = await _userManager.Users
+                .Where(user => user.Address == targetAddress)
+                .Include(user => user.Profile)
+                .FirstOrDefaultAsync();
+
+            return user.Profile.Followers.Contains(address);
+        }
+
+        public async Task UpdateVolume(string Id, double sale)
+        {
+            var user = await _userManager.Users
+                .Where(user => user.Id == Id)
+                .Include(user => user.Profile)
+                .FirstOrDefaultAsync();
+
+            user.Profile.Volume += sale;
         }
     }
 }

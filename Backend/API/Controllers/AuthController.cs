@@ -20,8 +20,9 @@ namespace API.Controllers
         {
             return HandleResult(
                 await Mediator.Send(
-                    new CreateOrFetchUserCommand(){ 
-                        Address=Address 
+                    new CreateOrFetchUserCommand()
+                    {
+                        Address = Address
                     }
                 )
             );
@@ -32,9 +33,10 @@ namespace API.Controllers
         {
             return HandleResult(
                 await Mediator.Send(
-                    new AuthenticateUserCommand(){ 
-                        Address=authenticateDto.Address, 
-                        SignedNonce=authenticateDto.SignedNonce
+                    new AuthenticateUserCommand()
+                    {
+                        Address = authenticateDto.Address,
+                        SignedNonce = authenticateDto.SignedNonce
                     }
                 )
             );
@@ -51,21 +53,38 @@ namespace API.Controllers
                         PageSize = pageSize,
                         PageNumber = pageNumber
                     }
-        )
-        );
-    }
+                )
+            );
+        }
 
-    [HttpGet("user/detail")]
-    public async Task<IActionResult> GetUserDetails([FromQuery] string address)
-    {
-        return HandleResult(
-            await Mediator.Send(
-                new GetUserDetailQuery
-                {
-                    address = address
-                }
-            )
-        );
-    }
+        [HttpGet("user/detail")]
+        public async Task<IActionResult> GetUserDetails([FromQuery] string address)
+        {
+            return HandleResult(
+                await Mediator.Send(
+                    new GetUserDetailQuery
+                    {
+                        address = address
+                    }
+                )
+            );
+        }
+
+        [HttpGet("users/network/{address}")]
+        public async Task<IActionResult> GetNetwork([FromRoute] string address, [FromQuery] string type, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
+        {
+            return HandleResult(
+                await Mediator.Send(
+                    new GetUserNetwork
+                    {
+                        CurrentUserAddress = _userAccessor.GetAddress(),
+                        Address = address,
+                        PageNumber = pageNumber,
+                        PageSize = pageSize,
+                        Type = type
+                    }
+                )
+            );
+        }
     }
 }

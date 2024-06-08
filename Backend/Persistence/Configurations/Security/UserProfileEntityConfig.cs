@@ -1,3 +1,4 @@
+using Bogus;
 using Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -6,51 +7,24 @@ namespace Persistence.Configurations.Security;
 
 public class UserProfileConfiguration : IEntityTypeConfiguration<UserProfile>
 {
+    private static readonly Faker _faker = new();
+    
 	public void Configure(EntityTypeBuilder<UserProfile> builder)
 	{
 		var admin = new UserProfile
-		{
-            Id = 1,
-			UserId ="6f09dad5-2268-4410-b755-cf7859927e5f",
-			UserName="starlord"
-		};
-
-		var trader1 = new UserProfile
-		{
-            Id = 2,
-			UserId ="6f09dad5-2268-4410-b755-cf7859927f6g",
-			UserName="loki"
-		};
+        {
+            Id =  3,
+            UserId = "123e4567-e89b-12d3-a456-426614174000",
+            UserName = _faker.Internet.UserName(),
+        };
 
 		builder.HasData(
 			admin,
-			trader1,
-			new UserProfile
-            {
-                Id =  3,
-                UserId = "123e4567-e89b-12d3-a456-426614174000",
-                UserName = "johndoe@example.com",
-                Email = "johndoe@example.com",
-                Avatar = "https://example.com/avatar1.jpg",
-                Bio = "I am John Doe, a digital artist.",
-                ProfileBackgroundImage = "https://example.com/background1.jpg",
-                TotalSalesCount = 10,
-                Followers = new List<string> { 
-					"0x71bE63f3384f5fb98995898A86B02Fb2426c5788",
-					"0xFABB0ac9d68B0B445fB7357272Ff202C5651694a",
-					"0x1CBd3b2770909D4e10f157cABC84C7264073C9Ec",
-					"0xdF3e18d64BC6A983f673Ab319CCaE4f1a57C7097"
-				},
-                Facebook = "https://facebook.com/johndoe",
-                Twitter = "https://twitter.com/johndoe",
-                YouTube = "https://youtube.com/johndoe",
-                Telegram = "https://telegram.com/johndoe"
-            },
             new UserProfile
             {
                 Id = 4,
                 UserId = "111e2222-e89b-12d3-a456-426614174001",
-                UserName = "janedoe@example.com",
+                UserName = _faker.Internet.UserName(),
                 Email = "janedoe@example.com",
                 Avatar = "https://example.com/avatar2.jpg",
                 Bio = "I am Jane Doe, a digital collector.",
@@ -71,7 +45,7 @@ public class UserProfileConfiguration : IEntityTypeConfiguration<UserProfile>
             {
                 Id = 5,
                 UserId = "333e4444-e89b-12d3-a456-426614174002",
-                UserName = "bobsmith@example.com",
+                UserName = _faker.Internet.UserName(),
                 Email = "bobsmith@example.com",
                 Avatar = "https://example.com/avatar3.jpg",
                 Bio = "I am Bob Smith, a digital artist.",
@@ -92,7 +66,7 @@ public class UserProfileConfiguration : IEntityTypeConfiguration<UserProfile>
             {
                 Id = 6,
                 UserId = "444e5555-e89b-12d3-a456-426614174003",
-                UserName = "alicejones@example.com",
+                UserName = _faker.Internet.UserName(),
                 Email = "alicejones@example.com",
                 Avatar = "https://example.com/avatar4.jpg",
                 Bio = "I am Alice Jones, a digital collector.",
@@ -113,7 +87,7 @@ public class UserProfileConfiguration : IEntityTypeConfiguration<UserProfile>
             {
                 Id = 7,
                 UserId = "555e6666-e89b-12d3-a456-426614174004",
-                UserName = "charliebrown@example.com",
+                UserName = _faker.Internet.UserName(),
                 Email = "charliebrown@example.com",
                 Avatar = "https://example.com/avatar5.jpg",
                 Bio = "I am Charlie Brown, a digital artist.",
@@ -134,7 +108,7 @@ public class UserProfileConfiguration : IEntityTypeConfiguration<UserProfile>
             {
                 Id = 8,
                 UserId = "666e7777-e89b-12d3-a456-426614174005",
-                UserName = "daviddavis@example.com",
+                UserName = _faker.Internet.UserName(),
                 Email = "daviddavis@example.com",
                 Avatar = "https://example.com/avatar6.jpg",
                 Bio = "I am David Davis, a digital artist.",
@@ -155,7 +129,7 @@ public class UserProfileConfiguration : IEntityTypeConfiguration<UserProfile>
             {
                 Id = 9,
                 UserId = "777e8888-e89b-12d3-a456-426614174006",
-                UserName = "evelyngreen@example.com",
+                UserName = _faker.Internet.UserName(),
                 Email = "evelyngreen@example.com",
                 Avatar = "https://example.com/avatar7.jpg",
                 Bio = "I am Evelyn Green, a digital collector.",
@@ -176,7 +150,7 @@ public class UserProfileConfiguration : IEntityTypeConfiguration<UserProfile>
             {
                 Id =  10,
                 UserId = "888e9999-e89b-12d3-a456-426614174007",
-                UserName = "frankfranklin@example.com",
+                UserName = _faker.Internet.UserName(),
                 Email = "frankfranklin@example.com",
                 Avatar = "https://example.com/avatar8.jpg",
                 Bio = "I am Frank Franklin, a digital artist.",
@@ -197,7 +171,7 @@ public class UserProfileConfiguration : IEntityTypeConfiguration<UserProfile>
             {
                 Id = 11,
                 UserId = "999e0000-e89b-12d3-a456-426614174008",
-                UserName = "gracegray@example.com",
+                UserName = _faker.Internet.UserName(),
                 Email = "gracegray@example.com",
                 Avatar = "https://example.com/avatar9.jpg",
                 Bio = "I am Grace Gray, a digital collector.",
@@ -218,7 +192,7 @@ public class UserProfileConfiguration : IEntityTypeConfiguration<UserProfile>
             {
                 Id = 12,
                 UserId = "000e1111-e89b-12d3-a456-426614174009",
-                UserName = "henryhall@example.com",
+                UserName = _faker.Internet.UserName(),
                 Email = "henryhall@example.com",
                 Avatar = "https://example.com/avatar10.jpg",
                 Bio = "I am Henry Hall, a digital artist.",
@@ -239,7 +213,7 @@ public class UserProfileConfiguration : IEntityTypeConfiguration<UserProfile>
             {
                 Id = 13,
                 UserId = "111e2222-e89b-12d3-a456-426614174010",
-                UserName = "iggyiglesias@example.com",
+                UserName = _faker.Internet.UserName(),
                 Email = "iggyiglesias@example.com",
                 Avatar = "https://example.com/avatar11.jpg",
                 Bio = "I am Iggy Iglesias, a digital artist.",
@@ -260,7 +234,7 @@ public class UserProfileConfiguration : IEntityTypeConfiguration<UserProfile>
             {
                 Id = 14,
                 UserId = "222e3333-e89b-12d3-a456-426614174011",
-                UserName = "jessiejames@example.com",
+                UserName = _faker.Internet.UserName(),
                 Email = "jessiejames@example.com",
                 Avatar = "https://example.com/avatar12.jpg",
                 Bio = "I am Jessie James, a digital collector.",
@@ -281,7 +255,7 @@ public class UserProfileConfiguration : IEntityTypeConfiguration<UserProfile>
             {
                 Id = 15,
                 UserId = "333e4444-e89b-12d3-a456-426614174012",
-                UserName = "karlkennedy@example.com",
+                UserName = _faker.Internet.UserName(),
                 Email = "karlkennedy@example.com",
                 Avatar = "https://example.com/avatar13.jpg",
                 Bio = "I am Karl Kennedy, a digital artist.",
@@ -302,7 +276,7 @@ public class UserProfileConfiguration : IEntityTypeConfiguration<UserProfile>
             {
                 Id = 16,
                 UserId = "444e5555-e89b-12d3-a456-426614174013",
-                UserName = "lucylu@example.com",
+                UserName = _faker.Internet.UserName(),
                 Email = "lucylu@example.com",
                 Avatar = "https://example.com/avatar14.jpg",
                 Bio = "I am Lucy Lu, a digital collector.",
@@ -323,7 +297,7 @@ public class UserProfileConfiguration : IEntityTypeConfiguration<UserProfile>
             {
                 Id = 17,
                 UserId = "555e6666-e89b-12d3-a456-426614174014",
-                UserName = "mikemiller@example.com",
+                UserName = _faker.Internet.UserName(),
                 Email = "mikemiller@example.com",
                 Avatar = "https://example.com/avatar15.jpg",
                 Bio = "I am Mike Miller, a digital artist.",

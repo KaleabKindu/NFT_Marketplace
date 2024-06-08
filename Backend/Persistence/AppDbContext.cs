@@ -45,6 +45,7 @@ namespace Persistence
                 entity.Ignore(u => u.LockoutEnabled);
                 entity.Ignore(u => u.LockoutEnd);
                 entity.Ignore(u => u.UserName);
+                entity.Ignore(u => u.Email);
                 entity.Ignore(u => u.NormalizedUserName);
             });
 

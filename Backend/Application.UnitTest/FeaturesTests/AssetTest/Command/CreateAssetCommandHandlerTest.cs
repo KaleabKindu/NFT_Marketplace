@@ -1,5 +1,6 @@
 using Application.Common.Responses;
 using Application.Contracts.Persistance;
+using Application.Contracts.Services;
 using Application.Features.Assets.Command;
 using Application.Features.Assets.Dtos;
 using Application.Profiles;
@@ -17,6 +18,7 @@ namespace ApplicationUnitTest.FeaturesTests.AssetTest.Command
     public class CreateAssetCommandHandlerTest
     {
         private readonly Mock<IUnitOfWork> _mockUnitOfWork;
+        private readonly Mock<IAuctionManagementService> _mockAuctionManager;
         private readonly IMapper _mapper;
         private readonly CreateAssetCommandHandler _handler;
         private readonly CreateAssetDto _createAssetDto;
@@ -24,7 +26,8 @@ namespace ApplicationUnitTest.FeaturesTests.AssetTest.Command
         public CreateAssetCommandHandlerTest()
         {
             _mockUnitOfWork = MockUnitOfWork.GetUnitOfWork();
-
+            _mockAuctionManager = MockUnitOfWork.GetAuctionManager();
+            
             var mapper = new MapperConfiguration(c =>
             {
                 c.AddProfile<MappingProfile>();
@@ -32,7 +35,7 @@ namespace ApplicationUnitTest.FeaturesTests.AssetTest.Command
 
             _mapper = mapper.CreateMapper();
 
-            _handler = new CreateAssetCommandHandler(_mapper, _mockUnitOfWork.Object);
+            _handler = new CreateAssetCommandHandler(_mapper, _mockUnitOfWork.Object, _mockAuctionManager.Object);
 
             _createAssetDto = new CreateAssetDto
             {

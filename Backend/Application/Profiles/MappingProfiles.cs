@@ -45,6 +45,12 @@ namespace Application.Profiles
 
             CreateMap<UpdateProfileDto, UserProfile>();
 
+            CreateMap<AppUser, UserNetworkDto>()
+                .ForMember(dest => dest.Background, opt => opt.MapFrom(src => src.Profile.ProfileBackgroundImage))
+                .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.Profile.UserName))
+                .ForMember(dest => dest.Avatar, opt => opt.MapFrom(src => src.Profile.Avatar))
+                .ForMember(dest => dest.Sales, opt => opt.MapFrom(src => src.Profile.Volume));
+
             #endregion
 
             #region Bid 

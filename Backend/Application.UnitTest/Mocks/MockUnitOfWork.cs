@@ -1,4 +1,5 @@
 ﻿using Application.Contracts.Persistance;
+using Application.Contracts.Services;
 using Application.Profiles;
 using ApplicationUnitTest.Mocks;
 using AutoMapper;
@@ -8,7 +9,13 @@ namespace Application.UnitTest.Mocks
 {
     public static class MockUnitOfWork
     {
-
+        public static Mock<IAuctionManagementService> GetAuctionManager(){
+            var mockAucManager = new Mock<IAuctionManagementService>();
+            mockAucManager.Setup(r => r.CloseAuction(It.IsAny<string>(), It.IsAny<long>())).ReturnsAsync(() => true);
+            mockAucManager.Setup(r => r.Schedule(It.IsAny<string>(), It.IsAny<long>(), It.IsAny<long>()));
+            return mockAucManager;
+        }
+        
         public static Mock<IUnitOfWork> GetUnitOfWork()
         {
             var mapper = new MapperConfiguration(c =>

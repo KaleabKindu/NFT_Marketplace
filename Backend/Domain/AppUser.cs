@@ -3,8 +3,6 @@ namespace Domain
 {
     public sealed class AppUser : IdentityUser
     {
-        public override string? UserName { get; set; }
-        public override string? Email { get; set; }
         public string Address { get; set; }
         public string Nonce { get; set; }
         public UserProfile Profile { get; set; }
@@ -25,6 +23,7 @@ namespace Domain
         public string ProfileBackgroundImage { get; set; } = "";
 
         public int TotalSalesCount { get; set; } = 0;
+        public double Volume { get; set; } = 0.0;
         public List<string> Followers { get; set; } = new();
         public string Facebook { get; set; } = "";
         public string Twitter { get; set; } = "";

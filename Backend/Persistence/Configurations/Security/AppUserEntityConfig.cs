@@ -14,30 +14,14 @@ public class AppUserConfiguration : IEntityTypeConfiguration<AppUser>
 
         var admin = new AppUser
         {
-            Id = "6f09dad5-2268-4410-b755-cf7859927e5f",
-            Address = "0x68d54e37D6221D1DA835489099D1b69Ce5c8b90d",
-            Nonce = "ee528136-2f06-41e6-b417-fdd116d36446",
-            ProfileId = 1
-        };
-
-        var trader1 = new AppUser
-        {
-            Id = "6f09dad5-2268-4410-b755-cf7859927f6g",
-            Address = "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC",
+            Id = "123e4567-e89b-12d3-a456-426614174000",
+            Address = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
             Nonce = "ff528136-2f06-41e6-b417-fdd116d36446",
-            ProfileId = 2
+            ProfileId = 3
         };
 
         builder.HasData(
             admin,
-            trader1,
-            new AppUser
-            {
-                Id = "123e4567-e89b-12d3-a456-426614174000",
-                Address = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                Nonce = "ff528136-2f06-41e6-b417-fdd116d36446",
-                ProfileId = 3
-            },
             new AppUser
             {
                 Id = "111e2222-e89b-12d3-a456-426614174001",
