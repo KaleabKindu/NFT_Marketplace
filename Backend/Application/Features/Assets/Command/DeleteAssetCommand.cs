@@ -10,7 +10,6 @@ namespace Application.Features.Assets.Commands
     public class DeleteAssetCommand : IRequest<ErrorOr<bool>>
     {
         public DeleteAssetEventDto _event;
-        public string Address { get; set; }
     }
 
     public class DeleteAssetCommandHandler
@@ -31,17 +30,17 @@ namespace Application.Features.Assets.Commands
         )
         {
 
-            var asset = await _unitOfWork.AssetRepository.GetByIdAsync(((long)command._event.TokenId));
-            var user = await _unitOfWork.UserRepository.GetUserByAddress(command.Address);
+            var asset = await _unitOfWork.AssetRepository.GetAssetByTokenId(command._event.TokenId);
+
 
             if (asset == null)
                 return ErrorFactory.NotFound("Asset", "Asset not found");
             
-            if (user == null)
-                return ErrorFactory.NotFound("User", "User not found");
-            
-            if (asset.Owner.Address != command.Address)
-                return ErrorFactory.AuthorizationError("Asset", "User is not the owner of the asset");
+            _unitOfWork.AssetRepository.DeleteAsset(asset);
+
+            if (await _unitOfWork.SaveAsync() == 0)
+                return ErrorFactory.InternalServerError("Asset", "Error deleting asset");
+        
             
             _logger.LogInformation($"\nDeleteAssetEvent\nTokenID: {command._event.TokenId}\n");
 
