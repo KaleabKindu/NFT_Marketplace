@@ -39,23 +39,24 @@ namespace Persistence.Repositories
             var existing_user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Address == address);
             if (existing_user != null)
                 return existing_user;
-                
+
             var user = new AppUser
             {
                 Address = address,
                 Nonce = Guid.NewGuid().ToString(),
-                Profile = new UserProfile() { UserName = _faker.Internet.UserName() }
+                Profile = new UserProfile() { UserName = address.Substring(2, 5) }
             };
 
             var result = await _userManager.CreateAsync(user);
             var authorizationResult = await _userManager.AddToRoleAsync(user, "Trader");
 
-            if (!result.Succeeded || !authorizationResult.Succeeded){
-                throw new DbAccessException($"Unable to save user to database:{ result.Errors.ToArray()[0]}");
+            if (!result.Succeeded || !authorizationResult.Succeeded)
+            {
+                throw new DbAccessException($"Unable to save user to database:{result.Errors.ToArray()[0]}");
             }
 
             return user;
-        }        
+        }
 
         public async Task<List<AppRole>> GetUserRolesAsync(AppUser user)
         {
@@ -117,7 +118,7 @@ namespace Persistence.Repositories
             _dbContext.Entry(user).State = EntityState.Modified;
 
             var UpdateResult = await _dbContext.SaveChangesAsync();
-            if(UpdateResult == 0)
+            if (UpdateResult == 0)
             {
                 throw new DbAccessException($"Unable to update user nonce");
             }
@@ -130,12 +131,12 @@ namespace Persistence.Repositories
             };
         }
 
-        public async  Task<AppUser> GetUserByAddress(string address)
+        public async Task<AppUser> GetUserByAddress(string address)
         {
             var user = await _userManager.Users
                 .Include(user => user.Profile)
                 .FirstOrDefaultAsync(u => u.Address == address);
-            return user;            
+            return user;
         }
 
         public async Task<PaginatedResponse<AppUser>> GetFollowersAsync(string address, int pageNumber = 1, int pageSize = 10)
@@ -167,7 +168,7 @@ namespace Persistence.Repositories
             var query = _userManager.Users
                 .Include(user => user.Profile)
                 .Where(user => user.Profile.Followers.Contains(address));
-            
+
             var followings = await query
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
@@ -208,7 +209,7 @@ namespace Persistence.Repositories
                 .Where(user => user.Address == followee)
                 .Include(user => user.Profile)
                 .FirstOrDefaultAsync();
-            if(user.Profile.Followers.Contains(follower))
+            if (user.Profile.Followers.Contains(follower))
                 return false;
 
             user.Profile.Followers.Add(follower);
@@ -222,7 +223,7 @@ namespace Persistence.Repositories
                 .Include(user => user.Profile)
                 .FirstOrDefaultAsync();
 
-            if(!user.Profile.Followers.Contains(follower))
+            if (!user.Profile.Followers.Contains(follower))
                 return false;
 
             user.Profile.Followers.Remove(follower);
