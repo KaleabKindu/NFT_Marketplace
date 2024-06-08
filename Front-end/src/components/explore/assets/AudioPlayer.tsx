@@ -60,7 +60,6 @@ const AudioPlayer = ({ url, width }: Props) => {
       setAudioWidth(width - buttonRef.current.offsetWidth - 15);
     }
   }, [width, buttonRef]);
-  console.log("audio", width, audioWidth);
   return (
     <div className="absolute flex bg-background/30 rounded-full justify-between items-center bottom-1 left-1/2 -translate-x-1/2 px-2">
       <AudioVisualizer

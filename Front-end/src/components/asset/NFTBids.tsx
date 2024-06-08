@@ -37,10 +37,10 @@ export default function NFTBids() {
     pageSize: size,
   });
   const [bids, setBids] = useState<IBid[]>([]);
-  const { ref, inView } = useInView({ threshold: 0.3 });
+  const { ref, inView } = useInView({ threshold: 1 });
 
   useEffect(() => {
-    if (data && page * size > bids.length) {
+    if (data) {
       setBids([...bids, ...data.value]);
       setTotal(data.count);
     }
@@ -70,7 +70,11 @@ export default function NFTBids() {
               {isLoading ? (
                 <ProvenanceShimmers />
               ) : isError ? (
-                <Error retry={refetch} />
+                <TableRow>
+                  <TableCell colSpan={4}>
+                    <Error retry={refetch} />
+                  </TableCell>
+                </TableRow>
               ) : bids.length > 0 ? (
                 <>
                   {bids.map((bid, index) => (
@@ -102,11 +106,11 @@ export default function NFTBids() {
                       </TableCell>
                     </TableRow>
                   )}
+                  <div ref={ref} />
                 </>
               ) : (
                 <NoData message="No bids on this asset yet." />
               )}
-              <div ref={ref} />
             </TableBody>
           </Table>
         </AccordionContent>

@@ -29,10 +29,6 @@ const UserDetail = ({ address }: Props) => {
     isError,
     refetch,
   } = useGetUserDetailsQuery(address);
-  const [imgSrc, setImgSrc] = useState(user?.avatar as string);
-  const handleError = () => {
-    setImgSrc("/image-placeholder.png");
-  };
   return (
     <div className="relative flex flex-col lg:flex-row gap-8 -mt-[15vh] w-[90%] lg:w-[85%] mx-auto bg-background border z-40 rounded-3xl p-8">
       {isLoading ? (
@@ -44,8 +40,7 @@ const UserDetail = ({ address }: Props) => {
           <div className="relative w-full h-[200px] lg:w-[300px] lg:h-[250px]">
             <CustomImage
               className="rounded-3xl object-cover"
-              src={imgSrc}
-              onError={handleError}
+              src={user?.avatar || ""}
               fill
               alt=""
             />

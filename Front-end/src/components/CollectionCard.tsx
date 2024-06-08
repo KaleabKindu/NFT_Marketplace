@@ -11,7 +11,6 @@ import { Avatar } from "./common/Avatar";
 import Link from "next/link";
 import { Routes } from "@/routes";
 import { ICollection } from "@/types";
-import { useState } from "react";
 import CustomImage from "./common/CustomImage";
 type Props = {
   collection: ICollection;

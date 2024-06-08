@@ -35,7 +35,6 @@ type Props = {
 
 const NFTDetailLeft = ({ asset, isLoading }: Props) => {
   const { toast } = useToast();
-  const [imgSrc, setImgSrc] = useState(asset?.image as string);
   const [liked, setLiked] = useState(asset?.liked);
   const [likes, setLikes] = useState(asset?.likes || 0);
   const [showFiles, setShowFiles] = useState(false);
@@ -54,9 +53,7 @@ const NFTDetailLeft = ({ asset, isLoading }: Props) => {
   }, [asset]);
   const Icon = categories.find((cat) => cat.value === asset?.category)
     ?.icon as IconType;
-  const handleError = () => {
-    setImgSrc("/image-placeholder.png");
-  };
+
   return (
     <>
       {isLoading ? (
@@ -68,8 +65,7 @@ const NFTDetailLeft = ({ asset, isLoading }: Props) => {
             {asset?.image && (
               <CustomImage
                 className="object-cover rounded-3xl"
-                src={imgSrc}
-                onError={handleError}
+                src={asset.image || ""}
                 fill
                 alt=""
               />

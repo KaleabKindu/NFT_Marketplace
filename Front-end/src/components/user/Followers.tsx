@@ -23,7 +23,7 @@ const Followers = (props: Props) => {
       pageSize: size,
     });
   const [users, setUsers] = useState<User[]>([]);
-  const { ref, inView } = useInView({ threshold: 0.3 });
+  const { ref, inView } = useInView({ threshold: 1 });
 
   useEffect(() => {
     if (data) {
@@ -49,12 +49,12 @@ const Followers = (props: Props) => {
               <Creator key={index} user={user} index={index} showRank={false} />
             ))}
             {isFetching && <UsersShimmers elements={size} />}
+            <div ref={ref} />
           </>
         ) : (
           <NoData message="No assets found" />
         )}
       </div>
-      <div ref={ref} />
     </>
   );
 };
