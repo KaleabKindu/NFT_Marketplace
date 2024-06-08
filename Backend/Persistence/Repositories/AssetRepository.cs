@@ -189,6 +189,7 @@ namespace Persistence.Repositories
             if (like != null)
             {
                 _context.Likes.Remove(like);
+                asset.Likes -= 1;
             }
             else
             {
@@ -199,12 +200,10 @@ namespace Persistence.Repositories
                 };
 
                 await _context.Likes.AddAsync(newLike);
+                asset.Likes += 1;
             }
 
-            await _context.SaveChangesAsync();
-
-            asset.Likes = await _context.Likes.Where(x => x.AssetId == assetId).CountAsync();
-            await _context.SaveChangesAsync();
+            _context.Assets.Update(asset);
 
             return Unit.Value;
         }
