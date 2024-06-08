@@ -86,5 +86,33 @@ namespace API.Controllers
                 )
             );
         }
+
+        [HttpPost("users/network/{address}")]
+        public async Task<IActionResult> CreateNetwork([FromRoute] string address)
+        {
+            return HandleResult(
+                await Mediator.Send(
+                    new CreateUserNetworkCommand
+                    {
+                        Follower = _userAccessor.GetAddress(),
+                        Followee = address
+                    }
+                )
+            );
+        }
+
+        [HttpDelete("users/network/{address}")]
+        public async Task<IActionResult> RemoveNetwork([FromRoute] string address)
+        {
+            return HandleResult(
+                await Mediator.Send(
+                    new RemoveUserNetworkCommand
+                    {
+                        Follower = _userAccessor.GetAddress(),
+                        Followee = address
+                    }
+                )
+            );
+        }
     }
 }

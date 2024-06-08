@@ -36,11 +36,11 @@ namespace Application.Features.Auth.Queries
         )
         {
             query.Type = query.Type.ToLowerInvariant();
-            if (query.Type != "following" && query.Type != "follower")
-                return ErrorFactory.BadRequestError("User", "type query parameter must be either following or follower");
+            if (query.Type != "followings" && query.Type != "followers")
+                return ErrorFactory.BadRequestError("User", "type query parameter must be either followings or followers");
 
             PaginatedResponse<AppUser> network;
-            if(query.Type == "follower"){
+            if(query.Type == "followers"){
                 network= await _unitOfWork.UserRepository.GetFollowersAsync(query.Address, query.PageNumber, query.PageSize);
             }else{
                 network= await _unitOfWork.UserRepository.GetFollowingsAsync(query.Address, query.PageNumber, query.PageSize);
@@ -57,7 +57,7 @@ namespace Application.Features.Auth.Queries
                 PageNumber = query.PageNumber,
                 PageSize = query.PageSize,
                 Message = "User's network fetched successfully",
-                Value = _mapper.Map<List<UserNetworkDto>>(network.Value)
+                Value = networkDtos
             };
         }
     }

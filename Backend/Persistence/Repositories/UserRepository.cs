@@ -140,13 +140,13 @@ namespace Persistence.Repositories
 
         public async Task<PaginatedResponse<AppUser>> GetFollowersAsync(string address, int pageNumber = 1, int pageSize = 10)
         {
-            var user = await _userManager.Users
+            var target = await _userManager.Users
                 .Where(user => user.Address == address)
                 .Include(user => user.Profile)
                 .FirstOrDefaultAsync();
 
             var query = _userManager.Users
-                .Where(user => user.Profile.Followers.Contains(user.Address));
+                .Where(user => target.Profile.Followers.Contains(user.Address));
 
             var followers = await query
                 .Skip((pageNumber - 1) * pageSize)
@@ -200,6 +200,33 @@ namespace Persistence.Repositories
                 .FirstOrDefaultAsync();
 
             user.Profile.Volume += sale;
+        }
+
+        public async Task<bool> CreateNetwork(string follower, string followee)
+        {
+            var user = await _userManager.Users
+                .Where(user => user.Address == followee)
+                .Include(user => user.Profile)
+                .FirstOrDefaultAsync();
+            if(user.Profile.Followers.Contains(follower))
+                return false;
+
+            user.Profile.Followers.Add(follower);
+            return true;
+        }
+
+        public async Task<bool> RemoveNetwork(string follower, string followee)
+        {
+            var user = await _userManager.Users
+                .Where(user => user.Address == followee)
+                .Include(user => user.Profile)
+                .FirstOrDefaultAsync();
+
+            if(!user.Profile.Followers.Contains(follower))
+                return false;
+
+            user.Profile.Followers.Remove(follower);
+            return true;
         }
     }
 }
