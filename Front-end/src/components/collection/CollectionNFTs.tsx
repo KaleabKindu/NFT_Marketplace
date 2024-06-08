@@ -9,7 +9,6 @@ import NoData from "../common/NoData";
 import Error from "../common/Error";
 import { useParams, useSearchParams } from "next/navigation";
 import { FILTER } from "@/data";
-import Pagination from "@/components/common/Pagination";
 
 type Props = {};
 
@@ -31,9 +30,9 @@ const CollectionNFTs = (props: Props) => {
     pageSize: size,
   });
   const [assets, setAssets] = useState<NFT[]>([]);
-  const { ref, inView } = useInView({ threshold: 0.3 });
+  const { ref, inView } = useInView({ threshold: 1 });
   useEffect(() => {
-    if (data && page * size > assets.length) {
+    if (data) {
       setAssets([...assets, ...data.value]);
       setTotal(data.count);
     }
@@ -51,19 +50,11 @@ const CollectionNFTs = (props: Props) => {
         <Error retry={refetch} />
       ) : assets && assets.length > 0 ? (
         <>
-          {assets.slice(0, size).map((asset, index) => (
+          {assets.map((asset, index) => (
             <NFTCard key={index} asset={asset} />
           ))}
-          {total > page * size && (
-            <Pagination
-              total={total}
-              currentPage={page}
-              setPage={(a: number) => {
-                setPage(a);
-                window.scrollTo({ top: 500, behavior: "smooth" });
-              }}
-            />
-          )}
+          {isFetching && <AssetsShimmers elements={size} />}
+          <div ref={ref} />
         </>
       ) : (
         <NoData message="No assets found" />

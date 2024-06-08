@@ -42,10 +42,10 @@ const NFTProvenance = () => {
       pageSize: size,
     });
   const [provenances, setProvenances] = useState<IProvenance[]>([]);
-  const { ref, inView } = useInView({ threshold: 0.3 });
+  const { ref, inView } = useInView({ threshold: 1 });
 
   useEffect(() => {
-    if (data && page * size > provenances.length) {
+    if (data) {
       setProvenances([...provenances, ...data.value]);
       setTotal(data.count);
     }
@@ -131,6 +131,7 @@ const NFTProvenance = () => {
                       </TableCell>
                     </TableRow>
                   )}
+                  <div ref={ref} />
                 </>
               ) : (
                 <TableRow>
@@ -139,7 +140,6 @@ const NFTProvenance = () => {
                   </TableCell>
                 </TableRow>
               )}
-              <div ref={ref} />
             </TableBody>
           </Table>
         </AccordionContent>

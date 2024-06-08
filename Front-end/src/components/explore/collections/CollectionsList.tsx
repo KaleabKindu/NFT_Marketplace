@@ -102,7 +102,7 @@ const CollectionsList = (props: Props) => {
                   </TableCell>
                 </TableRow>
               ))}
-              {total > page * size && (
+              {total > size && (
                 <TableRow>
                   <TableCell colSpan={6} className="pt-10">
                     <Pagination

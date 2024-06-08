@@ -1,5 +1,4 @@
 "use client";
-import Image from "next/image";
 import {
   TypographyH2,
   TypographyH3,
@@ -23,10 +22,7 @@ const CollectionDetail = ({ id }: Props) => {
     isError,
     refetch,
   } = useGetCollectionDetailsQuery(id);
-  const [imgSrc, setImgSrc] = useState(collection?.avatar as string);
-  const handleError = () => {
-    setImgSrc("/collection/collection-pic.png");
-  };
+
   return (
     <div className="relative flex flex-col lg:flex-row gap-8 -mt-[15vh] w-[90%] lg:w-[85%] mx-auto bg-background border z-40 rounded-3xl p-8">
       {isLoading ? (
@@ -38,8 +34,7 @@ const CollectionDetail = ({ id }: Props) => {
           <div className="relative w-full h-[300px] lg:w-[350px] lg:h-[300px]">
             <CustomImage
               className="rounded-3xl object-cover"
-              src={imgSrc}
-              onError={handleError}
+              src={collection?.avatar || ""}
               fill
               alt=""
             />

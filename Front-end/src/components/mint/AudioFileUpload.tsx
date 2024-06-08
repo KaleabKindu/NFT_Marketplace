@@ -42,7 +42,6 @@ const AudioFileUpload = ({ onChange }: Props) => {
             accept="audio/*"
             className="hidden"
             onChange={(e) => {
-              console.log("here");
               setBlob(e.target.files?.[0]);
               onChange(e.target.files?.[0] as File);
             }}

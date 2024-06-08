@@ -22,7 +22,7 @@ const OwnedNFTs = (props: Props) => {
     pageSize: size,
   });
   const [assets, setAssets] = useState<NFT[]>([]);
-  const { ref, inView } = useInView({ threshold: 0.3 });
+  const { ref, inView } = useInView({ threshold: 1 });
   useEffect(() => {
     if (data) {
       setAssets([...assets, ...data.value]);
@@ -43,16 +43,16 @@ const OwnedNFTs = (props: Props) => {
           <Error retry={refetch} />
         ) : assets && assets.length > 0 ? (
           <>
-            {assets.slice(0, size).map((asset, index) => (
+            {assets.map((asset, index) => (
               <NFTCard key={index} asset={asset} />
             ))}
             {isFetching && <AssetsShimmers elements={size} />}
+            <div ref={ref} />
           </>
         ) : (
           <NoData message="No assets found" />
         )}
       </div>
-      <div ref={ref} />
     </>
   );
 };

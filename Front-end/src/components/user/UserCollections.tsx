@@ -22,7 +22,7 @@ const UserCollections = (props: Props) => {
       pageSize: size,
     });
   const [collections, setCollections] = useState<ICollection[]>([]);
-  const { ref, inView } = useInView({ threshold: 0.3 });
+  const { ref, inView } = useInView({ threshold: 1 });
 
   useEffect(() => {
     if (data) {
@@ -48,12 +48,12 @@ const UserCollections = (props: Props) => {
               <CollectionCard key={index} collection={collection} />
             ))}
             {isFetching && <CollectionsShimmers elements={size} />}
+            <div ref={ref} />
           </>
         ) : (
           <NoData message="No Collections found" />
         )}
       </div>
-      <div ref={ref} />
     </>
   );
 };
