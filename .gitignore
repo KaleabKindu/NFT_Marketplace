@@ -2,3 +2,6 @@
 *.pem
 *.key
 *.crt
+config.bat
+node_modules
+.env
