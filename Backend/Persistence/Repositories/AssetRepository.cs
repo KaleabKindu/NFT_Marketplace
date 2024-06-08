@@ -164,7 +164,7 @@ namespace Persistence.Repositories
             .Include(asset => asset.Owner)
             .Include(asset => asset.Auction)
             .Include(asset => asset.Collection)
-            .FirstOrDefaultAsync(asset => asset.Id == id);
+            .SingleOrDefaultAsync(asset => asset.Id == id);
 
             if (asset == null)
                 return ErrorFactory.NotFound("Asset", "Asset Not Found");
@@ -185,7 +185,7 @@ namespace Persistence.Repositories
             var asset = await _context.Assets.SingleOrDefaultAsync(x => x.Id == assetId);
             if (asset == null) return ErrorFactory.NotFound("Asset", "Asset Not Found");
 
-            var like = await _context.Likes.FirstOrDefaultAsync(x => x.UserId == userId && x.AssetId == assetId);
+            var like = await _context.Likes.SingleOrDefaultAsync(x => x.UserId == userId && x.AssetId == assetId);
             if (like != null)
             {
                 _context.Likes.Remove(like);
@@ -224,7 +224,7 @@ namespace Persistence.Repositories
         public async Task<ErrorOr<Asset>> SellAsset(BigInteger tokenId)
         {
 
-            var asset = await _context.Assets.FirstOrDefaultAsync(x => x.TokenId == tokenId);
+            var asset = await _context.Assets.SingleOrDefaultAsync(x => x.TokenId == tokenId);
             if (asset == null) return ErrorFactory.NotFound("Asset", "Asset Not Found");
 
             asset.Status = AssetStatus.NotOnSale;
@@ -235,7 +235,7 @@ namespace Persistence.Repositories
         public async Task<ErrorOr<Unit>> ResellAsset(ResellAssetEventDto resellAssetEventDto)
         {
             var asset = await _context.Assets.Include(x => x.Auction)
-                .FirstOrDefaultAsync(x => x.TokenId == resellAssetEventDto.TokenId);
+                .SingleOrDefaultAsync(x => x.TokenId == resellAssetEventDto.TokenId);
 
             if (asset == null) return ErrorFactory.NotFound("Asset", "Asset Not Found");
 
@@ -259,10 +259,10 @@ namespace Persistence.Repositories
 
         public async Task<ErrorOr<Tuple<string, Asset>>> TransferAsset(TransferAssetEventDto transferAssetEventDto)
         {
-            var asset = await _context.Assets.FirstOrDefaultAsync(x => x.TokenId == transferAssetEventDto.TokenId);
+            var asset = await _context.Assets.SingleOrDefaultAsync(x => x.TokenId == transferAssetEventDto.TokenId);
             if (asset == null) return ErrorFactory.NotFound("Asset", "Asset Not Found");
 
-            var newOwner = await _context.Users.FirstOrDefaultAsync(x => x.Address == transferAssetEventDto.NewOwner);
+            var newOwner = await _context.Users.SingleOrDefaultAsync(x => x.Address == transferAssetEventDto.NewOwner);
             if (newOwner == null) return ErrorFactory.NotFound("User", "User Not Found");
             var oldOwnerId = asset.OwnerId;
             asset.Owner = newOwner;
@@ -270,6 +270,14 @@ namespace Persistence.Repositories
 
             return new Tuple<string, Asset>(oldOwnerId, asset);
 
+        }
+
+        public async Task<Asset> GetAssetByAuctionId(long auctionId)
+        {
+            return await _dbContext.Assets
+                .Include(asset => asset.Auction)
+                .Where(asset => asset.Auction.AuctionId == auctionId)
+                .SingleOrDefaultAsync();
         }
     }
 }
