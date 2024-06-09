@@ -1,6 +1,10 @@
 "use client";
 import { Card } from "../../ui/card";
-import { TypographyH4, TypographyP, TypographySmall } from "../../common/Typography";
+import {
+  TypographyH4,
+  TypographyP,
+  TypographySmall,
+} from "../../common/Typography";
 import { Button } from "../../ui/button";
 import { FaHeart } from "react-icons/fa";
 import { Badge } from "../../ui/badge";
@@ -16,6 +20,8 @@ import { categories } from "@/data";
 import { IconType } from "react-icons";
 import { useToggleNFTlikeMutation } from "@/store/api";
 import CustomImage from "@/components/common/CustomImage";
+import { useWeb3Modal } from "@web3modal/wagmi/react";
+import { useAppSelector } from "@/store/hooks";
 type Props = {
   asset: NFT;
 };
@@ -26,7 +32,13 @@ const NFTCard = ({ asset }: Props) => {
   const [likes, setLikes] = useState(asset?.likes as number);
   const [audioWidth, setAudioWidth] = useState(0);
   const [toggleLike] = useToggleNFTlikeMutation();
+  const { open } = useWeb3Modal();
+  const session = useAppSelector((state) => state.auth.session);
   const handleLikes = () => {
+    if (!session) {
+      open();
+      return;
+    }
     toggleLike(asset?.tokenId as number).unwrap();
     setLiked(!liked);
     if (liked) {

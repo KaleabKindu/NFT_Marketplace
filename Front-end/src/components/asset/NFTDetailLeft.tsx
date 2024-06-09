@@ -29,6 +29,8 @@ import NFTLeftShimmer from "../common/shimmers/NFTLeftShimmer";
 import { NFT } from "@/types";
 import CustomImage from "../common/CustomImage";
 import { useToggleNFTlikeMutation } from "@/store/api";
+import { useAppSelector } from "@/store/hooks";
+import { useWeb3Modal } from "@web3modal/wagmi/react";
 type Props = {
   asset?: NFT;
   isLoading?: boolean;
@@ -40,7 +42,13 @@ const NFTDetailLeft = ({ asset, isLoading }: Props) => {
   const [likes, setLikes] = useState(0);
   const [showFiles, setShowFiles] = useState(false);
   const [toggleLike] = useToggleNFTlikeMutation();
+  const session = useAppSelector((state) => state.auth.session);
+  const { open } = useWeb3Modal();
   const handleLikes = async () => {
+    if (!session) {
+      open();
+      return;
+    }
     toggleLike(asset?.tokenId as number).unwrap();
     setLiked(!liked);
     if (liked) {

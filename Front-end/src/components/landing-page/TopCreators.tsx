@@ -19,6 +19,8 @@ import Error from "../common/Error";
 import NoData from "../common/NoData";
 import { useAccount } from "wagmi";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { useAppSelector } from "@/store/hooks";
+import { useWeb3Modal } from "@web3modal/wagmi/react";
 
 type Props = {};
 
@@ -72,8 +74,14 @@ export const Creator = ({
   const [unfollowUser, { isLoading: unfollowingUser }] =
     useUnFollowUserMutation();
   const [following, setFollowing] = useState(user.following || false);
+  const session = useAppSelector((state) => state.auth.session);
+  const { open } = useWeb3Modal();
   const handleFollow = async (e: MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
+    if (!session) {
+      open();
+      return;
+    }
     try {
       await followUser({
         follower: address as string,
@@ -87,6 +95,10 @@ export const Creator = ({
   };
   const handleUnfollow = async (e: MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
+    if (!session) {
+      open();
+      return;
+    }
     try {
       await unfollowUser({
         unfollower: address as string,

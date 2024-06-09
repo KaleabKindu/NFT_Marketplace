@@ -56,10 +56,6 @@ export const PlaceBidModal = ({ auctionId }: PlaceBidModalProps) => {
   });
   const handleClose = () => setShowModal(false);
   const onSubmit = (values: { price: number }) => {
-    if (!session) {
-      open();
-      return;
-    }
     contractWrite("placeBid", values.price.toString(), [auctionId]);
   };
   useEffect(() => {
@@ -68,7 +64,16 @@ export const PlaceBidModal = ({ auctionId }: PlaceBidModalProps) => {
     }
   }, [writeSuccess]);
   return (
-    <Dialog open={showModal} onOpenChange={(a) => setShowModal(a)}>
+    <Dialog
+      open={showModal}
+      onOpenChange={(a) => {
+        if (!session) {
+          open();
+          return;
+        }
+        setShowModal(a);
+      }}
+    >
       <DialogTrigger asChild>
         <Button type="button" className="flex-1 lg:w-[50%] w-full">
           Place Bid

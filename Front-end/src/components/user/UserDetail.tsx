@@ -20,6 +20,8 @@ import Error from "../common/Error";
 import CustomImage from "../common/CustomImage";
 import { useState } from "react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { useAppSelector } from "@/store/hooks";
+import { useWeb3Modal } from "@web3modal/wagmi/react";
 
 type Props = {
   address: string;
@@ -38,8 +40,14 @@ const UserDetail = ({ address }: Props) => {
   const [followUser, { isLoading: followingUser }] = useFollowUserMutation();
   const [unfollowUser, { isLoading: unfollowingUser }] =
     useUnFollowUserMutation();
+  const session = useAppSelector((state) => state.auth.session);
+  const { open } = useWeb3Modal();
 
   const handleFollow = async () => {
+    if (!session) {
+      open();
+      return;
+    }
     try {
       await followUser({
         follower: account.address as string,
@@ -52,6 +60,10 @@ const UserDetail = ({ address }: Props) => {
     }
   };
   const handleUnfollow = async () => {
+    if (!session) {
+      open();
+      return;
+    }
     try {
       await unfollowUser({
         unfollower: account.address as string,

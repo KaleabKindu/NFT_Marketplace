@@ -70,9 +70,7 @@ export const webApi = createApi({
         url: `assets/toggle-like/${id}`,
         method: "PUT",
       }),
-      invalidatesTags: (results, meta, args) => [
-        { id: args, type: "NFTs" },
-      ],
+      invalidatesTags: (results, meta, args) => [{ id: args, type: "NFTs" }],
     }),
     getAssets: builder.query<IAssetsPage, IFilter>({
       query: (params) => {
