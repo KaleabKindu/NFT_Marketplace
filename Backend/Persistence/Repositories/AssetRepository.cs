@@ -271,6 +271,31 @@ namespace Persistence.Repositories
 
         }
 
+        public async void DeleteAsset(Asset asset)
+        {
+
+            var auction = await _context.Auctions.FirstOrDefaultAsync(x => x.TokenId == asset.TokenId);
+
+            _context.Auctions.Remove(auction);
+
+            var bids = await _context.Bids.Where(x => x.AssetId == asset.Id).ToListAsync();
+
+            for (int i = 0; i < bids.Count(); i++)
+            {
+                _context.Bids.Remove(bids.ElementAt(i));
+            }
+
+            _context.Assets.Remove(asset);
+
+        }
+
+
+        public async Task<Asset> GetAssetByTokenId(BigInteger tokenId)
+        {
+            return await _context.Assets.FirstOrDefaultAsync(asset => asset.TokenId == tokenId);
+    
+        }
+
         public async Task<Asset> GetAssetByAuctionId(long auctionId)
         {
             return await _dbContext.Assets
@@ -278,5 +303,9 @@ namespace Persistence.Repositories
                 .Where(asset => asset.Auction.AuctionId == auctionId)
                 .SingleOrDefaultAsync();
         }
+        
+
+
+        
     }
 }

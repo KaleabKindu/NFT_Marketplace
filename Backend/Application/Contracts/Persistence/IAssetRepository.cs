@@ -23,5 +23,9 @@ namespace Application.Contracts.Presistence
 
         Task<ErrorOr<Tuple<string, Asset>>> TransferAsset(TransferAssetEventDto transferAssetEventDto);
         Task<Asset> GetAssetByAuctionId(long auctionId);
+
+        void DeleteAsset(Asset asset);
+
+        Task<Asset> GetAssetByTokenId(BigInteger tokenId);
     }
 }
