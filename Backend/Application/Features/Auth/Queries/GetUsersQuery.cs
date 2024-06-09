@@ -13,6 +13,7 @@ namespace Application.Features.Auth.Queries
 {
     public class GetUsersQuery : PaginatedQuery ,IRequest<ErrorOr<PaginatedResponse<UserListDto>>>
     {
+        public string CurrentAddress { get; set; }
     }
 
     public class GetUsersQueryHandler : IRequestHandler<GetUsersQuery, ErrorOr<PaginatedResponse<UserListDto>>>
@@ -32,13 +33,18 @@ namespace Application.Features.Auth.Queries
         )
         {
             var users = await _unitOfWork.UserRepository.GetAllUsersAsync(command.PageNumber, command.PageSize);
+            
+            List<UserListDto> dtos = _mapper.Map<List<UserListDto>>(users.Value);
+            foreach (var dto in dtos)
+                dto.Following = await _unitOfWork.UserRepository.IsFollowing(command.CurrentAddress, dto.Address);
+
             return new PaginatedResponse<UserListDto>()
             {
                 Count = users.Count,
                 PageNumber = command.PageNumber,
                 PageSize = command.PageSize,
                 Message = "Users fetched successfully",
-                Value = _mapper.Map<List<UserListDto>>(users.Value)
+                Value = dtos
             };
         }
     }

@@ -94,7 +94,10 @@ const NFTProvenance = () => {
                           href={`${Routes.USER}/${provenance.from.address}`}
                           className="flex gap-2 items-center"
                         >
-                          <Avatar src={provenance.from.avatar} />
+                          <Avatar
+                            name={provenance.from.userName}
+                            src={provenance.from.avatar}
+                          />
                           <TypographyP
                             className="whitespace-nowrap text-ellipsis overflow-hidden"
                             text={provenance.from.userName}
@@ -106,7 +109,10 @@ const NFTProvenance = () => {
                           href={`${Routes.USER}/${provenance.to.address}`}
                           className="flex gap-2 items-center"
                         >
-                          <Avatar src={provenance.to.avatar} />
+                          <Avatar
+                            name={provenance.to.userName}
+                            src={provenance.to.avatar}
+                          />
                           <TypographyP
                             className="whitespace-nowrap text-ellipsis overflow-hidden"
                             text={provenance.to.userName}

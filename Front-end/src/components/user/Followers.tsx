@@ -52,7 +52,7 @@ const Followers = (props: Props) => {
             <div ref={ref} />
           </>
         ) : (
-          <NoData message="No assets found" />
+          <NoData message="No Users found" />
         )}
       </div>
     </>
