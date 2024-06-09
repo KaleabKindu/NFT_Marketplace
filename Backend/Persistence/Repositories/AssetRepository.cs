@@ -33,7 +33,7 @@ namespace Persistence.Repositories
         {
             var thresholdDateTime = DateTime.UtcNow.AddHours(-24);
             var assets = _dbContext.Assets
-                .Where(x => x.Status != AssetStatus.NotOnSale)
+                .Where(x => x.Status != AssetStatus.NotOnSale && x.AuctionId != null)
                 .Include(x => x.Bids.Where(bd => bd.CreatedAt > thresholdDateTime))
                 .Include(x => x.Auction)
                 .OrderByDescending(ast => ast.Bids.Count())
