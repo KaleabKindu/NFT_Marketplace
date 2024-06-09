@@ -121,13 +121,11 @@ const generateDummyUsers = () => {
       address: `0x${faker.finance.bitcoinAddress()}`,
       bio: faker.person.bio(),
       profile_background: faker.image.urlPicsumPhotos(),
-      social_media: {
-        facebook: faker.internet.url(),
-        twitter: faker.internet.url(),
-        youtube: faker.internet.url(),
-        telegram: faker.internet.url(),
-      },
-      sales: faker.number.float({ min: 10, max: 30, fractionDigits: 4 }),
+      facebook: faker.internet.url(),
+      twitter: faker.internet.url(),
+      youtube: faker.internet.url(),
+      telegram: faker.internet.url(),
+      totalSalesCount: faker.number.float({ min: 10, max: 30, fractionDigits: 4 }),
     };
     dummyData.push(data);
   }

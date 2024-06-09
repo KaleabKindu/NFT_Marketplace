@@ -77,11 +77,8 @@ export const Creator = ({ index, user, showRank = true }: CreatorProps) => {
         <div className="flex gap-3 items-center justify-around w-full p-3">
           <div>
             <TypographyH4
-              text={
-                user.username
-                  ? user.username.slice(0, 10)
-                  : user.address.slice(2, 7)
-              }
+              className="whitespace-nowrap text-ellipsis overflow-hidden"
+              text={user.userName}
             />
             <div className="flex items-center gap-3">
               <TypographyP
@@ -90,7 +87,7 @@ export const Creator = ({ index, user, showRank = true }: CreatorProps) => {
               />
               <TypographyP
                 className="font-semibold"
-                text={`${user.sales}ETH`}
+                text={`${user.totalSalesCount}ETH`}
               />
             </div>
           </div>

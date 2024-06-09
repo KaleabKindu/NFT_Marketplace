@@ -578,14 +578,8 @@ export const UsersFilter = () => {
         <Button className="flex items-center gap-2 h-auto bg-secondary rounded-full hover:bg-secondary/80 text-secondary-foreground">
           <LuUser2 size={25} />
           <TypographySmall
-            className="text-foreground"
-            text={
-              value
-                ? currentUser?.username
-                  ? currentUser?.username.slice(0, 10)
-                  : currentUser?.address.slice(2, 7)
-                : "Creators"
-            }
+            className="whitespace-nowrap text-ellipsis overflow-hidden  text-foreground"
+            text={value ? currentUser?.userName : "Creators"}
           />
           {value ? (
             <IoMdCloseCircle
@@ -622,9 +616,7 @@ export const UsersFilter = () => {
                   )}
                 />
                 <Avatar className="h-5 w-5 mr-2" />
-                {user.username
-                  ? user.username.slice(0, 10)
-                  : user.address.slice(2, 7)}
+                {user.userName}
               </CommandItem>
             ))}
           </CommandGroup>

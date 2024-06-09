@@ -77,7 +77,7 @@ const AddCollectionModal = (props: Props) => {
         avatar: `https://nftstorage.link/ipfs/${avatar_cid}/${values.image?.name}`,
       };
       await createCollection(payload);
-      form.reset()
+      form.reset();
     } catch (error) {
       console.log("error");
     } finally {

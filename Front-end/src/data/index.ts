@@ -249,8 +249,4 @@ export const nft_detail = {
     name: "Bruce Banner",
     address: "0xowieurweoor",
   },
-  collection: {
-    name: "Avengers",
-    address: "0xowieurweoor",
-  },
 };

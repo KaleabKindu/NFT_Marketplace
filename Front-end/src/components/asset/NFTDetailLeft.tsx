@@ -128,7 +128,8 @@ const NFTDetailLeft = ({ asset, isLoading }: Props) => {
                         href={`${Routes.ETHER_TRANSACTIONS}/${asset?.transactionHash}`}
                       >
                         <TypographyP
-                          text={`${asset?.transactionHash?.slice(0, 30)}...`}
+                          className="whitespace-nowrap text-ellipsis overflow-hidden"
+                          text={asset?.transactionHash}
                         />
                       </Link>
                     </div>
@@ -154,8 +155,8 @@ const NFTDetailLeft = ({ asset, isLoading }: Props) => {
                             )}
                           >
                             <TypographyP
-                              className="truncate text-right select-none"
-                              text={`${"ipfs://614917f589593189ac27ac8b81064cbe450c35e3".slice(0, 30)}...`}
+                              className="whitespace-nowrap text-ellipsis overflow-hidden text-right select-none"
+                              text={`${"ipfs://614917f589593189ac27ac8b81064cbe450c35e3"}`}
                             />
                             <TbCopy size={20} />
                           </Badge>

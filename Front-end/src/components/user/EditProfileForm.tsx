@@ -93,9 +93,9 @@ const EditProfileForm = (props: Props) => {
 
       toast({
         title: "Profile Update Successfull",
-        variant:"default"
-      })
-      router.push(`${Routes.USER}/${user?.address}`)
+        variant: "default",
+      });
+      router.push(`${Routes.USER}/${user?.address}`);
     } catch (error) {
       console.log("error");
     } finally {
@@ -210,11 +210,11 @@ const EditProfileForm = (props: Props) => {
         />
 
         <Button type="submit" className="rounded-full self-end" size="lg">
-        {loading ? (
+          {loading ? (
             <AiOutlineLoading3Quarters className="animate-spin" />
           ) : (
             "Submit"
-          )}        
+          )}
         </Button>
       </form>
     </Form>

@@ -24,7 +24,7 @@ const NFTList = (props: Props) => {
     max_price: params.get(FILTER.MAX_PRICE) as string,
     sale_type: params.get(FILTER.SALE) as string,
     sort_by: params.get(FILTER.SORT_BY) as string,
-    collection: params.get(FILTER.COLLECTION) as string,
+    collectionId: params.get(FILTER.COLLECTION) as string,
     creator: params.get(FILTER.CREATOR) as string,
     pageNumber: page,
     pageSize: size,

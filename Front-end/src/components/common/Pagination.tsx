@@ -25,7 +25,7 @@ export default function CPagination({
     setPage(currentPage + 1);
   };
   const backward = () => {
-    setPage(currentPage - 1);
+    currentPage > 1 && setPage(currentPage - 1);
   };
 
   return (

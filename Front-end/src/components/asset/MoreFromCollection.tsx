@@ -20,7 +20,7 @@ type Props = {
 };
 const MoreFromCollection = ({ id }: Props) => {
   const { data, isLoading, isError, refetch } = useGetAssetsQuery({
-    collection: id?.toString(),
+    collectionId: id?.toString(),
     pageNumber: 1,
     pageSize: 12,
   });

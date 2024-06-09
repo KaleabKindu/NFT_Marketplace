@@ -178,7 +178,7 @@ export const webApi = createApi({
           twitter: payload.twitter,
           youtube: payload.youtube,
           telegram: payload.telegram,
-          facebook: payload.facebook
+          facebook: payload.facebook,
         },
       }),
       transformResponse(baseQueryReturnValue: any, meta, arg) {

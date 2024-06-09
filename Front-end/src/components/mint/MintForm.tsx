@@ -66,7 +66,7 @@ interface FormInput {
   files: File[];
   royalty: string;
   price: string;
-  collection?: number;
+  collectionId?: number;
   auction: boolean;
   auctionEnd: number;
 }
@@ -105,7 +105,7 @@ const schema = z.object({
   royalty: z.string().min(1, "Royalty is Required"),
   price: z.string().min(1, "Price is required"),
   auctionEnd: z.number().optional(),
-  collection: z.string().optional(),
+  collectionId: z.string().optional(),
   auction: z.boolean(),
 });
 
@@ -171,6 +171,7 @@ const MintForm = (props: Props) => {
           ? `https://nftstorage.link/ipfs/${thumbnail_cid}/${video?.name}`
           : undefined,
         category: values.category,
+        collectionId: values.collectionId && values.collectionId,
         price: values.price,
         royalty: parseInt(values.royalty),
         auction: values.auction
@@ -476,7 +477,7 @@ const MintForm = (props: Props) => {
         />
         <FormField
           control={form.control}
-          name="collection"
+          name="collectionId"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Add To a Collection(Optional)</FormLabel>

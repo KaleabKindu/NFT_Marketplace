@@ -85,7 +85,10 @@ const NFTCard = ({ asset }: Props) => {
         </div>
         <div className="flex flex-col p-5">
           <div className="flex items-center justify-between">
-            <TypographyH4 className="capitalize" text={asset.name} />
+            <TypographyH4
+              className="whitespace-nowrap text-ellipsis overflow-hidden capitalize"
+              text={asset.name}
+            />
           </div>
           <div className="flex justify-between items-end">
             <div className="flex-1 bg-primary/5">
