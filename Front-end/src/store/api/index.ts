@@ -27,7 +27,7 @@ export const webApi = createApi({
       return headers;
     },
   }),
-  tagTypes: ["Users"],
+  tagTypes: ["Collections", "Users"],
   endpoints: (builder) => ({
     getNounce: builder.mutation<string, Address>({
       query: (address) => ({
@@ -102,12 +102,24 @@ export const webApi = createApi({
         });
         return `collections?${filter.toString()}`;
       },
+      providesTags: ["Collections"],
     }),
     getCollectionDetails: builder.query<ICollection, string>({
       query: (id) => `collections/${id}`,
       transformResponse(baseQueryReturnValue: any, meta, arg) {
         return baseQueryReturnValue.value;
       },
+    }),
+    createCollection: builder.mutation<
+      ICollection,
+      { name: string; description: string; avatar: string }
+    >({
+      query: (payload) => ({
+        url: `collections`,
+        method: "POST",
+        body: payload,
+      }),
+      invalidatesTags: ["Collections"],
     }),
     getUsers: builder.query<IUsersPage, IFilter>({
       query: (params) => {
@@ -197,4 +209,5 @@ export const {
   useGetTrendingAssetsQuery,
   useGetTrendingCollectionsQuery,
   useEditProfileMutation,
+  useCreateCollectionMutation,
 } = webApi;

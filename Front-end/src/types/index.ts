@@ -61,7 +61,7 @@ export interface ICollection {
 }
 export interface IFilter {
   search?: string;
-  category?: string;
+  categoryId?: string;
   min_price?: string;
   max_price?: string;
   min_volume?: string;

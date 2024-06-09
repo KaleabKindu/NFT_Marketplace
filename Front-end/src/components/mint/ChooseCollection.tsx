@@ -1,31 +1,55 @@
 "use client";
+import { useState, useEffect } from "react";
 import { Avatar } from "../common/Avatar";
-import {
-  TypographyH4,
-  TypographyP,
-  TypographySmall,
-} from "../common/Typography";
+import { TypographyP } from "../common/Typography";
 import { ScrollArea, ScrollBar } from "../ui/scroll-area";
 import { IoCheckmarkCircle } from "react-icons/io5";
 import { Button } from "../ui/button";
-import { MdAdd } from "react-icons/md";
 import { cn } from "@/lib/utils";
-type Props = {};
+import { ICollection } from "@/types";
+import AddCollectionModal from "./AddCollectionModal";
+import { useGetCollectionsQuery } from "@/store/api";
+import { useAccount } from "wagmi";
 
-const ChooseCollection = (props: Props) => {
+type Props = {
+  onChange: (a: string) => void;
+};
+
+const ChooseCollection = ({ onChange }: Props) => {
+  const { address } = useAccount();
+  const [selected, setSelected] = useState("");
+  const [collections, setCollections] = useState<ICollection[]>([]);
+  const { data } = useGetCollectionsQuery({
+    creator: address,
+  });
+  const handleClick = (id: string) => {
+    if (id === selected) {
+      setSelected("");
+      onChange("");
+    } else {
+      setSelected(id);
+      onChange(id);
+    }
+  };
+  useEffect(() => {
+    if (data) {
+      setCollections(data.value);
+    }
+  }, [data]);
+
   return (
     <div>
-      <TypographyH4 text="Add To a Collection(Optional)" />
-      <TypographySmall text="Choose an exiting collection or create a new one" />
       <ScrollArea>
-        <div className="flex gap-5 mt-5">
-          <Button
-            type="button"
-            variant={"ghost"}
-            className="flex flex-col gap-5 p-8 border whitespace-normal text-left items-center rounded-md  h-auto w-[15rem]"
-          >
-            <MdAdd size={30} />
-          </Button>
+        <div className="flex gap-5">
+          <AddCollectionModal />
+          {collections.map((collection, index) => (
+            <Collection
+              key={index}
+              collection={collection}
+              selected={selected === collection.id}
+              onSelected={handleClick}
+            />
+          ))}
         </div>
         <ScrollBar className="hidden" orientation="horizontal" />
       </ScrollArea>
@@ -34,23 +58,28 @@ const ChooseCollection = (props: Props) => {
 };
 
 type CollectionProps = {
+  collection: ICollection;
   selected: boolean;
+  onSelected: (a: string) => void;
 };
 
-const Collection = ({ selected }: CollectionProps) => {
+const Collection = ({ collection, onSelected, selected }: CollectionProps) => {
   return (
     <Button
       type="button"
       variant={selected ? "default" : "ghost"}
-      className="flex flex-col gap-5 p-5 border whitespace-normal text-left items-stretch rounded-md  h-auto w-[15rem]"
+      onClick={() => onSelected(collection.id)}
+      className="flex flex-col gap-5 p-5 border whitespace-nowrap text-left items-stretch rounded-2xl h-auto w-[200px]"
     >
-      <div className="flex justify-between items-center">
-        <Avatar className="w-10 h-10" />
-        {selected && <IoCheckmarkCircle size={30} />}
+      <div className="flex justify-between">
+        <Avatar src={collection.avatar} className="w-24 h-24 rounded-2xl" />
+        {selected && <IoCheckmarkCircle size={40} />}
       </div>
       <TypographyP
-        className={cn({ "text-foreground": selected })}
-        text="Crypto Legend Professor"
+        className={cn("whitespace-nowrap text-ellipsis overflow-hidden", {
+          "text-foreground": selected,
+        })}
+        text={collection.name}
       />
     </Button>
   );
