@@ -50,6 +50,7 @@ namespace API.Controllers
                 await Mediator.Send(
                     new GetUsersQuery
                     {
+                        CurrentAddress=_userAccessor.GetAddress(),
                         PageSize = pageSize,
                         PageNumber = pageNumber
                     }

@@ -26,9 +26,10 @@ namespace Application.Profiles
                 .ForMember(dest => dest.Avatar, opt => opt.MapFrom(src => src.Profile.Avatar));
 
             CreateMap<AppUser, UserListDto>()
-                .ForMember(dest => dest.Background, opt => opt.MapFrom(src => src.Profile.ProfileBackgroundImage))
                 .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.Profile.UserName))
-                .ForMember(dest => dest.Avatar, opt => opt.MapFrom(src => src.Profile.Avatar));
+                .ForMember(dest => dest.Background, opt => opt.MapFrom(src => src.Profile.ProfileBackgroundImage))
+                .ForMember(dest => dest.Avatar, opt => opt.MapFrom(src => src.Profile.Avatar))
+                .ForMember(dest => dest.Sales, opt => opt.MapFrom(src => src.Profile.Volume));
 
             CreateMap<AppUser, UserDetailDto>()
                 .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Profile.Email))
