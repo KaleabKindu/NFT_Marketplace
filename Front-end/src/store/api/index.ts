@@ -27,6 +27,7 @@ export const webApi = createApi({
       return headers;
     },
   }),
+  tagTypes: ["Users"],
   endpoints: (builder) => ({
     getNounce: builder.mutation<string, Address>({
       query: (address) => ({
@@ -77,6 +78,7 @@ export const webApi = createApi({
       transformResponse(baseQueryReturnValue: any, meta, arg) {
         return baseQueryReturnValue.value;
       },
+      providesTags: (results, meta, args) => [{ id: args, type: "Users" }],
     }),
     getProvenance: builder.query<
       IProvenancePage,
@@ -153,6 +155,27 @@ export const webApi = createApi({
         return baseQueryReturnValue.value;
       },
     }),
+    editProfile: builder.mutation<string, User>({
+      query: (payload) => ({
+        url: `userprofile`,
+        method: "PUT",
+        body: {
+          userName: payload.userName,
+          bio: payload.bio,
+          avatar: payload.avatar,
+          twitter: payload.twitter,
+          youtube: payload.youtube,
+          telegram: payload.telegram,
+          facebook: payload.facebook
+        },
+      }),
+      transformResponse(baseQueryReturnValue: any, meta, arg) {
+        return baseQueryReturnValue.value.nonce;
+      },
+      invalidatesTags: (result, meta, args) => [
+        { id: args.address, type: "Users" },
+      ],
+    }),
   }),
 });
 
@@ -173,4 +196,5 @@ export const {
   useGetCategoryCountQuery,
   useGetTrendingAssetsQuery,
   useGetTrendingCollectionsQuery,
+  useEditProfileMutation,
 } = webApi;
