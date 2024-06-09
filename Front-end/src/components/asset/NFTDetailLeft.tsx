@@ -28,6 +28,7 @@ import { Routes } from "@/routes";
 import NFTLeftShimmer from "../common/shimmers/NFTLeftShimmer";
 import { NFT } from "@/types";
 import CustomImage from "../common/CustomImage";
+import { useToggleNFTlikeMutation } from "@/store/api";
 type Props = {
   asset?: NFT;
   isLoading?: boolean;
@@ -35,10 +36,12 @@ type Props = {
 
 const NFTDetailLeft = ({ asset, isLoading }: Props) => {
   const { toast } = useToast();
-  const [liked, setLiked] = useState(asset?.liked);
-  const [likes, setLikes] = useState(asset?.likes || 0);
+  const [liked, setLiked] = useState(false);
+  const [likes, setLikes] = useState(0);
   const [showFiles, setShowFiles] = useState(false);
-  const handleLikes = () => {
+  const [toggleLike] = useToggleNFTlikeMutation();
+  const handleLikes = async () => {
+    toggleLike(asset?.tokenId as number).unwrap();
     setLiked(!liked);
     if (liked) {
       setLikes(likes - 1);
@@ -49,6 +52,7 @@ const NFTDetailLeft = ({ asset, isLoading }: Props) => {
   useEffect(() => {
     if (asset) {
       setLikes(asset.likes as number);
+      setLiked(asset.liked as boolean);
     }
   }, [asset]);
   const Icon = categories.find((cat) => cat.value === asset?.category)
@@ -111,7 +115,7 @@ const NFTDetailLeft = ({ asset, isLoading }: Props) => {
                 <AccordionTrigger className="bg-accent text-accent-foreground px-5 rounded-md mb-5 border-b">
                   Details
                 </AccordionTrigger>
-                <AccordionContent className="px-5">
+                <AccordionContent>
                   <div className="flex flex-col gap-5">
                     <div className="flex justify-between items-center">
                       <TypographyH4 text={"Token ID: "} />
@@ -122,13 +126,16 @@ const NFTDetailLeft = ({ asset, isLoading }: Props) => {
                       <TypographyP text={`${asset?.royalty}%`} />
                     </div>
                     <div className="flex justify-between items-center">
-                      <TypographyH4 text={"Transaction Hash: "} />
+                      <TypographyH4
+                        className="whitespace-nowrap pr-5"
+                        text={"Transaction Hash: "}
+                      />
                       <Link
                         className="hover:text-primary"
                         href={`${Routes.ETHER_TRANSACTIONS}/${asset?.transactionHash}`}
                       >
                         <TypographyP
-                          className="whitespace-nowrap text-ellipsis overflow-hidden"
+                          className="whitespace-nowrap text-ellipsis overflow-hidden max-w-[400px]"
                           text={asset?.transactionHash}
                         />
                       </Link>
@@ -155,10 +162,10 @@ const NFTDetailLeft = ({ asset, isLoading }: Props) => {
                             )}
                           >
                             <TypographyP
-                              className="whitespace-nowrap text-ellipsis overflow-hidden text-right select-none"
+                              className="whitespace-nowrap text-ellipsis overflow-hidden max-w-[400px] text-right select-none"
                               text={`${"ipfs://614917f589593189ac27ac8b81064cbe450c35e3"}`}
                             />
-                            <TbCopy size={20} />
+                            <TbCopy className="hover:text-primary" size={20} />
                           </Badge>
                         </CopyToClipboard>
                         <Button

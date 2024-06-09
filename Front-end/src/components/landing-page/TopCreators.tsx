@@ -122,6 +122,7 @@ export const Creator = ({
               className="h-16 w-16"
               name={user.userName}
               src={user.avatar}
+              dark
             />
           </Link>
         </div>

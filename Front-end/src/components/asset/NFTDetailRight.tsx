@@ -99,33 +99,33 @@ const NFTDetailRight = ({ asset, isLoading }: Props) => {
                 className="flex w-[30%] items-center gap-3 p-5"
               >
                 <Avatar
-                  className="h-12 w-12"
+                  className="bg-secondary h-16 w-16"
                   name={asset?.creator?.userName}
                   src={asset?.creator?.avatar}
                 />
                 <div className="flex flex-col">
-                  <TypographySmall text="Creator" />
-                  <TypographyH4 text={asset?.creator?.address.slice(2, 8)} />
+                  <TypographySmall className="font-bold" text="Creator" />
+                  <TypographyH4 text={asset?.creator?.userName} />
                 </div>
               </Link>
               <Link
                 href={`${Routes.USER}/${asset?.owner?.address}`}
-                className="flex w-[30%] items-center gap-3 p-5"
+                className="flex min-w-[30%] items-center gap-3 p-5"
               >
                 <Avatar
-                  className="h-12 w-12"
+                  className="h-16 w-16"
                   name={asset?.owner?.userName}
                   src={asset?.owner?.avatar}
                 />
                 <div className="flex flex-col">
-                  <TypographySmall text="Owner" />
-                  <TypographyH4 text={asset?.owner?.address.slice(2, 8)} />
+                  <TypographySmall className="font-bold" text="Owner" />
+                  <TypographyH4 text={asset?.owner?.userName} />
                 </div>
               </Link>
               {asset?.collection && (
                 <Link
                   href={`${Routes.COLLECTION}/${asset?.collection?.id}`}
-                  className="flex w-[30%] items-center gap-3 p-5"
+                  className="flex min-w-[30%] items-center gap-3 p-5"
                 >
                   <Avatar
                     className="h-12 w-12"
@@ -135,7 +135,7 @@ const NFTDetailRight = ({ asset, isLoading }: Props) => {
                     }
                   />
                   <div className="flex flex-col truncate">
-                    <TypographySmall text="Collection" />
+                    <TypographySmall className="font-bold" text="Collection" />
                     <TypographyH4
                       className="whitespace-nowrap text-ellipsis overflow-hidden"
                       text={asset?.collection?.name}

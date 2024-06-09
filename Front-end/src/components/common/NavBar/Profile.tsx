@@ -38,7 +38,11 @@ const Profile = (props: Props) => {
       <DropdownMenuContent>
         <DropdownMenuLabel>
           <div className="flex gap-3 items-center justify-center p-3">
-            <Avatar name={user?.userName} src={user?.avatar} />
+            <Avatar
+              name={user?.userName}
+              src={user?.avatar}
+              className="bg-secondary"
+            />
             <div>
               <div className="scroll-m-20 text-xl font-semibold tracking-tight">
                 Tony Stark
