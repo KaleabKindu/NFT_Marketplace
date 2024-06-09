@@ -40,6 +40,8 @@ namespace Application.Features.UserProfiles.Commands
 
             _unitOfWork.UserProfileRepository.UpdateAsync(userProfile);
 
+            await _unitOfWork.SaveAsync();
+
             return new BaseResponse<Unit>()
             {
                 Message = "User profile updated successfully",
