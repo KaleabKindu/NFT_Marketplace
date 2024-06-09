@@ -98,7 +98,11 @@ const NFTDetailRight = ({ asset, isLoading }: Props) => {
                 href={`${Routes.USER}/${asset?.creator?.address}`}
                 className="flex w-[30%] items-center gap-3 p-5"
               >
-                <Avatar className="h-12 w-12" src={asset?.creator?.avatar} />
+                <Avatar
+                  className="h-12 w-12"
+                  name={asset?.creator?.userName}
+                  src={asset?.creator?.avatar}
+                />
                 <div className="flex flex-col">
                   <TypographySmall text="Creator" />
                   <TypographyH4 text={asset?.creator?.address.slice(2, 8)} />
@@ -108,7 +112,11 @@ const NFTDetailRight = ({ asset, isLoading }: Props) => {
                 href={`${Routes.USER}/${asset?.owner?.address}`}
                 className="flex w-[30%] items-center gap-3 p-5"
               >
-                <Avatar className="h-12 w-12" src={asset?.owner?.avatar} />
+                <Avatar
+                  className="h-12 w-12"
+                  name={asset?.owner?.userName}
+                  src={asset?.owner?.avatar}
+                />
                 <div className="flex flex-col">
                   <TypographySmall text="Owner" />
                   <TypographyH4 text={asset?.owner?.address.slice(2, 8)} />
@@ -121,6 +129,7 @@ const NFTDetailRight = ({ asset, isLoading }: Props) => {
                 >
                   <Avatar
                     className="h-12 w-12"
+                    name={asset.collection.name}
                     src={
                       asset?.collection?.avatar || "/collection/collection.png"
                     }

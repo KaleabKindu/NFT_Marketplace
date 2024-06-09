@@ -27,7 +27,7 @@ export const webApi = createApi({
       return headers;
     },
   }),
-  tagTypes: ["Collections", "Users"],
+  tagTypes: ["Collections", "Users", "Followings", "Followers"],
   endpoints: (builder) => ({
     getNounce: builder.mutation<string, Address>({
       query: (address) => ({
@@ -135,7 +135,36 @@ export const webApi = createApi({
       { address: string; type: string; pageNumber: number; pageSize: number }
     >({
       query: ({ address, type, pageNumber, pageSize }) =>
-        `users/network/${address}?type=${type}&pageNumber=${pageNumber}&pageSize=${pageSize}`,
+        `auth/users/network/${address}?type=${type}&pageNumber=${pageNumber}&pageSize=${pageSize}`,
+      providesTags: (results, meta, args) => [
+        {
+          id: args.address,
+          type: args.type === "followings" ? "Followings" : "Followers",
+        },
+      ],
+    }),
+    followUser: builder.mutation<void, { follower: string; followee: string }>({
+      query: (args) => ({
+        url: `auth/users/network/${args.followee}`,
+        method: "POST",
+      }),
+      invalidatesTags: (results, meta, args) => [
+        { id: args.follower, type: "Followings" },
+        { id: args.followee, type: "Followers" },
+      ],
+    }),
+    unFollowUser: builder.mutation<
+      void,
+      { unfollower: string; unfollowee: string }
+    >({
+      query: (args) => ({
+        url: `auth/users/network/${args.unfollowee}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: (results, meta, args) => [
+        { id: args.unfollower, type: "Followings" },
+        { id: args.unfollowee, type: "Followers" },
+      ],
     }),
     getTopCreators: builder.query<IUsersPage, { page: number; size: number }>({
       query: ({ page, size }) =>
@@ -210,4 +239,6 @@ export const {
   useGetTrendingCollectionsQuery,
   useEditProfileMutation,
   useCreateCollectionMutation,
+  useFollowUserMutation,
+  useUnFollowUserMutation,
 } = webApi;

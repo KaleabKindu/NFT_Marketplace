@@ -9,11 +9,17 @@ import { Badge } from "../ui/badge";
 import { useToast } from "../ui/use-toast";
 import { useAccount } from "wagmi";
 import { MdEdit } from "react-icons/md";
-import { useGetUserDetailsQuery } from "@/store/api";
+import {
+  useFollowUserMutation,
+  useGetUserDetailsQuery,
+  useUnFollowUserMutation,
+} from "@/store/api";
 import { Skeleton } from "../ui/skeleton";
 import { Routes } from "@/routes";
 import Error from "../common/Error";
 import CustomImage from "../common/CustomImage";
+import { useState } from "react";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 type Props = {
   address: string;
@@ -28,6 +34,35 @@ const UserDetail = ({ address }: Props) => {
     isError,
     refetch,
   } = useGetUserDetailsQuery(address);
+  const [following, setFollowing] = useState(user?.following || false);
+  const [followUser, { isLoading: followingUser }] = useFollowUserMutation();
+  const [unfollowUser, { isLoading: unfollowingUser }] =
+    useUnFollowUserMutation();
+
+  const handleFollow = async () => {
+    try {
+      await followUser({
+        follower: account.address as string,
+        followee: user?.address as string,
+      }).unwrap();
+    } catch (error) {
+      console.log("error", error);
+    } finally {
+      setFollowing(!following);
+    }
+  };
+  const handleUnfollow = async () => {
+    try {
+      await unfollowUser({
+        unfollower: account.address as string,
+        unfollowee: user?.address as string,
+      }).unwrap();
+    } catch (error) {
+      console.log("error", error);
+    } finally {
+      setFollowing(!following);
+    }
+  };
   return (
     <div className="relative flex flex-col lg:flex-row gap-8 -mt-[15vh] w-[90%] lg:w-[85%] mx-auto bg-background border z-40 rounded-3xl p-8">
       {isLoading ? (
@@ -120,7 +155,19 @@ const UserDetail = ({ address }: Props) => {
                 </Button>
               </Link>
             ) : (
-              <Button className="rounded-full">Follow</Button>
+              <Button
+                className="rounded-full"
+                variant={following ? "destructive" : "default"}
+                onClick={following ? handleUnfollow : handleFollow}
+              >
+                {followingUser || unfollowingUser ? (
+                  <AiOutlineLoading3Quarters className="animate-spin" />
+                ) : following ? (
+                  "Unfollow"
+                ) : (
+                  "Follow"
+                )}
+              </Button>
             )}
           </div>
         </>

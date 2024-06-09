@@ -72,7 +72,11 @@ const Collection = ({ collection, onSelected, selected }: CollectionProps) => {
       className="flex flex-col gap-5 p-5 border whitespace-nowrap text-left items-stretch rounded-2xl h-auto w-[200px]"
     >
       <div className="flex justify-between">
-        <Avatar src={collection.avatar} className="w-24 h-24 rounded-2xl" />
+        <Avatar
+          name={collection.name}
+          src={collection.avatar}
+          className="w-24 h-24 rounded-2xl"
+        />
         {selected && <IoCheckmarkCircle size={40} />}
       </div>
       <TypographyP
