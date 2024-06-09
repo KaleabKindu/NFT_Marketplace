@@ -161,7 +161,9 @@ namespace Persistence.Repositories
         {
             var asset = await _context.Assets
             .Include(asset => asset.Creator)
+            .ThenInclude(ctr => ctr.Profile)
             .Include(asset => asset.Owner)
+            .ThenInclude(owner => owner.Profile)
             .Include(asset => asset.Auction)
             .Include(asset => asset.Collection)
             .SingleOrDefaultAsync(asset => asset.Id == id);
@@ -293,7 +295,7 @@ namespace Persistence.Repositories
         public async Task<Asset> GetAssetByTokenId(BigInteger tokenId)
         {
             return await _context.Assets.FirstOrDefaultAsync(asset => asset.TokenId == tokenId);
-    
+
         }
 
         public async Task<Asset> GetAssetByAuctionId(long auctionId)
@@ -303,9 +305,9 @@ namespace Persistence.Repositories
                 .Where(asset => asset.Auction.AuctionId == auctionId)
                 .SingleOrDefaultAsync();
         }
-        
 
 
-        
+
+
     }
 }

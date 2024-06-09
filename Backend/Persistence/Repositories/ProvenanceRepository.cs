@@ -1,5 +1,4 @@
 ﻿using Application.Contracts.Persistence;
-using Application.Features.Provenances.Dtos;
 using Application.Responses;
 using Domain.Provenances;
 using Microsoft.EntityFrameworkCore;
@@ -7,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Persistence.Repositories;
 
-public class ProvenanceRepository : Repository<Provenance> , IProvenanceRepository
+public class ProvenanceRepository : Repository<Provenance>, IProvenanceRepository
 {
     public ProvenanceRepository(AppDbContext dbContext) : base(dbContext)
     {
@@ -22,7 +21,11 @@ public class ProvenanceRepository : Repository<Provenance> , IProvenanceReposito
             .Include(provenance => provenance.From)
             .Include(provenance => provenance.To)
             .Include(provenance => provenance.Asset)
-            .Where(provenance => provenance.Asset.TokenId == tokenId)
+            .Where(provenance => provenance.Asset.TokenId == tokenId);
+
+        var count = await provenances.CountAsync();
+
+        provenances = provenances
             .Skip<Provenance>(skip)
             .Take(pageSize);
 
@@ -30,10 +33,8 @@ public class ProvenanceRepository : Repository<Provenance> , IProvenanceReposito
         {
             PageNumber = pageNumber,
             PageSize = pageSize,
-            Count = await provenances.CountAsync(),
+            Count = count,
             Value = await provenances.ToListAsync(),
-
-
         };
 
 
