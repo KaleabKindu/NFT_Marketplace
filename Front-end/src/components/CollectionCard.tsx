@@ -59,18 +59,15 @@ const CollectionCard = ({ collection }: Props) => {
         </div>
         <div className="flex flex-col gap-3 px-5 py-2">
           <TypographyH3
-            className="text-primary/60 capitalize"
+            className="whitespace-nowrap text-ellipsis overflow-hidden text-primary/60 capitalize"
             text={collection.name}
           />
           <div className="flex justify-between">
             <div className="flex items-center gap-3">
               <Avatar className="h-8 w-8" src={collection.creator.avatar} />
               <TypographySmall
-                text={
-                  collection.creator.username
-                    ? collection.creator.username.slice(0, 10)
-                    : collection.creator.address.slice(2, 7)
-                }
+                className="whitespace-nowrap text-ellipsis overflow-hidden"
+                text={collection.creator.userName}
               />
             </div>
             <Card className="relative p-2 bg-primary/5 border-4">

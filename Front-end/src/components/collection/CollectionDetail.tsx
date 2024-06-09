@@ -40,7 +40,10 @@ const CollectionDetail = ({ id }: Props) => {
             />
           </div>
           <div className="flex flex-col gap-5">
-            <TypographyH2 className="capitalize" text={collection?.name} />
+            <TypographyH2
+              className="whitespace-nowrap text-ellipsis overflow-hidden capitalize"
+              text={collection?.name}
+            />
             <TypographyP text={collection?.description} />
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
               <div className="flex flex-col items-center gap-5 lg:gap-8 p-5 lg:p-7 border rounded-xl">

@@ -1,9 +1,9 @@
-using Application.Contracts.Persistance;
-using Domain.Assets;
 using MediatR;
 using ErrorOr;
-using Application.Features.Assets.Dtos;
+using Domain.Assets;
 using System.Numerics;
+using Application.Features.Assets.Dtos;
+using Application.Contracts.Persistance;
 
 namespace Application.Contracts.Presistence
 {
@@ -22,5 +22,6 @@ namespace Application.Contracts.Presistence
         Task<ErrorOr<Unit>> ResellAsset(ResellAssetEventDto resellAssetEventDto);
 
         Task<ErrorOr<Tuple<string, Asset>>> TransferAsset(TransferAssetEventDto transferAssetEventDto);
+        Task<Asset> GetAssetByAuctionId(long auctionId);
     }
 }

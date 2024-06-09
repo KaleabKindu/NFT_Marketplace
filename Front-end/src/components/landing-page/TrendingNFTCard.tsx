@@ -85,7 +85,7 @@ const TrendingNFTCard = ({ asset }: Props) => {
           <div className="absolute rounded-tr-3xl rounded-bl-xl transform skew-x-[30deg] bottom-0 left-1 py-[0.5rem] ml-[-1.5rem] pl-[2rem] min-w-[50%] bg-accent ">
             <div className="flex flex-col items-start gap-3 transform skew-x-[-30deg]">
               <TypographyP
-                className="text-primary/60 capitalize"
+                className="whitespace-nowrap text-ellipsis overflow-hidden text-primary/60 capitalize"
                 text={asset.name}
               />
               <Card className="relative p-2 px-4 bg-primary/5 border-4">

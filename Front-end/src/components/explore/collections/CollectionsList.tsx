@@ -95,9 +95,7 @@ const CollectionsList = (props: Props) => {
                         className="mr-3"
                         src={collection.creator.avatar}
                       />
-                      {collection.creator.username
-                        ? collection.creator.username
-                        : collection.creator.address.slice(2, 7)}
+                      {collection.creator.userName}
                     </Link>
                   </TableCell>
                 </TableRow>

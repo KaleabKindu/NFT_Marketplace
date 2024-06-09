@@ -87,7 +87,7 @@ export enum FILTER {
   MAX_PRICE = "max_price",
   CATEGORY = "category",
   SORT_BY = "sort_by",
-  COLLECTION = "collection",
+  COLLECTION = "collectionId",
   CREATOR = "creator",
 }
 export const categories: {
@@ -247,10 +247,6 @@ export const nft_detail = {
   },
   owner: {
     name: "Bruce Banner",
-    address: "0xowieurweoor",
-  },
-  collection: {
-    name: "Avengers",
     address: "0xowieurweoor",
   },
 };

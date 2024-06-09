@@ -47,12 +47,12 @@ const generateDummyAssets = () => {
         name: faker.word.noun(),
       },
       creator: {
-        username: faker.internet.userName(),
+        userName: faker.internet.userName(),
         avatar: faker.image.avatar(),
         address: `0x${faker.finance.bitcoinAddress()}`,
       },
       owner: {
-        username: faker.internet.userName(),
+        userName: faker.internet.userName(),
         avatar: faker.image.avatar(),
         address: `0x${faker.finance.bitcoinAddress()}`,
       },
@@ -84,7 +84,7 @@ const generateDummyCollections = () => {
       description: faker.lorem.sentence(),
       avatar: faker.image.url(),
       creator: {
-        username: faker.internet.userName(),
+        userName: faker.internet.userName(),
         avatar: faker.image.avatar(),
         address: `0x${faker.finance.bitcoinAddress()}`,
       },
@@ -116,18 +116,16 @@ const generateDummyUsers = () => {
   const dummyData = [];
   for (let i = 0; i < 10; i++) {
     const data: User = {
-      username: faker.internet.userName(),
+      userName: faker.internet.userName(),
       avatar: faker.image.avatar(),
       address: `0x${faker.finance.bitcoinAddress()}`,
       bio: faker.person.bio(),
       profile_background: faker.image.urlPicsumPhotos(),
-      social_media: {
-        facebook: faker.internet.url(),
-        twitter: faker.internet.url(),
-        youtube: faker.internet.url(),
-        telegram: faker.internet.url(),
-      },
-      sales: faker.number.float({ min: 10, max: 30, fractionDigits: 4 }),
+      facebook: faker.internet.url(),
+      twitter: faker.internet.url(),
+      youtube: faker.internet.url(),
+      telegram: faker.internet.url(),
+      totalSalesCount: faker.number.float({ min: 10, max: 30, fractionDigits: 4 }),
     };
     dummyData.push(data);
   }
@@ -143,12 +141,12 @@ const generateDummyProvenance = () => {
     const data: IProvenance = {
       event: events[Math.floor(Math.random() * events.length)],
       from: {
-        username: faker.internet.userName(),
+        userName: faker.internet.userName(),
         avatar: faker.image.avatar(),
         address: `0x${faker.finance.bitcoinAddress()}`,
       },
       to: {
-        username: faker.internet.userName(),
+        userName: faker.internet.userName(),
         avatar: faker.image.avatar(),
         address: `0x${faker.finance.bitcoinAddress()}`,
       },
@@ -170,7 +168,7 @@ const generateDummyBids = () => {
   for (let i = 0; i < 10; i++) {
     const data: IBid = {
       from: {
-        username: faker.internet.userName(),
+        userName: faker.internet.userName(),
         avatar: faker.image.avatar(),
         address: `0x${faker.finance.bitcoinAddress()}`,
       },

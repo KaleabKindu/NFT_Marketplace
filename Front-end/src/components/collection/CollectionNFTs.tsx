@@ -25,7 +25,7 @@ const CollectionNFTs = (props: Props) => {
     max_price: params.get(FILTER.MAX_PRICE) as string,
     sale_type: params.get(FILTER.SALE) as string,
     sort_by: params.get(FILTER.SORT_BY) as string,
-    collection: id as string,
+    collectionId: id as string,
     pageNumber: page,
     pageSize: size,
   });

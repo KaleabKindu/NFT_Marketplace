@@ -88,11 +88,8 @@ export default function NFTBids() {
                         >
                           <Avatar src={bid.from.avatar} />
                           <TypographyP
-                            text={
-                              bid.from.username
-                                ? bid.from.username.slice(0, 10)
-                                : bid.from.address.slice(2, 7)
-                            }
+                            className="whitespace-nowrap text-ellipsis overflow-hidden"
+                            text={bid.from.userName}
                           />
                         </Link>
                       </TableCell>

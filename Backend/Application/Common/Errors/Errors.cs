@@ -21,5 +21,6 @@ namespace Application.Common.Errors{
 
         // Bad request error
         public static Error BadRequestError(string entityName, string errorMessage) => Error.Failure($"{entityName}.BadRequest", $"{errorMessage}");
+        public static Error InternalServerError(string entityName, string errorMessage) => Error.Failure($"{entityName}.BadRequest", $"{errorMessage}");
     }
 }

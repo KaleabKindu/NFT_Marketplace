@@ -85,7 +85,10 @@ const NFTDetailRight = ({ asset, isLoading }: Props) => {
         <div className="flex-1 p-3">
           <div className="flex flex-col gap-10">
             <div className="flex justify-between items-start p-5">
-              <TypographyH2 className="capitalize" text={asset?.name} />
+              <TypographyH2
+                className="whitespace-nowrap text-ellipsis overflow-hidden capitalize"
+                text={asset?.name}
+              />
               {address && asset?.owner?.address === address && (
                 <Menu asset={asset as NFT} />
               )}
@@ -124,7 +127,10 @@ const NFTDetailRight = ({ asset, isLoading }: Props) => {
                   />
                   <div className="flex flex-col truncate">
                     <TypographySmall text="Collection" />
-                    <TypographyH4 text={asset?.collection?.name} />
+                    <TypographyH4
+                      className="whitespace-nowrap text-ellipsis overflow-hidden"
+                      text={asset?.collection?.name}
+                    />
                   </div>
                 </Link>
               )}

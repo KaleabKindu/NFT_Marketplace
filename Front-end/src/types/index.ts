@@ -16,6 +16,7 @@ export interface NFT {
     avatar: string;
     name: string;
   };
+  collectionId?: number;
   creator?: User;
   owner?: User;
   auction?: Auction;
@@ -36,19 +37,16 @@ export interface Credentials {
 }
 
 export interface User {
-  username: string;
+  userName: string;
   avatar: string;
   address: Address;
   bio?: string;
   profile_background?: string;
-  social_media?: SocialMedia;
-  sales?: number;
-}
-export interface SocialMedia {
-  facebook: string;
-  twitter: string;
-  youtube: string;
-  telegram: string;
+  facebook?: string;
+  twitter?: string;
+  youtube?: string;
+  telegram?: string;
+  totalSalesCount?: number;
 }
 export interface ICollection {
   id: string;
@@ -70,7 +68,7 @@ export interface IFilter {
   min_volume?: string;
   max_volume?: string;
   sale_type?: string;
-  collection?: string;
+  collectionId?: string;
   creator?: string;
   owner?: string;
   sort_by?: string;
@@ -82,7 +80,7 @@ export interface IPagination {
   count: number;
 }
 export interface IUser {
-  username: string;
+  userName: string;
   avatar: string;
   address: string;
 }

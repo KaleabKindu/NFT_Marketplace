@@ -55,6 +55,7 @@ import SelectCategory from "./SelectCategory";
 import AudioFileUpload from "./AudioFileUpload";
 import { CATEGORY } from "@/data";
 import useContractWriteMutation from "@/hooks/useContractWriteMutation";
+import ChooseCollection from "./ChooseCollection";
 
 interface FormInput {
   name: string;
@@ -65,7 +66,7 @@ interface FormInput {
   files: File[];
   royalty: string;
   price: string;
-  collection: string;
+  collectionId?: number;
   auction: boolean;
   auctionEnd: number;
 }
@@ -78,14 +79,14 @@ const initialState: FormInput = {
   price: "",
   auction: false,
   royalty: "",
-  collection: "",
   auctionEnd: 0.0,
 };
 const schema = z.object({
-  name: z.string().min(3),
-  description: z.string().min(5),
+  name: z.string().min(3, "Name must be at least 3 characters"),
+  description: z.string().min(5, "Description must be at least 5 characters"),
   thumbnail: z
     .any()
+    .refine((files) => files && files.length > 0, "Thumbnail is required")
     .refine(
       (file) => file && file.size <= 20 * 1024 * 1024,
       "File size must be less than 20MB.",
@@ -100,11 +101,11 @@ const schema = z.object({
   files: z
     .any()
     .refine((files) => files && files.length > 0, "Files are required"),
-  category: z.string(),
-  royalty: z.string(),
-  price: z.string(),
-  auctionEnd: z.number(),
-  collection: z.string(),
+  category: z.string().min(1, "Category is required"),
+  royalty: z.string().min(1, "Royalty is Required"),
+  price: z.string().min(1, "Price is required"),
+  auctionEnd: z.number().optional(),
+  collectionId: z.string().optional(),
   auction: z.boolean(),
 });
 
@@ -170,6 +171,7 @@ const MintForm = (props: Props) => {
           ? `https://nftstorage.link/ipfs/${thumbnail_cid}/${video?.name}`
           : undefined,
         category: values.category,
+        collectionId: values.collectionId && values.collectionId,
         price: values.price,
         royalty: parseInt(values.royalty),
         auction: values.auction
@@ -245,7 +247,7 @@ const MintForm = (props: Props) => {
           name="category"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Select Category</FormLabel>
+              <FormLabel>Category</FormLabel>
               <FormControl>
                 <SelectCategory onChange={field.onChange} />
               </FormControl>
@@ -468,6 +470,22 @@ const MintForm = (props: Props) => {
               </FormControl>
               <FormDescription>
                 This is Royalty you would get on secondary resale of your NFT.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="collectionId"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Add To a Collection(Optional)</FormLabel>
+              <FormControl>
+                <ChooseCollection onChange={field.onChange} />
+              </FormControl>
+              <FormDescription>
+                Choose an exiting collection or create a new one
               </FormDescription>
               <FormMessage />
             </FormItem>

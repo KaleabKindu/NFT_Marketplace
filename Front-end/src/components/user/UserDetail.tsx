@@ -13,7 +13,6 @@ import { useGetUserDetailsQuery } from "@/store/api";
 import { Skeleton } from "../ui/skeleton";
 import { Routes } from "@/routes";
 import Error from "../common/Error";
-import { useState } from "react";
 import CustomImage from "../common/CustomImage";
 
 type Props = {
@@ -47,7 +46,8 @@ const UserDetail = ({ address }: Props) => {
           </div>
           <div className="flex flex-col items-start gap-5">
             <TypographyH2
-              text={user?.username ? user?.username : user?.address.slice(2, 7)}
+              className="whitespace-nowrap text-ellipsis overflow-hidden"
+              text={user?.userName}
             />
             <CopyToClipboard
               text={address}
@@ -62,7 +62,7 @@ const UserDetail = ({ address }: Props) => {
                 className="flex gap-2 items-center cursor-pointer"
               >
                 <TypographyP
-                  className="truncate text-right text-base select-none"
+                  className="whitespace-nowrap text-ellipsis overflow-hidden text-right text-base select-none"
                   text={address}
                 />
                 <TbCopy size={20} />
@@ -70,7 +70,7 @@ const UserDetail = ({ address }: Props) => {
             </CopyToClipboard>
             <TypographyP text={user?.bio || "No Bio."} />
             <div className="flex gap-5">
-              <Link href={user?.social_media?.facebook || ""}>
+              <Link href={user?.facebook || ""}>
                 <Button
                   className="rounded-full"
                   variant={"ghost"}
@@ -79,7 +79,7 @@ const UserDetail = ({ address }: Props) => {
                   <BsFacebook size={25} />
                 </Button>
               </Link>
-              <Link href={user?.social_media?.twitter || ""}>
+              <Link href={user?.twitter || ""}>
                 <Button
                   className="rounded-full"
                   variant={"ghost"}
@@ -88,7 +88,7 @@ const UserDetail = ({ address }: Props) => {
                   <BsTwitterX size={25} />
                 </Button>
               </Link>
-              <Link href={user?.social_media?.youtube || ""}>
+              <Link href={user?.youtube || ""}>
                 <Button
                   className="rounded-full"
                   variant={"ghost"}
@@ -97,7 +97,7 @@ const UserDetail = ({ address }: Props) => {
                   <BsYoutube size={25} />
                 </Button>
               </Link>
-              <Link href={user?.social_media?.telegram || ""}>
+              <Link href={user?.telegram || ""}>
                 <Button
                   className="rounded-full"
                   variant={"ghost"}
@@ -113,8 +113,8 @@ const UserDetail = ({ address }: Props) => {
               <Link href={Routes.EDIT_PROFILE}>
                 <Button
                   variant={"ghost"}
-                  size={"icon"}
-                  className="rounded-full"
+                  size={"lg"}
+                  className="rounded-full p-5"
                 >
                   <MdEdit size={30} />
                 </Button>
