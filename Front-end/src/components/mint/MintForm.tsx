@@ -84,13 +84,7 @@ const initialState: FormInput = {
 const schema = z.object({
   name: z.string().min(3, "Name must be at least 3 characters"),
   description: z.string().min(5, "Description must be at least 5 characters"),
-  thumbnail: z
-    .any()
-    .refine((files) => files && files.length > 0, "Thumbnail is required")
-    .refine(
-      (file) => file && file.size <= 20 * 1024 * 1024,
-      "File size must be less than 20MB.",
-    ),
+  thumbnail: z.any().refine((file) => file, "Thumbnail is required"),
   audio: z
     .any()
     .refine(

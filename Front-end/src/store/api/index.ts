@@ -27,7 +27,7 @@ export const webApi = createApi({
       return headers;
     },
   }),
-  tagTypes: ["Collections", "Users", "Followings", "Followers"],
+  tagTypes: ["NFTs", "Collections", "Users", "Followings", "Followers"],
   endpoints: (builder) => ({
     getNounce: builder.mutation<string, Address>({
       query: (address) => ({
@@ -63,6 +63,14 @@ export const webApi = createApi({
       transformResponse(baseQueryReturnValue: any, meta, arg) {
         return baseQueryReturnValue.value;
       },
+      providesTags: (results, meta, args) => [{ id: args, type: "NFTs" }],
+    }),
+    toggleNFTlike: builder.mutation<void, number>({
+      query: (id) => ({
+        url: `assets/toggle-like/${id}`,
+        method: "PUT",
+      }),
+      invalidatesTags: (results, meta, args) => [{ id: args, type: "NFTs" }],
     }),
     getAssets: builder.query<IAssetsPage, IFilter>({
       query: (params) => {
@@ -72,6 +80,7 @@ export const webApi = createApi({
         });
         return `assets/all?${filter.toString()}`;
       },
+      providesTags: ["NFTs"],
     }),
     getUserDetails: builder.query<User, string>({
       query: (address) => `auth/user/detail?address=${address}`,
@@ -241,4 +250,5 @@ export const {
   useCreateCollectionMutation,
   useFollowUserMutation,
   useUnFollowUserMutation,
+  useToggleNFTlikeMutation,
 } = webApi;
