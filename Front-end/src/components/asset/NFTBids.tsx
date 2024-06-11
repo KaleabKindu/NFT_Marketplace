@@ -86,7 +86,10 @@ export default function NFTBids() {
                           href={`${Routes.USER}/${bid.from.address}`}
                           className="flex gap-2 items-center"
                         >
-                          <Avatar src={bid.from.avatar} />
+                          <Avatar
+                            src={bid.from.avatar}
+                            name={bid.from.userName}
+                          />
                           <TypographyP
                             className="whitespace-nowrap text-ellipsis overflow-hidden"
                             text={bid.from.userName}

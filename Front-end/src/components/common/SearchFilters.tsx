@@ -526,7 +526,11 @@ export const CollectionsFilter = () => {
                     value === collection.id ? "opacity-100" : "opacity-0",
                   )}
                 />
-                <Avatar className="h-5 w-5 mr-2" />
+                <Avatar
+                  name={collection.name}
+                  src={collection.avatar}
+                  className="h-5 w-5 mr-2"
+                />
                 {collection.name}
               </CommandItem>
             ))}
@@ -615,7 +619,11 @@ export const UsersFilter = () => {
                     value === user.address ? "opacity-100" : "opacity-0",
                   )}
                 />
-                <Avatar className="h-5 w-5 mr-2" />
+                <Avatar
+                  name={user.userName}
+                  src={user.avatar}
+                  className="h-5 w-5 mr-2"
+                />
                 {user.userName}
               </CommandItem>
             ))}

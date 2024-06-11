@@ -27,7 +27,7 @@ export const webApi = createApi({
       return headers;
     },
   }),
-  tagTypes: ["Collections", "Users"],
+  tagTypes: ["NFTs", "Collections", "Users", "Followings", "Followers"],
   endpoints: (builder) => ({
     getNounce: builder.mutation<string, Address>({
       query: (address) => ({
@@ -63,6 +63,14 @@ export const webApi = createApi({
       transformResponse(baseQueryReturnValue: any, meta, arg) {
         return baseQueryReturnValue.value;
       },
+      providesTags: (results, meta, args) => [{ id: args, type: "NFTs" }],
+    }),
+    toggleNFTlike: builder.mutation<void, number>({
+      query: (id) => ({
+        url: `assets/toggle-like/${id}`,
+        method: "PUT",
+      }),
+      invalidatesTags: (results, meta, args) => [{ id: args, type: "NFTs" }],
     }),
     getAssets: builder.query<IAssetsPage, IFilter>({
       query: (params) => {
@@ -72,6 +80,7 @@ export const webApi = createApi({
         });
         return `assets/all?${filter.toString()}`;
       },
+      providesTags: ["NFTs"],
     }),
     getUserDetails: builder.query<User, string>({
       query: (address) => `auth/user/detail?address=${address}`,
@@ -135,7 +144,36 @@ export const webApi = createApi({
       { address: string; type: string; pageNumber: number; pageSize: number }
     >({
       query: ({ address, type, pageNumber, pageSize }) =>
-        `users/network/${address}?type=${type}&pageNumber=${pageNumber}&pageSize=${pageSize}`,
+        `auth/users/network/${address}?type=${type}&pageNumber=${pageNumber}&pageSize=${pageSize}`,
+      providesTags: (results, meta, args) => [
+        {
+          id: args.address,
+          type: args.type === "followings" ? "Followings" : "Followers",
+        },
+      ],
+    }),
+    followUser: builder.mutation<void, { follower: string; followee: string }>({
+      query: (args) => ({
+        url: `auth/users/network/${args.followee}`,
+        method: "POST",
+      }),
+      invalidatesTags: (results, meta, args) => [
+        { id: args.follower, type: "Followings" },
+        { id: args.followee, type: "Followers" },
+      ],
+    }),
+    unFollowUser: builder.mutation<
+      void,
+      { unfollower: string; unfollowee: string }
+    >({
+      query: (args) => ({
+        url: `auth/users/network/${args.unfollowee}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: (results, meta, args) => [
+        { id: args.unfollower, type: "Followings" },
+        { id: args.unfollowee, type: "Followers" },
+      ],
     }),
     getTopCreators: builder.query<IUsersPage, { page: number; size: number }>({
       query: ({ page, size }) =>
@@ -210,4 +248,7 @@ export const {
   useGetTrendingCollectionsQuery,
   useEditProfileMutation,
   useCreateCollectionMutation,
+  useFollowUserMutation,
+  useUnFollowUserMutation,
+  useToggleNFTlikeMutation,
 } = webApi;

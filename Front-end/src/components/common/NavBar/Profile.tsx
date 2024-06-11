@@ -11,11 +11,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Routes } from "@/routes";
-import { useDisconnect } from "wagmi";
+import { useAccount, useDisconnect } from "wagmi";
 import useWeb3Status from "@/hooks/useWeb3Status";
 import { persistor } from "@/store";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useGetUserDetailsQuery } from "@/store/api";
 
 type Props = {};
 
@@ -23,7 +24,8 @@ const Profile = (props: Props) => {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const { disconnect } = useDisconnect();
-  const { address } = useWeb3Status();
+  const { address } = useAccount();
+  const { data: user } = useGetUserDetailsQuery(address as string);
   const handleLogout = () => {
     disconnect();
     persistor.purge();
@@ -31,12 +33,16 @@ const Profile = (props: Props) => {
   return (
     <DropdownMenu open={isOpen} onOpenChange={(a) => setIsOpen(a)}>
       <DropdownMenuTrigger className="rounded-full">
-        <Avatar />
+        <Avatar name={user?.userName} src={user?.avatar} />
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuLabel>
           <div className="flex gap-3 items-center justify-center p-3">
-            <Avatar />
+            <Avatar
+              name={user?.userName}
+              src={user?.avatar}
+              className="bg-secondary"
+            />
             <div>
               <div className="scroll-m-20 text-xl font-semibold tracking-tight">
                 Tony Stark

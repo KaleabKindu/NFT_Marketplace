@@ -46,7 +46,8 @@ export interface User {
   twitter?: string;
   youtube?: string;
   telegram?: string;
-  totalSalesCount?: number;
+  sales?: number;
+  following?: boolean;
 }
 export interface ICollection {
   id: string;

@@ -1,7 +1,10 @@
 "use client";
-import Image from "next/image";
 import { Card } from "../../ui/card";
-import { TypographyH4, TypographySmall } from "../../common/Typography";
+import {
+  TypographyH4,
+  TypographyP,
+  TypographySmall,
+} from "../../common/Typography";
 import { Button } from "../../ui/button";
 import { FaHeart } from "react-icons/fa";
 import { Badge } from "../../ui/badge";
@@ -15,6 +18,10 @@ import AudioPlayer from "./AudioPlayer";
 import VideoPlayer from "./VideoPlayer";
 import { categories } from "@/data";
 import { IconType } from "react-icons";
+import { useToggleNFTlikeMutation } from "@/store/api";
+import CustomImage from "@/components/common/CustomImage";
+import { useWeb3Modal } from "@web3modal/wagmi/react";
+import { useAppSelector } from "@/store/hooks";
 type Props = {
   asset: NFT;
 };
@@ -23,10 +30,16 @@ const NFTCard = ({ asset }: Props) => {
   const cardRef = useRef<HTMLDivElement>(null);
   const [liked, setLiked] = useState(asset?.liked as boolean);
   const [likes, setLikes] = useState(asset?.likes as number);
-  const [imgSrc, setImgSrc] = useState(asset.image as string);
   const [audioWidth, setAudioWidth] = useState(0);
-  const handleLikes = (e: any) => {
-    e.preventDefault();
+  const [toggleLike] = useToggleNFTlikeMutation();
+  const { open } = useWeb3Modal();
+  const session = useAppSelector((state) => state.auth.session);
+  const handleLikes = () => {
+    if (!session) {
+      open();
+      return;
+    }
+    toggleLike(asset?.tokenId as number).unwrap();
     setLiked(!liked);
     if (liked) {
       setLikes(likes - 1);
@@ -34,27 +47,20 @@ const NFTCard = ({ asset }: Props) => {
       setLikes(likes + 1);
     }
   };
-  const Icon = categories.find((cat) => cat.value === asset.category)
-    ?.icon as IconType;
-  const handleImageError = () => {
-    setImgSrc("/image-placeholder.png");
-  };
   useEffect(() => {
     if (cardRef.current) setAudioWidth(cardRef.current.offsetWidth as number);
   }, [cardRef]);
+  const Icon = categories.find((cat) => cat.value === asset.category)
+    ?.icon as IconType;
   return (
-    <Link
-      href={`${Routes.PRODUCT}/${asset.tokenId}`}
-      className="col-span-12 sm:col-span-6 lg:col-span-3"
-    >
+    <div className="col-span-12 sm:col-span-6 lg:col-span-3">
       <Card ref={cardRef} className="w-full rounded-3xl group ">
         <div className="relative  min-h-[20rem] h-full rounded-t-3xl overflow-clip">
           {/* Images */}
           {asset.image && (
-            <Image
+            <CustomImage
               className="object-cover rounded-t-3xl group-hover:scale-105"
-              src={imgSrc}
-              onError={handleImageError}
+              src={asset.image}
               fill
               alt=""
             />
@@ -83,22 +89,21 @@ const NFTCard = ({ asset }: Props) => {
             <Icon size={25} />
           </Badge>
         </div>
-        <div className="flex flex-col p-5">
-          <div className="flex items-center justify-between">
+        <div className="flex flex-col gap-2 p-5 pt-2">
+          <Link
+            href={`${Routes.PRODUCT}/${asset.tokenId}`}
+            className="flex items-center justify-between"
+          >
             <TypographyH4
-              className="whitespace-nowrap text-ellipsis overflow-hidden capitalize"
+              className="whitespace-nowrap text-ellipsis overflow-hidden hover:text-primary capitalize"
               text={asset.name}
             />
-          </div>
+          </Link>
           <div className="flex justify-between items-end">
             <div className="flex-1 bg-primary/5">
-              <TypographySmall
-                className=" text-xs"
-                text={asset.auction ? "Current Bid" : "Price"}
-              />
-              <TypographyH4
+              <TypographyP
                 className="text-primary/60"
-                text={`${asset.auction ? asset.auction.highestBid : asset.price}ETH`}
+                text={`${asset.auction ? asset.auction.highestBid : asset.price} ETH`}
               />
             </div>
             <div className="flex-1 w-[50%] flex flex-col items-end">
@@ -114,7 +119,7 @@ const NFTCard = ({ asset }: Props) => {
           </div>
         </div>
       </Card>
-    </Link>
+    </div>
   );
 };
 

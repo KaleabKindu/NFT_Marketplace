@@ -2,7 +2,7 @@
 import { Creator } from "@/components/landing-page/TopCreators";
 import NoData from "@/components/common/NoData";
 import Error from "@/components/common/Error";
-import { useGetUserNetworksQuery, useGetUsersQuery } from "@/store/api";
+import { useGetUserNetworksQuery } from "@/store/api";
 import UsersShimmers from "@/components/common/shimmers/UsersShimmers";
 import { useParams } from "next/navigation";
 import { useInView } from "react-intersection-observer";
@@ -24,7 +24,8 @@ const Followings = (props: Props) => {
     });
   const [users, setUsers] = useState<User[]>([]);
   const { ref, inView } = useInView({ threshold: 1 });
-
+  const removeUser = (address: string) =>
+    setUsers(users.filter((user) => user.address !== address));
   useEffect(() => {
     if (data) {
       setUsers([...users, ...data.value]);
@@ -46,13 +47,19 @@ const Followings = (props: Props) => {
         ) : users && users.length > 0 ? (
           <>
             {users.map((user, index) => (
-              <Creator key={index} user={user} index={index} showRank={false} />
+              <Creator
+                key={index}
+                user={user}
+                index={index}
+                showRank={false}
+                removeUser={removeUser}
+              />
             ))}
             {isFetching && <UsersShimmers elements={size} />}
             <div ref={ref} />
           </>
         ) : (
-          <NoData message="No assets found" />
+          <NoData message="No Users found" />
         )}
       </div>
     </>

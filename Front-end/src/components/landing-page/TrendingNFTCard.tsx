@@ -18,6 +18,8 @@ import { NFT } from "@/types";
 import { categories } from "@/data";
 import { IconType } from "react-icons";
 import CustomImage from "../common/CustomImage";
+import { useWeb3Modal } from "@web3modal/wagmi/react";
+import { useAppSelector } from "@/store/hooks";
 
 type Props = {
   asset: NFT;
@@ -26,6 +28,8 @@ type Props = {
 const TrendingNFTCard = ({ asset }: Props) => {
   const [liked, setLiked] = useState(false);
   const [likes, setLikes] = useState(22);
+  const { open } = useWeb3Modal();
+  const session = useAppSelector((state) => state.auth.session);
   const onTick = ({
     hours,
     minutes,
@@ -38,6 +42,10 @@ const TrendingNFTCard = ({ asset }: Props) => {
     return <>{`${hours}h:${minutes}m:${seconds}s`}</>;
   };
   const handleLikes = (e: any) => {
+    if (!session) {
+      open();
+      return;
+    }
     e.preventDefault();
     setLiked(!liked);
     if (liked) {

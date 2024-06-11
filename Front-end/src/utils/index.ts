@@ -125,7 +125,11 @@ const generateDummyUsers = () => {
       twitter: faker.internet.url(),
       youtube: faker.internet.url(),
       telegram: faker.internet.url(),
-      totalSalesCount: faker.number.float({ min: 10, max: 30, fractionDigits: 4 }),
+      sales: faker.number.float({
+        min: 10,
+        max: 30,
+        fractionDigits: 4,
+      }),
     };
     dummyData.push(data);
   }

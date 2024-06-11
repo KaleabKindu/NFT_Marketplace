@@ -32,10 +32,6 @@ export const BuyModal = ({ tokenId, price }: SaleModalProps) => {
   const { writing, writeSuccess, contractWrite } = useContractWriteMutation();
   const handleClose = () => setShowModal(false);
   const handleBuy = () => {
-    if (!session) {
-      open();
-      return;
-    }
     contractWrite("buyAsset", price, [tokenId]);
   };
   useEffect(() => {
@@ -44,7 +40,16 @@ export const BuyModal = ({ tokenId, price }: SaleModalProps) => {
     }
   }, [writeSuccess]);
   return (
-    <Dialog open={showModal} onOpenChange={(a) => setShowModal(a)}>
+    <Dialog
+      open={showModal}
+      onOpenChange={(a) => {
+        if (!session) {
+          open();
+          return;
+        }
+        setShowModal(a);
+      }}
+    >
       <DialogTrigger asChild>
         <Button className="flex-1 lg:w-[50%] w-full">Buy Now</Button>
       </DialogTrigger>
