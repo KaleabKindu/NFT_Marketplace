@@ -36,6 +36,7 @@ namespace API.Controllers
             [FromQuery] string sale_type,
             [FromQuery] long? collectionId,
             [FromQuery] string creatorId,
+            [FromQuery] string semanticQuery,
             [FromQuery] int pageNumber = 1,
             [FromQuery] int pageSize = 10
         )
@@ -53,6 +54,7 @@ namespace API.Controllers
                 SaleType = sale_type,
                 CollectionId = collectionId,
                 CreatorId = creatorId,
+                SemanticSearchQuery = semanticQuery,
                 PageNumber = pageNumber,
                 PageSize = pageSize
             }));

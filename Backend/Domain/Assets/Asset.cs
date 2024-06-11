@@ -26,6 +26,8 @@ namespace Domain.Assets
         public int Likes { get; set; }
         public string TransactionHash { get; set; }
         public AssetStatus Status { get; set; }
+        public float[] Embedding { get; set; }
+        public bool EmbeddingUpdated { get; set; } = false;
     }
 
     public enum AssetCategory

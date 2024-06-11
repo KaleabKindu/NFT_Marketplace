@@ -39,12 +39,16 @@ namespace Application.Features.Assets.Command
             if (asset == null )
                 return ErrorFactory.NotFound("Resource","Resource Not Found");
 
+            var oldDesc = asset.Description;
             _mapper.Map(request.UpdateAssetDto, asset);
             _unitOfWork.AssetRepository.UpdateAsync(asset);
 
             if ( await _unitOfWork.SaveAsync() == 0)
                 throw new DbAccessException("Database Error: Unable To SaveAsync");
 
+            if(oldDesc != asset.Description){
+                await _unitOfWork.AssetRepository.MarkEmbeddingUpdate(request.UpdateAssetDto.Id);
+            }
 
             response.Message = "Update Successful";
             response.Value = Unit.Value;

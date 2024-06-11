@@ -4,6 +4,7 @@ using Domain.Assets;
 using System.Numerics;
 using Application.Features.Assets.Dtos;
 using Application.Contracts.Persistance;
+using Application.Responses;
 
 namespace Application.Contracts.Presistence
 {
@@ -27,5 +28,7 @@ namespace Application.Contracts.Presistence
         void DeleteAsset(Asset asset);
 
         Task<Asset> GetAssetByTokenId(BigInteger tokenId);
+        Task<PaginatedResponse<Asset>> SemanticBasedAssetSearch(string query, int pageNumber=1, int pageSize=10);
+        Task MarkEmbeddingUpdate(long Id);
     }
 }
