@@ -1,4 +1,4 @@
-﻿using Application.Features.Bids.Dtos;
+using Application.Features.Bids.Dtos;
 using Application.Features.Assets.Dtos;
 using AutoMapper;
 using Domain;
@@ -77,8 +77,10 @@ namespace Application.Profiles
             CreateMap<Asset, AssetListOpenAuctDto>().ReverseMap();
 
             CreateMap<Asset, AssetDetailDto>()
-                .ForMember(dest => dest.Creator, opt => opt.MapFrom(src => new UserFetchDto { Address = src.Creator.Address, UserName = src.Creator.UserName }))
-                .ForMember(dest => dest.Owner, opt => opt.MapFrom(src => new UserFetchDto { Address = src.Owner.Address, UserName = src.Owner.UserName }));
+                .ForMember(dest => dest.Creator.Avatar, opt => opt.MapFrom(src => src.Creator.Profile.Avatar))
+                .ForMember(dest => dest.Creator.UserName, opt => opt.MapFrom(src => src.Creator.Profile.UserName))
+                .ForMember(dest => dest.Owner.Avatar, opt => opt.MapFrom(src => src.Owner.Profile.Avatar))
+                .ForMember(dest => dest.Owner.UserName, opt => opt.MapFrom(src => src.Owner.Profile.UserName));
 
             CreateMap<Asset, AssetListDto>().ReverseMap();
             CreateMap<Asset, UpdateAssetDto>().ReverseMap();

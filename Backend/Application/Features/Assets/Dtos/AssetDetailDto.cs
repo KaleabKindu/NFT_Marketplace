@@ -2,13 +2,13 @@ using System;
 using Application.Features.Auctions.Dtos;
 using Application.Features.Auth.Dtos;
 using Application.Features.Collections.Dtos;
+using Application.Features.Common;
 using Domain.Assets;
 
 namespace Application.Features.Assets.Dtos
 {
-    public class AssetDetailDto
+    public class AssetDetailDto : BaseDto
     {
-
         public string Name { get; set; }
         public long TokenId { get; set; }
         public string Description { get; set; }
@@ -19,10 +19,11 @@ namespace Application.Features.Assets.Dtos
         public string Price { get; set; }
         public UserFetchDto Creator { get; set; }
         public UserFetchDto Owner { get; set; }
-        public GetAuctionDto?  Auction {get; set;}
+        public GetAuctionDto? Auction { get; set; }
         public float Royalty { get; set; }
         public string TransactionHash { get; set; }
         public CollectionDto? Collection { get; set; }
+        public long CollectionId { get; set; }
         public int Likes { get; set; }
         public bool Liked { get; set; }
     }

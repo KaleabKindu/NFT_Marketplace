@@ -91,7 +91,7 @@ namespace Application.Features.Assets.Command
             {
                 Event = Event.Mint,
                 Asset = asset,
-                From = user,
+                ToId = user.Id,
                 TransactionHash = request.CreateAssetDto.TransactionHash
 
             };
@@ -106,7 +106,7 @@ namespace Application.Features.Assets.Command
                 _auctionManager.Schedule(request.Address, asset.Auction.AuctionId, asset.Auction.AuctionEnd);
             }
 
-            response.Message = "Creation Succesful";
+            response.Message = "Asset Created Successfully";
             response.Value = asset.Id;
 
             return response;
