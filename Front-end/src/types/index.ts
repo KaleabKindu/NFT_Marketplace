@@ -100,6 +100,13 @@ export interface IBid {
   hash: string;
   date: number;
 }
+export interface INotification {
+  id: number;
+  title: string;
+  content: string;
+  date: Date;
+  isRead: boolean;
+}
 
 export interface IAssetsPage extends IPagination {
   value: NFT[];
@@ -119,4 +126,11 @@ export interface IProvenancePage extends IPagination {
 
 export interface IBidPage extends IPagination {
   value: IBid[];
+}
+
+export interface INotificationPage extends IPagination {
+  value: INotification[];
+  count: number;
+  pageNumber: number;
+  pageSize: number;
 }

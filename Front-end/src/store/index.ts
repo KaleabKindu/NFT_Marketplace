@@ -2,6 +2,7 @@ import { combineSlices, configureStore } from "@reduxjs/toolkit";
 import { webApi } from "./api";
 import { setupListeners } from "@reduxjs/toolkit/query";
 import { authSlice } from "./slice/auth";
+import { notificationSlice } from "./slice/notification";
 import {
   persistReducer,
   FLUSH,
@@ -24,6 +25,7 @@ const persistConfig = {
 const rootReducer = combineSlices({
   [webApi.reducerPath]: webApi.reducer,
   [authSlice.reducerPath]: authSlice.reducer,
+  [notificationSlice.reducerPath]: notificationSlice.reducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

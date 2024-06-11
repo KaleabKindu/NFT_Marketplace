@@ -32,11 +32,13 @@ import {
 } from "@/store/api";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { useToast } from "@/components/ui/use-toast";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Address } from "@/types";
 import { ToastAction } from "@/components/ui/toast";
 import { setSession } from "@/store/slice/auth";
 import { persistor } from "@/store";
+import NotificationHub from "@/utils/signalrConfig";
+import NotificationList from "./NotificationList";
 
 type Props = {};
 
@@ -60,6 +62,18 @@ const SideBar = (props: Props) => {
     }
   };
 
+
+  const [notificationHub, setNotificationHub] = useState<NotificationHub>();
+
+  useEffect(() => {
+    if (session != null)
+      setNotificationHub(new NotificationHub(session!, dispatch));
+
+    return () => {
+      notificationHub?.stop()
+    }
+  }, [session])
+
   const signIn = async () => {
     try {
       setLoading(true);
@@ -82,10 +96,12 @@ const SideBar = (props: Props) => {
       setLoading(false);
     }
   };
+
   const handleLogout = () => {
     disconnect();
     persistor.purge();
   };
+
   return (
     <div className="lg:hidden">
       <Sheet>
@@ -135,12 +151,7 @@ const SideBar = (props: Props) => {
               <AccordionItem value="item-3" className="border-b mb-[2.5rem]">
                 <AccordionTrigger>Notifications</AccordionTrigger>
                 <AccordionContent>
-                  <div className="p-3">
-                    <div> Measure action your user...</div>
-                    <div className="text-sm font-medium leading-none">
-                      4 minutes ago
-                    </div>
-                  </div>
+                  <NotificationList notificationHub={notificationHub} />
                 </AccordionContent>
               </AccordionItem>
             )}
