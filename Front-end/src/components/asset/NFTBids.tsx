@@ -109,7 +109,11 @@ export default function NFTBids() {
                   <div ref={ref} />
                 </>
               ) : (
-                <NoData message="No bids on this asset yet." />
+                <TableRow>
+                <TableCell colSpan={4}>
+                  <NoData message="No bids on this asset yet." />
+                </TableCell>
+              </TableRow>
               )}
             </TableBody>
           </Table>

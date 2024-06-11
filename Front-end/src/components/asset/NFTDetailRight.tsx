@@ -29,14 +29,17 @@ import { DeleteAssetModal } from "./DeleteAssetModal";
 import { ChangePriceModal } from "./ChangePriceModal";
 import { useAccount } from "wagmi";
 import { useMemo } from "react";
+import useGetUsdPrice from "@/hooks/useGetUsdPrice";
 
 type Props = {
   asset?: NFT;
   isLoading?: boolean;
+  isError?:boolean
 };
 
-const NFTDetailRight = ({ asset, isLoading }: Props) => {
+const NFTDetailRight = ({ asset, isLoading, isError }: Props) => {
   const { address } = useAccount();
+  const usdPrice = useGetUsdPrice(asset?.price)
   const onRender = ({
     days,
     hours,
@@ -79,7 +82,7 @@ const NFTDetailRight = ({ asset, isLoading }: Props) => {
   }, [asset?.auction]);
   return (
     <>
-      {isLoading ? (
+      {(isLoading || isError) ? (
         <NFTRightShimmer />
       ) : (
         <div className="flex-1 p-3">
@@ -105,12 +108,12 @@ const NFTDetailRight = ({ asset, isLoading }: Props) => {
                 />
                 <div className="flex flex-col">
                   <TypographySmall className="font-bold" text="Creator" />
-                  <TypographyH4 text={asset?.creator?.userName} />
+                  <TypographyH4 className="whitespace-nowrap text-ellipsis overflow-hidden w-[100px]" text={asset?.creator?.userName} />
                 </div>
               </Link>
               <Link
                 href={`${Routes.USER}/${asset?.owner?.address}`}
-                className="flex min-w-[30%] items-center gap-3 p-5"
+                className="flex w-30% items-center gap-3 p-5"
               >
                 <Avatar
                   className="h-16 w-16"
@@ -119,13 +122,13 @@ const NFTDetailRight = ({ asset, isLoading }: Props) => {
                 />
                 <div className="flex flex-col">
                   <TypographySmall className="font-bold" text="Owner" />
-                  <TypographyH4 text={asset?.owner?.userName} />
+                  <TypographyH4 className="whitespace-nowrap text-ellipsis overflow-hidden w-[100px]" text={asset?.owner?.userName} />
                 </div>
               </Link>
               {asset?.collection && (
                 <Link
                   href={`${Routes.COLLECTION}/${asset?.collection?.id}`}
-                  className="flex min-w-[30%] items-center gap-3 p-5"
+                  className="flex w-30% items-center gap-3 p-5"
                 >
                   <Avatar
                     className="h-12 w-12"
@@ -137,7 +140,7 @@ const NFTDetailRight = ({ asset, isLoading }: Props) => {
                   <div className="flex flex-col truncate">
                     <TypographySmall className="font-bold" text="Collection" />
                     <TypographyH4
-                      className="whitespace-nowrap text-ellipsis overflow-hidden"
+                      className="whitespace-nowrap text-ellipsis overflow-hidden w-[100px]"
                       text={asset?.collection?.name}
                     />
                   </div>
@@ -165,12 +168,13 @@ const NFTDetailRight = ({ asset, isLoading }: Props) => {
                     <TypographyH2 text={`${asset?.price || 0.394} ETH`} />
                     <TypographyP
                       className="text-primary/60"
-                      text={`$${807.07}`}
+                      text={`$${usdPrice}`}
                     />
                   </div>
                 </div>
                 {asset?.auction ? (
                   <PlaceBidModal
+                    tokenId={asset?.tokenId as number}
                     auctionId={asset.auction.auctionId as number}
                   />
                 ) : (

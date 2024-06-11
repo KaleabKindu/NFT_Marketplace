@@ -88,23 +88,24 @@ const NFTProvenance = () => {
                       <TableCell className="font-medium">
                         {provenance.event}
                       </TableCell>
-                      <TableCell>{provenance.price}ETH</TableCell>
+                      <TableCell>{provenance.price} ETH</TableCell>
                       <TableCell>
                         <Link
                           href={`${Routes.USER}/${provenance.from.address}`}
-                          className="flex gap-2 items-center"
+                          className="flex gap-2 items-center w-fit"
                         >
                           <Avatar
                             name={provenance.from.userName}
                             src={provenance.from.avatar}
                           />
                           <TypographyP
-                            className="whitespace-nowrap text-ellipsis overflow-hidden"
+                            className="whitespace-nowrap text-ellipsis overflow-hidden hover:text-primary"
                             text={provenance.from.userName}
                           />
                         </Link>
                       </TableCell>
                       <TableCell>
+                        {provenance.to ? 
                         <Link
                           href={`${Routes.USER}/${provenance.to.address}`}
                           className="flex gap-2 items-center"
@@ -117,10 +118,12 @@ const NFTProvenance = () => {
                             className="whitespace-nowrap text-ellipsis overflow-hidden"
                             text={provenance.to.userName}
                           />
-                        </Link>
+                        </Link>: "NULL"}
                       </TableCell>
                       <TableCell>
-                        {moment(provenance.date).format("ll")}
+                        <Link href={`${Routes.ETHER_TRANSACTIONS}/${provenance.transactionHash}`} className="hover:text-primary">
+                          {moment(provenance.date).format("ll")}
+                        </Link>
                       </TableCell>
                     </TableRow>
                   ))}

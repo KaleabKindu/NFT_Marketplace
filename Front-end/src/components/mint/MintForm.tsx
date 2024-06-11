@@ -56,6 +56,8 @@ import AudioFileUpload from "./AudioFileUpload";
 import { CATEGORY } from "@/data";
 import useContractWriteMutation from "@/hooks/useContractWriteMutation";
 import ChooseCollection from "./ChooseCollection";
+import { DateTimePicker } from "@/components/ui/date-time-picker/date-time-picker";
+import moment from "moment";
 
 interface FormInput {
   name: string;
@@ -272,12 +274,12 @@ const MintForm = (props: Props) => {
             name="audio"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Audio Thumbnail(optional)</FormLabel>
+                <FormLabel>Audio Sample(optional)</FormLabel>
                 <FormControl>
                   <AudioFileUpload onChange={field.onChange} />
                 </FormControl>
                 <FormDescription>
-                  Upload Audio thumbnail to showcase your Product
+                  Upload Audio sample to showcase your Product
                 </FormDescription>
                 <FormMessage />
               </FormItem>
@@ -389,23 +391,29 @@ const MintForm = (props: Props) => {
                       >
                         <CalendarIcon className="mr-2 h-4 w-4" />
                         {field.value ? (
-                          format(field.value, "PPP")
+                          format(field.value, "PPpp")
                         ) : (
                           <span>Auction End Date</span>
                         )}
                       </Button>
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-0">
-                      <Calendar
-                        mode="single"
-                        selected={new Date(field.value)}
-                        onSelect={(d) => {
-                          const date = new Date(d?.getTime() as number);
-                          date.setHours(23, 59, 59, 999);
-                          field.onChange(date.getTime());
-                        }}
-                        initialFocus
-                      />
+                      <DateTimePicker 
+                        onChange={(dateTime:any) => {
+                        const date = new Date(
+                          dateTime.year,
+                          dateTime.month - 1, // JavaScript months are 0-indexed (0 = January, 1 = February, etc.)
+                          dateTime.day,
+                          dateTime.hour,
+                          dateTime.minute,
+                          dateTime.second,
+                          dateTime.millisecond
+                        )
+                        console.log(date.toString(), moment(date).fromNow())
+                        field.onChange(date.getTime())
+                      }}
+
+                        granularity={"minute"}/>
                     </PopoverContent>
                   </Popover>
                 </FormControl>

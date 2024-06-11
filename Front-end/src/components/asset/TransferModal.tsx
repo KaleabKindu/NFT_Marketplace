@@ -28,6 +28,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import useContractWriteMutation from "@/hooks/useContractWriteMutation";
 import { BiTransferAlt } from "react-icons/bi";
+import { useAppDispatch } from "@/store/hooks";
+import { webApi } from "@/store/api";
 const initialState = {
   address: "",
 };
@@ -52,12 +54,14 @@ export const TransferModal = ({ tokenId }: TransferModalProps) => {
     resolver: zodResolver(schema),
     defaultValues: initialState,
   });
+  const dispatch = useAppDispatch()
   const handleClose = () => setOpen(false);
   const onSubmit = (values: { address: string }) => {
     contractWrite("transferAsset", undefined, [tokenId, values.address]);
   };
   useEffect(() => {
     if (writeSuccess) {
+      dispatch(webApi.util.invalidateTags(["NFTs", {id:tokenId, type:"NFTs"}]))
       handleClose();
     }
   }, [writeSuccess]);

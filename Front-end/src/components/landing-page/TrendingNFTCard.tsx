@@ -65,7 +65,7 @@ const TrendingNFTCard = ({ asset }: Props) => {
     return new Date();
   }, [asset?.auction?.auctionEnd]);
   return (
-    <Link href={`${Routes.PRODUCT}/${asset.tokenId}`}>
+    <Link href={`${Routes.PRODUCT}/${asset.id}`}>
       <Card className="p-5 bg-accent hover:bg-accent rounded-3xl max-w-[35rem] w-full">
         <div className="relative overflow-clip rounded-3xl h-[30rem]">
           <CustomImage

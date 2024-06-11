@@ -29,6 +29,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import useContractWriteMutation from "@/hooks/useContractWriteMutation";
 import { FaDollarSign } from "react-icons/fa6";
 import { parseEther } from "viem";
+import { useAppDispatch } from "@/store/hooks";
+import { webApi } from "@/store/api";
 
 const initialState = {
   new_price: 0.0,
@@ -43,6 +45,7 @@ type ChangePriceModalProps = {
 export const ChangePriceModal = ({ tokenId }: ChangePriceModalProps) => {
   const [open, setOpen] = useState(false);
   const handleClose = () => setOpen(false);
+  const dispatch = useAppDispatch()
   const { isLoading, writeSuccess, contractWrite } = useContractWriteMutation();
   const form = useForm<{ new_price: number }>({
     resolver: zodResolver(schema),
@@ -56,6 +59,7 @@ export const ChangePriceModal = ({ tokenId }: ChangePriceModalProps) => {
   };
   useEffect(() => {
     if (writeSuccess) {
+      dispatch(webApi.util.invalidateTags(["NFTs", {id:tokenId, type:"NFTs"}]))
       handleClose();
     }
   }, [writeSuccess]);

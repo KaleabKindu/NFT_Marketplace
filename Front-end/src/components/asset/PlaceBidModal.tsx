@@ -29,8 +29,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { MdWallet } from "react-icons/md";
 import { useAccount, useBalance } from "wagmi";
 import useContractWriteMutation from "@/hooks/useContractWriteMutation";
-import { useAppSelector } from "@/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { useWeb3Modal } from "@web3modal/wagmi/react";
+import { webApi } from "@/store/api";
 
 const initialState = {
   price: 0.0,
@@ -40,12 +41,13 @@ const schema = z.object({
 });
 
 type PlaceBidModalProps = {
+  tokenId: number;
   auctionId: number;
 };
-export const PlaceBidModal = ({ auctionId }: PlaceBidModalProps) => {
+export const PlaceBidModal = ({ tokenId, auctionId }: PlaceBidModalProps) => {
   const session = useAppSelector((state) => state.auth.session);
   const { open } = useWeb3Modal();
-
+  const dispatch = useAppDispatch()
   const [showModal, setShowModal] = useState(false);
   const { address } = useAccount();
   const { data: balance } = useBalance({ address: address });
@@ -60,6 +62,7 @@ export const PlaceBidModal = ({ auctionId }: PlaceBidModalProps) => {
   };
   useEffect(() => {
     if (writeSuccess) {
+      dispatch(webApi.util.invalidateTags([{ id:tokenId, type:"Bids" }]))
       handleClose();
     }
   }, [writeSuccess]);

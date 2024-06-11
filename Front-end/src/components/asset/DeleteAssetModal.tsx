@@ -14,6 +14,8 @@ import { useEffect } from "react";
 import { Loader2 } from "lucide-react";
 import useContractWriteMutation from "@/hooks/useContractWriteMutation";
 import { MdDelete } from "react-icons/md";
+import { useAppDispatch } from "@/store/hooks";
+import { webApi } from "@/store/api";
 
 type SaleModalProps = {
   tokenId: number;
@@ -21,6 +23,7 @@ type SaleModalProps = {
 export const DeleteAssetModal = ({ tokenId }: SaleModalProps) => {
   const [open, setOpen] = useState(false);
   const { address } = useAccount();
+  const dispatch = useAppDispatch()
   const { data: balance } = useBalance({ address: address });
   const { isLoading, writing, writeSuccess, contractWrite } =
     useContractWriteMutation();
@@ -30,6 +33,7 @@ export const DeleteAssetModal = ({ tokenId }: SaleModalProps) => {
   };
   useEffect(() => {
     if (writeSuccess) {
+      dispatch(webApi.util.invalidateTags(["NFTs", { id:tokenId, type:"NFTs" }]))
       handleClose();
     }
   }, [writeSuccess]);
