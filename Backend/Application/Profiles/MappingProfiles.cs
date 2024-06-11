@@ -12,8 +12,6 @@ using Application.Features.Collections.Dtos;
 using Application.Features.Provenances.Dtos;
 using Domain.Provenances;
 using Application.Features.UserProfiles.Dtos;
-using Domain.Notifications;
-using Application.Features.Notifications.Dtos;
 
 namespace Application.Profiles
 {
