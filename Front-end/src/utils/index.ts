@@ -157,7 +157,7 @@ const generateDummyProvenance = () => {
       price: faker.number
         .float({ min: 1, max: 20, fractionDigits: 4 })
         .toString(),
-      hash: `0x${faker.finance.litecoinAddress()}`,
+      transactionHash: `0x${faker.finance.litecoinAddress()}`,
       date: new Date(faker.date.future()).getTime(),
     };
     dummyData.push(data);

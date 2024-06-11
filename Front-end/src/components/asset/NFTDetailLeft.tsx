@@ -31,12 +31,14 @@ import CustomImage from "../common/CustomImage";
 import { useToggleNFTlikeMutation } from "@/store/api";
 import { useAppSelector } from "@/store/hooks";
 import { useWeb3Modal } from "@web3modal/wagmi/react";
+import { useAccount } from "wagmi";
 type Props = {
   asset?: NFT;
   isLoading?: boolean;
+  isError?: boolean;
 };
 
-const NFTDetailLeft = ({ asset, isLoading }: Props) => {
+const NFTDetailLeft = ({ asset, isLoading, isError }: Props) => {
   const { toast } = useToast();
   const [liked, setLiked] = useState(false);
   const [likes, setLikes] = useState(0);
@@ -44,12 +46,13 @@ const NFTDetailLeft = ({ asset, isLoading }: Props) => {
   const [toggleLike] = useToggleNFTlikeMutation();
   const session = useAppSelector((state) => state.auth.session);
   const { open } = useWeb3Modal();
+  const { address } = useAccount();
   const handleLikes = async () => {
     if (!session) {
       open();
       return;
     }
-    toggleLike(asset?.tokenId as number).unwrap();
+    toggleLike(asset?.id as string).unwrap();
     setLiked(!liked);
     if (liked) {
       setLikes(likes - 1);
@@ -68,7 +71,7 @@ const NFTDetailLeft = ({ asset, isLoading }: Props) => {
 
   return (
     <>
-      {isLoading ? (
+      {(isLoading || isError) ? (
         <NFTLeftShimmer />
       ) : (
         <div className="flex-1 flex flex-col gap-10">
@@ -148,6 +151,7 @@ const NFTDetailLeft = ({ asset, isLoading }: Props) => {
                         />
                       </Link>
                     </div>
+                    {address === asset?.owner?.address && 
                     <div className="flex justify-between items-center">
                       <TypographyH4 text={"Files: "} />
                       <div className="flex gap-1 items-center">
@@ -189,7 +193,7 @@ const NFTDetailLeft = ({ asset, isLoading }: Props) => {
                           )}
                         </Button>
                       </div>
-                    </div>
+                    </div>}
                   </div>
                 </AccordionContent>
               </AccordionItem>

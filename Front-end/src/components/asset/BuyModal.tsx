@@ -13,9 +13,10 @@ import {
 import { useEffect } from "react";
 import { Loader2 } from "lucide-react";
 import useContractWriteMutation from "@/hooks/useContractWriteMutation";
-import { useAppSelector } from "@/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { useWeb3Modal } from "@web3modal/wagmi/react";
 import { useState } from "react";
+import { webApi } from "@/store/api";
 
 type SaleModalProps = {
   tokenId: number;
@@ -26,7 +27,7 @@ export const BuyModal = ({ tokenId, price }: SaleModalProps) => {
 
   const session = useAppSelector((state) => state.auth.session);
   const { open } = useWeb3Modal();
-
+  const dispatch = useAppDispatch()
   const { address } = useAccount();
   const { data: balance } = useBalance({ address: address });
   const { writing, writeSuccess, contractWrite } = useContractWriteMutation();
@@ -36,6 +37,7 @@ export const BuyModal = ({ tokenId, price }: SaleModalProps) => {
   };
   useEffect(() => {
     if (writeSuccess) {
+      dispatch(webApi.util.invalidateTags(["NFTs", {id:tokenId, type:"NFTs"}, {id:tokenId, type:"Provenances"}]))
       handleClose();
     }
   }, [writeSuccess]);

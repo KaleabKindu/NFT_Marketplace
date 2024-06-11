@@ -33,7 +33,7 @@ const Profile = (props: Props) => {
   return (
     <DropdownMenu open={isOpen} onOpenChange={(a) => setIsOpen(a)}>
       <DropdownMenuTrigger className="rounded-full">
-        <Avatar name={user?.userName} src={user?.avatar} />
+        <Avatar name={user?.userName} src={user?.avatar} className="w-16 h-16" />
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuLabel>
@@ -41,11 +41,11 @@ const Profile = (props: Props) => {
             <Avatar
               name={user?.userName}
               src={user?.avatar}
-              className="bg-secondary"
+              className="bg-secondary w-16 h-16"
             />
             <div>
               <div className="scroll-m-20 text-xl font-semibold tracking-tight">
-                Tony Stark
+                {user?.userName}
               </div>
               <div className="text-sm font-medium truncate max-w-[10rem]">
                 {address}

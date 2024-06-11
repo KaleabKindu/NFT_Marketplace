@@ -17,7 +17,7 @@ import NoData from "../common/NoData";
 type Props = {};
 
 const BrowseCategorySection = (props: Props) => {
-  const { data, isLoading, isError } = useGetCategoryCountQuery();
+  const { data:count, isLoading, isError } = useGetCategoryCountQuery();
   return (
     <div className="flex flex-col gap-5">
       <TypographyH2 text={"Browse By Category"} />
@@ -45,7 +45,7 @@ const BrowseCategorySection = (props: Props) => {
                       />
                       <TypographySmall
                         className="text-primary/50"
-                        text={`${category.count} NFTs`}
+                        text={`${count?.[category.value]} NFTs`}
                       />
                     </div>
                   </CardContent>

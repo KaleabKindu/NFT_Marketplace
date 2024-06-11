@@ -10,12 +10,12 @@ type Props = {
 };
 
 const NFTDetail = ({ params }: Props) => {
-  const { data: asset, isLoading } = useGetNFTQuery(params.id as string);
+  const { data: asset, isLoading, isError } = useGetNFTQuery(params.id as string);
   return (
     <div className="flex flex-col gap-10 pt-10">
       <div className="flex flex-col lg:flex-row gap-10">
-        <NFTDetailsLeft asset={asset} isLoading={isLoading} />
-        <NFTDetailsRight asset={asset} isLoading={isLoading} />
+        <NFTDetailsLeft asset={asset} isLoading={isLoading} isError={isError} />
+        <NFTDetailsRight asset={asset} isLoading={isLoading} isError={isError} />
       </div>
       <NFTProvenance />
       {asset?.collection && <MoreFromCollection id={asset?.collection?.id} />}

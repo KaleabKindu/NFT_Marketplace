@@ -10,6 +10,7 @@ import {
   IProvenancePage,
   User,
   ICollection,
+  CategoryCount,
 } from "@/types";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import type { RootState } from "..";
@@ -27,7 +28,7 @@ export const webApi = createApi({
       return headers;
     },
   }),
-  tagTypes: ["NFTs", "Collections", "Users", "Followings", "Followers"],
+  tagTypes: ["NFTs", "Collections", "Users", "Followings", "Followers", "Bids", "Provenances"],
   endpoints: (builder) => ({
     getNounce: builder.mutation<string, Address>({
       query: (address) => ({
@@ -65,7 +66,7 @@ export const webApi = createApi({
       },
       providesTags: (results, meta, args) => [{ id: args, type: "NFTs" }],
     }),
-    toggleNFTlike: builder.mutation<void, number>({
+    toggleNFTlike: builder.mutation<void, string>({
       query: (id) => ({
         url: `assets/toggle-like/${id}`,
         method: "PUT",
@@ -95,6 +96,7 @@ export const webApi = createApi({
     >({
       query: ({ id, pageNumber, pageSize }) =>
         `provenance/${id}?pageNumber=${pageNumber}&pageSize=${pageSize}`,
+      providesTags: (results, meta, args) => ([{id:args.id, type:"Provenances"}])
     }),
     getBids: builder.query<
       IBidPage,
@@ -102,6 +104,8 @@ export const webApi = createApi({
     >({
       query: ({ id, pageNumber, pageSize }) =>
         `bids?tokenId=${id}&pageNumber=${pageNumber}&pageSize=${pageSize}`,
+      providesTags: (results, meta, args) => ([{id:args.id, type:"Provenances"}])
+
     }),
     getCollections: builder.query<ICollectionsPage, IFilter>({
       query: (params) => {
@@ -182,7 +186,7 @@ export const webApi = createApi({
         return baseQueryReturnValue.value;
       },
     }),
-    getCategoryCount: builder.query<{ name: string; count: number }[], void>({
+    getCategoryCount: builder.query<CategoryCount, void>({
       query: () => `category`,
       transformResponse: (baseQueryReturnValue: any) => {
         return baseQueryReturnValue.value;
