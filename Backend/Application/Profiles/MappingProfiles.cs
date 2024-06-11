@@ -80,7 +80,9 @@ namespace Application.Profiles
                 .ForPath(dest => dest.Creator.Avatar, opt => opt.MapFrom(src => src.Creator.Profile.Avatar))
                 .ForPath(dest => dest.Creator.UserName, opt => opt.MapFrom(src => src.Creator.Profile.UserName))
                 .ForPath(dest => dest.Owner.Avatar, opt => opt.MapFrom(src => src.Owner.Profile.Avatar))
-                .ForPath(dest => dest.Owner.UserName, opt => opt.MapFrom(src => src.Owner.Profile.UserName));
+                .ForPath(dest => dest.Owner.UserName, opt => opt.MapFrom(src => src.Owner.Profile.UserName))
+                .ForPath(dest => dest.Owner.Address, opt => opt.MapFrom(src => src.Owner.Address))
+                .ForPath(dest => dest.Creator.Address, opt => opt.MapFrom(src => src.Creator.Address));
 
             CreateMap<Asset, AssetListDto>().ReverseMap();
             CreateMap<Asset, UpdateAssetDto>().ReverseMap();
