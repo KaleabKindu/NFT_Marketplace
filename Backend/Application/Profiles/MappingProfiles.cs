@@ -1,4 +1,4 @@
-using Application.Features.Bids.Dtos;
+﻿using Application.Features.Bids.Dtos;
 using Application.Features.Assets.Dtos;
 using AutoMapper;
 using Domain;
@@ -12,6 +12,8 @@ using Application.Features.Collections.Dtos;
 using Application.Features.Provenances.Dtos;
 using Domain.Provenances;
 using Application.Features.UserProfiles.Dtos;
+using Domain.Notifications;
+using Application.Features.Notifications.Dtos;
 
 namespace Application.Profiles
 {
@@ -77,10 +79,10 @@ namespace Application.Profiles
             CreateMap<Asset, AssetListOpenAuctDto>().ReverseMap();
 
             CreateMap<Asset, AssetDetailDto>()
-                .ForMember(dest => dest.Creator.Avatar, opt => opt.MapFrom(src => src.Creator.Profile.Avatar))
-                .ForMember(dest => dest.Creator.UserName, opt => opt.MapFrom(src => src.Creator.Profile.UserName))
-                .ForMember(dest => dest.Owner.Avatar, opt => opt.MapFrom(src => src.Owner.Profile.Avatar))
-                .ForMember(dest => dest.Owner.UserName, opt => opt.MapFrom(src => src.Owner.Profile.UserName));
+                .ForPath(dest => dest.Creator.Avatar, opt => opt.MapFrom(src => src.Creator.Profile.Avatar))
+                .ForPath(dest => dest.Creator.UserName, opt => opt.MapFrom(src => src.Creator.Profile.UserName))
+                .ForPath(dest => dest.Owner.Avatar, opt => opt.MapFrom(src => src.Owner.Profile.Avatar))
+                .ForPath(dest => dest.Owner.UserName, opt => opt.MapFrom(src => src.Owner.Profile.UserName));
 
             CreateMap<Asset, AssetListDto>().ReverseMap();
             CreateMap<Asset, UpdateAssetDto>().ReverseMap();
@@ -111,8 +113,6 @@ namespace Application.Profiles
             CreateMap<Provenance, CreateProvenanceDto>();
 
             #endregion
-
-
         }
 
     }
