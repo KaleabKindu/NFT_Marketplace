@@ -4,27 +4,30 @@ using Infrastructure;
 using API.MiddleWares;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Converters;
+using Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+//NFT_MARKET_ConnectionStrings__AppConnectionString
 builder.Configuration.AddEnvironmentVariables("NFT_MARKET_");
 
-//NFT_MARKET_ConnectionStrings__AppConnectionString
 
 // Add services to the container.
+// builder.Services.AddSignalR();
 builder.Services.ConfigureApplicationServices();
 builder.Services.ConfigurePersistenceServices(builder.Configuration);
 builder.Services.ConfigureInfrastructureServices(builder.Configuration);
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
 
-builder.Services.AddSwaggerGenNewtonsoftSupport(); 
+builder.Services.AddSwaggerGenNewtonsoftSupport();
 builder.Services.AddControllers().AddNewtonsoftJson(opts =>
 {
     opts.SerializerSettings.Converters.Add(new StringEnumConverter());
 });
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c => {
+builder.Services.AddSwaggerGen(c =>
+{
     c.SwaggerDoc("v1", new OpenApiInfo
     {
         Title = "NFT Gebeya Backend API",
@@ -40,7 +43,7 @@ builder.Services.AddSwaggerGen(c => {
     {
         Url = "https://nft-gebeya.com/api/"
     });
-    
+
     c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
@@ -51,7 +54,7 @@ builder.Services.AddSwaggerGen(c => {
         In = ParameterLocation.Header,
         Description = "JWT Authorization header using the Bearer scheme."
     });
-    
+
     c.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
         {
@@ -73,10 +76,12 @@ builder.Services.AddSwaggerGen(c => {
 
 builder.Services.AddCors(o =>
 {
-	o.AddPolicy("CorsPolicy",
-		builder => builder.AllowAnyOrigin()
-		.AllowAnyMethod()
-		.AllowAnyHeader());
+    o.AddPolicy("CorsPolicy",
+        builder => builder
+        .AllowAnyMethod()
+        .AllowAnyHeader()
+        .AllowCredentials()
+        .WithOrigins("http://localhost:3000", "http://localhost:3001", "https://nft-gebeya.com"));
 });
 
 var app = builder.Build();
@@ -103,5 +108,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapHub<NotificationHub>("/notifications");
 
 app.Run();

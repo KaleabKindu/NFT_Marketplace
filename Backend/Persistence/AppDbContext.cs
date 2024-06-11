@@ -3,6 +3,7 @@ using Domain.Assets;
 using Domain.Auctions;
 using Domain.Bids;
 using Domain.Collections;
+using Domain.Notifications;
 using Domain.Provenances;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -50,14 +51,15 @@ namespace Persistence
             });
 
             var entityTypes = modelBuilder.Model.GetEntityTypes();
-            foreach (var entityType in entityTypes){
+            foreach (var entityType in entityTypes)
+            {
                 var createdAtProperty = entityType.FindProperty("CreatedAt");
                 createdAtProperty?.SetColumnType("timestamptz");
-                
+
                 var updatedAtProperty = entityType.FindProperty("UpdatedAt");
                 updatedAtProperty?.SetColumnType("timestamptz");
             }
-            
+
             base.OnModelCreating(modelBuilder);
         }
 
@@ -68,5 +70,6 @@ namespace Persistence
         public DbSet<Like> Likes { get; set; }
         public DbSet<Provenance> Provenances { get; set; }
         public DbSet<UserProfile> UserProfiles { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
     }
 }

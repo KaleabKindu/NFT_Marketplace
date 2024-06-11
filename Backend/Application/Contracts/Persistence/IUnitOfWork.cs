@@ -11,6 +11,7 @@ namespace Application.Contracts.Persistance
         IAuctionRepository AuctionRepository { get; }
         ICollectionRepository CollectionRepository { get; }
         IProvenanceRepository ProvenanceRepository { get; }
+        INotificationRepository NotificationRepository { get; }
         IUserProfileRepository UserProfileRepository { get; }
         Task<int> SaveAsync();
     }

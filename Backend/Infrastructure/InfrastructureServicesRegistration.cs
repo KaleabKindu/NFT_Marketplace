@@ -16,6 +16,7 @@ using Application.Features.Auctions.Dtos;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using API.SignalR;
 
 namespace Infrastructure
 {
@@ -48,10 +49,25 @@ namespace Infrastructure
                                 Encoding.UTF8.GetBytes(configuration["Jwt:SecurityKey"])
                         )
                     };
+
+                    options.Events = new JwtBearerEvents
+                    {
+                        OnMessageReceived = context =>
+                        {
+                            var accessToken = context.Request.Query["access_token"];
+                            var path = context.HttpContext.Request.Path;
+
+                            if ((!string.IsNullOrEmpty(accessToken)) && (path.StartsWithSegments("/notifications")))
+                            {
+                                context.Token = accessToken;
+                            }
+                            return Task.CompletedTask;
+                        }
+                    };
                 }
             );
             services.AddAuthorization();
-            
+
             services.AddScoped<IJwtService, JwtService>();
             services.AddScoped<IUserAccessor, UserAccessor>();
             services.AddScoped<IEthereumCryptoService, EthereumCryptoService>();
@@ -76,37 +92,39 @@ namespace Infrastructure
                         Uri = new Uri(configuration["RabbitMQ:ConnectionString"]),
                         AutomaticRecoveryEnabled = true
                     };
-                    return  factory.CreateConnection();
+                    return factory.CreateConnection();
                 })
                 .AddHealthChecks()
                 .AddRabbitMQ();
 
             services.AddSingleton(sp =>
-            {
-                var connection = sp.GetRequiredService<IConnection>();
-                var queues = new List<string>{
-                    $"{typeof(AuctionCreatedEventDto)}", $"{typeof(BidPlacedEventDto)}", $"{typeof(AuctionEndedEventDto)}", 
-                    $"{typeof(AssetSoldEventDto)}", $"{typeof(ResellAssetEventDto)}", $"{typeof(TransferAssetEventDto)}", 
+                    {
+                        var connection = sp.GetRequiredService<IConnection>();
+                        var queues = new List<string>{
+                    $"{typeof(AuctionCreatedEventDto)}", $"{typeof(BidPlacedEventDto)}", $"{typeof(AuctionEndedEventDto)}",
+                    $"{typeof(AssetSoldEventDto)}", $"{typeof(ResellAssetEventDto)}", $"{typeof(TransferAssetEventDto)}",
                     $"{typeof(DeleteAssetEventDto)}"
-                };
-                return new RabbitMqService(connection, queues);
-            });
+                        };
+                        return new RabbitMqService(connection, queues);
+                    });
 
             services.AddTransient<EventListeningService>();
             services.AddHostedService(provider => provider.GetRequiredService<EventListeningService>());
-                        
+
             services.AddTransient<EventProcessingService>();
             services.AddHostedService(provider => provider.GetRequiredService<EventProcessingService>());
 
             services.AddLogging(builder =>
             {
                 builder.SetMinimumLevel(LogLevel.Debug);
-                builder.AddConsole(); 
+                builder.AddConsole();
             });
 
             services.AddHangfire(options => options.UsePostgreSqlStorage(configuration["PostgreSQL:ConnectionString"]));
             services.AddHangfireServer();
-            
+            services.AddSignalR();
+            services.AddScoped<INotificationService, NotificationService>();
+
             return services;
         }
     }

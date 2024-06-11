@@ -22,6 +22,8 @@ namespace Persistence.Repositories
         private ICollectionRepository _CollectionRepository;
         private IProvenanceRepository _ProvenanceRepository;
         private IUserProfileRepository _UserProfileRepository;
+
+        private INotificationRepository _notificationRepository;
         private readonly IJwtService _jwtService;
         private readonly IEthereumCryptoService _ethereumCryptoService;
 
@@ -97,6 +99,15 @@ namespace Persistence.Repositories
             {
                 _UserProfileRepository ??= new UserProfileRepository(_dbContext, _usermanager);
                 return _UserProfileRepository;
+            }
+        }
+
+        public INotificationRepository NotificationRepository
+        {
+            get
+            {
+                _notificationRepository ??= new NotificationRepository(_dbContext);
+                return _notificationRepository;
             }
         }
 

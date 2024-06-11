@@ -12,6 +12,8 @@ using Application.Features.Collections.Dtos;
 using Application.Features.Provenances.Dtos;
 using Domain.Provenances;
 using Application.Features.UserProfiles.Dtos;
+using Domain.Notifications;
+using Application.Features.Notifications.Dtos;
 
 namespace Application.Profiles
 {
@@ -112,6 +114,13 @@ namespace Application.Profiles
                 .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.CreatedAt));
             CreateMap<Provenance, CreateProvenanceDto>();
 
+            #endregion
+
+            #region 
+            CreateMap<Notification, NotificationDto>()
+                .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.CreatedAt));
+            CreateMap<CreateNotificationDto, Notification>()
+                .ForMember(dst => dst.ToId, opt => opt.MapFrom(src => src.UserId));
             #endregion
         }
 
