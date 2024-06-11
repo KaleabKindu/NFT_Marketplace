@@ -34,14 +34,16 @@ namespace Application.Features.Buys.Commands
         )
         {
             if (!await _unitOfWork.UserRepository.AddressExists(request.UserAddress))
-                return ErrorFactory.BadRequestError("User","User not found");
+                return ErrorFactory.BadRequestError("User", "User not found");
 
             var user = await _unitOfWork.UserRepository.CreateOrFetchUserAsync(request.UserAddress);
 
             var asset = await _unitOfWork.AssetRepository.GetByIdAsync(request.BuyAsset.AssetId);
 
-            asset.Owner = user;
-        
+            asset.OwnerId = user.Id;
+
+            _unitOfWork.AssetRepository.UpdateAsync(asset);
+
             var provenance = new Provenance
             {
                 Event = Event.Sale,
@@ -52,13 +54,14 @@ namespace Application.Features.Buys.Commands
             };
 
             await _unitOfWork.ProvenanceRepository.AddAsync(provenance);
-                
-            if (await _unitOfWork.SaveAsync() == 0) 
+
+            if (await _unitOfWork.SaveAsync() == 0)
                 throw new DbAccessException("Unable to save to database");
-            
-            return new BaseResponse<Unit>(){
-                Message="Asset transfered successfully",
-                Value=Unit.Value
+
+            return new BaseResponse<Unit>()
+            {
+                Message = "Asset transfered successfully",
+                Value = Unit.Value
             };
         }
     }

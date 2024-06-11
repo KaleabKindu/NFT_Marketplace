@@ -226,57 +226,6 @@ namespace Persistence.Repositories
             return await assets.ToListAsync();
         }
 
-        public async Task<ErrorOr<Asset>> SellAsset(BigInteger tokenId)
-        {
-
-            var asset = await _context.Assets.SingleOrDefaultAsync(x => x.TokenId == tokenId);
-            if (asset == null) return ErrorFactory.NotFound("Asset", "Asset Not Found");
-
-            asset.Status = AssetStatus.NotOnSale;
-
-            return asset;
-        }
-
-        public async Task<ErrorOr<Unit>> ResellAsset(ResellAssetEventDto resellAssetEventDto)
-        {
-            var asset = await _context.Assets.Include(x => x.Auction)
-                .SingleOrDefaultAsync(x => x.TokenId == resellAssetEventDto.TokenId);
-
-            if (asset == null) return ErrorFactory.NotFound("Asset", "Asset Not Found");
-
-            asset.Price = (double)resellAssetEventDto.Price;
-
-            if (resellAssetEventDto.Auction && resellAssetEventDto.AuctionId != 0 && resellAssetEventDto.AuctionEnd == null)
-            {
-                asset.Auction.AuctionId = (long)resellAssetEventDto.AuctionId;
-                asset.AuctionId = asset.Auction.AuctionId;
-                asset.Auction.AuctionEnd = (long)resellAssetEventDto.AuctionEnd;
-
-                asset.Status = AssetStatus.OnAuction;
-            }
-            else
-            {
-                asset.Status = AssetStatus.OnFixedSale;
-            }
-
-            return Unit.Value;
-        }
-
-        public async Task<ErrorOr<Tuple<string, Asset>>> TransferAsset(TransferAssetEventDto transferAssetEventDto)
-        {
-            var asset = await _context.Assets.SingleOrDefaultAsync(x => x.TokenId == transferAssetEventDto.TokenId);
-            if (asset == null) return ErrorFactory.NotFound("Asset", "Asset Not Found");
-
-            var newOwner = await _context.Users.SingleOrDefaultAsync(x => x.Address == transferAssetEventDto.NewOwner);
-            if (newOwner == null) return ErrorFactory.NotFound("User", "User Not Found");
-            var oldOwnerId = asset.OwnerId;
-            asset.Owner = newOwner;
-            asset.OwnerId = newOwner.Id;
-
-            return new Tuple<string, Asset>(oldOwnerId, asset);
-
-        }
-
         public async void DeleteAsset(Asset asset)
         {
 
@@ -298,7 +247,9 @@ namespace Persistence.Repositories
 
         public async Task<Asset> GetAssetByTokenId(BigInteger tokenId)
         {
-            return await _context.Assets.FirstOrDefaultAsync(asset => asset.TokenId == tokenId);
+            return await _context.Assets
+                .Include(x => x.Owner)
+                .FirstOrDefaultAsync(asset => asset.TokenId == tokenId);
 
         }
 
@@ -310,37 +261,41 @@ namespace Persistence.Repositories
                 .SingleOrDefaultAsync();
         }
 
-        public async Task MarkEmbeddingUpdate(long Id){
+        public async Task MarkEmbeddingUpdate(long Id)
+        {
             var asset = await _dbContext.Assets
                 .Where(asset => asset.Id == Id)
                 .SingleOrDefaultAsync();
-            
+
             asset.EmbeddingUpdated = false;
             _dbContext.Assets.Update(asset);
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<PaginatedResponse<Asset>> SemanticBasedAssetSearch(string query, int pageNumber=1, int pageSize=10){
+        public async Task<PaginatedResponse<Asset>> SemanticBasedAssetSearch(string query, int pageNumber = 1, int pageSize = 10)
+        {
             var requireNewEmbedding = await _dbContext.Assets
                 .Where(x => x.Status != AssetStatus.NotOnSale)
                 .Where(asset => !asset.EmbeddingUpdated)
                 .ToListAsync();
-            
+
             var descriptions = requireNewEmbedding.Select(asset => asset.Description).ToList();
             float[][] embeddings = Array.Empty<float[]>();
             descriptions.Insert(0, query);
             embeddings = await _semanticSearch.GetEmbeddingService().GetBatchEmbeddingAsync(descriptions);
-            for(int i = 1; embeddings.Length > 1 && i < embeddings.Length; i++){
-                requireNewEmbedding[i-1].Embedding = embeddings[i];
-                requireNewEmbedding[i-1].EmbeddingUpdated = true;
+            for (int i = 1; embeddings.Length > 1 && i < embeddings.Length; i++)
+            {
+                requireNewEmbedding[i - 1].Embedding = embeddings[i];
+                requireNewEmbedding[i - 1].EmbeddingUpdated = true;
             }
             _dbContext.Assets.UpdateRange(requireNewEmbedding);
             await _dbContext.SaveChangesAsync();
-            
+
             var assets = await _dbContext.Assets.ToListAsync();
             assets = assets.OrderByDescending(asset => _semanticSearch.EmbeddingSimilarity(embeddings[0], asset.Embedding)).ToList();
 
-            return new PaginatedResponse<Asset>{
+            return new PaginatedResponse<Asset>
+            {
                 Count = await _dbContext.Assets.CountAsync(),
                 Value = assets.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList(),
                 PageNumber = pageNumber,

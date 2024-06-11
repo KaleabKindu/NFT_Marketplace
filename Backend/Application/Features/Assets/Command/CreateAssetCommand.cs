@@ -102,7 +102,8 @@ namespace Application.Features.Assets.Command
             if (await _unitOfWork.SaveAsync() == 0)
                 throw new DbAccessException("Database Error: Unable To Save");
 
-            if (request.CreateAssetDto.Auction != null){
+            if (request.CreateAssetDto.Auction != null)
+            {
                 _auctionManager.Schedule(request.Address, asset.Auction.AuctionId, asset.Auction.AuctionEnd);
             }
 

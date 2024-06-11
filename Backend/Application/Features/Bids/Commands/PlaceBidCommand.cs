@@ -6,6 +6,8 @@ using Microsoft.Extensions.Logging;
 using Application.Features.Bids.Dtos;
 using Application.Contracts.Persistance;
 using Application.Common.Errors;
+using Application.Contracts.Services;
+using Application.Features.Notifications.Dtos;
 
 namespace Application.Features.Auctions.Commands
 {
@@ -19,14 +21,17 @@ namespace Application.Features.Auctions.Commands
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<PlaceBidCommandHandler> _logger;
+        private readonly INotificationService _notificationService;
 
-        public PlaceBidCommandHandler(IUnitOfWork unitOfWork, ILogger<PlaceBidCommandHandler> logger)
+        public PlaceBidCommandHandler(IUnitOfWork unitOfWork, ILogger<PlaceBidCommandHandler> logger, INotificationService notificationService)
         {
             _unitOfWork = unitOfWork;
             _logger = logger;
+            _notificationService = notificationService;
         }
 
-        private static double WeiToEther(BigInteger wei){
+        private static double WeiToEther(BigInteger wei)
+        {
             return ((long)wei) / 1e+18;
         }
 
@@ -39,12 +44,13 @@ namespace Application.Features.Auctions.Commands
             var asset = await _unitOfWork.AssetRepository.GetAssetByAuctionId((long)command._event.AuctionId);
 
             _logger.LogInformation($"\nBidPlacedEvent\nAuctionId: {command._event.AuctionId}\nAmount: {command._event.Amount}");
-            
-            Bid newBid = new(){
-                BidderId=bidder.Id,
-                AssetId=asset.Id,
-                Amount= WeiToEther(command._event.Amount),
-                TransactionHash= command._event.TransactionHash
+
+            Bid newBid = new()
+            {
+                BidderId = bidder.Id,
+                AssetId = asset.Id,
+                Amount = WeiToEther(command._event.Amount),
+                TransactionHash = command._event.TransactionHash
             };
             await _unitOfWork.BidRepository.AddAsync(newBid);
 
@@ -54,9 +60,19 @@ namespace Application.Features.Auctions.Commands
 
             _unitOfWork.AuctionRepository.UpdateAsync(auction);
 
-            if (await _unitOfWork.SaveAsync() == 0){
+            if (await _unitOfWork.SaveAsync() == 0)
+            {
                 return ErrorFactory.InternalServerError("Bid", "Error Processing BidPlacedEvent");
             }
+
+            var notificationFoOwner = new CreateNotificationDto
+            {
+                UserId = asset.OwnerId,
+                Title = "Bid Placed",
+                Content = $"New bid of amount {newBid.Amount} on {asset.Name}"
+            };
+
+            await _notificationService.SendNotification(notificationFoOwner);
 
             return true;
         }
