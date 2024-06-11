@@ -14,6 +14,7 @@ namespace Persistence.Repositories
         private readonly IMapper _mapper;
         private readonly IServiceProvider _services;
         private readonly UserManager<AppUser> _usermanager;
+        private ISemanticSearchService _semanticSearch;
         private IAssetRepository _assetRepository;
         private IUserRepository _userRepository;
         private IBidRepository _bidRepository;
@@ -25,13 +26,14 @@ namespace Persistence.Repositories
         private readonly IEthereumCryptoService _ethereumCryptoService;
 
 
-        public UnitOfWork(AppDbContext dbContext, UserManager<AppUser> userManager, IJwtService jwtService, IEthereumCryptoService ethereumCryptoService, IMapper mapper)
+        public UnitOfWork(AppDbContext dbContext, UserManager<AppUser> userManager, IJwtService jwtService, IEthereumCryptoService ethereumCryptoService, IMapper mapper, ISemanticSearchService semanticSearch)
         {
             _dbContext = dbContext;
             _mapper = mapper;
             _jwtService = jwtService;
             _ethereumCryptoService = ethereumCryptoService;
             _usermanager = userManager;
+            _semanticSearch = semanticSearch;
         }
 
         public IUserRepository UserRepository
@@ -57,7 +59,7 @@ namespace Persistence.Repositories
         {
             get
             {
-                _assetRepository ??= new AssetRepository(_dbContext, _mapper);
+                _assetRepository ??= new AssetRepository(_dbContext, _mapper, _semanticSearch);
                 return _assetRepository;
             }
         }

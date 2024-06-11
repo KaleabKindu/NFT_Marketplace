@@ -20,6 +20,7 @@ namespace Application.Features.Assets.Query
         public string? SaleType { get; set; } = null;
         public long? CollectionId { get; set; } = null;
         public string? CreatorId { get; set; } = null;        
+        public string? SemanticSearchQuery { get; set; }
     }
 
 
@@ -36,20 +37,27 @@ namespace Application.Features.Assets.Query
         } 
 
         public async Task<ErrorOr<PaginatedResponse<AssetListDto>>> Handle(GetAllAssetQuery request, CancellationToken cancellationToken)
-        {           
-            
-            var result = await _unitOfWork.AssetRepository
+        {        
+            List<AssetListDto> filteredResult;
+            int count;
+            if (request.SemanticSearchQuery != null){
+                var temp = await _unitOfWork.AssetRepository.SemanticBasedAssetSearch(request.SemanticSearchQuery, request.PageNumber, request.PageSize);
+                filteredResult = _mapper.Map<List<AssetListDto>>(temp.Value);
+                count = temp.Count;
+            }else{
+                var result = await _unitOfWork.AssetRepository
                 .GetFilteredAssets(request.UserId,request.Query,request.MinPrice, request.MaxPrice, request.Category, request.SortBy, request.SaleType, request.CollectionId, request.CreatorId, request.PageNumber, request.PageSize);
+                if (result.IsError) return result.Errors;
+                filteredResult = result.Value.Item2.ToList();
+                count = result.Value.Item1;
+            }
             
-            if (result.IsError) return result.Errors;
-
             var response = new PaginatedResponse<AssetListDto>{
                 Message = "Fetch Succesful",
-                Value = _mapper.Map<List<AssetListDto>>(result.Value.Item2),
-                Count = result.Value.Item1,
+                Value = filteredResult,
+                Count = count,
                 PageNumber = request.PageNumber,
                 PageSize = request.PageSize
-
             };
 
             return response;

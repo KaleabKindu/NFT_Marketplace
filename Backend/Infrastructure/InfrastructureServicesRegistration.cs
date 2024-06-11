@@ -56,6 +56,19 @@ namespace Infrastructure
             services.AddScoped<IUserAccessor, UserAccessor>();
             services.AddScoped<IEthereumCryptoService, EthereumCryptoService>();
             services.AddScoped<IAuctionManagementService, AuctionManagementService>();
+            services.AddScoped<IEmbeddingService, OpenAiEmbeddingService>((provider) => new OpenAiEmbeddingService(
+                configuration["OpenAi:API_KEY"],
+                configuration["OpenAi:MODEL"]
+            ));
+            services.AddScoped<IEmbeddingService, BedrockEmbeddingService>(provider => new BedrockEmbeddingService(
+                configuration["Amazon-AWS:REGION"],
+                configuration["Amazon-AWS:MODEL_ID"],
+                configuration["Amazon-AWS:ACCESS_KEY"],
+                configuration["Amazon-AWS:SECRET_KEY"],
+                provider.GetService<ILogger<BedrockEmbeddingService>>()
+            ));
+            services.AddScoped<ISemanticSearchService, SemanticSearchService>();
+
             services.AddSingleton(sp =>
                 {
                     var factory = new ConnectionFactory

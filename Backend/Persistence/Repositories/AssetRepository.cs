@@ -2,7 +2,9 @@ using System.Numerics;
 using System.Text.RegularExpressions;
 using Application.Common.Errors;
 using Application.Contracts.Presistence;
+using Application.Contracts.Services;
 using Application.Features.Assets.Dtos;
+using Application.Responses;
 using AutoMapper;
 using Domain.Assets;
 using ErrorOr;
@@ -15,11 +17,13 @@ namespace Persistence.Repositories
     {
         private readonly AppDbContext _context;
         private readonly IMapper _mapper;
+        private readonly ISemanticSearchService _semanticSearch;
 
-        public AssetRepository(AppDbContext context, IMapper mapper) : base(context)
+        public AssetRepository(AppDbContext context, IMapper mapper, ISemanticSearchService semanticSearch) : base(context)
         {
             _context = context;
             _mapper = mapper;
+            _semanticSearch = semanticSearch;
         }
 
         public async Task<IEnumerable<Asset>> GetAssetsWOpenAuct()
@@ -303,9 +307,43 @@ namespace Persistence.Repositories
                 .Where(asset => asset.Auction.AuctionId == auctionId)
                 .SingleOrDefaultAsync();
         }
-        
 
+        public async Task MarkEmbeddingUpdate(long Id){
+            var asset = await _dbContext.Assets
+                .Where(asset => asset.Id == Id)
+                .SingleOrDefaultAsync();
+            
+            asset.EmbeddingUpdated = false;
+            _dbContext.Assets.Update(asset);
+            await _dbContext.SaveChangesAsync();
+        }
 
-        
+        public async Task<PaginatedResponse<Asset>> SemanticBasedAssetSearch(string query, int pageNumber=1, int pageSize=10){
+            var requireNewEmbedding = await _dbContext.Assets
+                .Where(x => x.Status != AssetStatus.NotOnSale)
+                .Where(asset => !asset.EmbeddingUpdated)
+                .ToListAsync();
+            
+            var descriptions = requireNewEmbedding.Select(asset => asset.Description).ToList();
+            float[][] embeddings = Array.Empty<float[]>();
+            descriptions.Insert(0, query);
+            embeddings = await _semanticSearch.GetEmbeddingService().GetBatchEmbeddingAsync(descriptions);
+            for(int i = 1; embeddings.Length > 1 && i < embeddings.Length; i++){
+                requireNewEmbedding[i-1].Embedding = embeddings[i];
+                requireNewEmbedding[i-1].EmbeddingUpdated = true;
+            }
+            _dbContext.Assets.UpdateRange(requireNewEmbedding);
+            await _dbContext.SaveChangesAsync();
+            
+            var assets = await _dbContext.Assets.ToListAsync();
+            assets = assets.OrderByDescending(asset => _semanticSearch.EmbeddingSimilarity(embeddings[0], asset.Embedding)).ToList();
+
+            return new PaginatedResponse<Asset>{
+                Count = await _dbContext.Assets.CountAsync(),
+                Value = assets.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList(),
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            };
+        }
     }
 }
