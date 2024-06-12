@@ -238,7 +238,7 @@ namespace Persistence.Repositories
 
             var count = await assets.CountAsync();
 
-            var assetList = assets.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+            var assetList = await assets.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
 
             return new Tuple<int, List<AssetListDto>>(count, _mapper.Map<List<AssetListDto>>(assetList));
         }
@@ -254,7 +254,7 @@ namespace Persistence.Repositories
 
             var count = await assets.CountAsync();
 
-            var assetList = assets.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+            var assetList = await assets.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
 
             return new Tuple<int, List<AssetListDto>>(count, _mapper.Map<List<AssetListDto>>(assetList));
         }
