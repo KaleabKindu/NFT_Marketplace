@@ -2,8 +2,9 @@ using Application.Features.Common;
 
 namespace Application.Features.Auth.Dtos
 {
-    public class UserDetailDto : BaseDto
+    public class UserDetailDto
     {
+        public string Id { get; set; }
         public string Address { get; set; }
         public string UserName { get; set; }
         public string Email { get; set; }
