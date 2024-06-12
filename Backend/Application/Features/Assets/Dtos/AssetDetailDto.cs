@@ -15,6 +15,7 @@ namespace Application.Features.Assets.Dtos
         public string? Image { get; set; }
         public string? Audio { get; set; }
         public string? Video { get; set; }
+        public AssetStatus Status { get; set; }
         public AssetCategory Category { get; set; }
         public string Price { get; set; }
         public UserFetchDto Creator { get; set; }
