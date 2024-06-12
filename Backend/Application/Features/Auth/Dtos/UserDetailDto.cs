@@ -1,6 +1,8 @@
+using Application.Features.Common;
+
 namespace Application.Features.Auth.Dtos
 {
-    public class UserDetailDto
+    public class UserDetailDto : BaseDto
     {
         public string Address { get; set; }
         public string UserName { get; set; }

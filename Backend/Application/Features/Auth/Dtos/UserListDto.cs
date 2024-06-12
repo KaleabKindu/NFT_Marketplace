@@ -1,6 +1,8 @@
-﻿namespace Application.Features.Auth.Dtos;
+﻿using Application.Features.Common;
 
-public class UserListDto
+namespace Application.Features.Auth.Dtos;
+
+public class UserListDto : BaseDto
 {
     public string UserName { get; set; }
     public string Background { get; set; }
