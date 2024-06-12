@@ -23,6 +23,11 @@ namespace Application.Contracts.Presistence
 
         Task<Asset> GetAssetByTokenId(BigInteger tokenId);
         Task<PaginatedResponse<Asset>> SemanticBasedAssetSearch(string query, int pageNumber = 1, int pageSize = 10);
+
+        Task<ErrorOr<Tuple<int, List<AssetListDto>>>> GetOwnedAssetsAsync(string ownerId, int pageNumber, int pageSize);
+
+        Task<ErrorOr<Tuple<int, List<AssetListDto>>>> GetCreatedAssetsAsync(string creatorId, int pageNumber, int pageSize);
+
         Task MarkEmbeddingUpdate(long Id);
     }
 }

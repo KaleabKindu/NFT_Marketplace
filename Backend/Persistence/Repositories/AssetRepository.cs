@@ -96,9 +96,10 @@ namespace Persistence.Repositories
             {
                 assets = assets.Where(asset => asset.CollectionId == collectionId);
             }
+
             if (creatorId != null)
             {
-                assets = assets.Where(asset => asset.Owner.Id == creatorId);
+                assets = assets.Where(asset => asset.OwnerId == creatorId);
             }
 
             IEnumerable<AssetListDto> assetsInDto;
@@ -224,6 +225,38 @@ namespace Persistence.Repositories
             }
 
             return await assets.ToListAsync();
+        }
+
+        public async Task<ErrorOr<Tuple<int, List<AssetListDto>>>> GetOwnedAssetsAsync(string ownerId, int pageNumber, int pageSize)
+        {
+            var assets = _dbContext.Assets
+                .Where(x => x.OwnerId == ownerId)
+                .Include(x => x.Auction)
+                .OrderBy(x => x.CreatedAt)
+                .AsQueryable();
+
+
+            var count = await assets.CountAsync();
+
+            var assetList = assets.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+
+            return new Tuple<int, List<AssetListDto>>(count, _mapper.Map<List<AssetListDto>>(assetList));
+        }
+
+        public async Task<ErrorOr<Tuple<int, List<AssetListDto>>>> GetCreatedAssetsAsync(string creatorId, int pageNumber, int pageSize)
+        {
+            var assets = _dbContext.Assets
+                .Where(x => x.OwnerId == creatorId)
+                .Include(x => x.Auction)
+                .OrderBy(x => x.CreatedAt)
+                .AsQueryable();
+
+
+            var count = await assets.CountAsync();
+
+            var assetList = assets.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+
+            return new Tuple<int, List<AssetListDto>>(count, _mapper.Map<List<AssetListDto>>(assetList));
         }
 
         public async void DeleteAsset(Asset asset)

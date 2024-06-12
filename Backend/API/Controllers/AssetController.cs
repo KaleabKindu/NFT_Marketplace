@@ -113,6 +113,20 @@ namespace API.Controllers
             return HandleResult(await Mediator.Send(new ToggleLikeAssetCommand { Id = id, UserId = userId }));
         }
 
+        [HttpGet("owned")]
+        public async Task<IActionResult> GetAssetsOwned([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
+        {
+            var userId = _userAccessor.GetUserId();
+            return HandleResult(await Mediator.Send(new GetOwnedAssetsQuery { userId = userId, PageNumber = pageNumber, PageSize = pageSize }));
+        }
+
+        [HttpGet("created")]
+        public async Task<IActionResult> GetAssetsCreated([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
+        {
+            var userId = _userAccessor.GetUserId();
+            return HandleResult(await Mediator.Send(new GetCreatedAssetsQuery { userId = userId, PageNumber = pageNumber, PageSize = pageSize }));
+        }
+
         [HttpGet("assets/{categoryName}")]
         public async Task<IActionResult> GetAssetsCount([FromQuery] AssetCategory categoryName)
         {
