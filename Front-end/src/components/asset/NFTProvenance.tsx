@@ -90,22 +90,23 @@ const NFTProvenance = () => {
                       </TableCell>
                       <TableCell>{provenance.price} ETH</TableCell>
                       <TableCell>
-                        <Link
-                          href={`${Routes.USER}/${provenance.from.address}`}
-                          className="flex gap-2 items-center w-fit"
-                        >
-                          <Avatar
-                            name={provenance.from.userName}
-                            src={provenance.from.avatar}
-                          />
-                          <TypographyP
-                            className="whitespace-nowrap text-ellipsis overflow-hidden hover:text-primary"
-                            text={provenance.from.userName}
-                          />
-                        </Link>
+                        {provenance.from ?
+                          <Link
+                            href={`${Routes.USER}/${provenance.from.address}`}
+                            className="flex gap-2 items-center w-fit"
+                          >
+                            <Avatar
+                              name={provenance.from.userName}
+                              src={provenance.from.avatar}
+                            />
+                            <TypographyP
+                              className="whitespace-nowrap text-ellipsis overflow-hidden hover:text-primary"
+                              text={provenance.from.userName}
+                            />
+                          </Link> : "NULL"}
                       </TableCell>
                       <TableCell>
-                        {provenance.to ? 
+
                         <Link
                           href={`${Routes.USER}/${provenance.to.address}`}
                           className="flex gap-2 items-center"
@@ -118,7 +119,7 @@ const NFTProvenance = () => {
                             className="whitespace-nowrap text-ellipsis overflow-hidden"
                             text={provenance.to.userName}
                           />
-                        </Link>: "NULL"}
+                        </Link>
                       </TableCell>
                       <TableCell>
                         <Link href={`${Routes.ETHER_TRANSACTIONS}/${provenance.transactionHash}`} className="hover:text-primary">
