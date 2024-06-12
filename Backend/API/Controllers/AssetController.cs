@@ -127,10 +127,11 @@ namespace API.Controllers
             return HandleResult(await Mediator.Send(new GetCreatedAssetsQuery { userId = userId, PageNumber = pageNumber, PageSize = pageSize }));
         }
 
-        [HttpGet("assets/{categoryName}")]
-        public async Task<IActionResult> GetAssetsCount([FromQuery] AssetCategory categoryName)
+        [AllowAnonymous]
+        [HttpGet("categories-asset-count")]
+        public async Task<IActionResult> GetAssetsCountByCategory()
         {
-            return HandleResult(await Mediator.Send(new GetAssetCountByCategoryQuery { CategoryName = categoryName }));
+            return HandleResult(await Mediator.Send(new GetCategoriesAssetCountQuery()));
         }
 
     }

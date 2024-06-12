@@ -14,7 +14,7 @@ namespace Application.Contracts.Presistence
         Task<ErrorOr<AssetDetailDto>> GetAssetWithDetail(long id, string userId);
         Task<ErrorOr<Unit>> ToggleAssetLike(long assetId, string userId);
         Task<ErrorOr<Tuple<int, IEnumerable<AssetListDto>>>> GetFilteredAssets(string userId, string? query, double minPrice, double maxPrice, AssetCategory? category, string sortBy, string? saleType, long? collectionId, string? creatorId, int pageNumber, int pageSize);
-        Task<IEnumerable<Asset>> GetByAssetAsync(AssetCategory? category);
+        Task<ErrorOr<Dictionary<string, int>>> GetCategoriesAssetCount();
 
         Task<ErrorOr<Tuple<int, IEnumerable<AssetListDto>>>> GetTrendingAssets(string userId, int pageNumber, int pageSize);
         Task<Asset> GetAssetByAuctionId(long auctionId);

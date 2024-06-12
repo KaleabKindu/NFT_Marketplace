@@ -215,16 +215,18 @@ namespace Persistence.Repositories
             return Unit.Value;
         }
 
-        public async Task<IEnumerable<Asset>> GetByAssetAsync(AssetCategory? category)
+        public async Task<ErrorOr<Dictionary<string, int>>> GetCategoriesAssetCount()
         {
-            IQueryable<Asset> assets = _context.Assets;
+            var assetCounts = await _context.Assets
+                    .GroupBy(a => a.Category)
+                    .ToDictionaryAsync(g => g.Key.ToString(), g => g.Count());
 
-            if (category.HasValue)
+            foreach (AssetCategory category in Enum.GetValues(typeof(AssetCategory)))
             {
-                assets = assets.Where(asset => asset.Category == category);
+                if (!assetCounts.ContainsKey(category.ToString())) assetCounts.Add(category.ToString(), 0);
             }
 
-            return await assets.ToListAsync();
+            return assetCounts;
         }
 
         public async Task<ErrorOr<Tuple<int, List<AssetListDto>>>> GetOwnedAssetsAsync(string ownerId, int pageNumber, int pageSize)
