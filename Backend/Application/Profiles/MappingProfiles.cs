@@ -105,6 +105,8 @@ namespace Application.Profiles
             CreateMap<Collection, CollectionDetailsDto>();
             CreateMap<CreateCollectionsDto, Collection>();
             CreateMap<Collection, CollectionDto>();
+            CreateMap<Collection, TrendingCollectionsDto>()
+                .ForMember(dest => dest.Images, opt => opt.MapFrom(src => src.Assets.Select(asset => asset.Image)));
 
             #endregion Collections
 

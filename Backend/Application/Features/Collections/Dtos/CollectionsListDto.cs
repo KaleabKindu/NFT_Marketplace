@@ -12,4 +12,10 @@ namespace Application.Features.Collections.Dtos
         public string FloorPrice { get; set; }
         public long Items { get; set; }
     }
+
+
+    public class TrendingCollectionsDto : CollectionsListDto
+    {
+        public List<string> Images { get; set; }
+    }
 }

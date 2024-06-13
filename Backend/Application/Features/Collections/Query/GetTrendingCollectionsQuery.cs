@@ -8,12 +8,12 @@ using Application.Features.Collections.Dtos;
 
 namespace Application.Features.Assets.Query
 {
-    public class GetTrendingCollectionsQuery : PaginatedQuery, IRequest<ErrorOr<PaginatedResponse<CollectionsListDto>>>
+    public class GetTrendingCollectionsQuery : PaginatedQuery, IRequest<ErrorOr<PaginatedResponse<TrendingCollectionsDto>>>
     {
     }
 
 
-     public class GetTrendingCollectionsQueryHandler : IRequestHandler<GetTrendingCollectionsQuery, ErrorOr<PaginatedResponse<CollectionsListDto>>>
+    public class GetTrendingCollectionsQueryHandler : IRequestHandler<GetTrendingCollectionsQuery, ErrorOr<PaginatedResponse<TrendingCollectionsDto>>>
     {
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
@@ -22,18 +22,19 @@ namespace Application.Features.Assets.Query
         {
             _mapper = mapper;
             _unitOfWork = unitOfwork;
-            
-        } 
- 
-        public async Task<ErrorOr<PaginatedResponse<CollectionsListDto>>> Handle(GetTrendingCollectionsQuery query, CancellationToken cancellationToken)
+
+        }
+
+        public async Task<ErrorOr<PaginatedResponse<TrendingCollectionsDto>>> Handle(GetTrendingCollectionsQuery query, CancellationToken cancellationToken)
         {
-            var result = await _unitOfWork.CollectionRepository.GetTrendingAsync( query.PageNumber, query.PageSize);
-            
+            var result = await _unitOfWork.CollectionRepository.GetTrendingAsync(query.PageNumber, query.PageSize);
+
             if (result.IsError) return result.Errors;
-            
-            var response = new PaginatedResponse<CollectionsListDto>{
+
+            var response = new PaginatedResponse<TrendingCollectionsDto>
+            {
                 Message = "Collections Fetched Succesfully",
-                Value = _mapper.Map<List<CollectionsListDto>>(result.Value.Item2),
+                Value = _mapper.Map<List<TrendingCollectionsDto>>(result.Value.Item2),
                 Count = result.Value.Item1,
                 PageNumber = query.PageNumber,
                 PageSize = query.PageSize

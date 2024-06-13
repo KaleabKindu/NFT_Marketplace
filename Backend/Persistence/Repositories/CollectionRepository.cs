@@ -43,14 +43,28 @@ namespace Persistence.Repositories
             var collections = _dbContext.Collections
                 .Where(cltn => cltn.Items > 4)
                 .OrderByDescending(cltn => cltn.LatestPrice)
-                .Include(entity => entity.Creator)
                 .AsQueryable();
 
             var count = await collections.CountAsync();
 
             var collectionsList = await collections.Skip(skip)
                 .Take(limit)
-                .ToListAsync();
+                .Select(cltn => new Collection
+                {
+                    Id = cltn.Id,
+                    Name = cltn.Name,
+                    Description = cltn.Description,
+                    Background = cltn.Background,
+                    Creator = cltn.Creator,
+                    CreatorId = cltn.CreatorId,
+                    Avatar = cltn.Avatar,
+                    Items = cltn.Items,
+                    Volume = cltn.Volume,
+                    LatestPrice = cltn.LatestPrice,
+                    FloorPrice = cltn.FloorPrice,
+                    CreatedAt = cltn.CreatedAt,
+                    Assets = cltn.Assets.OrderBy(ast => ast.CreatedAt).Take(3).ToList()
+                }).ToListAsync();
 
             return new Tuple<int, IEnumerable<Collection>>(count, collectionsList);
 
