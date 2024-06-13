@@ -15,9 +15,9 @@ namespace API.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> GetAllCollections([FromQuery] string Creator, [FromQuery] string Query, [FromQuery] double MinVolume = 0, [FromQuery] double MaxVolume = 1000.0d, [FromQuery] string SortBy = "date_added", [FromQuery] int PageNumber = 1, [FromQuery] int PageSize = 10)
+        public async Task<IActionResult> GetAllCollections([FromQuery] string creator, [FromQuery] string query, [FromQuery] double minVolume = 0, [FromQuery] double maxVolume = 1000.0d, [FromQuery] string sortBy = "date_added", [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
         {
-            return HandleResult(await Mediator.Send(new GetAllCollectionsQuery { Creator = Creator, Query = Query, MinVolume = MinVolume, MaxVolume = MaxVolume, SortBy = SortBy, PageNumber = PageNumber, PageSize = PageSize }));
+            return HandleResult(await Mediator.Send(new GetAllCollectionsQuery { Creator = creator, Query = query, MinVolume = minVolume, MaxVolume = maxVolume, SortBy = sortBy, PageNumber = pageNumber, PageSize = pageSize }));
         }
 
         [HttpPost]
@@ -28,9 +28,9 @@ namespace API.Controllers
 
         [HttpGet("trending")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetTrendingCollections([FromQuery] int PageNumber = 1, [FromQuery] int PageSize = 10)
+        public async Task<IActionResult> GetTrendingCollections([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
         {
-            return HandleResult(await Mediator.Send(new GetTrendingCollectionsQuery() { PageNumber = PageNumber, PageSize = PageSize }));
+            return HandleResult(await Mediator.Send(new GetTrendingCollectionsQuery() { PageNumber = pageNumber, PageSize = pageSize }));
         }
 
         [AllowAnonymous]
