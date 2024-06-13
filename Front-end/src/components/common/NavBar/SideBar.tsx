@@ -62,7 +62,6 @@ const SideBar = (props: Props) => {
     }
   };
 
-
   const [notificationHub, setNotificationHub] = useState<NotificationHub>();
 
   useEffect(() => {
@@ -70,9 +69,9 @@ const SideBar = (props: Props) => {
       setNotificationHub(new NotificationHub(session!, dispatch));
 
     return () => {
-      notificationHub?.stop()
-    }
-  }, [session])
+      notificationHub?.stop();
+    };
+  }, [session]);
 
   const signIn = async () => {
     try {

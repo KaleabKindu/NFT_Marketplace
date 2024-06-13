@@ -23,7 +23,7 @@ type SaleModalProps = {
 export const DeleteAssetModal = ({ tokenId }: SaleModalProps) => {
   const [open, setOpen] = useState(false);
   const { address } = useAccount();
-  const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
   const { data: balance } = useBalance({ address: address });
   const { isLoading, writing, writeSuccess, contractWrite } =
     useContractWriteMutation();
@@ -33,7 +33,9 @@ export const DeleteAssetModal = ({ tokenId }: SaleModalProps) => {
   };
   useEffect(() => {
     if (writeSuccess) {
-      dispatch(webApi.util.invalidateTags(["NFTs", { id:tokenId, type:"NFTs" }]))
+      dispatch(
+        webApi.util.invalidateTags(["NFTs", { id: tokenId, type: "NFTs" }]),
+      );
       handleClose();
     }
   }, [writeSuccess]);

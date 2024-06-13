@@ -566,7 +566,7 @@ export const UsersFilter = () => {
     },
     [params],
   );
-  const currentUser = users?.find((user) => user.address === value);
+  const currentUser = users?.find((user) => user.id === value);
 
   useEffect(() => {
     updateQueryParameter(value, FILTER.CREATOR);
@@ -606,8 +606,8 @@ export const UsersFilter = () => {
           <CommandGroup>
             {users.map((user) => (
               <CommandItem
-                key={user.address}
-                value={user.address}
+                key={user.id}
+                value={user.id}
                 onSelect={(currentValue) => {
                   setValue(currentValue === value ? "" : currentValue);
                   setOpen(false);
@@ -616,7 +616,7 @@ export const UsersFilter = () => {
                 <Check
                   className={cn(
                     "mr-2 h-4 w-4",
-                    value === user.address ? "opacity-100" : "opacity-0",
+                    value === user.id ? "opacity-100" : "opacity-0",
                   )}
                 />
                 <Avatar

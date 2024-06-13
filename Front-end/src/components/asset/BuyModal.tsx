@@ -27,7 +27,7 @@ export const BuyModal = ({ tokenId, price }: SaleModalProps) => {
 
   const session = useAppSelector((state) => state.auth.session);
   const { open } = useWeb3Modal();
-  const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
   const { address } = useAccount();
   const { data: balance } = useBalance({ address: address });
   const { writing, writeSuccess, contractWrite } = useContractWriteMutation();
@@ -37,7 +37,13 @@ export const BuyModal = ({ tokenId, price }: SaleModalProps) => {
   };
   useEffect(() => {
     if (writeSuccess) {
-      dispatch(webApi.util.invalidateTags(["NFTs", {id:tokenId, type:"NFTs"}, {id:tokenId, type:"Provenances"}]))
+      dispatch(
+        webApi.util.invalidateTags([
+          "NFTs",
+          { id: tokenId, type: "NFTs" },
+          { id: tokenId, type: "Provenances" },
+        ]),
+      );
       handleClose();
     }
   }, [writeSuccess]);

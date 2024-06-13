@@ -86,6 +86,7 @@ export enum FILTER {
   MIN_PRICE = "min_price",
   MAX_PRICE = "max_price",
   CATEGORY = "category",
+  OWNER = "owner",
   SORT_BY = "sort_by",
   COLLECTION = "collectionId",
   CREATOR = "creator",

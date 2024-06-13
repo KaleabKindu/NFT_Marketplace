@@ -22,14 +22,11 @@ import { useToggleNFTlikeMutation } from "@/store/api";
 import CustomImage from "@/components/common/CustomImage";
 import { useWeb3Modal } from "@web3modal/wagmi/react";
 import { useAppSelector } from "@/store/hooks";
-import { ResellAssetModal } from "./ResellAssetModal";
-import { useAccount } from "wagmi";
 type Props = {
   asset: NFT;
 };
 
 const NFTCard = ({ asset }: Props) => {
-  const { address } = useAccount()
   const cardRef = useRef<HTMLDivElement>(null);
   const [liked, setLiked] = useState(asset?.liked as boolean);
   const [likes, setLikes] = useState(asset?.likes as number);
@@ -119,7 +116,6 @@ const NFTCard = ({ asset }: Props) => {
                 </div>
               )}
             </div>
-            {asset.owner?.address === address && asset.status === "NotOnSale" && <ResellAssetModal tokenId={asset.tokenId as number} />}
           </div>
         </div>
       </Card>

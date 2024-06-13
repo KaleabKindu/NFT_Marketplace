@@ -105,7 +105,7 @@ const TrendingNFTCard = ({ asset }: Props) => {
                 </Badge>
                 <TypographySmall
                   className="text-primary/60 font-semibold"
-                  text={`${asset.auction?.highestBid}ETH`}
+                  text={`${asset.auction?.highestBid} ETH`}
                 />
               </Card>
             </div>

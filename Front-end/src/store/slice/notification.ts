@@ -2,7 +2,6 @@ import { INotification, INotificationPage } from "@/types";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { PURGE } from "redux-persist";
 
-
 interface notificationState {
   notifications: INotification[];
   count: number;
@@ -13,17 +12,23 @@ const initialState: notificationState = {
   notifications: [],
   count: 0,
   unReadCount: 0,
-}
+};
 
 export const notificationSlice = createSlice({
-  name: 'notifications',
+  name: "notifications",
   initialState: initialState,
   reducers: {
     removeNotification(state, action: PayloadAction<number>) {
-      if (state.notifications.find((notification) => notification.id === action.payload)?.isRead === false) {
+      if (
+        state.notifications.find(
+          (notification) => notification.id === action.payload,
+        )?.isRead === false
+      ) {
         state.unReadCount -= 1;
       }
-      state.notifications = state.notifications.filter((notification) => notification.id !== action.payload);
+      state.notifications = state.notifications.filter(
+        (notification) => notification.id !== action.payload,
+      );
       state.count -= 1;
     },
 
@@ -41,7 +46,7 @@ export const notificationSlice = createSlice({
       state.unReadCount = action.payload;
     },
     addNotification: (state, action: PayloadAction<INotification>) => {
-      if (!state.notifications.find(x => x.id == action.payload.id)) {
+      if (!state.notifications.find((x) => x.id == action.payload.id)) {
         state.notifications = [action.payload, ...state.notifications];
         state.count += 1;
         state.unReadCount += 1;
@@ -50,10 +55,13 @@ export const notificationSlice = createSlice({
     addNotifications: (state, action: PayloadAction<INotificationPage>) => {
       const { value, count, pageNumber, pageSize } = action.payload;
       state.count = count;
-      if (state.notifications.length > 0 && pageNumber > 1 && (pageSize * pageNumber) > state.notifications.length) {
+      if (
+        state.notifications.length > 0 &&
+        pageNumber > 1 &&
+        pageSize * pageNumber > state.notifications.length
+      ) {
         state.notifications = [...state.notifications, ...value];
-      }
-      else {
+      } else {
         state.notifications = value;
       }
     },
@@ -63,8 +71,12 @@ export const notificationSlice = createSlice({
       return initialState;
     });
   },
-}
-);
+});
 
-export const { addNotification, addNotifications, setUnReadcount, notificationRead, removeNotification } = notificationSlice.actions;
-
+export const {
+  addNotification,
+  addNotifications,
+  setUnReadcount,
+  notificationRead,
+  removeNotification,
+} = notificationSlice.actions;

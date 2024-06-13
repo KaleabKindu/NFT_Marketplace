@@ -1,7 +1,7 @@
 import { CATEGORY } from "@/data";
 import { ICollection, IBid, IProvenance, NFT, User } from "@/types";
 import { faker } from "@faker-js/faker";
-import { formatDistanceToNow, parseISO } from 'date-fns';
+import { formatDistanceToNow, parseISO } from "date-fns";
 
 faker.seed(5);
 const categories = [
@@ -39,8 +39,8 @@ const generateDummyAssets = () => {
       price:
         i % 3 === 0
           ? faker.number
-            .float({ min: 0.00001, max: 1, fractionDigits: 4 })
-            .toString()
+              .float({ min: 0.00001, max: 1, fractionDigits: 4 })
+              .toString()
           : undefined,
       royalty: faker.number.int({ min: 1, max: 10 }),
       collection: {
@@ -62,12 +62,12 @@ const generateDummyAssets = () => {
         i % 3 === 0
           ? undefined
           : {
-            auctionId: faker.number.int(),
-            auctionEnd: new Date(faker.date.future()).getTime(),
-            highestBid: faker.number
-              .float({ min: 0.00001, max: 1, fractionDigits: 4 })
-              .toString(),
-          },
+              auctionId: faker.number.int(),
+              auctionEnd: new Date(faker.date.future()).getTime(),
+              highestBid: faker.number
+                .float({ min: 0.00001, max: 1, fractionDigits: 4 })
+                .toString(),
+            },
       transactionHash: `0x${faker.finance.litecoinAddress()}`,
     };
     dummyData.push(data);
@@ -191,10 +191,8 @@ const generateDummyBids = () => {
 
 export const bids = generateDummyBids();
 
-
 export const timeAgo = (date: Date | string): string => {
-
-  if (typeof date === 'string') {
+  if (typeof date === "string") {
     date = parseISO(date);
   }
   return formatDistanceToNow(date, { addSuffix: true });

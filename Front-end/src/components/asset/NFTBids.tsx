@@ -12,7 +12,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import NoData from "../common/NoData";
@@ -26,13 +25,16 @@ import { Routes } from "@/routes";
 import { Avatar } from "../common/Avatar";
 import { TypographyP } from "../common/Typography";
 import { Loader2 } from "lucide-react";
-export default function NFTBids() {
-  const params = useParams();
+
+type Props = {
+  tokenId?: number;
+};
+export default function NFTBids({ tokenId }: Props) {
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
   const [size, setSize] = useState(12);
   const { data, isLoading, isFetching, isError, refetch } = useGetBidsQuery({
-    id: params.id as string,
+    id: tokenId as number,
     pageNumber: page,
     pageSize: size,
   });
@@ -110,10 +112,10 @@ export default function NFTBids() {
                 </>
               ) : (
                 <TableRow>
-                <TableCell colSpan={4}>
-                  <NoData message="No bids on this asset yet." />
-                </TableCell>
-              </TableRow>
+                  <TableCell colSpan={4}>
+                    <NoData message="No bids on this asset yet." />
+                  </TableCell>
+                </TableRow>
               )}
             </TableBody>
           </Table>

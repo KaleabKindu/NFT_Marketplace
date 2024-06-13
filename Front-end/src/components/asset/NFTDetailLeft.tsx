@@ -35,10 +35,9 @@ import { useAccount } from "wagmi";
 type Props = {
   asset?: NFT;
   isLoading?: boolean;
-  isError?: boolean;
 };
 
-const NFTDetailLeft = ({ asset, isLoading, isError }: Props) => {
+const NFTDetailLeft = ({ asset, isLoading }: Props) => {
   const { toast } = useToast();
   const [liked, setLiked] = useState(false);
   const [likes, setLikes] = useState(0);
@@ -71,7 +70,7 @@ const NFTDetailLeft = ({ asset, isLoading, isError }: Props) => {
 
   return (
     <>
-      {(isLoading || isError) ? (
+      {isLoading ? (
         <NFTLeftShimmer />
       ) : (
         <div className="flex-1 flex flex-col gap-10">
@@ -151,49 +150,53 @@ const NFTDetailLeft = ({ asset, isLoading, isError }: Props) => {
                         />
                       </Link>
                     </div>
-                    {address === asset?.owner?.address && 
-                    <div className="flex justify-between items-center">
-                      <TypographyH4 text={"Files: "} />
-                      <div className="flex gap-1 items-center">
-                        <CopyToClipboard
-                          text={
-                            "ipfs://614917f589593189ac27ac8b81064cbe450c35e3"
-                          }
-                          onCopy={() =>
-                            showFiles &&
-                            toast({
-                              title: "Copied to Clipboard",
-                            })
-                          }
-                        >
-                          <Badge
-                            variant={"secondary"}
-                            className={clsx(
-                              "flex gap-2 items-center cursor-pointer",
-                              { "blur-sm": !showFiles },
-                            )}
+                    {address === asset?.owner?.address && (
+                      <div className="flex justify-between items-center">
+                        <TypographyH4 text={"Files: "} />
+                        <div className="flex gap-1 items-center">
+                          <CopyToClipboard
+                            text={
+                              "ipfs://614917f589593189ac27ac8b81064cbe450c35e3"
+                            }
+                            onCopy={() =>
+                              showFiles &&
+                              toast({
+                                title: "Copied to Clipboard",
+                              })
+                            }
                           >
-                            <TypographyP
-                              className="whitespace-nowrap text-ellipsis overflow-hidden max-w-[400px] text-right select-none"
-                              text={`${"ipfs://614917f589593189ac27ac8b81064cbe450c35e3"}`}
-                            />
-                            <TbCopy className="hover:text-primary" size={20} />
-                          </Badge>
-                        </CopyToClipboard>
-                        <Button
-                          variant={"ghost"}
-                          size={"icon"}
-                          className="rounded-full"
-                          onClick={() => setShowFiles(!showFiles)}
-                        >
-                          {!showFiles ? (
-                            <LuEye size={20} />
-                          ) : (
-                            <LuEyeOff size={20} />
-                          )}
-                        </Button>
+                            <Badge
+                              variant={"secondary"}
+                              className={clsx(
+                                "flex gap-2 items-center cursor-pointer",
+                                { "blur-sm": !showFiles },
+                              )}
+                            >
+                              <TypographyP
+                                className="whitespace-nowrap text-ellipsis overflow-hidden max-w-[400px] text-right select-none"
+                                text={`${"ipfs://614917f589593189ac27ac8b81064cbe450c35e3"}`}
+                              />
+                              <TbCopy
+                                className="hover:text-primary"
+                                size={20}
+                              />
+                            </Badge>
+                          </CopyToClipboard>
+                          <Button
+                            variant={"ghost"}
+                            size={"icon"}
+                            className="rounded-full"
+                            onClick={() => setShowFiles(!showFiles)}
+                          >
+                            {!showFiles ? (
+                              <LuEye size={20} />
+                            ) : (
+                              <LuEyeOff size={20} />
+                            )}
+                          </Button>
+                        </div>
                       </div>
-                    </div>}
+                    )}
                   </div>
                 </AccordionContent>
               </AccordionItem>

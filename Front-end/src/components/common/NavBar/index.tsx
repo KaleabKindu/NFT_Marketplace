@@ -25,6 +25,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { ToastAction } from "@/components/ui/toast";
 import { setSession } from "@/store/slice/auth";
 import { useDisconnect } from "wagmi";
+import { persistor } from "@/store";
 
 type Props = {};
 
@@ -38,6 +39,9 @@ const NavBar = (props: Props) => {
       if (!session) {
         signIn();
       }
+    },
+    onDisconnect: () => {
+      persistor.purge();
     },
   });
   const [getNonce] = useGetNounceMutation();

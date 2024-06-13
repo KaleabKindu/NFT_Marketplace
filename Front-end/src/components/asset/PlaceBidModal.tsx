@@ -47,7 +47,7 @@ type PlaceBidModalProps = {
 export const PlaceBidModal = ({ tokenId, auctionId }: PlaceBidModalProps) => {
   const session = useAppSelector((state) => state.auth.session);
   const { open } = useWeb3Modal();
-  const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
   const [showModal, setShowModal] = useState(false);
   const { address } = useAccount();
   const { data: balance } = useBalance({ address: address });
@@ -62,7 +62,7 @@ export const PlaceBidModal = ({ tokenId, auctionId }: PlaceBidModalProps) => {
   };
   useEffect(() => {
     if (writeSuccess) {
-      dispatch(webApi.util.invalidateTags([{ id:tokenId, type:"Bids" }]))
+      dispatch(webApi.util.invalidateTags([{ id: tokenId, type: "Bids" }]));
       handleClose();
     }
   }, [writeSuccess]);

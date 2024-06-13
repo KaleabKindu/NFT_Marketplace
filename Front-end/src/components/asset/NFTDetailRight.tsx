@@ -34,12 +34,11 @@ import useGetUsdPrice from "@/hooks/useGetUsdPrice";
 type Props = {
   asset?: NFT;
   isLoading?: boolean;
-  isError?:boolean
 };
 
-const NFTDetailRight = ({ asset, isLoading, isError }: Props) => {
+const NFTDetailRight = ({ asset, isLoading }: Props) => {
   const { address } = useAccount();
-  const usdPrice = useGetUsdPrice(asset?.price)
+  const usdPrice = useGetUsdPrice(asset?.price);
   const onRender = ({
     days,
     hours,
@@ -82,7 +81,7 @@ const NFTDetailRight = ({ asset, isLoading, isError }: Props) => {
   }, [asset?.auction]);
   return (
     <>
-      {(isLoading || isError) ? (
+      {isLoading ? (
         <NFTRightShimmer />
       ) : (
         <div className="flex-1 p-3">
@@ -108,7 +107,10 @@ const NFTDetailRight = ({ asset, isLoading, isError }: Props) => {
                 />
                 <div className="flex flex-col">
                   <TypographySmall className="font-bold" text="Creator" />
-                  <TypographyH4 className="whitespace-nowrap text-ellipsis overflow-hidden w-[100px]" text={asset?.creator?.userName} />
+                  <TypographyH4
+                    className="whitespace-nowrap text-ellipsis overflow-hidden w-[100px]"
+                    text={asset?.creator?.userName}
+                  />
                 </div>
               </Link>
               <Link
@@ -122,7 +124,10 @@ const NFTDetailRight = ({ asset, isLoading, isError }: Props) => {
                 />
                 <div className="flex flex-col">
                   <TypographySmall className="font-bold" text="Owner" />
-                  <TypographyH4 className="whitespace-nowrap text-ellipsis overflow-hidden w-[100px]" text={asset?.owner?.userName} />
+                  <TypographyH4
+                    className="whitespace-nowrap text-ellipsis overflow-hidden w-[100px]"
+                    text={asset?.owner?.userName}
+                  />
                 </div>
               </Link>
               {asset?.collection && (
@@ -165,10 +170,12 @@ const NFTDetailRight = ({ asset, isLoading, isError }: Props) => {
                 <div>
                   <TypographyP text="Current Price" />
                   <div className="flex gap-2 items-end">
-                    <TypographyH2 text={`${asset?.price || 0.394} ETH`} />
+                    <TypographyH2
+                      text={`${asset?.auction ? asset.auction.highestBid : asset?.price} ETH`}
+                    />
                     <TypographyP
                       className="text-primary/60"
-                      text={`$${usdPrice}`}
+                      text={`$${parseFloat(usdPrice).toLocaleString()}`}
                     />
                   </div>
                 </div>
@@ -185,7 +192,7 @@ const NFTDetailRight = ({ asset, isLoading, isError }: Props) => {
                 )}
               </div>
             </div>
-            {asset?.auction && <NFTBids />}
+            {asset?.auction && <NFTBids tokenId={asset?.tokenId} />}
           </div>
         </div>
       )}
