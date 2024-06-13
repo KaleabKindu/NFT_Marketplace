@@ -145,31 +145,29 @@ namespace Persistence.Repositories
             var target = await _userManager.Users
                 .Where(user => user.Address == address)
                 .Include(user => user.Profile)
+                .ThenInclude(profile => profile.Followers)
                 .FirstOrDefaultAsync();
 
-            var query = _userManager.Users
-                .Include(user => user.Profile)
-                .Where(user => target.Profile.Followers.Contains(user.Address));
+            var count = target.Profile.Followers.Count;
 
-            var followers = await query
-                .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize)
-                .ToListAsync();
+            var followers = target.Profile.Followers.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
 
             return new PaginatedResponse<AppUser>
             {
                 Value = followers,
                 PageNumber = pageNumber,
                 PageSize = pageSize,
-                Count = await query.CountAsync()
+                Count = count
             };
         }
 
         public async Task<PaginatedResponse<AppUser>> GetFollowingsAsync(string address, int pageNumber = 1, int pageSize = 10)
         {
+            var followerUser = await _userManager.Users.SingleOrDefaultAsync(user => user.Address == address);
+
             var query = _userManager.Users
                 .Include(user => user.Profile)
-                .Where(user => user.Profile.Followers.Contains(address));
+                .Where(user => user.Profile.Followers.Contains(followerUser));
 
             var followings = await query
                 .Skip((pageNumber - 1) * pageSize)
@@ -190,9 +188,10 @@ namespace Persistence.Repositories
             var user = await _userManager.Users
                 .Where(user => user.Address == targetAddress)
                 .Include(user => user.Profile)
+                .ThenInclude(profile => profile.Followers)
                 .FirstOrDefaultAsync();
 
-            return user.Profile.Followers.Contains(address);
+            return user.Profile.Followers.FirstOrDefault(pfl => pfl.Address == address) != null;
         }
 
         public async Task UpdateVolume(string Id, double sale)
@@ -211,10 +210,11 @@ namespace Persistence.Repositories
                 .Where(user => user.Address == followee)
                 .Include(user => user.Profile)
                 .FirstOrDefaultAsync();
-            if (user.Profile.Followers.Contains(follower))
+            if (user.Profile.Followers.FirstOrDefault(usr => usr.Address == follower) != null)
                 return false;
 
-            user.Profile.Followers.Add(follower);
+            var followerUser = await _userManager.Users.SingleOrDefaultAsync(user => user.Address == follower);
+            user.Profile.Followers.Add(followerUser);
             return true;
         }
 
@@ -225,10 +225,11 @@ namespace Persistence.Repositories
                 .Include(user => user.Profile)
                 .FirstOrDefaultAsync();
 
-            if (!user.Profile.Followers.Contains(follower))
+            if (user.Profile.Followers.FirstOrDefault(usr => usr.Address == follower) == null)
                 return false;
 
-            user.Profile.Followers.Remove(follower);
+            var followerUser = await _userManager.Users.SingleOrDefaultAsync(user => user.Address == follower);
+            user.Profile.Followers.Remove(followerUser);
             return true;
         }
     }

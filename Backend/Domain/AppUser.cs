@@ -9,7 +9,8 @@ namespace Domain
         public long ProfileId { get; set; }
     }
 
-    public class UserProfile : BaseClass{
+    public class UserProfile : BaseClass
+    {
         public AppUser User { get; set; }
         public string UserId { get; set; }
         public string UserName { get; set; } = "";
@@ -24,7 +25,7 @@ namespace Domain
 
         public int TotalSalesCount { get; set; } = 0;
         public double Volume { get; set; } = 0.0;
-        public List<string> Followers { get; set; } = new();
+        public List<AppUser> Followers { get; set; } = new();
         public string Facebook { get; set; } = "";
         public string Twitter { get; set; } = "";
         public string YouTube { get; set; } = "";

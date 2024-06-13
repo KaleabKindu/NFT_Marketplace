@@ -8,18 +8,18 @@ namespace Persistence.Configurations.Security;
 public class UserProfileConfiguration : IEntityTypeConfiguration<UserProfile>
 {
     private static readonly Faker _faker = new();
-    
-	public void Configure(EntityTypeBuilder<UserProfile> builder)
-	{
-		var admin = new UserProfile
+
+    public void Configure(EntityTypeBuilder<UserProfile> builder)
+    {
+        var admin = new UserProfile
         {
-            Id =  3,
+            Id = 3,
             UserId = "123e4567-e89b-12d3-a456-426614174000",
             UserName = _faker.Internet.UserName(),
         };
 
-		builder.HasData(
-			admin,
+        builder.HasData(
+            admin,
             new UserProfile
             {
                 Id = 4,
@@ -30,12 +30,6 @@ public class UserProfileConfiguration : IEntityTypeConfiguration<UserProfile>
                 Bio = "I am Jane Doe, a digital collector.",
                 ProfileBackgroundImage = "https://example.com/background2.jpg",
                 TotalSalesCount = 0,
-                Followers = new List<string> { 
-					"0x71bE63f3384f5fb98995898A86B02Fb2426c5788",
-					"0xFABB0ac9d68B0B445fB7357272Ff202C5651694a",
-					"0x1CBd3b2770909D4e10f157cABC84C7264073C9Ec",
-					"0xdF3e18d64BC6A983f673Ab319CCaE4f1a57C7097"
-				},
                 Facebook = "https://facebook.com/janedoe",
                 Twitter = "https://twitter.com/janedoe",
                 YouTube = "https://youtube.com/janedoe",
@@ -51,12 +45,6 @@ public class UserProfileConfiguration : IEntityTypeConfiguration<UserProfile>
                 Bio = "I am Bob Smith, a digital artist.",
                 ProfileBackgroundImage = "https://example.com/background3.jpg",
                 TotalSalesCount = 20,
-                Followers = new List<string> { 
-					"0x71bE63f3384f5fb98995898A86B02Fb2426c5788",
-					"0xFABB0ac9d68B0B445fB7357272Ff202C5651694a",
-					"0x1CBd3b2770909D4e10f157cABC84C7264073C9Ec",
-					"0xdF3e18d64BC6A983f673Ab319CCaE4f1a57C7097"
-				},
                 Facebook = "https://facebook.com/bobsmith",
                 Twitter = "https://twitter.com/bobsmith",
                 YouTube = "https://youtube.com/bobsmith",
@@ -72,12 +60,6 @@ public class UserProfileConfiguration : IEntityTypeConfiguration<UserProfile>
                 Bio = "I am Alice Jones, a digital collector.",
                 ProfileBackgroundImage = "https://example.com/background4.jpg",
                 TotalSalesCount = 0,
-                Followers = new List<string> { 
-					"0x71bE63f3384f5fb98995898A86B02Fb2426c5788",
-					"0xFABB0ac9d68B0B445fB7357272Ff202C5651694a",
-					"0x1CBd3b2770909D4e10f157cABC84C7264073C9Ec",
-					"0xdF3e18d64BC6A983f673Ab319CCaE4f1a57C7097"
-				},
                 Facebook = "https://facebook.com/alicejones",
                 Twitter = "https://twitter.com/alicejones",
                 YouTube = "https://youtube.com/alicejones",
@@ -93,12 +75,6 @@ public class UserProfileConfiguration : IEntityTypeConfiguration<UserProfile>
                 Bio = "I am Charlie Brown, a digital artist.",
                 ProfileBackgroundImage = "https://example.com/background5.jpg",
                 TotalSalesCount = 30,
-                Followers = new List<string> { 
-					"0x71bE63f3384f5fb98995898A86B02Fb2426c5788",
-					"0xFABB0ac9d68B0B445fB7357272Ff202C5651694a",
-					"0x1CBd3b2770909D4e10f157cABC84C7264073C9Ec",
-					"0xdF3e18d64BC6A983f673Ab319CCaE4f1a57C7097"
-				},
                 Facebook = "https://facebook.com/charliebrown",
                 Twitter = "https://twitter.com/charliebrown",
                 YouTube = "https://youtube.com/charliebrown",
@@ -114,12 +90,6 @@ public class UserProfileConfiguration : IEntityTypeConfiguration<UserProfile>
                 Bio = "I am David Davis, a digital artist.",
                 ProfileBackgroundImage = "https://example.com/background6.jpg",
                 TotalSalesCount = 40,
-                Followers = new List<string> { 
-					"0x71bE63f3384f5fb98995898A86B02Fb2426c5788",
-					"0xFABB0ac9d68B0B445fB7357272Ff202C5651694a",
-					"0x1CBd3b2770909D4e10f157cABC84C7264073C9Ec",
-					"0xdF3e18d64BC6A983f673Ab319CCaE4f1a57C7097"
-				},
                 Facebook = "https://facebook.com/daviddavis",
                 Twitter = "https://twitter.com/daviddavis",
                 YouTube = "https://youtube.com/daviddavis",
@@ -135,12 +105,6 @@ public class UserProfileConfiguration : IEntityTypeConfiguration<UserProfile>
                 Bio = "I am Evelyn Green, a digital collector.",
                 ProfileBackgroundImage = "https://example.com/background7.jpg",
                 TotalSalesCount = 0,
-                Followers = new List<string> { 
-					"0x71bE63f3384f5fb98995898A86B02Fb2426c5788",
-					"0xFABB0ac9d68B0B445fB7357272Ff202C5651694a",
-					"0x1CBd3b2770909D4e10f157cABC84C7264073C9Ec",
-					"0xdF3e18d64BC6A983f673Ab319CCaE4f1a57C7097"
-				},
                 Facebook = "https://facebook.com/evelyngreen",
                 Twitter = "https://twitter.com/evelyngreen",
                 YouTube = "https://youtube.com/evelyngreen",
@@ -148,7 +112,7 @@ public class UserProfileConfiguration : IEntityTypeConfiguration<UserProfile>
             },
             new UserProfile
             {
-                Id =  10,
+                Id = 10,
                 UserId = "888e9999-e89b-12d3-a456-426614174007",
                 UserName = _faker.Internet.UserName(),
                 Email = "frankfranklin@example.com",
@@ -156,12 +120,6 @@ public class UserProfileConfiguration : IEntityTypeConfiguration<UserProfile>
                 Bio = "I am Frank Franklin, a digital artist.",
                 ProfileBackgroundImage = "https://example.com/background8.jpg",
                 TotalSalesCount = 50,
-                Followers = new List<string> { 
-					"0x71bE63f3384f5fb98995898A86B02Fb2426c5788",
-					"0xFABB0ac9d68B0B445fB7357272Ff202C5651694a",
-					"0x1CBd3b2770909D4e10f157cABC84C7264073C9Ec",
-					"0xdF3e18d64BC6A983f673Ab319CCaE4f1a57C7097"
-				},
                 Facebook = "https://facebook.com/frankfranklin",
                 Twitter = "https://twitter.com/frankfranklin",
                 YouTube = "https://youtube.com/frankfranklin",
@@ -177,12 +135,6 @@ public class UserProfileConfiguration : IEntityTypeConfiguration<UserProfile>
                 Bio = "I am Grace Gray, a digital collector.",
                 ProfileBackgroundImage = "https://example.com/background9.jpg",
                 TotalSalesCount = 0,
-                Followers = new List<string> { 
-					"0x71bE63f3384f5fb98995898A86B02Fb2426c5788",
-					"0xFABB0ac9d68B0B445fB7357272Ff202C5651694a",
-					"0x1CBd3b2770909D4e10f157cABC84C7264073C9Ec",
-					"0xdF3e18d64BC6A983f673Ab319CCaE4f1a57C7097"
-				},
                 Facebook = "https://facebook.com/gracegray",
                 Twitter = "https://twitter.com/gracegray",
                 YouTube = "https://youtube.com/gracegray",
@@ -198,12 +150,6 @@ public class UserProfileConfiguration : IEntityTypeConfiguration<UserProfile>
                 Bio = "I am Henry Hall, a digital artist.",
                 ProfileBackgroundImage = "https://example.com/background10.jpg",
                 TotalSalesCount = 60,
-                Followers = new List<string> { 
-					"0x71bE63f3384f5fb98995898A86B02Fb2426c5788",
-					"0xFABB0ac9d68B0B445fB7357272Ff202C5651694a",
-					"0x1CBd3b2770909D4e10f157cABC84C7264073C9Ec",
-					"0xdF3e18d64BC6A983f673Ab319CCaE4f1a57C7097"
-				},
                 Facebook = "https://facebook.com/henryhall",
                 Twitter = "https://twitter.com/henryhall",
                 YouTube = "https://youtube.com/henryhall",
@@ -219,12 +165,6 @@ public class UserProfileConfiguration : IEntityTypeConfiguration<UserProfile>
                 Bio = "I am Iggy Iglesias, a digital artist.",
                 ProfileBackgroundImage = "https://example.com/background11.jpg",
                 TotalSalesCount = 70,
-                Followers = new List<string>{
-					"0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC",
-					"0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65",
-					"0x14dC79964da2C08b23698B3D3cc7Ca32193d9955",
-					"0x71bE63f3384f5fb98995898A86B02Fb2426c5788"
-                },
                 Facebook = "https://facebook.com/iggyiglesias",
                 Twitter = "https://twitter.com/iggyiglesias",
                 YouTube = "https://youtube.com/iggyiglesias",
@@ -240,12 +180,6 @@ public class UserProfileConfiguration : IEntityTypeConfiguration<UserProfile>
                 Bio = "I am Jessie James, a digital collector.",
                 ProfileBackgroundImage = "https://example.com/background12.jpg",
                 TotalSalesCount = 0,
-                Followers = new List<string>{
-					"0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC",
-					"0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65",
-					"0x14dC79964da2C08b23698B3D3cc7Ca32193d9955",
-					"0x71bE63f3384f5fb98995898A86B02Fb2426c5788"
-                },
                 Facebook = "https://facebook.com/jessiejames",
                 Twitter = "https://twitter.com/jessiejames",
                 YouTube = "https://youtube.com/jessiejames",
@@ -261,12 +195,6 @@ public class UserProfileConfiguration : IEntityTypeConfiguration<UserProfile>
                 Bio = "I am Karl Kennedy, a digital artist.",
                 ProfileBackgroundImage = "https://example.com/background13.jpg",
                 TotalSalesCount = 80,
-                Followers = new List<string>{
-					"0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC",
-					"0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-					"0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
-					"0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC"
-                },
                 Facebook = "https://facebook.com/karlkennedy",
                 Twitter = "https://twitter.com/karlkennedy",
                 YouTube = "https://youtube.com/karlkennedy",
@@ -282,12 +210,6 @@ public class UserProfileConfiguration : IEntityTypeConfiguration<UserProfile>
                 Bio = "I am Lucy Lu, a digital collector.",
                 ProfileBackgroundImage = "https://example.com/background14.jpg",
                 TotalSalesCount = 0,
-                Followers = new List<string>{
-					"0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC",
-					"0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-					"0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
-					"0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC"
-                },
                 Facebook = "https://facebook.com/lucylu",
                 Twitter = "https://twitter.com/lucylu",
                 YouTube = "https://youtube.com/lucylu",
@@ -303,17 +225,11 @@ public class UserProfileConfiguration : IEntityTypeConfiguration<UserProfile>
                 Bio = "I am Mike Miller, a digital artist.",
                 ProfileBackgroundImage = "https://example.com/background15.jpg",
                 TotalSalesCount = 90,
-                Followers = new List<string>{
-					"0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC",
-					"0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-					"0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
-					"0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC"
-                },
                 Facebook = "https://facebook.com/mikemiller",
                 Twitter = "https://twitter.com/mikemiller",
                 YouTube = "https://youtube.com/mikemiller",
                 Telegram = "https://telegram.com/mikemiller"
             }
-		);		
-    }	
+        );
+    }
 }
