@@ -35,7 +35,7 @@ namespace API.Controllers
             [FromQuery] string sort_by,
             [FromQuery] string sale_type,
             [FromQuery] long? collectionId,
-            [FromQuery] string creatorId,
+            [FromQuery] string creator,
             [FromQuery] string semanticQuery,
             [FromQuery] int pageNumber = 1,
             [FromQuery] int pageSize = 10
@@ -53,7 +53,7 @@ namespace API.Controllers
                 SortBy = sort_by,
                 SaleType = sale_type,
                 CollectionId = collectionId,
-                CreatorId = creatorId,
+                Creator = creator,
                 SemanticSearchQuery = semanticQuery,
                 PageNumber = pageNumber,
                 PageSize = pageSize

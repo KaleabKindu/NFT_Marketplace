@@ -19,12 +19,12 @@ namespace Application.Features.Assets.Query
         public string SortBy { get; set; } = "Id";
         public string? SaleType { get; set; } = null;
         public long? CollectionId { get; set; } = null;
-        public string? CreatorId { get; set; } = null;        
+        public string? Creator { get; set; } = null;
         public string? SemanticSearchQuery { get; set; }
     }
 
 
-     public class GetAllAssetQueryHandler : IRequestHandler<GetAllAssetQuery, ErrorOr<PaginatedResponse<AssetListDto>>>
+    public class GetAllAssetQueryHandler : IRequestHandler<GetAllAssetQuery, ErrorOr<PaginatedResponse<AssetListDto>>>
     {
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
@@ -33,26 +33,30 @@ namespace Application.Features.Assets.Query
         {
             _mapper = mapper;
             _unitOfWork = unitOfwork;
-            
-        } 
+
+        }
 
         public async Task<ErrorOr<PaginatedResponse<AssetListDto>>> Handle(GetAllAssetQuery request, CancellationToken cancellationToken)
-        {        
+        {
             List<AssetListDto> filteredResult;
             int count;
-            if (request.SemanticSearchQuery != null){
+            if (request.SemanticSearchQuery != null)
+            {
                 var temp = await _unitOfWork.AssetRepository.SemanticBasedAssetSearch(request.SemanticSearchQuery, request.PageNumber, request.PageSize);
                 filteredResult = _mapper.Map<List<AssetListDto>>(temp.Value);
                 count = temp.Count;
-            }else{
+            }
+            else
+            {
                 var result = await _unitOfWork.AssetRepository
-                .GetFilteredAssets(request.UserId,request.Query,request.MinPrice, request.MaxPrice, request.Category, request.SortBy, request.SaleType, request.CollectionId, request.CreatorId, request.PageNumber, request.PageSize);
+                .GetFilteredAssets(request.UserId, request.Query, request.MinPrice, request.MaxPrice, request.Category, request.SortBy, request.SaleType, request.CollectionId, request.Creator, request.PageNumber, request.PageSize);
                 if (result.IsError) return result.Errors;
                 filteredResult = result.Value.Item2.ToList();
                 count = result.Value.Item1;
             }
-            
-            var response = new PaginatedResponse<AssetListDto>{
+
+            var response = new PaginatedResponse<AssetListDto>
+            {
                 Message = "Fetch Succesful",
                 Value = filteredResult,
                 Count = count,

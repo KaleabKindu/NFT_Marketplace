@@ -60,10 +60,13 @@ namespace Persistence.Repositories
             return new Tuple<int, IEnumerable<AssetListDto>>(count, assetsInDto);
         }
 
-        public async Task<ErrorOr<Tuple<int, IEnumerable<AssetListDto>>>> GetFilteredAssets(string? userId, string? query, double minPrice, double maxPrice, AssetCategory? category, string sortBy, string? saleType, long? collectionId, string? creatorId, int pageNumber, int pageSize)
+        public async Task<ErrorOr<Tuple<int, IEnumerable<AssetListDto>>>> GetFilteredAssets(string? userId, string? query, double minPrice, double maxPrice, AssetCategory? category, string sortBy, string? saleType, long? collectionId, string? creator, int pageNumber, int pageSize)
         {
             var assets = _dbContext.Assets
-                .Where(x => x.Status != AssetStatus.NotOnSale)
+                .Include(x => x.Creator)
+                .Where(x => x.Status != AssetStatus.NotOnSale &&
+                 (string.IsNullOrEmpty(creator) || x.Creator.Address == creator)
+                 )
                 .Include(x => x.Auction)
                 .AsQueryable();
 
@@ -95,11 +98,6 @@ namespace Persistence.Repositories
             if (collectionId != null)
             {
                 assets = assets.Where(asset => asset.CollectionId == collectionId);
-            }
-
-            if (creatorId != null)
-            {
-                assets = assets.Where(asset => asset.OwnerId == creatorId);
             }
 
             IEnumerable<AssetListDto> assetsInDto;
