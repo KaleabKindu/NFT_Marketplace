@@ -126,6 +126,7 @@ namespace Persistence.Repositories
             var tokenInfo = _jwtService.GenerateToken(user, roles);
             return new TokenDto
             {
+                Id = user.Id,
                 AccessToken = tokenInfo.Item1,
                 ExpireInDays = Math.Round(tokenInfo.Item2 / (60 * 24), 2)
             };
