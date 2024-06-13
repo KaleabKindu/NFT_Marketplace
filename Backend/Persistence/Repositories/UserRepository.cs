@@ -148,6 +148,7 @@ namespace Persistence.Repositories
                 .FirstOrDefaultAsync();
 
             var query = _userManager.Users
+                .Include(user => user.Profile)
                 .Where(user => target.Profile.Followers.Contains(user.Address));
 
             var followers = await query
