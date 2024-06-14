@@ -106,7 +106,7 @@ namespace Persistence.Repositories
         {
             get
             {
-                _notificationRepository ??= new NotificationRepository(_dbContext);
+                _notificationRepository ??= new NotificationRepository(_dbContext, _mapper);
                 return _notificationRepository;
             }
         }

@@ -28,6 +28,20 @@ namespace API.SignalR
                 .SendAsync("RecieveNotification", response.Value);
             }
         }
-    }
 
+        public async Task SendNotificationsForMultipleUsers(List<string> userIds, CreateNotificationDto createNotificationDto)
+        {
+
+            var response = await _mediator.Send(new CreateMultipleNotificationsCommand { CreateNotificationDto = createNotificationDto, UserIds = userIds });
+
+            if (!response.IsError)
+            {
+                foreach (var notifiction in response.Value)
+                {
+                    await _hubContext.Clients.Group(notifiction.ToId)
+                    .SendAsync("RecieveNotification", notifiction);
+                }
+            }
+        }
+    }
 }

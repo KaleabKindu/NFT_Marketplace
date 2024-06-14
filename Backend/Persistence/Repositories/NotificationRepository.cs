@@ -1,5 +1,7 @@
 ﻿using Application.Contracts.Persistence;
+using Application.Features.Notifications.Dtos;
 using Application.Responses;
+using AutoMapper;
 using Domain.Notifications;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,8 +10,11 @@ namespace Persistence.Repositories;
 
 public class NotificationRepository : Repository<Notification>, INotificationRepository
 {
-    public NotificationRepository(AppDbContext dbContext) : base(dbContext)
+
+    private readonly IMapper _mapper;
+    public NotificationRepository(AppDbContext dbContext, IMapper mapper) : base(dbContext)
     {
+        _mapper = mapper;
     }
     public async Task<PaginatedResponse<Notification>> GetNotifications(string userId, int pageNumber, int pageSize)
     {
@@ -45,5 +50,22 @@ public class NotificationRepository : Repository<Notification>, INotificationRep
             .Where(ntf => ntf.ToId == userId && !ntf.IsRead).CountAsync();
 
         return unReadCount;
+    }
+
+    public async Task<List<Notification>> CreateMultipleNotifications(List<string> userIds, CreateNotificationDto createNotificationDto)
+    {
+
+        var notifications = new List<Notification>();
+
+        foreach (var userId in userIds)
+        {
+            var notificationData = _mapper.Map<Notification>(createNotificationDto);
+            notificationData.ToId = userId;
+            notifications.Add(notificationData);
+        }
+        await _dbContext.Notifications.AddRangeAsync(notifications);
+
+        return notifications;
+
     }
 }
