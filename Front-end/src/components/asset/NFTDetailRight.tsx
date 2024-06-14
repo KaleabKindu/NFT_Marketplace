@@ -30,6 +30,9 @@ import { ChangePriceModal } from "./ChangePriceModal";
 import { useAccount } from "wagmi";
 import { useMemo } from "react";
 import useGetUsdPrice from "@/hooks/useGetUsdPrice";
+import { ResellAssetModal } from "../explore/assets/ResellAssetModal";
+import { CancelAuctionModal } from "./CancelAuctionModal";
+import { CancelSaleModal } from "./CancelSaleModal";
 
 type Props = {
   asset?: NFT;
@@ -179,16 +182,31 @@ const NFTDetailRight = ({ asset, isLoading }: Props) => {
                     />
                   </div>
                 </div>
-                {asset?.auction ? (
-                  <PlaceBidModal
-                    tokenId={asset?.tokenId as number}
-                    auctionId={asset.auction.auctionId as number}
+                {asset?.owner?.address != address ? (
+                  <>
+                    {asset?.auction ? (
+                      <PlaceBidModal
+                        tokenId={asset?.tokenId as number}
+                        auctionId={asset.auction.auctionId as number}
+                        floorPrice={asset.price}
+                        highestBid={asset.auction.highestBid}
+                      />
+                    ) : (
+                      <BuyModal
+                        tokenId={asset?.tokenId as number}
+                        price={asset?.price as string}
+                      />
+                    )}
+                  </>
+                ) : asset?.status === "NotOnSale" ? (
+                  <ResellAssetModal tokenId={asset?.tokenId as number} />
+                ) : asset?.auction ? (
+                  <CancelAuctionModal
+                    tokenId={asset.tokenId as number}
+                    auctionId={asset?.auction?.auctionId as number}
                   />
                 ) : (
-                  <BuyModal
-                    tokenId={asset?.tokenId as number}
-                    price={asset?.price as string}
-                  />
+                  <CancelSaleModal id={asset?.id as string} />
                 )}
               </div>
             </div>

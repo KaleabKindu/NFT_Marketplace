@@ -31,7 +31,9 @@ import CustomImage from "../common/CustomImage";
 import { useToggleNFTlikeMutation } from "@/store/api";
 import { useAppSelector } from "@/store/hooks";
 import { useWeb3Modal } from "@web3modal/wagmi/react";
-import { useAccount } from "wagmi";
+import { useAccount, useContractRead } from "wagmi";
+import NftAbi from "@/data/abi/marketplace.json";
+
 type Props = {
   asset?: NFT;
   isLoading?: boolean;
@@ -68,6 +70,15 @@ const NFTDetailLeft = ({ asset, isLoading }: Props) => {
   const Icon = categories.find((cat) => cat.value === asset?.category)
     ?.icon as IconType;
 
+  const { data: tokenUri } = useContractRead({
+    address: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as `0x${string}`,
+    abi: NftAbi,
+    functionName: "getTokenUri",
+    args: [asset?.tokenId as number],
+    onError: (e) => {
+      console.log("error", e);
+    },
+  });
   return (
     <>
       {isLoading ? (
@@ -155,9 +166,7 @@ const NFTDetailLeft = ({ asset, isLoading }: Props) => {
                         <TypographyH4 text={"Files: "} />
                         <div className="flex gap-1 items-center">
                           <CopyToClipboard
-                            text={
-                              "ipfs://614917f589593189ac27ac8b81064cbe450c35e3"
-                            }
+                            text={tokenUri as string}
                             onCopy={() =>
                               showFiles &&
                               toast({
@@ -174,7 +183,7 @@ const NFTDetailLeft = ({ asset, isLoading }: Props) => {
                             >
                               <TypographyP
                                 className="whitespace-nowrap text-ellipsis overflow-hidden max-w-[400px] text-right select-none"
-                                text={`${"ipfs://614917f589593189ac27ac8b81064cbe450c35e3"}`}
+                                text={tokenUri as string}
                               />
                               <TbCopy
                                 className="hover:text-primary"

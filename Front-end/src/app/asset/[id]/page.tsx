@@ -15,12 +15,13 @@ const NFTDetail = ({ params }: Props) => {
     data: asset,
     isLoading,
     isError,
+    refetch,
   } = useGetNFTQuery(params.id as string);
   return (
     <div className="flex flex-col gap-10 pt-10">
       {isError ? (
         <div className="flex justify-center items-center w-full h-[50vh]">
-          <Error />
+          <Error retry={refetch} />
         </div>
       ) : (
         <div className="flex flex-col lg:flex-row gap-10">

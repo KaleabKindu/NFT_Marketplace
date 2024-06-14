@@ -83,6 +83,13 @@ export const webApi = createApi({
       }),
       invalidatesTags: (results, meta, args) => [{ id: args, type: "NFTs" }],
     }),
+    cancelAssetSale: builder.mutation<void, string>({
+      query: (id) => ({
+        url: `assets/sale/${id}`,
+        method: "PUT",
+      }),
+      invalidatesTags: (results, meta, args) => [{ id: args, type: "NFTs" }],
+    }),
     getAssets: builder.query<IAssetsPage, IFilter>({
       query: (params) => {
         const filter = queryString.stringify(params, {
@@ -94,11 +101,11 @@ export const webApi = createApi({
       providesTags: ["NFTs"],
     }),
     getOwnedAssets: builder.query<IAssetsPage, string>({
-      query: (address) => `assets/owned`,
+      query: (address) => `assets/owned?address=${address}`,
       providesTags: (results, meta, args) => [{ id: args, type: "Owned" }],
     }),
     getCreatedAssets: builder.query<IAssetsPage, string>({
-      query: (address) => `assets/owned`,
+      query: (address) => `assets/created?address=${address}`,
       providesTags: (results, meta, args) => [{ id: args, type: "Created" }],
     }),
     getUserDetails: builder.query<User, string>({
@@ -278,4 +285,5 @@ export const {
   useToggleNFTlikeMutation,
   useGetCreatedAssetsQuery,
   useGetOwnedAssetsQuery,
+  useCancelAssetSaleMutation,
 } = webApi;

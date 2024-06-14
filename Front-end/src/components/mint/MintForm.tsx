@@ -101,7 +101,7 @@ const schema = z.object({
   royalty: z.string().min(1, "Royalty is Required"),
   price: z.string().min(1, "Price is required"),
   auctionEnd: z.number().optional(),
-  collectionId: z.string().optional(),
+  collectionId: z.number().optional(),
   auction: z.boolean(),
 });
 
