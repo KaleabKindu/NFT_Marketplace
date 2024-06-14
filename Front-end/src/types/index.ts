@@ -77,6 +77,7 @@ export interface IFilter {
   collectionId?: string;
   creator?: string;
   owner?: string;
+  searchQuery?: string;
   sort_by?: string;
   pageNumber?: number;
   pageSize?: number;

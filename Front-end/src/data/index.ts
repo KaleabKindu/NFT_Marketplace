@@ -90,6 +90,7 @@ export enum FILTER {
   SORT_BY = "sort_by",
   COLLECTION = "collectionId",
   CREATOR = "creator",
+  SEMANTIC_SEARCH = "semanticQuery",
 }
 export const categories: {
   name: string;

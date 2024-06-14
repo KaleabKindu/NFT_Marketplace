@@ -33,6 +33,7 @@ export default function NFTBids({ tokenId }: Props) {
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
   const [size, setSize] = useState(12);
+  const [fetchingNextPage, setFetchingNextPage] = useState(false);
   const { data, isLoading, isFetching, isError, refetch } = useGetBidsQuery({
     id: tokenId as number,
     pageNumber: page,
@@ -43,13 +44,15 @@ export default function NFTBids({ tokenId }: Props) {
 
   useEffect(() => {
     if (data) {
-      setBids([...bids, ...data.value]);
+      setBids([...data.value]);
+      setFetchingNextPage(false);
       setTotal(data.count);
     }
   }, [data]);
   useEffect(() => {
-    if (inView && !(page * size >= total)) {
-      setPage(page + 1);
+    if (inView && size < total) {
+      setSize(size * 2);
+      setFetchingNextPage(true);
     }
   }, [inView]);
   return (
@@ -101,7 +104,7 @@ export default function NFTBids({ tokenId }: Props) {
                       <TableCell>{moment(bid.date).format("ll")}</TableCell>
                     </TableRow>
                   ))}
-                  {isFetching && (
+                  {isFetching && fetchingNextPage && (
                     <TableRow>
                       <TableCell colSpan={4}>
                         <Loader2 className="mx-auto h-4 w-4 animate-spin" />

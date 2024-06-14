@@ -8,7 +8,7 @@ import {
 import { Button } from "../../ui/button";
 import { FaHeart } from "react-icons/fa";
 import { Badge } from "../../ui/badge";
-import { useEffect, useRef, useState } from "react";
+import { MouseEvent, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { Routes } from "@/routes";
 import { NFT } from "@/types";
@@ -22,19 +22,22 @@ import { useToggleNFTlikeMutation } from "@/store/api";
 import CustomImage from "@/components/common/CustomImage";
 import { useWeb3Modal } from "@web3modal/wagmi/react";
 import { useAppSelector } from "@/store/hooks";
+import { useRouter } from "next/navigation";
 type Props = {
   asset: NFT;
 };
 
 const NFTCard = ({ asset }: Props) => {
   const cardRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
   const [liked, setLiked] = useState(asset?.liked as boolean);
   const [likes, setLikes] = useState(asset?.likes as number);
   const [audioWidth, setAudioWidth] = useState(0);
   const [toggleLike] = useToggleNFTlikeMutation();
   const { open } = useWeb3Modal();
   const session = useAppSelector((state) => state.auth.session);
-  const handleLikes = () => {
+  const handleLikes = (e: MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
     if (!session) {
       open();
       return;
@@ -53,7 +56,10 @@ const NFTCard = ({ asset }: Props) => {
   const Icon = categories.find((cat) => cat.value === asset.category)
     ?.icon as IconType;
   return (
-    <div className="col-span-12 sm:col-span-6 lg:col-span-3">
+    <button
+      onClick={() => router.push(`${Routes.PRODUCT}/${asset.id}`)}
+      className="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 w-full h-full"
+    >
       <Card ref={cardRef} className="w-full rounded-3xl group ">
         <div className="relative  min-h-[20rem] h-full rounded-t-3xl overflow-clip">
           {/* Images */}
@@ -90,22 +96,15 @@ const NFTCard = ({ asset }: Props) => {
           </Badge>
         </div>
         <div className="flex flex-col gap-2 p-5 pt-2">
-          <Link
-            href={`${Routes.PRODUCT}/${asset.id}`}
-            className="flex items-center justify-between"
-          >
-            <TypographyH4
-              className="whitespace-nowrap text-ellipsis overflow-hidden hover:text-primary capitalize"
-              text={asset.name}
-            />
-          </Link>
+          <TypographyH4
+            className="self-start text-left text-ellipsis overflow-hidden w-full hover:text-primary capitalize"
+            text={asset.name}
+          />
           <div className="flex justify-between items-end">
-            <div className="flex-1 bg-primary/5">
-              <TypographyP
-                className="text-primary/60"
-                text={`${asset.auction ? asset.auction.highestBid : asset.price} ETH`}
-              />
-            </div>
+            <TypographyP
+              className="text-primary/60"
+              text={`${asset.auction ? asset.auction.highestBid : asset.price} ETH`}
+            />
             <div className="flex-1 w-[50%] flex flex-col items-end">
               {asset.auction && (
                 <div className="flex gap-1 items-center">
@@ -119,7 +118,7 @@ const NFTCard = ({ asset }: Props) => {
           </div>
         </div>
       </Card>
-    </div>
+    </button>
   );
 };
 

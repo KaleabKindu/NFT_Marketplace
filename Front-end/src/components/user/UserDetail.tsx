@@ -18,7 +18,7 @@ import { Skeleton } from "../ui/skeleton";
 import { Routes } from "@/routes";
 import Error from "../common/Error";
 import CustomImage from "../common/CustomImage";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { useAppSelector } from "@/store/hooks";
 import { useWeb3Modal } from "@web3modal/wagmi/react";
@@ -36,7 +36,7 @@ const UserDetail = ({ address }: Props) => {
     isError,
     refetch,
   } = useGetUserDetailsQuery(address);
-  const [following, setFollowing] = useState(user?.following || false);
+  const [following, setFollowing] = useState(false);
   const [followUser, { isLoading: followingUser }] = useFollowUserMutation();
   const [unfollowUser, { isLoading: unfollowingUser }] =
     useUnFollowUserMutation();

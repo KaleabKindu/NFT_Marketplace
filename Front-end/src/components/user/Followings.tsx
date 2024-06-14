@@ -14,7 +14,8 @@ const Followings = (props: Props) => {
   const params = useParams();
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
-  const [size, setSize] = useState(12);
+  const [size, setSize] = useState(8);
+  const [fetchingNextPage, setFetchingNextPage] = useState(false);
   const { data, isFetching, isLoading, isError, refetch } =
     useGetUserNetworksQuery({
       type: "followings",
@@ -24,17 +25,17 @@ const Followings = (props: Props) => {
     });
   const [users, setUsers] = useState<User[]>([]);
   const { ref, inView } = useInView({ threshold: 1 });
-  const removeUser = (address: string) =>
-    setUsers(users.filter((user) => user.address !== address));
   useEffect(() => {
     if (data) {
-      setUsers([...users, ...data.value]);
+      setUsers([...data.value]);
+      setFetchingNextPage(false);
       setTotal(data.count);
     }
   }, [data]);
   useEffect(() => {
-    if (inView && !(page * size >= total)) {
-      setPage(page + 1);
+    if (inView && size < total) {
+      setSize(size * 2);
+      setFetchingNextPage(true);
     }
   }, [inView]);
   return (
@@ -47,15 +48,11 @@ const Followings = (props: Props) => {
         ) : users && users.length > 0 ? (
           <>
             {users.map((user, index) => (
-              <Creator
-                key={index}
-                user={user}
-                index={index}
-                showRank={false}
-                removeUser={removeUser}
-              />
+              <Creator key={index} user={user} index={index} showRank={false} />
             ))}
-            {isFetching && <UsersShimmers elements={size} />}
+            {isFetching && fetchingNextPage && (
+              <UsersShimmers elements={size} />
+            )}
             <div ref={ref} />
           </>
         ) : (
