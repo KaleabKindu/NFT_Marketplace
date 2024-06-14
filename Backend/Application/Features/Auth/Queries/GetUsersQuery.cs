@@ -1,5 +1,4 @@
 
-using Application.Common.Responses;
 using Application.Contracts.Persistance;
 using Application.Features.Auth.Dtos;
 using Application.Features.Common;
@@ -11,7 +10,7 @@ using MediatR;
 
 namespace Application.Features.Auth.Queries
 {
-    public class GetUsersQuery : PaginatedQuery ,IRequest<ErrorOr<PaginatedResponse<UserListDto>>>
+    public class GetUsersQuery : PaginatedQuery, IRequest<ErrorOr<PaginatedResponse<UserListDto>>>
     {
         public string CurrentAddress { get; set; }
     }
@@ -32,8 +31,8 @@ namespace Application.Features.Auth.Queries
             CancellationToken cancellationToken
         )
         {
-            var users = await _unitOfWork.UserRepository.GetAllUsersAsync(command.PageNumber, command.PageSize);
-            
+            var users = await _unitOfWork.UserRepository.GetAllUsersAsync(command.PageNumber, command.PageSize, command.CurrentAddress);
+
             List<UserListDto> dtos = _mapper.Map<List<UserListDto>>(users.Value);
             foreach (var dto in dtos)
                 dto.Following = await _unitOfWork.UserRepository.IsFollowing(command.CurrentAddress, dto.Address);

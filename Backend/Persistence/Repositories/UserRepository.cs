@@ -63,19 +63,30 @@ namespace Persistence.Repositories
             return (await _userManager.GetRolesAsync(user)).Select(role => new AppRole { Name = role }).ToList();
         }
 
-        public async Task<PaginatedResponse<AppUser>> GetAllUsersAsync(int pageNumber = 1, int pageSize = 10)
+        public async Task<PaginatedResponse<AppUser>> GetAllUsersAsync(int pageNumber = 1, int pageSize = 10, string? address = null)
         {
-            var users = await _userManager.Users
-                .Include(user => user.Profile)
+            var users = _userManager.Users
+                .Include(user => user.Profile).AsQueryable();
+
+            if (address != null)
+            {
+                users = users.Where(user => user.Address != address);
+            }
+
+            var count = await users.CountAsync();
+
+
+            var usersList = await users
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
+
             return new PaginatedResponse<AppUser>
             {
-                Value = users,
+                Value = usersList,
                 PageNumber = pageNumber,
                 PageSize = pageSize,
-                Count = await _userManager.Users.CountAsync()
+                Count = count
             };
         }
 
@@ -159,6 +170,19 @@ namespace Persistence.Repositories
                 PageSize = pageSize,
                 Count = count
             };
+        }
+
+        public async Task<List<AppUser>> GetAllFollowersAsync(string address)
+        {
+            var target = await _userManager.Users
+                .Where(user => user.Address == address)
+                .Include(user => user.Profile)
+                .ThenInclude(profile => profile.Followers)
+                .FirstOrDefaultAsync();
+
+            var count = target.Profile.Followers.Count;
+
+            return target.Profile.Followers;
         }
 
         public async Task<PaginatedResponse<AppUser>> GetFollowingsAsync(string address, int pageNumber = 1, int pageSize = 10)
