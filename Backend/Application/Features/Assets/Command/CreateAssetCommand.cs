@@ -4,6 +4,7 @@ using Application.Common.Responses;
 using Application.Contracts.Persistance;
 using Application.Contracts.Services;
 using Application.Features.Assets.Dtos;
+using Application.Features.Notifications.Dtos;
 using AutoMapper;
 using Domain.Assets;
 using Domain.Auctions;
@@ -27,12 +28,14 @@ namespace Application.Features.Assets.Command
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IAuctionManagementService _auctionManager;
+        private readonly INotificationService _notificationService;
 
-        public CreateAssetCommandHandler(IMapper mapper, IUnitOfWork unitOfwork, IAuctionManagementService auctionManager)
+        public CreateAssetCommandHandler(IMapper mapper, IUnitOfWork unitOfwork, IAuctionManagementService auctionManager, INotificationService notificationService)
         {
             _mapper = mapper;
             _unitOfWork = unitOfwork;
             _auctionManager = auctionManager;
+            _notificationService = notificationService;
         }
 
         public async Task<ErrorOr<BaseResponse<long>>> Handle(CreateAssetCommand request, CancellationToken cancellationToken)
@@ -106,6 +109,16 @@ namespace Application.Features.Assets.Command
             {
                 _auctionManager.Schedule(request.Address, asset.Auction.AuctionId, asset.Auction.AuctionEnd);
             }
+
+            var followers = await _unitOfWork.UserRepository.GetAllFollowersAsync(user.Address);
+
+            var notificationDto = new CreateNotificationDto
+            {
+                Title = "New Asset",
+                Content = $"{user.UserName} has created a new asset {asset.Name}",
+            };
+
+            _notificationService.SendNotificationsForMultipleUsers(followers.Select(x => x.Id).ToList(), notificationDto);
 
             response.Message = "Asset Created Successfully";
             response.Value = asset.Id;
