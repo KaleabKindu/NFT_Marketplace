@@ -108,10 +108,9 @@ namespace Persistence.Repositories
                 var regex = new Regex(Regex.Escape(query), RegexOptions.IgnoreCase);
                 var assetsEnum = assets
                     .AsEnumerable()
-                    .Where(asset => regex.IsMatch(asset.Name) || regex.IsMatch(asset.Description))
-                    .ToList();
+                    .Where(asset => regex.IsMatch(asset.Name) || regex.IsMatch(asset.Description));
 
-                HandleSort(sortBy, assets);
+                assetsEnum = HandleSort(sortBy, assets);
 
                 count = assetsEnum.Count();
                 var resultEn = assetsEnum.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
@@ -120,12 +119,10 @@ namespace Persistence.Repositories
             else
             {
 
-                HandleSort(sortBy, assets);
+                var sortedAssets = HandleSort(sortBy, assets);
 
-
-                count = await assets.CountAsync();
-                var assetList = await assets.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
-
+                count = sortedAssets.Count();
+                var assetList = sortedAssets.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
                 assetsInDto = _mapper.Map<IEnumerable<AssetListDto>>(assetList);
             }
 
@@ -154,6 +151,10 @@ namespace Persistence.Repositories
             else if (sortBy == "high_low")
             {
                 assets = assets.OrderByDescending(asset => asset.Price);
+            }
+            else
+            {
+                assets = assets.OrderBy(asset => asset.Id);
             }
 
             return assets;
