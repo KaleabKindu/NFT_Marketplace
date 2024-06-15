@@ -43,6 +43,9 @@ namespace Application.Contracts.Services
             var transferAssetFilter = await transferAssetEventHandler.CreateFilterAsync();
             var deleteAssetEventHandler = _contract.GetEvent<DeleteAssetEventDto>();
             var deleteAssetFilter = await deleteAssetEventHandler.CreateFilterAsync();
+            var auctionCancelledEventHandler = _contract.GetEvent<AuctionCancelledEventDto>();
+            var auctionCancelledFilter = await auctionCancelledEventHandler.CreateFilterAsync();
+
 
             _logger.LogInformation("Listening for SmartContract Events...");
             while (!stoppingToken.IsCancellationRequested)
@@ -132,6 +135,14 @@ namespace Application.Contracts.Services
                 {
                     _logger.LogInformation("Retrieved DeleteAsset Events...");
                     DispatchEventsToQueue(deleteAssetEvents.Select(evnt => evnt.Event).ToArray());
+                }
+
+                // CancelAuction Event
+                var cancelAuctionEvents = await auctionCancelledEventHandler.GetAllChangesAsync(auctionCancelledFilter);
+                if (cancelAuctionEvents.Count > 0)
+                {
+                    _logger.LogInformation("Retrieved CancelAuction Events...");
+                    DispatchEventsToQueue(cancelAuctionEvents.Select(evnt => evnt.Event).ToArray());
                 }
 
                 await Task.Delay(10000, stoppingToken); // Add a delay to avoid excessive API calls

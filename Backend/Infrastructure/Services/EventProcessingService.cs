@@ -7,10 +7,11 @@ using Application.Features.Auctions.Dtos;
 using Application.Features.Assets.Commands;
 using Application.Features.Auctions.Commands;
 using Microsoft.Extensions.DependencyInjection;
+using Application.Features.Assets.Command;
 
 namespace Infrastructure.Services;
 
-public class EventProcessingService: BackgroundService
+public class EventProcessingService : BackgroundService
 {
     private readonly IServiceScopeFactory _serviceScopeFactory;
     private readonly RabbitMqService _messageQueue;
@@ -20,7 +21,8 @@ public class EventProcessingService: BackgroundService
         IServiceScopeFactory serviceScopeFactory,
         RabbitMqService messageQueue,
         ILogger<EventProcessingService> logger
-    ){
+    )
+    {
         _messageQueue = messageQueue;
         _logger = logger;
         _serviceScopeFactory = serviceScopeFactory;
@@ -28,9 +30,10 @@ public class EventProcessingService: BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        await Task.Run(() => {
-                HandleEvents(stoppingToken);
-            },
+        await Task.Run(() =>
+        {
+            HandleEvents(stoppingToken);
+        },
             stoppingToken
         );
     }
@@ -49,6 +52,7 @@ public class EventProcessingService: BackgroundService
             var resellAssetEvent = _messageQueue.DequeueAsync<ResellAssetEventDto>($"{typeof(ResellAssetEventDto)}");
             var transferAssetEvent = _messageQueue.DequeueAsync<TransferAssetEventDto>($"{typeof(TransferAssetEventDto)}");
             var deleteAssetEvent = _messageQueue.DequeueAsync<DeleteAssetEventDto>($"{typeof(DeleteAssetEventDto)}");
+            var auctionCancelledEvent = _messageQueue.DequeueAsync<AuctionCancelledEventDto>($"{typeof(AuctionCancelledEventDto)}");
 
             if (auctionCreatedEvent != null)
             {
@@ -129,6 +133,18 @@ public class EventProcessingService: BackgroundService
                     {
                         var result = await mediator.Send(new DeleteAssetCommand { _event = deleteAssetEvent }, stoppingToken);
                         _logger.LogInformation($"DeleteAsset Event Processing Result: {result.Value}");
+                    },
+                    stoppingToken
+                );
+            }
+
+            if (auctionCancelledEvent != null)
+            {
+                Task.Run(
+                    async () =>
+                    {
+                        var result = await mediator.Send(new CancelAuctionAssetCommand { _event = auctionCancelledEvent }, stoppingToken);
+                        _logger.LogInformation($"CancelAuction Event Processing Result: {result.Value}");
                     },
                     stoppingToken
                 );
