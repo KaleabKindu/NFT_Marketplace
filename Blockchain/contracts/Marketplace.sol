@@ -45,7 +45,7 @@ contract Marketplace is ERC721URIStorage, Ownable {
         uint256 auctionEnd
     );
     event AuctionCanceled(
-        uint256 indexed auctionEnd,
+        uint256 indexed auctionId,
         address highestBidder,
         uint256 highestBid
     );
