@@ -1,5 +1,4 @@
-﻿using Application.Features.Common;
-
+﻿
 namespace Application.Features.Auth.Dtos;
 
 public class UserListDto

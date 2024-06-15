@@ -50,7 +50,7 @@ namespace API.Controllers
                 await Mediator.Send(
                     new GetUsersQuery
                     {
-                        CurrentAddress=_userAccessor.GetAddress(),
+                        CurrentAddress = _userAccessor.GetAddress(),
                         PageSize = pageSize,
                         PageNumber = pageNumber
                     }
@@ -114,6 +114,12 @@ namespace API.Controllers
                     }
                 )
             );
+        }
+
+        [HttpGet("users/top-creators")]
+        public async Task<IActionResult> GetTopCreators()
+        {
+            return HandleResult(await Mediator.Send(new GetTopCreatorsQuery()));
         }
     }
 }

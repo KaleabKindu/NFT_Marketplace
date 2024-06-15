@@ -21,4 +21,5 @@ public interface IUserRepository
 	Task UpdateVolume(string Id, double volume, int increateSellCount = 0);
 	Task<bool> CreateNetwork(string follower, string followee);
 	Task<bool> RemoveNetwork(string follower, string followee);
+	Task<List<AppUser>> GetTopCreators();
 }

@@ -256,5 +256,18 @@ namespace Persistence.Repositories
             user.Profile.Followers.Remove(followerUser);
             return true;
         }
+
+
+        public async Task<List<AppUser>> GetTopCreators()
+        {
+            return await _userManager.Users
+                .Include(x => x.Profile)
+                .OrderByDescending(x => x.Profile.Volume)
+                .ThenByDescending(x => x.Profile.TotalSalesCount)
+                .Take(10)
+                .ToListAsync();
+
+        }
+
     }
 }
