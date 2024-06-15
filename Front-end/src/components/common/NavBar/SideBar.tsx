@@ -37,7 +37,6 @@ import { Address } from "@/types";
 import { ToastAction } from "@/components/ui/toast";
 import { setSession } from "@/store/slice/auth";
 import { persistor } from "@/store";
-import NotificationHub from "@/utils/signalrConfig";
 import NotificationList from "./NotificationList";
 
 type Props = {};
@@ -61,18 +60,6 @@ const SideBar = (props: Props) => {
       open();
     }
   };
-
-
-  const [notificationHub, setNotificationHub] = useState<NotificationHub>();
-
-  useEffect(() => {
-    if (session != null)
-      setNotificationHub(new NotificationHub(session!, dispatch));
-
-    return () => {
-      notificationHub?.stop()
-    }
-  }, [session])
 
   const signIn = async () => {
     try {
@@ -151,7 +138,7 @@ const SideBar = (props: Props) => {
               <AccordionItem value="item-3" className="border-b mb-[2.5rem]">
                 <AccordionTrigger>Notifications</AccordionTrigger>
                 <AccordionContent>
-                  <NotificationList notificationHub={notificationHub} />
+                  <NotificationList />
                 </AccordionContent>
               </AccordionItem>
             )}

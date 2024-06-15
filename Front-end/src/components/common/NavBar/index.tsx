@@ -18,19 +18,26 @@ import {
   useAuthenticateSignatureMutation,
   useGetNounceMutation,
 } from "@/store/api";
-import { Address } from "@/types";
-import { useState } from "react";
+import { Address, INotification } from "@/types";
+import { useContext, useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { useToast } from "@/components/ui/use-toast";
 import { ToastAction } from "@/components/ui/toast";
 import { setSession } from "@/store/slice/auth";
 import { useDisconnect } from "wagmi";
+import { SocketContext } from "@/context/SocketContext";
+import {
+  addNotification,
+  addNotifications,
+  setUnReadcount,
+} from "@/store/slice/notification";
 
 type Props = {};
 
 const NavBar = (props: Props) => {
   const dispatch = useAppDispatch();
   const session = useAppSelector((state) => state.auth.session);
+  const { socketConnection } = useContext(SocketContext);
   const { mode, handleToggle } = useWebTheme();
   const { toast } = useToast();
   const { address, isConnected } = useAccount({
@@ -53,6 +60,36 @@ const NavBar = (props: Props) => {
       open();
     }
   };
+
+  useEffect(() => {
+    if (session) {
+      socketConnection?.on(
+        "RecieveNotification",
+        (notification: INotification) => {
+          console.log("RecieveNotification:", notification);
+          dispatch(addNotification(notification));
+        },
+      );
+
+      socketConnection?.on("LoadNotifications", (notifications) => {
+        console.log("LoadNotifications", notifications);
+        dispatch(addNotifications(notifications));
+      });
+
+      socketConnection?.on("UnReadNotificationCount", (count) => {
+        console.log("UnReadNotificationCount", count);
+        dispatch(setUnReadcount(count));
+      });
+    }
+
+    return () => {
+      [
+        "RecieveNotification",
+        "LoadNotifications",
+        "UnReadNotificationCount",
+      ].forEach((methodName: string) => socketConnection?.off(methodName));
+    };
+  }, [socketConnection]);
 
   const signIn = async () => {
     try {
