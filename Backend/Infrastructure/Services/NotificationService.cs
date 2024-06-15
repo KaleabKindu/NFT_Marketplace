@@ -43,5 +43,30 @@ namespace API.SignalR
                 }
             }
         }
+
+        public async Task NotifyAssetRefetch(long assetId)
+        {
+
+            await _hubContext.Clients.All
+            .SendAsync($"RefetchAsset{assetId}", assetId);
+
+        }
+        public async Task NotifyAssetProvenanceRefetch(long assetId)
+        {
+            await _hubContext.Clients.All
+           .SendAsync($"RefetchAssetProvenance{assetId}", assetId);
+
+        }
+        public async Task NotifyAssetBidsRefetch(long assetId)
+        {
+            await _hubContext.Clients.All
+            .SendAsync($"RefetchAssetBids{assetId}", assetId);
+        }
+
+        public async Task NotifyRemoveAssetFromView(long assetId)
+        {
+            await _hubContext.Clients.All
+            .SendAsync($"RemoveAssetFromView{assetId}", assetId);
+        }
     }
 }
