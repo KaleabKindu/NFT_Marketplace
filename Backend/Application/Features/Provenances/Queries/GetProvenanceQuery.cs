@@ -11,7 +11,7 @@ namespace Application.Features.Provenances.Queries;
 
 public class GetProvenanceQuery : PaginatedQuery, IRequest<ErrorOr<PaginatedResponse<ProvenanceListDto>>>
 {
-    public long TokenId { get; set; }
+    public long AssetId { get; set; }
 }
 
 public class GetProvenanceQueryHandler : IRequestHandler<GetProvenanceQuery, ErrorOr<PaginatedResponse<ProvenanceListDto>>>
@@ -28,7 +28,7 @@ public class GetProvenanceQueryHandler : IRequestHandler<GetProvenanceQuery, Err
     public async Task<ErrorOr<PaginatedResponse<ProvenanceListDto>>> Handle(GetProvenanceQuery request,
         CancellationToken cancellationToken)
     {
-        var provenances = await _unitOfWork.ProvenanceRepository.GetAssetProvenance(request.TokenId, request.PageNumber, request.PageSize);
+        var provenances = await _unitOfWork.ProvenanceRepository.GetAssetProvenance(request.AssetId, request.PageNumber, request.PageSize);
 
         return new PaginatedResponse<ProvenanceListDto>
         {

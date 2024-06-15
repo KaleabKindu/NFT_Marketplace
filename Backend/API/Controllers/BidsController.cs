@@ -11,11 +11,11 @@ namespace API.Controllers
         {
         }
 
-        [HttpGet]
+        [HttpGet("{assetId}")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetBids([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10, [FromQuery] int tokenId = default)
+        public async Task<IActionResult> GetBids([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10, [FromRoute] int assetId = default)
         {
-            return HandleResult(await Mediator.Send(new GetBidsQuery() { PageNumber = pageNumber, PageSize = pageSize, TokenId= tokenId }));
+            return HandleResult(await Mediator.Send(new GetBidsQuery() { PageNumber = pageNumber, PageSize = pageSize, AssetId = assetId }));
         }
 
 

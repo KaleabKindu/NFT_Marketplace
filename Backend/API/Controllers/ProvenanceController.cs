@@ -11,13 +11,13 @@ public class ProvenanceController : BaseController
     {
     }
 
-    [HttpGet("{tokenId}")]
-    public async Task<IActionResult> Get([FromRoute] long tokenId, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
+    [HttpGet("{assetId}")]
+    public async Task<IActionResult> Get([FromRoute] long assetId, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
 
     {
 
         return HandleResult(await Mediator.Send(new GetProvenanceQuery
-        { TokenId = tokenId, PageNumber = pageNumber, PageSize = pageSize }));
+        { AssetId = assetId, PageNumber = pageNumber, PageSize = pageSize }));
 
     }
 

@@ -10,29 +10,34 @@ namespace Persistence.Repositories
     {
         private readonly IMapper _mapper;
 
-        public  BidRepository(AppDbContext dbContext,IMapper mapper): base(dbContext)
+        public BidRepository(AppDbContext dbContext, IMapper mapper) : base(dbContext)
         {
             _mapper = mapper;
         }
 
-        public async Task<ErrorOr<Tuple<int,List<BidsListDto>>>> GetAllBidsAsync( int tokenId, int page=1, int limit=10)
+        public async Task<ErrorOr<Tuple<int, List<BidsListDto>>>> GetAllBidsAsync(int assetId, int page = 1, int limit = 10)
         {
             int skip = (page - 1) * limit;
-            
+
             var bids = _dbContext.Bids
-                .Include(x => x.Asset)
-                .Include(x => x.Bidder)
-                .Where(x => x.Asset.TokenId == tokenId)
+                .Where(x => x.AssetId == assetId)
                 .OrderByDescending(x => x.CreatedAt)
                 .AsQueryable();
+
             var count = await bids.CountAsync();
 
-            var bidsList = await bids.Skip(skip).Take(limit).ToListAsync();
+            var bidsList = await bids
+                .Skip(skip)
+                .Take(limit)
+                .Include(x => x.Asset)
+                .Include(x => x.Bidder)
+                .ToListAsync();
 
             return new Tuple<int, List<BidsListDto>>(count, _mapper.Map<List<BidsListDto>>(bidsList));
         }
-        
-        public async Task<int> Count(int AssetId){
+
+        public async Task<int> Count(int AssetId)
+        {
             return await _dbContext.Set<Bid>()
                 .Where(entity => AssetId == default || entity.Asset.Id == AssetId)
                 .CountAsync();

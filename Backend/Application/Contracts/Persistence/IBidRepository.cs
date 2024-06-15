@@ -3,9 +3,10 @@ using Domain.Bids;
 using ErrorOr;
 namespace Application.Contracts.Persistance
 {
-    public interface IBidRepository:IRepository<Bid>{ 
+    public interface IBidRepository : IRepository<Bid>
+    {
 
-        Task<ErrorOr<Tuple<int,List<BidsListDto>>>> GetAllBidsAsync( int tokenId, int page=1, int limit=10);
+        Task<ErrorOr<Tuple<int, List<BidsListDto>>>> GetAllBidsAsync(int assetId, int page = 1, int limit = 10);
 
         Task<Bid> GetBidByIdAsync(long id);
 

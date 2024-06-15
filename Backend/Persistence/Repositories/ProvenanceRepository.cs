@@ -12,24 +12,23 @@ public class ProvenanceRepository : Repository<Provenance>, IProvenanceRepositor
     {
     }
 
-    public async Task<PaginatedResponse<Provenance>> GetAssetProvenance(long tokenId, int pageNumber, int pageSize)
+    public async Task<PaginatedResponse<Provenance>> GetAssetProvenance(long assetId, int pageNumber, int pageSize)
     {
         int skip = (pageNumber - 1) * pageSize;
 
         var provenances = _dbContext.Provenances
-            .OrderBy(provenance => provenance.CreatedAt)
-            .Include(provenance => provenance.From)
-            .ThenInclude(frm => frm.Profile)
-            .Include(provenance => provenance.To)
-            .ThenInclude(to => to.Profile)
-            .Include(provenance => provenance.Asset)
-            .Where(provenance => provenance.Asset.TokenId == tokenId);
+            .Where(provenance => provenance.AssetId == assetId)
+            .OrderBy(provenance => provenance.CreatedAt).AsQueryable();
 
         var count = await provenances.CountAsync();
 
         provenances = provenances
             .Skip(skip)
-            .Take(pageSize);
+            .Take(pageSize)
+            .Include(provenance => provenance.From)
+            .ThenInclude(frm => frm.Profile)
+            .Include(provenance => provenance.To)
+            .ThenInclude(to => to.Profile);
 
         return new PaginatedResponse<Provenance>
         {

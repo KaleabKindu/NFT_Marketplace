@@ -7,10 +7,11 @@ using Application.Responses;
 
 namespace Application.Features.Bids.Queries
 {
-    public class GetBidsQuery : IRequest<ErrorOr<PaginatedResponse<BidsListDto>>> { 
+    public class GetBidsQuery : IRequest<ErrorOr<PaginatedResponse<BidsListDto>>>
+    {
         public int PageNumber { get; set; } = 1;
         public int PageSize { get; set; } = 10;
-        public int TokenId { get; set; }
+        public int AssetId { get; set; }
     }
 
     public class GetBidsQueryHandler
@@ -30,15 +31,16 @@ namespace Application.Features.Bids.Queries
             CancellationToken cancellationToken
         )
         {
-            var result = await _unitOfWork.BidRepository.GetAllBidsAsync(query.TokenId, query.PageNumber, query.PageSize);
+            var result = await _unitOfWork.BidRepository.GetAllBidsAsync(query.AssetId, query.PageNumber, query.PageSize);
             if (result.IsError) return result.Errors;
-            
-            return new PaginatedResponse<BidsListDto>(){
-                Message="Bid lists fetched successfully",
-                PageNumber=query.PageNumber,
-                PageSize=query.PageSize,
-                Count=result.Value.Item1,
-                Value= result.Value.Item2
+
+            return new PaginatedResponse<BidsListDto>()
+            {
+                Message = "Bid lists fetched successfully",
+                PageNumber = query.PageNumber,
+                PageSize = query.PageSize,
+                Count = result.Value.Item1,
+                Value = result.Value.Item2
             };
         }
     }
