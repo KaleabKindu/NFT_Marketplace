@@ -68,6 +68,9 @@ namespace Application.Features.Auctions.Commands
             };
 
             await _notificationService.SendNotification(notification);
+            await _notificationService.NotifyAssetRefetch(asset.Id);
+            await _notificationService.NotifyAssetProvenanceRefetch(asset.Id);
+
             _logger.LogInformation($"\nTransferAssetEvent\nTokenID: {command._event.TokenId}\nNewOwner: {command._event.NewOwner}");
             return true;
         }

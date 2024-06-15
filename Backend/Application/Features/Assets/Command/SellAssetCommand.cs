@@ -97,6 +97,7 @@ namespace Application.Features.Auctions.Commands
             };
 
             await _notificationService.SendNotification(notificationForSeller);
+            await _notificationService.NotifyRemoveAssetFromView(asset.Id);
 
             _logger.LogInformation($"\nAssetSoldEvent\nTokenID: {command._event.TokenId}\nTo: {command._event.To}");
             return true;

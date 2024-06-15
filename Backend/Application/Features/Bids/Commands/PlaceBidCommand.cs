@@ -73,6 +73,7 @@ namespace Application.Features.Auctions.Commands
             };
 
             await _notificationService.SendNotification(notificationFoOwner);
+            await _notificationService.NotifyAssetBidsRefetch(asset.Id);
 
             return true;
         }

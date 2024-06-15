@@ -103,6 +103,7 @@ namespace Application.Features.Auctions.Commands
 
             await _notificationService.SendNotification(notificationForSeller);
             await _notificationService.SendNotification(notificationForBuyer);
+            await _notificationService.NotifyRemoveAssetFromView(asset.Id);
 
             _logger.LogInformation($"\nCloseAuctionEvent\nAuctionId: {command._event.AuctionId}\nWinner: {command._event.Winner}");
             return true;

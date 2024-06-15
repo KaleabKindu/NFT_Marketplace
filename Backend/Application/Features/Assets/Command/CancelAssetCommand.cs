@@ -34,7 +34,7 @@ namespace Application.Features.Assets.Command
                 return ErrorFactory.NotFound("Resource", "Resource Not Found");
 
             if (asset.AuctionId != null)
-                return ErrorFactory.BadRequest("Asset", "Auction Asset cancel is not supported by this endpoint");
+                return ErrorFactory.BadRequestError("Asset", "Auction Asset cancel is not supported by this endpoint");
 
             asset.Status = AssetStatus.NotOnSale;
 
