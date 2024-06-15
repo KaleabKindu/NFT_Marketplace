@@ -95,13 +95,6 @@ namespace API.Controllers
             return HandleResult(await Mediator.Send(new CreateAssetCommand { CreateAssetDto = createAssetDto, Address = _userAccessor.GetAddress() }));
         }
 
-        [HttpPut]
-        public async Task<IActionResult> Update([FromBody] UpdateAssetDto updateAssetDto)
-        {
-
-            return HandleResult(await Mediator.Send(new UpdateAssetCommand { UpdateAssetDto = updateAssetDto }));
-        }
-
         [HttpPut("toggle-like/{id}")]
         public async Task<IActionResult> ToggleLike(int id)
         {
@@ -132,6 +125,12 @@ namespace API.Controllers
         public async Task<IActionResult> GetAssetsCountByCategory()
         {
             return HandleResult(await Mediator.Send(new GetCategoriesAssetCountQuery()));
+        }
+
+        [HttpPut("cancel/{id}")]
+        public async Task<IActionResult> CancelAssetCommand([FromRoute] int id)
+        {
+            return HandleResult(await Mediator.Send(new CancelAssetCommand { Id = id }));
         }
 
     }
