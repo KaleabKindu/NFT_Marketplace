@@ -16,7 +16,6 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import Link from "next/link";
-import { useParams } from "next/navigation";
 import ProvenanceShimmers from "../common/shimmers/ProvenanceShimmers";
 import Error from "../common/Error";
 import NoData from "../common/NoData";
@@ -30,14 +29,17 @@ import { Avatar } from "../common/Avatar";
 import { TypographyP } from "../common/Typography";
 import { Loader2 } from "lucide-react";
 
-const NFTProvenance = () => {
-  const params = useParams();
+type Props = {
+  tokenId?: number;
+};
+const NFTProvenance = ({ tokenId }: Props) => {
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
   const [size, setSize] = useState(12);
+  const [fetchingNextPage, setFetchingNextPage] = useState(false);
   const { data, isLoading, isFetching, isError, refetch } =
     useGetProvenanceQuery({
-      id: params.id as string,
+      id: tokenId as number,
       pageNumber: page,
       pageSize: size,
     });
@@ -46,13 +48,14 @@ const NFTProvenance = () => {
 
   useEffect(() => {
     if (data) {
-      setProvenances([...provenances, ...data.value]);
+      setProvenances([...data.value]);
       setTotal(data.count);
     }
   }, [data]);
   useEffect(() => {
-    if (inView && !(page * size >= total)) {
-      setPage(page + 1);
+    if (inView && size < total) {
+      setSize(size * 2);
+      setFetchingNextPage(true);
     }
   }, [inView]);
   return (
@@ -90,7 +93,7 @@ const NFTProvenance = () => {
                       </TableCell>
                       <TableCell>{provenance.price} ETH</TableCell>
                       <TableCell>
-                        {provenance.from ?
+                        {provenance.from ? (
                           <Link
                             href={`${Routes.USER}/${provenance.from.address}`}
                             className="flex gap-2 items-center w-fit"
@@ -103,10 +106,12 @@ const NFTProvenance = () => {
                               className="whitespace-nowrap text-ellipsis overflow-hidden hover:text-primary"
                               text={provenance.from.userName}
                             />
-                          </Link> : "NULL"}
+                          </Link>
+                        ) : (
+                          "NULL"
+                        )}
                       </TableCell>
                       <TableCell>
-
                         <Link
                           href={`${Routes.USER}/${provenance.to.address}`}
                           className="flex gap-2 items-center"
@@ -122,13 +127,16 @@ const NFTProvenance = () => {
                         </Link>
                       </TableCell>
                       <TableCell>
-                        <Link href={`${Routes.ETHER_TRANSACTIONS}/${provenance.transactionHash}`} className="hover:text-primary">
+                        <Link
+                          href={`${Routes.ETHER_TRANSACTIONS}/${provenance.transactionHash}`}
+                          className="hover:text-primary"
+                        >
                           {moment(provenance.date).format("ll")}
                         </Link>
                       </TableCell>
                     </TableRow>
                   ))}
-                  {isFetching && (
+                  {isFetching && fetchingNextPage && (
                     <TableRow>
                       <TableCell colSpan={5}>
                         <Loader2 className="mx-auto h-4 w-4 animate-spin" />

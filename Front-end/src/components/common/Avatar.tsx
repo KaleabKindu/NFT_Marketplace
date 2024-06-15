@@ -13,7 +13,7 @@ type Props = {
 export function Avatar({ name, className, src, dark }: Props) {
   return (
     <RadixAvatar className={className}>
-      <AvatarImage src={src} alt={name} />
+      <AvatarImage src={src} alt={name} className="object-cover" />
       <AvatarFallback
         className={clsx("uppercase font-bold", { "bg-background": dark })}
       >

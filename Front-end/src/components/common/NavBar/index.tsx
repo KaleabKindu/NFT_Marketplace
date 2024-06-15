@@ -31,6 +31,7 @@ import {
   addNotifications,
   setUnReadcount,
 } from "@/store/slice/notification";
+import { persistor } from "@/store";
 
 type Props = {};
 
@@ -45,6 +46,9 @@ const NavBar = (props: Props) => {
       if (!session) {
         signIn();
       }
+    },
+    onDisconnect: () => {
+      persistor.purge();
     },
   });
   const [getNonce] = useGetNounceMutation();

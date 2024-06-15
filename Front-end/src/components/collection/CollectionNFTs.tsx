@@ -18,6 +18,7 @@ const CollectionNFTs = (props: Props) => {
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
   const [size, setSize] = useState(12);
+  const [fetchingNextPage, setFetchingNextPage] = useState(false);
   const { data, isLoading, isFetching, isError, refetch } = useGetAssetsQuery({
     search: params.get(FILTER.SEARCH) as string,
     category: params.get(FILTER.CATEGORY) as string,
@@ -33,13 +34,14 @@ const CollectionNFTs = (props: Props) => {
   const { ref, inView } = useInView({ threshold: 1 });
   useEffect(() => {
     if (data) {
-      setAssets([...assets, ...data.value]);
+      setAssets([...data.value]);
       setTotal(data.count);
     }
   }, [data]);
   useEffect(() => {
-    if (inView && !(page * size >= total)) {
-      setPage(page + 1);
+    if (inView && size < total) {
+      setSize(size * 2);
+      setFetchingNextPage(true);
     }
   }, [inView]);
   return (
@@ -53,7 +55,7 @@ const CollectionNFTs = (props: Props) => {
           {assets.map((asset, index) => (
             <NFTCard key={index} asset={asset} />
           ))}
-          {isFetching && <AssetsShimmers elements={size} />}
+          {isFetching && fetchingNextPage && <AssetsShimmers elements={size} />}
           <div ref={ref} />
         </>
       ) : (

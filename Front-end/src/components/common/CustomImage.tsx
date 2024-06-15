@@ -1,5 +1,5 @@
 import Image, { ImageProps } from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface CustomImageProps extends Omit<ImageProps, "src"> {
   src: string;
@@ -18,6 +18,11 @@ const CustomImage = ({
   const handleError = () => {
     setImgSrc(fallbackSrc);
   };
+  useEffect(() => {
+    if (src) {
+      setImgSrc(src);
+    }
+  }, [src]);
   return <Image src={imgSrc} alt={alt} onError={handleError} {...props} />;
 };
 

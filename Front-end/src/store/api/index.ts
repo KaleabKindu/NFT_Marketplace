@@ -28,7 +28,17 @@ export const webApi = createApi({
       return headers;
     },
   }),
-  tagTypes: ["NFTs", "Collections", "Users", "Followings", "Followers", "Bids", "Provenances"],
+  tagTypes: [
+    "NFTs",
+    "Owned",
+    "Created",
+    "Collections",
+    "Users",
+    "Followings",
+    "Followers",
+    "Bids",
+    "Provenances",
+  ],
   endpoints: (builder) => ({
     getNounce: builder.mutation<string, Address>({
       query: (address) => ({
@@ -73,6 +83,13 @@ export const webApi = createApi({
       }),
       invalidatesTags: (results, meta, args) => [{ id: args, type: "NFTs" }],
     }),
+    cancelAssetSale: builder.mutation<void, string>({
+      query: (id) => ({
+        url: `assets/sale/${id}`,
+        method: "PUT",
+      }),
+      invalidatesTags: (results, meta, args) => [{ id: args, type: "NFTs" }],
+    }),
     getAssets: builder.query<IAssetsPage, IFilter>({
       query: (params) => {
         const filter = queryString.stringify(params, {
@@ -83,6 +100,14 @@ export const webApi = createApi({
       },
       providesTags: ["NFTs"],
     }),
+    getOwnedAssets: builder.query<IAssetsPage, string>({
+      query: (address) => `assets/owned?address=${address}`,
+      providesTags: (results, meta, args) => [{ id: args, type: "Owned" }],
+    }),
+    getCreatedAssets: builder.query<IAssetsPage, string>({
+      query: (address) => `assets/created?address=${address}`,
+      providesTags: (results, meta, args) => [{ id: args, type: "Created" }],
+    }),
     getUserDetails: builder.query<User, string>({
       query: (address) => `auth/user/detail?address=${address}`,
       transformResponse(baseQueryReturnValue: any, meta, arg) {
@@ -92,20 +117,23 @@ export const webApi = createApi({
     }),
     getProvenance: builder.query<
       IProvenancePage,
-      { id: string; pageNumber: number; pageSize: number }
+      { id: number; pageNumber: number; pageSize: number }
     >({
       query: ({ id, pageNumber, pageSize }) =>
         `provenance/${id}?pageNumber=${pageNumber}&pageSize=${pageSize}`,
-      providesTags: (results, meta, args) => ([{id:args.id, type:"Provenances"}])
+      providesTags: (results, meta, args) => [
+        { id: args.id, type: "Provenances" },
+      ],
     }),
     getBids: builder.query<
       IBidPage,
-      { id: string; pageNumber: number; pageSize: number }
+      { id: number; pageNumber: number; pageSize: number }
     >({
       query: ({ id, pageNumber, pageSize }) =>
         `bids?tokenId=${id}&pageNumber=${pageNumber}&pageSize=${pageSize}`,
-      providesTags: (results, meta, args) => ([{id:args.id, type:"Provenances"}])
-
+      providesTags: (results, meta, args) => [
+        { id: args.id, type: "Provenances" },
+      ],
     }),
     getCollections: builder.query<ICollectionsPage, IFilter>({
       query: (params) => {
@@ -187,7 +215,7 @@ export const webApi = createApi({
       },
     }),
     getCategoryCount: builder.query<CategoryCount, void>({
-      query: () => `category`,
+      query: () => `assets/categories-asset-count`,
       transformResponse: (baseQueryReturnValue: any) => {
         return baseQueryReturnValue.value;
       },
@@ -204,7 +232,7 @@ export const webApi = createApi({
       { page: number; size: number }
     >({
       query: ({ page, size }) =>
-        `collection/trending?pageNumber=${page}&pageSize=${size}`,
+        `collections/trending?pageNumber=${page}&pageSize=${size}`,
       transformResponse: (baseQueryReturnValue: any) => {
         return baseQueryReturnValue.value;
       },
@@ -255,4 +283,7 @@ export const {
   useFollowUserMutation,
   useUnFollowUserMutation,
   useToggleNFTlikeMutation,
+  useGetCreatedAssetsQuery,
+  useGetOwnedAssetsQuery,
+  useCancelAssetSaleMutation,
 } = webApi;

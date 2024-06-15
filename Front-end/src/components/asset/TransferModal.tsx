@@ -54,14 +54,16 @@ export const TransferModal = ({ tokenId }: TransferModalProps) => {
     resolver: zodResolver(schema),
     defaultValues: initialState,
   });
-  const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
   const handleClose = () => setOpen(false);
   const onSubmit = (values: { address: string }) => {
     contractWrite("transferAsset", undefined, [tokenId, values.address]);
   };
   useEffect(() => {
     if (writeSuccess) {
-      dispatch(webApi.util.invalidateTags(["NFTs", {id:tokenId, type:"NFTs"}]))
+      dispatch(
+        webApi.util.invalidateTags(["NFTs", { id: tokenId, type: "NFTs" }]),
+      );
       handleClose();
     }
   }, [writeSuccess]);

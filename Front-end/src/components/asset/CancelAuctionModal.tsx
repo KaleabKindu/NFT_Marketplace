@@ -17,10 +17,14 @@ import { MdDelete } from "react-icons/md";
 import { useAppDispatch } from "@/store/hooks";
 import { webApi } from "@/store/api";
 
-type SaleModalProps = {
+type CancelAuctionModalProps = {
   tokenId: number;
+  auctionId: number;
 };
-export const DeleteAssetModal = ({ tokenId }: SaleModalProps) => {
+export const CancelAuctionModal = ({
+  tokenId,
+  auctionId,
+}: CancelAuctionModalProps) => {
   const [open, setOpen] = useState(false);
   const { address } = useAccount();
   const dispatch = useAppDispatch();
@@ -28,8 +32,8 @@ export const DeleteAssetModal = ({ tokenId }: SaleModalProps) => {
   const { isLoading, writing, writeSuccess, contractWrite } =
     useContractWriteMutation();
   const handleClose = () => setOpen(false);
-  const handleDelete = () => {
-    contractWrite("deleteAsset", undefined, [tokenId]);
+  const handleCancel = () => {
+    contractWrite("cancelAuction", undefined, [tokenId, auctionId]);
   };
   useEffect(() => {
     if (writeSuccess) {
@@ -42,23 +46,19 @@ export const DeleteAssetModal = ({ tokenId }: SaleModalProps) => {
   return (
     <Dialog open={open} onOpenChange={(a) => setOpen(a)}>
       <DialogTrigger asChild>
-        <Button
-          variant={"ghost"}
-          className="flex gap-3 hover:text-red-500 font-medium justify-start items-center w-full"
-        >
-          <MdDelete size={20} />
-          <div>Delete</div>
+        <Button type="button" className="flex-1 lg:w-[50%] bg-red-500 w-full">
+          Cancel Auction
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Delete Asset</DialogTitle>
+          <DialogTitle>Cancel Auction</DialogTitle>
           <DialogDescription className="flex flex-col gap-5 pt-5">
             <div className="flex flex-col gap-5">
               <div>
                 <TypographyP
                   className="text-base text-red-500"
-                  text="Are you sure you want to delete this asset?"
+                  text="Are you sure you want to cancel the auction?"
                 />
               </div>
               <div className="flex justify-end gap-5">
@@ -68,22 +68,19 @@ export const DeleteAssetModal = ({ tokenId }: SaleModalProps) => {
                   className="rounded-full self-end"
                   size="lg"
                 >
-                  Cancel
+                  No
                 </Button>
                 <Button
                   type="button"
                   disabled={isLoading}
                   className="rounded-full self-end"
                   size="lg"
-                  onClick={handleDelete}
+                  onClick={handleCancel}
                 >
                   {writing ? (
-                    <>
-                      <Loader2 className="mr-2 h-6 w-6 animate-spin" />
-                      Deleting
-                    </>
+                    <Loader2 className="mr-2 h-6 w-6 animate-spin" />
                   ) : (
-                    "Delete"
+                    "Yes"
                   )}
                 </Button>
               </div>

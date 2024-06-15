@@ -1,6 +1,6 @@
 // types definition
 export interface NFT {
-  id?:string;
+  id?: string;
   tokenId?: number;
   name: string;
   description: string;
@@ -18,13 +18,15 @@ export interface NFT {
     name: string;
   };
   collectionId?: number;
-  status?: NFTSTATUS; 
+  status?: NFTSTATUS;
   creator?: User;
   owner?: User;
   auction?: Auction;
   transactionHash?: string;
 }
-export type NFTSTATUS = "OnAuction" | "OnFixedSale" | "NotOnSale"
+
+export type NFTSTATUS = "OnAuction" | "OnFixedSale" | "NotOnSale";
+
 export interface Auction {
   auctionId?: number;
   auctionEnd: number;
@@ -39,6 +41,7 @@ export interface Credentials {
 }
 
 export interface User {
+  id?: string;
   userName: string;
   avatar: string;
   address: Address;
@@ -74,6 +77,7 @@ export interface IFilter {
   collectionId?: string;
   creator?: string;
   owner?: string;
+  searchQuery?: string;
   sort_by?: string;
   pageNumber?: number;
   pageSize?: number;
@@ -84,7 +88,7 @@ export interface CategoryCount {
   photography: number;
   audio: number;
   video: number;
-  three_d:number;
+  three_d: number;
   design: number;
   ebook: number;
   ticket: number;
@@ -94,6 +98,7 @@ export interface IPagination {
   count: number;
 }
 export interface IUser {
+  id?: string;
   userName: string;
   avatar: string;
   address: string;

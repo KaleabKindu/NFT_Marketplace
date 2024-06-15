@@ -1,6 +1,6 @@
 import {
   PriceFilter,
-  UsersFilter,
+  CreatorsFilter,
   SearchInput,
   SortFilter,
 } from "@/components/common/SearchFilters";
@@ -14,7 +14,7 @@ const Filters = (props: Props) => {
         <SearchInput className="flex-1" />
         <div className="flex-1 flex flex-wrap items-center gap-5">
           <PriceFilter />
-          <UsersFilter />
+          <CreatorsFilter />
           {/* <SortFilter /> */}
         </div>
       </div>

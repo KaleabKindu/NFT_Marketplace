@@ -15,6 +15,7 @@ const UserCollections = (props: Props) => {
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
   const [size, setSize] = useState(12);
+  const [fetchingNextPage, setFetchingNextPage] = useState(false);
   const { data, isLoading, isFetching, isError, refetch } =
     useGetCollectionsQuery({
       creator: address as string,
@@ -26,13 +27,14 @@ const UserCollections = (props: Props) => {
 
   useEffect(() => {
     if (data) {
-      setCollections([...collections, ...data.value]);
+      setCollections([...data.value]);
       setTotal(data.count);
     }
   }, [data]);
   useEffect(() => {
-    if (inView && !(page * size >= total)) {
-      setPage(page + 1);
+    if (inView && size < total) {
+      setSize(size * 2);
+      setFetchingNextPage(true);
     }
   }, [inView]);
   return (
@@ -47,7 +49,9 @@ const UserCollections = (props: Props) => {
             {collections.map((collection, index) => (
               <CollectionCard key={index} collection={collection} />
             ))}
-            {isFetching && <CollectionsShimmers elements={size} />}
+            {isFetching && fetchingNextPage && (
+              <CollectionsShimmers elements={size} />
+            )}
             <div ref={ref} />
           </>
         ) : (

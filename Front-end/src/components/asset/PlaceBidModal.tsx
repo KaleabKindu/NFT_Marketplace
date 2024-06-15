@@ -36,22 +36,39 @@ import { webApi } from "@/store/api";
 const initialState = {
   price: 0.0,
 };
-const schema = z.object({
-  price: z.number().nonnegative(),
-});
 
 type PlaceBidModalProps = {
   tokenId: number;
   auctionId: number;
+  floorPrice?: string;
+  highestBid?: string;
 };
-export const PlaceBidModal = ({ tokenId, auctionId }: PlaceBidModalProps) => {
+export const PlaceBidModal = ({
+  tokenId,
+  auctionId,
+  floorPrice,
+  highestBid,
+}: PlaceBidModalProps) => {
   const session = useAppSelector((state) => state.auth.session);
   const { open } = useWeb3Modal();
-  const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
   const [showModal, setShowModal] = useState(false);
   const { address } = useAccount();
   const { data: balance } = useBalance({ address: address });
   const { isLoading, writeSuccess, contractWrite } = useContractWriteMutation();
+  const schema = z.object({
+    price: z
+      .number()
+      .nonnegative()
+      .refine(
+        (price) =>
+          price > parseFloat(floorPrice as string) &&
+          price > parseFloat(highestBid as string),
+        {
+          message: `Bid must be greater than ${highestBid}`,
+        },
+      ),
+  });
   const form = useForm<{ price: number }>({
     resolver: zodResolver(schema),
     defaultValues: initialState,
@@ -62,7 +79,7 @@ export const PlaceBidModal = ({ tokenId, auctionId }: PlaceBidModalProps) => {
   };
   useEffect(() => {
     if (writeSuccess) {
-      dispatch(webApi.util.invalidateTags([{ id:tokenId, type:"Bids" }]))
+      dispatch(webApi.util.invalidateTags([{ id: tokenId, type: "Bids" }]));
       handleClose();
     }
   }, [writeSuccess]);
@@ -138,7 +155,7 @@ export const PlaceBidModal = ({ tokenId, auctionId }: PlaceBidModalProps) => {
                   {isLoading ? (
                     <>
                       <Loader2 className="mr-2 h-6 w-6 animate-spin" />
-                      Bidding
+                      Waiting
                     </>
                   ) : (
                     "Bid"

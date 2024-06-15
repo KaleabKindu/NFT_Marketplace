@@ -60,20 +60,14 @@ type CreatorProps = {
   index: number;
   user: User;
   showRank?: boolean;
-  removeUser?: (a: string) => void;
 };
 
-export const Creator = ({
-  index,
-  user,
-  removeUser,
-  showRank = true,
-}: CreatorProps) => {
+export const Creator = ({ index, user, showRank = true }: CreatorProps) => {
   const { address } = useAccount();
   const [followUser, { isLoading: followingUser }] = useFollowUserMutation();
   const [unfollowUser, { isLoading: unfollowingUser }] =
     useUnFollowUserMutation();
-  const [following, setFollowing] = useState(user.following || false);
+  const [following, setFollowing] = useState(false);
   const session = useAppSelector((state) => state.auth.session);
   const { open } = useWeb3Modal();
   const handleFollow = async (e: MouseEvent<HTMLButtonElement>) => {
@@ -108,13 +102,16 @@ export const Creator = ({
       console.log("error", error);
     } finally {
       setFollowing(!following);
-      removeUser?.(user.address);
     }
   };
-
+  useEffect(() => {
+    if (user) {
+      setFollowing(user?.following as boolean);
+    }
+  }, [user]);
   return (
-    <div className="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3">
-      <Card className="relative flex flex-col rounded-2xl justify-evenly items-center h-[15rem] bg-secondary group">
+    <div className="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 h-full min-h-[15rem]">
+      <Card className="relative flex flex-col rounded-2xl justify-evenly items-center h-full bg-secondary group">
         <div className="relative w-full h-[50%]">
           <div className="relative rounded-t-2xl overflow-clip w-full h-full  ">
             <Image
@@ -138,28 +135,25 @@ export const Creator = ({
             />
           </Link>
         </div>
-        <div className="flex gap-3 items-center justify-around w-full h-[50%] p-3 pt-8">
-          <div>
-            <Link href={`${Routes.USER}/${user.address}`}>
-              <TypographyH4
-                className="whitespace-nowrap text-ellipsis overflow-hidden hover:text-primary"
+        <div className="flex flex-wrap gap-3 items-center justify-around w-full flex-1 h-full p-3 pt-8">
+          <div className="flex-1 w-full">
+            <Link href={`${Routes.USER}/${user.address}`} className="w-full">
+              <TypographyP
+                className="hover:text-primary"
                 text={user.userName}
               />
             </Link>
-            <div className="flex items-center gap-3">
-              <TypographyP
-                className="font-semibold text-primary/80"
-                text="Sales: "
-              />
+            <div className="flex items-center gap-2">
+              <TypographyP className="text-primary/80" text="Sales: " />
               <TypographyP
                 className="font-semibold"
-                text={`${user.sales}ETH`}
+                text={`${user.sales} ETH`}
               />
             </div>
           </div>
           <Button
             type="button"
-            className="text-md rounded-full"
+            className="text-md rounded-full ml-auto"
             variant={following ? "destructive" : "default"}
             onClick={following ? handleUnfollow : handleFollow}
           >

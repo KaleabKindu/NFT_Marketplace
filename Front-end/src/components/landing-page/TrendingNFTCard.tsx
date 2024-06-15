@@ -11,7 +11,7 @@ import { Button } from "../ui/button";
 import { FaHeart } from "react-icons/fa";
 import { Badge } from "../ui/badge";
 import CountDown from "count-down-react";
-import { useMemo, useState } from "react";
+import { MouseEvent, useMemo, useState } from "react";
 import { Routes } from "@/routes";
 import Link from "next/link";
 import { NFT } from "@/types";
@@ -20,6 +20,7 @@ import { IconType } from "react-icons";
 import CustomImage from "../common/CustomImage";
 import { useWeb3Modal } from "@web3modal/wagmi/react";
 import { useAppSelector } from "@/store/hooks";
+import { useRouter } from "next/navigation";
 
 type Props = {
   asset: NFT;
@@ -29,6 +30,7 @@ const TrendingNFTCard = ({ asset }: Props) => {
   const [liked, setLiked] = useState(false);
   const [likes, setLikes] = useState(22);
   const { open } = useWeb3Modal();
+  const router = useRouter();
   const session = useAppSelector((state) => state.auth.session);
   const onTick = ({
     hours,
@@ -41,7 +43,8 @@ const TrendingNFTCard = ({ asset }: Props) => {
   }) => {
     return <>{`${hours}h:${minutes}m:${seconds}s`}</>;
   };
-  const handleLikes = (e: any) => {
+  const handleLikes = (e: MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
     if (!session) {
       open();
       return;
@@ -65,7 +68,7 @@ const TrendingNFTCard = ({ asset }: Props) => {
     return new Date();
   }, [asset?.auction?.auctionEnd]);
   return (
-    <Link href={`${Routes.PRODUCT}/${asset.id}`}>
+    <button onClick={() => router.push(`${Routes.PRODUCT}/${asset.id}`)}>
       <Card className="p-5 bg-accent hover:bg-accent rounded-3xl max-w-[35rem] w-full">
         <div className="relative overflow-clip rounded-3xl h-[30rem]">
           <CustomImage
@@ -105,7 +108,7 @@ const TrendingNFTCard = ({ asset }: Props) => {
                 </Badge>
                 <TypographySmall
                   className="text-primary/60 font-semibold"
-                  text={`${asset.auction?.highestBid}ETH`}
+                  text={`${asset.auction?.highestBid} ETH`}
                 />
               </Card>
             </div>
@@ -126,7 +129,7 @@ const TrendingNFTCard = ({ asset }: Props) => {
           </Badge>
         </div>
       </Card>
-    </Link>
+    </button>
   );
 };
 

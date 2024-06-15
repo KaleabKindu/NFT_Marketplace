@@ -44,6 +44,11 @@ contract Marketplace is ERC721URIStorage, Ownable {
         uint256 floorPrice,
         uint256 auctionEnd
     );
+    event AuctionCanceled(
+        uint256 indexed auctionEnd,
+        address highestBidder,
+        uint256 highestBid
+    );
 
     event BidPlaced(uint256 indexed auctionId, address bidder, uint256 amount);
     event AuctionEnded(uint256 indexed auctionId, address winner);
@@ -94,6 +99,14 @@ contract Marketplace is ERC721URIStorage, Ownable {
         return (nextTokenId, auctionId);
     }
 
+    function getTokenUri(uint256 tokenId) public view returns (string memory) {
+        require(_exists(tokenId), "ERC721Metadata: URI query for nonexistent token");
+        require(ownerOf(tokenId) == msg.sender, "Only Owner of the NFT can see uri");
+
+        string memory _tokenURI = tokenURI(tokenId);
+        return _tokenURI;
+    }
+
     function listProduct(
         uint256 tokenId, 
         address creator,
@@ -130,7 +143,9 @@ contract Marketplace is ERC721URIStorage, Ownable {
         _productsSold.decrement();
         emit ResellAsset(tokenId, auction, price, auctionEnd);
     }
-    function changePrice(uint256 tokenId, uint256 newPrice) public onlyOwner {
+
+    function changePrice(uint256 tokenId, uint256 newPrice) public {
+        require(ownerOf(tokenId) == msg.sender, "Only Owner of the NFT can change the price");
         uint256 price = idToProduct[tokenId].price;
         console.log("NFT Original Price %s", price);
         idToProduct[tokenId].price = newPrice;
@@ -167,13 +182,17 @@ contract Marketplace is ERC721URIStorage, Ownable {
 
         emit AssetSold(tokenId, msg.sender);
     }
-    function transferAsset(uint256 tokenId, address to) public onlyOwner {
+
+    function transferAsset(uint256 tokenId, address to) public {
+        require(ownerOf(tokenId) == msg.sender, "Only Owner of the NFT can change the price");
         console.log("NFT Transfer Begin - Owner %s", ownerOf(tokenId));
         _transfer(ownerOf(tokenId), to, tokenId);
         console.log("NFT Transfer Complete - Owner %s", ownerOf(tokenId));
         emit TransferAsset(tokenId, to);
     }
-    function deleteAsset(uint256 tokenId) public onlyOwner {
+
+    function deleteAsset(uint256 tokenId) public {
+        require(ownerOf(tokenId) == msg.sender, "Only Owner of the NFT can delete the asset");
         console.log("NFT Burn Begin - Owner %s", ownerOf(tokenId));
         _burn(tokenId);
         console.log("NFT Burn Complete - Asset Burnt %s", _exists(tokenId));   
@@ -259,7 +278,20 @@ contract Marketplace is ERC721URIStorage, Ownable {
         emit AuctionEnded(_auctionId, auction.highestBidder);
     }
 
-}
+    function cancelAuction(uint256 tokenId, uint256 _auctionId) external {
+        Auction storage auction = idToAuction[_auctionId];
+        require(auction.auctionId != 0, "Auction does not exist");
+        require(block.timestamp < auction.auctionEnd, "Auction has already ended");
+
+        require(msg.sender == ownerOf(tokenId), "Only owner of the asset can cancel the auction.");
+
+        if(auction.highestBidder != address(0)){
+            // Refund the previous highest bidder
+            auction.highestBidder.transfer(auction.highestBid);
+            emit AuctionCanceled(_auctionId, auction.highestBidder, auction.highestBid);
+            }  
+        }
+    }
 
 
 

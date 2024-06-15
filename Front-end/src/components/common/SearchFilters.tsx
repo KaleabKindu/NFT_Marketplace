@@ -10,8 +10,14 @@ import { FILTER, categories, sale_types, sort_types } from "@/data";
 import { Checkbox } from "../ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { ReactNode, useCallback, useEffect, useState } from "react";
-import { MdOutlineSell } from "react-icons/md";
+import {
+  KeyboardEvent,
+  ReactNode,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
+import { MdArrowForward, MdOutlineSell } from "react-icons/md";
 import { cn } from "@/lib/utils";
 import { CiSearch } from "react-icons/ci";
 import { Input } from "../ui/input";
@@ -19,22 +25,15 @@ import { Check, ChevronsUpDown } from "lucide-react";
 import { MdOutlineCollectionsBookmark } from "react-icons/md";
 import { LuUser2 } from "react-icons/lu";
 import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-} from "@/components/ui/command";
-import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Avatar } from "../common/Avatar";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useDebounce } from "use-debounce";
 import { useGetCollectionsQuery, useGetUsersQuery } from "@/store/api";
-import { ICollection, User } from "@/types";
+import { SiSemanticscholar } from "react-icons/si";
+import { IconType } from "react-icons";
 
 type SearchProps = {
   className?: string;
@@ -46,7 +45,7 @@ export const SearchInput = ({ className, postIcon }: SearchProps) => {
   const pathname = usePathname();
   const params = useSearchParams();
   const [query, setQuery] = useState("");
-  const [value] = useDebounce(query, 1000);
+  const [value] = useDebounce(query, 500);
   const updateQueryParameter = useCallback(
     (value: string, key: string) => {
       const newParams = new URLSearchParams(params.toString());
@@ -59,6 +58,7 @@ export const SearchInput = ({ className, postIcon }: SearchProps) => {
   useEffect(() => {
     updateQueryParameter(value, FILTER.SEARCH);
   }, [value]);
+  <CiSearch className="absolute top-0 bottom-0 my-auto left-3" size={25} />;
   return (
     <div className={cn("relative", className)}>
       <CiSearch className="absolute top-0 bottom-0 my-auto left-3" size={25} />
@@ -76,6 +76,53 @@ export const SearchInput = ({ className, postIcon }: SearchProps) => {
           {postIcon}
         </Button>
       )}
+    </div>
+  );
+};
+export const SemanticSearch = () => {
+  const router = useRouter();
+  const pathname = usePathname();
+  const params = useSearchParams();
+  const [query, setQuery] = useState("");
+  const [value] = useDebounce(query, 500);
+  const updateQueryParameter = useCallback(
+    (value: string, key: string) => {
+      const newParams = new URLSearchParams(params.toString());
+      value ? newParams.set(key, value) : newParams.delete(key);
+      router.push(`${pathname}?${newParams.toString()}`);
+    },
+    [params],
+  );
+
+  const handleClick = () => {
+    updateQueryParameter(value, FILTER.SEMANTIC_SEARCH);
+  };
+  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      updateQueryParameter(value, FILTER.SEMANTIC_SEARCH);
+    }
+  };
+  return (
+    <div className={cn("relative flex-1 w-full")}>
+      <SiSemanticscholar
+        className="absolute top-0 bottom-0 my-auto left-3"
+        size={25}
+      />
+      <Input
+        type="text"
+        value={query}
+        placeholder="Semantic Search"
+        onChange={(e) => setQuery(e.target.value)}
+        onKeyDown={handleKeyDown}
+        className="w-full rounded-full pl-12 pr-4 text-accent-foreground focus:border-background/80"
+      />
+      <Button
+        className="absolute top-0 bottom-0 my-auto right-0 rounded-full"
+        onClick={handleClick}
+        size={"icon"}
+      >
+        <MdArrowForward size={30} />
+      </Button>
     </div>
   );
 };
@@ -163,8 +210,8 @@ export const PriceFilter = () => {
   const [open, setOpen] = useState(false);
   const [minPrice, setMinPrice] = useState(0);
   const [maxPrice, setMaxPrice] = useState(0);
-  const [debminPrice] = useDebounce(minPrice, 1000);
-  const [debmaxPrice] = useDebounce(maxPrice, 1000);
+  const [debminPrice] = useDebounce(minPrice, 500);
+  const [debmaxPrice] = useDebounce(maxPrice, 500);
   const handlePriceChange = (range: number[]) => {
     setMinPrice(range[0]);
     setMaxPrice(range[1]);
@@ -223,25 +270,27 @@ export const PriceFilter = () => {
             />
             <div className="flex justify-between">
               <div className="flex flex-col gap-1.5 w-[40%]">
-                <TypographySmall className="ml-2" text="Min Price" />
+                <TypographySmall className="ml-2" text="Min" />
                 <div className="flex justify-between gap-2 items-center ">
-                  <Input
+                  <input
                     type="number"
-                    onChange={(e) => setMinPrice(parseFloat(e.target.value))}
-                    className="rounded-xl bg-transparent"
                     value={minPrice}
+                    placeholder="Search Users..."
+                    className="flex h-10 w-full text-center rounded-xl bg-accent text-accent-foreground px-3 py-2 text-sm ring-offset-background focus:outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50"
+                    onChange={(e) => setMinPrice(parseFloat(e.target.value))}
                   />
                   <TypographySmall text="ETH" />
                 </div>
               </div>
               <div className="flex flex-col gap-1.5 w-[40%]">
-                <TypographySmall className="mr-2 self-end" text="Max Price" />
+                <TypographySmall className="mr-2" text="Max" />
                 <div className="flex justify-between items-center gap-2">
-                  <Input
+                  <input
                     type="number"
-                    onChange={(e) => setMaxPrice(parseFloat(e.target.value))}
-                    className="rounded-xl bg-transparent"
                     value={maxPrice}
+                    placeholder="Search Users..."
+                    className="flex h-10 w-full text-center rounded-xl bg-accent text-accent-foreground px-3 py-2 text-sm ring-offset-background focus:outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50"
+                    onChange={(e) => setMaxPrice(parseFloat(e.target.value))}
                   />
                   <TypographySmall text="ETH" />
                 </div>
@@ -445,11 +494,10 @@ export const SortFilter = () => {
 };
 
 export const CollectionsFilter = () => {
-  const [collections, setCollections] = useState<ICollection[]>([]);
   const [query, setQuery] = useState("");
-  const [value, setValue] = useState("");
-  const { data } = useGetCollectionsQuery({
-    search: value,
+  const [selectedCollectionId, setSelectedCollectionId] = useState("");
+  const { data: collections } = useGetCollectionsQuery({
+    search: query,
     pageNumber: 1,
     pageSize: 5,
   });
@@ -459,7 +507,7 @@ export const CollectionsFilter = () => {
   const [open, setOpen] = useState(false);
   const handleClear = (e: any) => {
     e.preventDefault();
-    setValue("");
+    setSelectedCollectionId("");
   };
   const updateQueryParameter = useCallback(
     (value: string, key: string) => {
@@ -469,15 +517,13 @@ export const CollectionsFilter = () => {
     },
     [params],
   );
+  const selectedCollection = collections?.value?.find(
+    (collection) => collection.id === selectedCollectionId,
+  );
+  useEffect(() => {
+    updateQueryParameter(selectedCollectionId, FILTER.COLLECTION);
+  }, [selectedCollectionId]);
 
-  useEffect(() => {
-    updateQueryParameter(value, FILTER.COLLECTION);
-  }, [value]);
-  useEffect(() => {
-    if (data) {
-      setCollections([...data.value]);
-    }
-  }, [data]);
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger>
@@ -486,13 +532,10 @@ export const CollectionsFilter = () => {
           <TypographySmall
             className="text-foreground"
             text={
-              value
-                ? collections.find((collection) => collection.id === value)
-                    ?.name
-                : "Collections"
+              selectedCollectionId ? selectedCollection?.name : "Collections"
             }
           />
-          {value ? (
+          {selectedCollectionId ? (
             <IoMdCloseCircle
               className="cursor-pointer"
               onClick={handleClear}
@@ -504,59 +547,62 @@ export const CollectionsFilter = () => {
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[300px] p-1 rounded-xl">
-        <Command>
-          <CommandInput
-            placeholder="Search Collections..."
-            onInput={(e) => setQuery((e.target as HTMLInputElement).value)}
-          />
-          <CommandEmpty>No Collection found.</CommandEmpty>
-          <CommandGroup>
-            {collections.map((collection) => (
-              <CommandItem
+        <input
+          placeholder="Search Collections..."
+          className="flex h-10 w-full rounded-xl bg-accent text-accent-foreground px-3 py-2 text-sm ring-offset-background focus:outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50"
+          onChange={(e) => setQuery(e.target.value)}
+        />
+        <div className="border-t mt-2">
+          {collections && collections.value.length > 0 ? (
+            collections?.value.map((collection) => (
+              <button
                 key={collection.id}
-                value={collection.name}
-                onSelect={(currentValue) => {
-                  setValue(currentValue === value ? "" : currentValue);
+                className="flex items-center gap-1 py-1 pl-2 hover:bg-secondary w-full"
+                onClick={() => {
+                  setSelectedCollectionId(
+                    collection.id === selectedCollectionId ? "" : collection.id,
+                  );
                   setOpen(false);
                 }}
               >
                 <Check
                   className={cn(
                     "mr-2 h-4 w-4",
-                    value === collection.id ? "opacity-100" : "opacity-0",
+                    selectedCollectionId === collection.id
+                      ? "opacity-100"
+                      : "opacity-0",
                   )}
                 />
-                <Avatar
-                  name={collection.name}
-                  src={collection.avatar}
-                  className="h-5 w-5 mr-2"
-                />
                 {collection.name}
-              </CommandItem>
-            ))}
-          </CommandGroup>
-        </Command>
+              </button>
+            ))
+          ) : (
+            <div className="flex justify-center w-full text-center py-5">
+              {" "}
+              No Collections Found
+            </div>
+          )}
+        </div>
       </PopoverContent>
     </Popover>
   );
 };
 
-export const UsersFilter = () => {
+export const CreatorsFilter = () => {
   const [query, setQuery] = useState("");
-  const [users, setUsers] = useState<User[]>([]);
-  const { data } = useGetUsersQuery({
+  const { data: users } = useGetUsersQuery({
     search: query,
     pageNumber: 1,
     pageSize: 5,
   });
-  const [value, setValue] = useState("");
+  const [selectedUser, setSelectedUser] = useState("");
   const router = useRouter();
   const pathname = usePathname();
   const params = useSearchParams();
   const [open, setOpen] = useState(false);
   const handleClear = (e: any) => {
     e.preventDefault();
-    setValue("");
+    setSelectedUser("");
   };
   const updateQueryParameter = useCallback(
     (value: string, key: string) => {
@@ -566,16 +612,13 @@ export const UsersFilter = () => {
     },
     [params],
   );
-  const currentUser = users?.find((user) => user.address === value);
+  const currentUser = users?.value?.find(
+    (user) => user.address === selectedUser,
+  );
 
   useEffect(() => {
-    updateQueryParameter(value, FILTER.CREATOR);
-  }, [value]);
-  useEffect(() => {
-    if (data) {
-      setUsers([...data.value]);
-    }
-  }, [data]);
+    updateQueryParameter(selectedUser, FILTER.CREATOR);
+  }, [selectedUser]);
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger>
@@ -583,9 +626,9 @@ export const UsersFilter = () => {
           <LuUser2 size={25} />
           <TypographySmall
             className="whitespace-nowrap text-ellipsis overflow-hidden  text-foreground"
-            text={value ? currentUser?.userName : "Creators"}
+            text={selectedUser ? currentUser?.userName : "Creators"}
           />
-          {value ? (
+          {selectedUser ? (
             <IoMdCloseCircle
               className="cursor-pointer"
               onClick={handleClear}
@@ -597,38 +640,40 @@ export const UsersFilter = () => {
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-fit p-1 rounded-xl">
-        <Command>
-          <CommandInput
-            placeholder="Search Users..."
-            onInput={(e) => setQuery((e.target as HTMLInputElement).value)}
-          />
-          <CommandEmpty>No User found.</CommandEmpty>
-          <CommandGroup>
-            {users.map((user) => (
-              <CommandItem
-                key={user.address}
-                value={user.address}
-                onSelect={(currentValue) => {
-                  setValue(currentValue === value ? "" : currentValue);
+        <input
+          placeholder="Search Users..."
+          className="flex h-10 w-full rounded-xl bg-accent text-accent-foreground px-3 py-2 text-sm ring-offset-background focus:outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50"
+          onChange={(e) => setQuery(e.target.value)}
+        />
+        <div className="border-t mt-2">
+          {users && users?.value.length > 0 ? (
+            users?.value.map((user) => (
+              <button
+                key={user.id}
+                className="flex items-center gap-1 py-1 pl-2 hover:bg-secondary w-full"
+                onClick={() => {
+                  setSelectedUser(
+                    user.address === selectedUser ? "" : user.address,
+                  );
                   setOpen(false);
                 }}
               >
                 <Check
                   className={cn(
                     "mr-2 h-4 w-4",
-                    value === user.address ? "opacity-100" : "opacity-0",
+                    selectedUser === user.address ? "opacity-100" : "opacity-0",
                   )}
                 />
-                <Avatar
-                  name={user.userName}
-                  src={user.avatar}
-                  className="h-5 w-5 mr-2"
-                />
                 {user.userName}
-              </CommandItem>
-            ))}
-          </CommandGroup>
-        </Command>
+              </button>
+            ))
+          ) : (
+            <div className="flex justify-center w-full text-center py-5">
+              {" "}
+              No Users Found
+            </div>
+          )}
+        </div>
       </PopoverContent>
     </Popover>
   );

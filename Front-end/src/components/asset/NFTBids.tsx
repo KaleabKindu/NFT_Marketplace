@@ -12,7 +12,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import NoData from "../common/NoData";
@@ -26,13 +25,17 @@ import { Routes } from "@/routes";
 import { Avatar } from "../common/Avatar";
 import { TypographyP } from "../common/Typography";
 import { Loader2 } from "lucide-react";
-export default function NFTBids() {
-  const params = useParams();
+
+type Props = {
+  tokenId?: number;
+};
+export default function NFTBids({ tokenId }: Props) {
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
   const [size, setSize] = useState(12);
+  const [fetchingNextPage, setFetchingNextPage] = useState(false);
   const { data, isLoading, isFetching, isError, refetch } = useGetBidsQuery({
-    id: params.id as string,
+    id: tokenId as number,
     pageNumber: page,
     pageSize: size,
   });
@@ -41,13 +44,15 @@ export default function NFTBids() {
 
   useEffect(() => {
     if (data) {
-      setBids([...bids, ...data.value]);
+      setBids([...data.value]);
+      setFetchingNextPage(false);
       setTotal(data.count);
     }
   }, [data]);
   useEffect(() => {
-    if (inView && !(page * size >= total)) {
-      setPage(page + 1);
+    if (inView && size < total) {
+      setSize(size * 2);
+      setFetchingNextPage(true);
     }
   }, [inView]);
   return (
@@ -99,7 +104,7 @@ export default function NFTBids() {
                       <TableCell>{moment(bid.date).format("ll")}</TableCell>
                     </TableRow>
                   ))}
-                  {isFetching && (
+                  {isFetching && fetchingNextPage && (
                     <TableRow>
                       <TableCell colSpan={4}>
                         <Loader2 className="mx-auto h-4 w-4 animate-spin" />
@@ -110,10 +115,10 @@ export default function NFTBids() {
                 </>
               ) : (
                 <TableRow>
-                <TableCell colSpan={4}>
-                  <NoData message="No bids on this asset yet." />
-                </TableCell>
-              </TableRow>
+                  <TableCell colSpan={4}>
+                    <NoData message="No bids on this asset yet." />
+                  </TableCell>
+                </TableRow>
               )}
             </TableBody>
           </Table>

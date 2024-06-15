@@ -3,7 +3,7 @@ import NFTCard from "../explore/assets/NFTCard";
 import { useInView } from "react-intersection-observer";
 import { useState, useEffect } from "react";
 import { NFT } from "@/types";
-import { useGetAssetsQuery } from "@/store/api";
+import { useGetCreatedAssetsQuery } from "@/store/api";
 import AssetsShimmers from "../common/shimmers/AssetsShimmers";
 import NoData from "../common/NoData";
 import Error from "../common/Error";
@@ -16,22 +16,21 @@ const CreatedNFTS = (props: Props) => {
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
   const [size, setSize] = useState(4);
-  const { data, isLoading, isFetching, isError, refetch } = useGetAssetsQuery({
-    creator: params.address as string,
-    pageNumber: page,
-    pageSize: size,
-  });
+  const [fetchingNextPage, setFetchingNextPage] = useState(false);
+  const { data, isLoading, isFetching, isError, refetch } =
+    useGetCreatedAssetsQuery(params.address as string);
   const [assets, setAssets] = useState<NFT[]>([]);
   const { ref, inView } = useInView({ threshold: 1 });
   useEffect(() => {
     if (data) {
-      setAssets([...assets, ...data.value]);
+      setAssets([...data.value]);
       setTotal(data.count);
     }
   }, [data]);
   useEffect(() => {
-    if (inView && !(page * size >= total)) {
-      setPage(page + 1);
+    if (inView && size < total) {
+      setSize(size * 2);
+      setFetchingNextPage(true);
     }
   }, [inView]);
   return (
@@ -46,7 +45,9 @@ const CreatedNFTS = (props: Props) => {
             {assets.map((asset, index) => (
               <NFTCard key={index} asset={asset} />
             ))}
-            {isFetching && <AssetsShimmers elements={size} />}
+            {isFetching && fetchingNextPage && (
+              <AssetsShimmers elements={size} />
+            )}
             <div ref={ref} />
           </>
         ) : (

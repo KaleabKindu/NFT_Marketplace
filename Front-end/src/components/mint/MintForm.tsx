@@ -101,7 +101,7 @@ const schema = z.object({
   royalty: z.string().min(1, "Royalty is Required"),
   price: z.string().min(1, "Price is required"),
   auctionEnd: z.number().optional(),
-  collectionId: z.string().optional(),
+  collectionId: z.number().optional(),
   auction: z.boolean(),
 });
 
@@ -398,22 +398,22 @@ const MintForm = (props: Props) => {
                       </Button>
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-0">
-                      <DateTimePicker 
-                        onChange={(dateTime:any) => {
-                        const date = new Date(
-                          dateTime.year,
-                          dateTime.month - 1, // JavaScript months are 0-indexed (0 = January, 1 = February, etc.)
-                          dateTime.day,
-                          dateTime.hour,
-                          dateTime.minute,
-                          dateTime.second,
-                          dateTime.millisecond
-                        )
-                        console.log(date.toString(), moment(date).fromNow())
-                        field.onChange(date.getTime())
-                      }}
-
-                        granularity={"minute"}/>
+                      <DateTimePicker
+                        onChange={(dateTime: any) => {
+                          const date = new Date(
+                            dateTime.year,
+                            dateTime.month - 1, // JavaScript months are 0-indexed (0 = January, 1 = February, etc.)
+                            dateTime.day,
+                            dateTime.hour,
+                            dateTime.minute,
+                            dateTime.second,
+                            dateTime.millisecond,
+                          );
+                          console.log(date.toString(), moment(date).fromNow());
+                          field.onChange(date.getTime());
+                        }}
+                        granularity={"minute"}
+                      />
                     </PopoverContent>
                   </Popover>
                 </FormControl>

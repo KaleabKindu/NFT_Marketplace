@@ -7,8 +7,9 @@ import {
   SaleFilter,
   SortFilter,
   CollectionsFilter,
-  UsersFilter,
   CategoryFilter2,
+  CreatorsFilter,
+  SemanticSearch,
 } from "@/components/common/SearchFilters";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
@@ -19,10 +20,10 @@ const Filters = (props: Props) => {
   const [showFilter, setShowFilter] = useState(false);
   return (
     <div className="flex flex-col gap-5 w-full mt-8 lg:mt-16">
-      <div className="flex items-center justify-between border-b py-6">
+      <div className="flex flex-wrap gap-3 items-center justify-between border-b py-6">
         <CategoryFilter2 />
         <Button
-          className="rounded-full"
+          className="rounded-full ml-auto"
           onClick={() => setShowFilter(!showFilter)}
         >
           <TbFilterSearch className="mr-2" size={25} />
@@ -34,12 +35,15 @@ const Filters = (props: Props) => {
         </Button>
       </div>
       {showFilter && (
-        <div className="flex flex-wrap items-center gap-5">
-          <PriceFilter />
-          <SaleFilter />
-          <CollectionsFilter />
-          <UsersFilter />
-          <SortFilter />
+        <div className="flex flex-wrap justify-center gap-5">
+          <SemanticSearch />
+          <div className="flex flex-wrap items-center gap-5">
+            <PriceFilter />
+            <SaleFilter />
+            <CollectionsFilter />
+            <CreatorsFilter />
+            <SortFilter />
+          </div>
         </div>
       )}
     </div>

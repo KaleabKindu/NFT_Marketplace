@@ -45,18 +45,15 @@ const DateTimePicker = React.forwardRef<
       ref={ref}
       className={cn(
         groupProps.className,
-        "flex items-center rounded-md ring-offset-background p-5"
+        "flex items-center rounded-md ring-offset-background p-5",
       )}
     >
-          <div {...dialogProps} className="space-y-3">
-            {!!state.hasTime && (
-              <TimeField
-                value={state.timeValue}
-                onChange={state.setTimeValue}
-              />
-            )}
-            <Calendar {...calendarProps} />
-          </div>
+      <div {...dialogProps} className="space-y-3">
+        {!!state.hasTime && (
+          <TimeField value={state.timeValue} onChange={state.setTimeValue} />
+        )}
+        <Calendar {...calendarProps} />
+      </div>
     </div>
   );
 });

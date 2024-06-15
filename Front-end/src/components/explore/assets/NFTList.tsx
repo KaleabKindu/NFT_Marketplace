@@ -26,6 +26,7 @@ const NFTList = (props: Props) => {
     sort_by: params.get(FILTER.SORT_BY) as string,
     collectionId: params.get(FILTER.COLLECTION) as string,
     creator: params.get(FILTER.CREATOR) as string,
+    searchQuery: params.get(FILTER.SEMANTIC_SEARCH) as string,
     pageNumber: page,
     pageSize: size,
   });

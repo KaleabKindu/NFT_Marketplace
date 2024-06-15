@@ -32,7 +32,11 @@ import { useAccount, useBalance } from "wagmi";
 import useContractWriteMutation from "@/hooks/useContractWriteMutation";
 import { useAppSelector } from "@/store/hooks";
 import { useWeb3Modal } from "@web3modal/wagmi/react";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
@@ -213,7 +217,8 @@ export const ResellAssetModal = ({ tokenId }: PlaceBidModalProps) => {
                         />
                       </FormControl>
                       <FormDescription>
-                        This is Price will be used as a floor price or fixed price
+                        This is Price will be used as a floor price or fixed
+                        price
                       </FormDescription>
                       <FormMessage />
                     </FormItem>

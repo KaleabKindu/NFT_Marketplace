@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useAccount, useBalance } from "wagmi";
 import { TypographyP } from "../common/Typography";
 import { Button } from "../ui/button";
 import {
@@ -10,55 +9,40 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { useEffect } from "react";
 import { Loader2 } from "lucide-react";
-import useContractWriteMutation from "@/hooks/useContractWriteMutation";
-import { MdDelete } from "react-icons/md";
-import { useAppDispatch } from "@/store/hooks";
-import { webApi } from "@/store/api";
+import { useCancelAssetSaleMutation } from "@/store/api";
 
-type SaleModalProps = {
-  tokenId: number;
+type CancelSaleModalProps = {
+  id: string;
 };
-export const DeleteAssetModal = ({ tokenId }: SaleModalProps) => {
+export const CancelSaleModal = ({ id }: CancelSaleModalProps) => {
   const [open, setOpen] = useState(false);
-  const { address } = useAccount();
-  const dispatch = useAppDispatch();
-  const { data: balance } = useBalance({ address: address });
-  const { isLoading, writing, writeSuccess, contractWrite } =
-    useContractWriteMutation();
+  const [cancelSale, { isLoading }] = useCancelAssetSaleMutation();
   const handleClose = () => setOpen(false);
-  const handleDelete = () => {
-    contractWrite("deleteAsset", undefined, [tokenId]);
-  };
-  useEffect(() => {
-    if (writeSuccess) {
-      dispatch(
-        webApi.util.invalidateTags(["NFTs", { id: tokenId, type: "NFTs" }]),
-      );
-      handleClose();
+  const handleCancel = async () => {
+    try {
+      await cancelSale(id as string).unwrap();
+    } catch (error) {
+      console.log("error", error);
     }
-  }, [writeSuccess]);
+  };
+
   return (
     <Dialog open={open} onOpenChange={(a) => setOpen(a)}>
       <DialogTrigger asChild>
-        <Button
-          variant={"ghost"}
-          className="flex gap-3 hover:text-red-500 font-medium justify-start items-center w-full"
-        >
-          <MdDelete size={20} />
-          <div>Delete</div>
+        <Button type="button" className="flex-1 lg:w-[50%] bg-red-500 w-full">
+          Cancel Sale
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Delete Asset</DialogTitle>
+          <DialogTitle>Cancel Sale</DialogTitle>
           <DialogDescription className="flex flex-col gap-5 pt-5">
             <div className="flex flex-col gap-5">
               <div>
                 <TypographyP
                   className="text-base text-red-500"
-                  text="Are you sure you want to delete this asset?"
+                  text="Are you sure you want to cancel sale?"
                 />
               </div>
               <div className="flex justify-end gap-5">
@@ -68,22 +52,19 @@ export const DeleteAssetModal = ({ tokenId }: SaleModalProps) => {
                   className="rounded-full self-end"
                   size="lg"
                 >
-                  Cancel
+                  No
                 </Button>
                 <Button
                   type="button"
                   disabled={isLoading}
                   className="rounded-full self-end"
                   size="lg"
-                  onClick={handleDelete}
+                  onClick={handleCancel}
                 >
-                  {writing ? (
-                    <>
-                      <Loader2 className="mr-2 h-6 w-6 animate-spin" />
-                      Deleting
-                    </>
+                  {isLoading ? (
+                    <Loader2 className="mr-2 h-6 w-6 animate-spin" />
                   ) : (
-                    "Delete"
+                    "Yes"
                   )}
                 </Button>
               </div>
