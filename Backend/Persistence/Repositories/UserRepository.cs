@@ -218,13 +218,13 @@ namespace Persistence.Repositories
             return user.Profile.Followers.FirstOrDefault(pfl => pfl.Address == address) != null;
         }
 
-        public async Task UpdateVolume(string Id, double sale)
+        public async Task UpdateVolume(string Id, double sale, int increaseSellCount = 0)
         {
             var user = await _userManager.Users
                 .Where(user => user.Id == Id)
                 .Include(user => user.Profile)
                 .FirstOrDefaultAsync();
-
+            user.Profile.TotalSalesCount += increaseSellCount;
             user.Profile.Volume += sale;
         }
 

@@ -18,7 +18,7 @@ public interface IUserRepository
 	Task<PaginatedResponse<AppUser>> GetFollowersAsync(string address, int pageNumber = 1, int pageSize = 10);
 	Task<List<AppUser>> GetAllFollowersAsync(string address);
 	Task<bool> IsFollowing(string address, string targetAddress);
-	Task UpdateVolume(string Id, double volume);
+	Task UpdateVolume(string Id, double volume, int increateSellCount = 0);
 	Task<bool> CreateNetwork(string follower, string followee);
 	Task<bool> RemoveNetwork(string follower, string followee);
 }

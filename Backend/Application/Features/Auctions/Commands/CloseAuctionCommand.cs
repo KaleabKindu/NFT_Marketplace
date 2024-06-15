@@ -61,7 +61,8 @@ namespace Application.Features.Auctions.Commands
             asset.Status = AssetStatus.NotOnSale;
             asset.OwnerId = user.Id;
 
-
+            // update  old owner  info
+            await _unitOfWork.UserRepository.UpdateVolume(oldOwnerId, auction.HighestBid, 1);
 
             _unitOfWork.CollectionRepository.UpdateAsync(collection);
             _unitOfWork.AssetRepository.UpdateAsync(asset);
@@ -86,6 +87,9 @@ namespace Application.Features.Auctions.Commands
             if (asset.Royalty != 0 && asset.CreatorId != oldOwnerId)
             {
                 var royalty = asset.Royalty / 100 * auction.HighestBid;
+
+                // update creator  info
+                await _unitOfWork.UserRepository.UpdateVolume(asset.CreatorId, royalty);
 
                 var notificationForCreator = new CreateNotificationDto
                 {
