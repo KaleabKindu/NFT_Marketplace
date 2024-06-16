@@ -76,16 +76,16 @@ export const webApi = createApi({
       },
       providesTags: (results, meta, args) => [{ id: args, type: "NFTs" }],
     }),
-    toggleNFTlike: builder.mutation<void, string>({
+    toggleNFTlike: builder.mutation<void, number>({
       query: (id) => ({
         url: `assets/toggle-like/${id}`,
         method: "PUT",
       }),
       invalidatesTags: (results, meta, args) => [{ id: args, type: "NFTs" }],
     }),
-    cancelAssetSale: builder.mutation<void, string>({
+    cancelAssetSale: builder.mutation<void, number>({
       query: (id) => ({
-        url: `assets/sale/${id}`,
+        url: `assets/cancel/${id}`,
         method: "PUT",
       }),
       invalidatesTags: (results, meta, args) => [{ id: args, type: "NFTs" }],
@@ -101,11 +101,11 @@ export const webApi = createApi({
       providesTags: ["NFTs"],
     }),
     getOwnedAssets: builder.query<IAssetsPage, string>({
-      query: (address) => `assets/owned?address=${address}`,
+      query: (address) => `assets/owned/${address}`,
       providesTags: (results, meta, args) => [{ id: args, type: "Owned" }],
     }),
     getCreatedAssets: builder.query<IAssetsPage, string>({
-      query: (address) => `assets/created?address=${address}`,
+      query: (address) => `assets/created/${address}`,
       providesTags: (results, meta, args) => [{ id: args, type: "Created" }],
     }),
     getUserDetails: builder.query<User, string>({
@@ -130,7 +130,7 @@ export const webApi = createApi({
       { id: number; pageNumber: number; pageSize: number }
     >({
       query: ({ id, pageNumber, pageSize }) =>
-        `bids?tokenId=${id}&pageNumber=${pageNumber}&pageSize=${pageSize}`,
+        `bids/${id}?pageNumber=${pageNumber}&pageSize=${pageSize}`,
       providesTags: (results, meta, args) => [
         { id: args.id, type: "Provenances" },
       ],
@@ -207,12 +207,8 @@ export const webApi = createApi({
         { id: args.unfollowee, type: "Followers" },
       ],
     }),
-    getTopCreators: builder.query<IUsersPage, { page: number; size: number }>({
-      query: ({ page, size }) =>
-        `users/top-creators?pageNumber=${page}&pageSize=${size}`,
-      transformResponse: (baseQueryReturnValue: any) => {
-        return baseQueryReturnValue.value;
-      },
+    getTopCreators: builder.query<User[], void>({
+      query: () => `auth/users/top-creators`,
     }),
     getCategoryCount: builder.query<CategoryCount, void>({
       query: () => `assets/categories-asset-count`,

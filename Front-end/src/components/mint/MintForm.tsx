@@ -58,6 +58,7 @@ import useContractWriteMutation from "@/hooks/useContractWriteMutation";
 import ChooseCollection from "./ChooseCollection";
 import { DateTimePicker } from "@/components/ui/date-time-picker/date-time-picker";
 import moment from "moment";
+import { useAppSelector } from "@/store/hooks";
 
 interface FormInput {
   name: string;
@@ -114,6 +115,7 @@ const MintForm = (props: Props) => {
   const [open, setOpen] = useState(false);
   const [payload, setPayload] = useState<NFT | undefined>(undefined);
   const { toast } = useToast();
+  const session = useAppSelector(state => state.auth.session)
   const [postNFT, { isLoading: uploadNft, isSuccess: uploadNftSuccess }] =
     useCreateNFTMutation();
   const form = useForm<FormInput>({
@@ -232,6 +234,12 @@ const MintForm = (props: Props) => {
       setOpen(false);
     }
   }, [isError]);
+
+  useEffect(() => {
+    if(!session){
+      router.push(Routes.HOME)
+    }
+  },[session])
   return (
     <Form {...form}>
       <form

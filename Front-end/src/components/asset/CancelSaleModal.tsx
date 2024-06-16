@@ -13,7 +13,7 @@ import { Loader2 } from "lucide-react";
 import { useCancelAssetSaleMutation } from "@/store/api";
 
 type CancelSaleModalProps = {
-  id: string;
+  id: number;
 };
 export const CancelSaleModal = ({ id }: CancelSaleModalProps) => {
   const [open, setOpen] = useState(false);
@@ -21,7 +21,7 @@ export const CancelSaleModal = ({ id }: CancelSaleModalProps) => {
   const handleClose = () => setOpen(false);
   const handleCancel = async () => {
     try {
-      await cancelSale(id as string).unwrap();
+      await cancelSale(id as number).unwrap();
     } catch (error) {
       console.log("error", error);
     }

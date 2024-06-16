@@ -75,6 +75,11 @@ const UserDetail = ({ address }: Props) => {
       setFollowing(!following);
     }
   };
+  useEffect(() => {
+    if(user){
+      setFollowing(user.following as boolean)
+    }
+  },[user])
   return (
     <div className="relative flex flex-col lg:flex-row gap-8 -mt-[15vh] w-[90%] lg:w-[85%] mx-auto bg-background border z-40 rounded-3xl p-8">
       {isLoading ? (

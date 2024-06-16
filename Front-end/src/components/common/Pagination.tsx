@@ -22,7 +22,7 @@ export default function CPagination({
 }: Props) {
   const pages = Math.ceil(total / offset);
   const forward = () => {
-    setPage(currentPage + 1);
+    currentPage < pages && setPage(currentPage + 1);
   };
   const backward = () => {
     currentPage > 1 && setPage(currentPage - 1);

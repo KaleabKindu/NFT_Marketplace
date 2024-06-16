@@ -90,7 +90,7 @@ const NotificationList = ({}: Props) => {
   }, [inView]);
 
   return (
-    <div className="max-h-[500px] overflow-y-auto">
+    <div className="max-h-[500px] max-w-[600px] overflow-y-auto p-3">
       {unReadNotifications.map((notification) => (
         <NotificationListItem
           key={notification.id}
@@ -110,6 +110,9 @@ const NotificationList = ({}: Props) => {
           deleteNotification={deleteNotifcation}
         />
       ))}
+      {unReadNotifications.length === 0 && readNotifications.length === 0 && 
+        <div className="text-center w-full py-10 font-semibold text-lg">No notifications</div>
+      }
       <div ref={ref} />
     </div>
   );
@@ -144,11 +147,11 @@ const NotificationListItem = ({
     <div
       ref={notification.isRead ? undefined : ref}
       key={notification.id}
-      className={`flex first:rounded-t-2xl hover:bg-secondary ${!notification.isRead ? "font-extrabold" : ""}`}
+      className={`flex gap-3 rounded-lg hover:bg-secondary ${!notification.isRead ? "font-extrabold" : ""}`}
     >
-      <FaEthereum className="my-auto ml-2" size={30} />
+      <FaEthereum className="flex-initial my-auto ml-2" size={40} />
 
-      <div className="p-3">
+      <div className="flex-1 p-3">
         <div> {notification.title}</div>
         <div>{notification.content}</div>
         <div className="text-sm font-medium leading-none">
@@ -156,8 +159,8 @@ const NotificationListItem = ({
         </div>
       </div>
       <MdClose
-        className="my-auto ml-auto mr-2 hover:bg-accent cursor-pointer"
-        size={25}
+        className="flex-initial my-auto ml-auto mr-2 hover:bg-accent cursor-pointer"
+        size={30}
         onClick={handleDeleteNotification}
       />
     </div>

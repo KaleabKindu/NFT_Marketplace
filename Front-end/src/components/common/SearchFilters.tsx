@@ -495,7 +495,7 @@ export const SortFilter = () => {
 
 export const CollectionsFilter = () => {
   const [query, setQuery] = useState("");
-  const [selectedCollectionId, setSelectedCollectionId] = useState("");
+  const [selectedCollectionId, setSelectedCollectionId] = useState<number>();
   const { data: collections } = useGetCollectionsQuery({
     search: query,
     pageNumber: 1,
@@ -507,12 +507,12 @@ export const CollectionsFilter = () => {
   const [open, setOpen] = useState(false);
   const handleClear = (e: any) => {
     e.preventDefault();
-    setSelectedCollectionId("");
+    setSelectedCollectionId(undefined);
   };
   const updateQueryParameter = useCallback(
-    (value: string, key: string) => {
+    (value: number | undefined, key: string) => {
       const newParams = new URLSearchParams(params.toString());
-      value ? newParams.set(key, value) : newParams.delete(key);
+      value ? newParams.set(key, value?.toString()) : newParams.delete(key);
       router.push(`${pathname}?${newParams.toString()}`);
     },
     [params],
@@ -560,7 +560,7 @@ export const CollectionsFilter = () => {
                 className="flex items-center gap-1 py-1 pl-2 hover:bg-secondary w-full"
                 onClick={() => {
                   setSelectedCollectionId(
-                    collection.id === selectedCollectionId ? "" : collection.id,
+                    collection.id === selectedCollectionId ? undefined : collection.id,
                   );
                   setOpen(false);
                 }}

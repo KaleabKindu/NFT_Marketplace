@@ -81,7 +81,7 @@ const generateDummyCollections = () => {
   const dummyData = [];
   for (let i = 0; i < 10; i++) {
     const data: ICollection = {
-      id: (i + 1).toString(),
+      id: (i + 1),
       name: faker.word.noun(),
       description: faker.lorem.sentence(),
       avatar: faker.image.url(),

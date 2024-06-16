@@ -26,9 +26,8 @@ import { PlaceBidModal } from "./PlaceBidModal";
 import { BuyModal } from "./BuyModal";
 import { TransferModal } from "./TransferModal";
 import { DeleteAssetModal } from "./DeleteAssetModal";
-import { ChangePriceModal } from "./ChangePriceModal";
 import { useAccount } from "wagmi";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import useGetUsdPrice from "@/hooks/useGetUsdPrice";
 import { ResellAssetModal } from "../explore/assets/ResellAssetModal";
 import { CancelAuctionModal } from "./CancelAuctionModal";
@@ -41,7 +40,8 @@ type Props = {
 
 const NFTDetailRight = ({ asset, isLoading }: Props) => {
   const { address } = useAccount();
-  const usdPrice = useGetUsdPrice(asset?.price);
+  const [ price, setPrice ] = useState<string>()
+  const usdPrice = useGetUsdPrice(price);
   const onRender = ({
     days,
     hours,
@@ -82,6 +82,11 @@ const NFTDetailRight = ({ asset, isLoading }: Props) => {
     }
     return null;
   }, [asset?.auction]);
+  useEffect(() =>{
+    if(asset){
+      setPrice(asset.auction ? asset.auction.highestBid : asset.price)
+    }
+  },[asset])
   return (
     <>
       {isLoading ? (
@@ -94,7 +99,7 @@ const NFTDetailRight = ({ asset, isLoading }: Props) => {
                 className="whitespace-nowrap text-ellipsis overflow-hidden capitalize"
                 text={asset?.name}
               />
-              {address && asset?.owner?.address === address && (
+              {address && asset?.owner?.address === address && (asset.status === "OnFixedSale" || asset.status === "NotOnSale") && (
                 <Menu asset={asset as NFT} />
               )}
             </div>
@@ -206,11 +211,11 @@ const NFTDetailRight = ({ asset, isLoading }: Props) => {
                     auctionId={asset?.auction?.auctionId as number}
                   />
                 ) : (
-                  <CancelSaleModal id={asset?.id as string} />
+                  <CancelSaleModal id={asset?.id as number} />
                 )}
               </div>
             </div>
-            {asset?.auction && <NFTBids tokenId={asset?.tokenId} />}
+            {asset?.auction && <NFTBids id={asset?.id} />}
           </div>
         </div>
       )}
@@ -233,9 +238,9 @@ const Menu = ({ asset }: MenuProps) => {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-[200px] rounded-lg">
-        <DropdownMenuItem asChild>
+        {/* <DropdownMenuItem asChild>
           <ChangePriceModal tokenId={asset?.tokenId as number} />
-        </DropdownMenuItem>
+  </DropdownMenuItem>*/}
         <DropdownMenuItem asChild>
           <TransferModal tokenId={asset.tokenId as number} />
         </DropdownMenuItem>

@@ -48,12 +48,13 @@ const NFTDetailLeft = ({ asset, isLoading }: Props) => {
   const session = useAppSelector((state) => state.auth.session);
   const { open } = useWeb3Modal();
   const { address } = useAccount();
+  const [args, setArgs] = useState<any[]>([]);
   const handleLikes = async () => {
     if (!session) {
       open();
       return;
     }
-    toggleLike(asset?.id as string).unwrap();
+    toggleLike(asset?.id as number).unwrap();
     setLiked(!liked);
     if (liked) {
       setLikes(likes - 1);
@@ -74,11 +75,16 @@ const NFTDetailLeft = ({ asset, isLoading }: Props) => {
     address: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as `0x${string}`,
     abi: NftAbi,
     functionName: "getTokenUri",
-    args: [asset?.tokenId as number],
+    args: args,
     onError: (e) => {
       console.log("error", e);
     },
   });
+  useEffect(() => {
+    if (asset) {
+      setArgs([asset.tokenId]);
+    }
+  }, [asset]);
   return (
     <>
       {isLoading ? (

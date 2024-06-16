@@ -101,9 +101,11 @@ contract Marketplace is ERC721URIStorage, Ownable {
 
     function getTokenUri(uint256 tokenId) public view returns (string memory) {
         require(_exists(tokenId), "ERC721Metadata: URI query for nonexistent token");
+        console.log("Owner %s - Sender %s", ownerOf(tokenId), msg.sender);
         require(ownerOf(tokenId) == msg.sender, "Only Owner of the NFT can see uri");
 
         string memory _tokenURI = tokenURI(tokenId);
+        console.log("URI %s", _tokenURI);
         return _tokenURI;
     }
 
@@ -132,7 +134,6 @@ contract Marketplace is ERC721URIStorage, Ownable {
     function resellProduct(uint256 tokenId, uint256 price, bool auction, uint256 auctionEnd) public payable{
 
         require(ownerOf(tokenId) == msg.sender, "Only Owner of the NFT can resale this Product");
-        require(msg.value == _listingPrice, "Listing Payment must be equal to listing price");
 
         idToProduct[tokenId].price = price;
 

@@ -12,7 +12,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import NoData from "../common/NoData";
 import Error from "../common/Error";
@@ -25,22 +25,24 @@ import { Routes } from "@/routes";
 import { Avatar } from "../common/Avatar";
 import { TypographyP } from "../common/Typography";
 import { Loader2 } from "lucide-react";
+import { SocketContext } from "@/context/SocketContext";
 
 type Props = {
-  tokenId?: number;
+  id?: number;
 };
-export default function NFTBids({ tokenId }: Props) {
+export default function NFTBids({ id }: Props) {
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
   const [size, setSize] = useState(12);
   const [fetchingNextPage, setFetchingNextPage] = useState(false);
   const { data, isLoading, isFetching, isError, refetch } = useGetBidsQuery({
-    id: tokenId as number,
+    id: id as number,
     pageNumber: page,
     pageSize: size,
   });
   const [bids, setBids] = useState<IBid[]>([]);
   const { ref, inView } = useInView({ threshold: 1 });
+  const { socketConnection } = useContext(SocketContext);
 
   useEffect(() => {
     if (data) {
@@ -55,6 +57,14 @@ export default function NFTBids({ tokenId }: Props) {
       setFetchingNextPage(true);
     }
   }, [inView]);
+  useEffect(() => {
+    socketConnection?.on(`NotifyAssetBidsRefetch${id}`, () => {
+      refetch()
+    })
+    return () =>{
+      socketConnection?.off(`NotifyAssetBidsRefetch${id}`)
+    }
+  }, [socketConnection])
   return (
     <Accordion type="single" collapsible defaultValue="item-1">
       <AccordionItem value="item-2">

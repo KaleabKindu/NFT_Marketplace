@@ -13,7 +13,7 @@ const Logo = (props: Props) => {
         height={150}
         alt="NFT Marketplace's Logo"
       />
-      <div className="text-lg lg:text-2xl font-bold">NFT Marketplace</div>
+      <div className="text-lg lg:text-2xl font-bold">NFT Gebya</div>
     </Link>
   );
 };
