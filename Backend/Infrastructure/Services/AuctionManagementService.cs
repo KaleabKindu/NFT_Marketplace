@@ -21,6 +21,7 @@ public class AuctionManagementService: IAuctionManagementService
 {
     private readonly ILogger<AuctionManagementService> _logger;
     private readonly Web3 _web3;
+    private readonly string _contractAddress;
 
     public AuctionManagementService(
         ILogger<AuctionManagementService> logger,
@@ -29,6 +30,7 @@ public class AuctionManagementService: IAuctionManagementService
         _logger = logger;
         var account = new Account(configuration["SmartContract:PrivateKey"]);
         _web3 = new Web3(account, configuration["SmartContract:RpcUrl"]);
+        _contractAddress = configuration["SmartContract:Address"];
     }
 
     public async Task<bool> CloseAuction(string Address, long AuctionId)
@@ -41,9 +43,8 @@ public class AuctionManagementService: IAuctionManagementService
             {
                 AuctionId = AuctionId,
                 FromAddress = Address,
-                Gas = new BigInteger(300000), // Optionally set the gas limit
             };
-            var result = await transactionHandler.SendRequestAndWaitForReceiptAsync(Address, endAuctionFunction);
+            var result = await transactionHandler.SendRequestAndWaitForReceiptAsync(_contractAddress, endAuctionFunction);
             
             Console.WriteLine("Transaction successful: " + result.TransactionHash);
 
