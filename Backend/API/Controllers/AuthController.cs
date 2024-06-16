@@ -44,12 +44,13 @@ namespace API.Controllers
 
 
         [HttpGet("users")]
-        public async Task<IActionResult> GetUsers([FromQuery] int pageNumber = 1, int pageSize = 10)
+        public async Task<IActionResult> GetUsers([FromQuery] string search, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
         {
             return HandleResult(
                 await Mediator.Send(
                     new GetUsersQuery
                     {
+                        Search = search,
                         CurrentAddress = _userAccessor.GetAddress(),
                         PageSize = pageSize,
                         PageNumber = pageNumber

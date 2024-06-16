@@ -9,7 +9,7 @@ public interface IUserRepository
 {
 	Task<AppUser> CreateOrFetchUserAsync(string address);
 	Task<List<AppRole>> GetUserRolesAsync(AppUser user);
-	Task<PaginatedResponse<AppUser>> GetAllUsersAsync(int pageNumber = 1, int pageSize = 10, string? address = null);
+	Task<PaginatedResponse<AppUser>> GetAllUsersAsync(string search = "", int pageNumber = 1, int pageSize = 10, string? address = null);
 	Task DeleteUserAsync(string address);
 	Task<bool> AddressExists(string address);
 	Task<AppUser> GetUserByAddress(string address);

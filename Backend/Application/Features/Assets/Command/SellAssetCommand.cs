@@ -65,7 +65,7 @@ namespace Application.Features.Auctions.Commands
             var provenance = new Provenance
             {
                 AssetId = asset.Id,
-                FromId = asset.OwnerId,
+                FromId = oldOwnerId,
                 ToId = buyerUser.Id,
                 Event = Event.Sale,
                 Price = asset.Price,
@@ -92,8 +92,8 @@ namespace Application.Features.Auctions.Commands
             var notificationForSeller = new CreateNotificationDto
             {
                 Title = "Asset Sold",
-                Content = $"Your Asset {asset.Name} has been sold to {buyerUser.Address} by {asset.Price} ETH.",
-                UserId = oldOwnerId
+                Content = $"Your Asset {asset.Name} has been sold to {buyerUser.UserName} by {asset.Price} ETH.",
+                UserId = oldOwnerId,
             };
 
             await _notificationService.SendNotification(notificationForSeller);

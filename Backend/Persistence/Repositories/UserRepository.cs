@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Application.Contracts.Services;
 using Application.Features.Auth.Dtos;
 using Application.Contracts.Persistance;
+using System.Text.RegularExpressions;
 
 
 namespace Persistence.Repositories
@@ -63,27 +64,42 @@ namespace Persistence.Repositories
             return (await _userManager.GetRolesAsync(user)).Select(role => new AppRole { Name = role }).ToList();
         }
 
-        public async Task<PaginatedResponse<AppUser>> GetAllUsersAsync(int pageNumber = 1, int pageSize = 10, string? address = null)
+        public async Task<PaginatedResponse<AppUser>> GetAllUsersAsync(string search = "", int pageNumber = 1, int pageSize = 10, string? address = null)
         {
             var users = _userManager.Users
                 .Include(user => user.Profile).AsQueryable();
+
 
             if (address != null)
             {
                 users = users.Where(user => user.Address != address);
             }
-
-            var count = await users.CountAsync();
-
-
-            var usersList = await users
+            int count = 0;
+            List<AppUser> result;
+            if (!string.IsNullOrEmpty(search))
+            {
+                var regex = new Regex(Regex.Escape(search), RegexOptions.IgnoreCase);
+                var filteredUsers = users.AsEnumerable()
+                    .Where(user => regex.IsMatch(user.Address) || regex.IsMatch(user.Profile.UserName));
+                count = filteredUsers.Count();
+                result = filteredUsers
+                    .Skip((pageNumber - 1) * pageSize)
+                    .Take(pageSize)
+                        .ToList();
+            }
+            else
+            {
+                result = await users
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
 
+                count = await users.CountAsync();
+            }
+
             return new PaginatedResponse<AppUser>
             {
-                Value = usersList,
+                Value = result,
                 PageNumber = pageNumber,
                 PageSize = pageSize,
                 Count = count
@@ -264,7 +280,7 @@ namespace Persistence.Repositories
                 .Include(x => x.Profile)
                 .OrderByDescending(x => x.Profile.Volume)
                 .ThenByDescending(x => x.Profile.TotalSalesCount)
-                .Take(10)
+                .Take(8)
                 .ToListAsync();
 
         }

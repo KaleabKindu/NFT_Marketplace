@@ -63,6 +63,15 @@ namespace Application.Features.Auctions.Commands
                 Title = "ReSell",
                 Content = $"Your asset {asset.Name} is on sell by {asset.Price}",
             };
+
+            var followers = await _unitOfWork.UserRepository.GetAllFollowersAsync(asset.Owner.Address);
+
+            var notificationDto = new CreateNotificationDto
+            {
+                Title = "New Asset",
+                Content = $"{asset.Owner.Profile.UserName} has set asset {asset.Name} on sell",
+            };
+            await _notificationService.SendNotificationsForMultipleUsers(followers.Select(x => x.Id).ToList(), notificationDto);
             await _notificationService.SendNotification(notification);
 
             _logger.LogInformation($"\nResellAssetEvent\nTokenID: {command._event.TokenId}\nAuction: {command._event.Auction}\nPrice: {command._event.Price}\nAuctionEnd: {command._event.AuctionEnd}\n");

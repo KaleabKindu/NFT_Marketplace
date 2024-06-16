@@ -228,10 +228,11 @@ namespace Persistence.Repositories
             return assetCounts;
         }
 
-        public async Task<ErrorOr<Tuple<int, List<AssetListDto>>>> GetOwnedAssetsAsync(string ownerId, int pageNumber, int pageSize)
+        public async Task<ErrorOr<Tuple<int, List<AssetListDto>>>> GetOwnedAssetsAsync(string ownerAddress, int pageNumber, int pageSize)
         {
             var assets = _dbContext.Assets
-                .Where(x => x.OwnerId == ownerId)
+                .Include(x => x.Owner)
+                .Where(x => x.Owner.Address == ownerAddress)
                 .Include(x => x.Auction)
                 .OrderBy(x => x.CreatedAt)
                 .AsQueryable();
@@ -244,10 +245,11 @@ namespace Persistence.Repositories
             return new Tuple<int, List<AssetListDto>>(count, _mapper.Map<List<AssetListDto>>(assetList));
         }
 
-        public async Task<ErrorOr<Tuple<int, List<AssetListDto>>>> GetCreatedAssetsAsync(string creatorId, int pageNumber, int pageSize)
+        public async Task<ErrorOr<Tuple<int, List<AssetListDto>>>> GetCreatedAssetsAsync(string creatorAddress, int pageNumber, int pageSize)
         {
             var assets = _dbContext.Assets
-                .Where(x => x.OwnerId == creatorId)
+                .Include(x => x.Creator)
+                .Where(x => x.Creator.Address == creatorAddress)
                 .Include(x => x.Auction)
                 .OrderBy(x => x.CreatedAt)
                 .AsQueryable();
@@ -283,6 +285,7 @@ namespace Persistence.Repositories
         {
             return await _context.Assets
                 .Include(x => x.Owner)
+                .ThenInclude(x => x.Profile)
                 .FirstOrDefaultAsync(asset => asset.TokenId == tokenId);
 
         }

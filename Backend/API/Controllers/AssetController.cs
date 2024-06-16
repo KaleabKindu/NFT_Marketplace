@@ -106,18 +106,18 @@ namespace API.Controllers
             return HandleResult(await Mediator.Send(new ToggleLikeAssetCommand { Id = id, UserId = userId }));
         }
 
-        [HttpGet("owned")]
-        public async Task<IActionResult> GetAssetsOwned([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
+        [AllowAnonymous]
+        [HttpGet("owned/{address}")]
+        public async Task<IActionResult> GetAssetsOwned([FromRoute] string address, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
         {
-            var userId = _userAccessor.GetUserId();
-            return HandleResult(await Mediator.Send(new GetOwnedAssetsQuery { userId = userId, PageNumber = pageNumber, PageSize = pageSize }));
+            return HandleResult(await Mediator.Send(new GetOwnedAssetsQuery { Address = address, PageNumber = pageNumber, PageSize = pageSize }));
         }
 
-        [HttpGet("created")]
-        public async Task<IActionResult> GetAssetsCreated([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
+        [AllowAnonymous]
+        [HttpGet("created/{address}")]
+        public async Task<IActionResult> GetAssetsCreated([FromRoute] string address, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
         {
-            var userId = _userAccessor.GetUserId();
-            return HandleResult(await Mediator.Send(new GetCreatedAssetsQuery { userId = userId, PageNumber = pageNumber, PageSize = pageSize }));
+            return HandleResult(await Mediator.Send(new GetCreatedAssetsQuery { Address = address, PageNumber = pageNumber, PageSize = pageSize }));
         }
 
         [AllowAnonymous]

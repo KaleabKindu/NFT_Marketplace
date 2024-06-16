@@ -64,7 +64,7 @@ namespace Application.Features.Auctions.Commands
             {
                 UserId = newOwner.Id,
                 Title = "Transfer Asset",
-                Content = $"You have received asset ${asset.Name} from  address ${oldOwner.Address} by transfer.",
+                Content = $"You have received asset ${asset.Name} from ${oldOwner.Profile.UserName} by transfer.",
             };
 
             await _notificationService.SendNotification(notification);

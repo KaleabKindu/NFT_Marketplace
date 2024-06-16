@@ -9,7 +9,7 @@ namespace Application.Features.Categories.Queries
 {
     public class GetCreatedAssetsQuery : PaginatedQuery, IRequest<ErrorOr<PaginatedResponse<AssetListDto>>>
     {
-        public string userId;
+        public string Address;
     }
 
     public class GetCreatedAssetsQueryHandler
@@ -27,7 +27,7 @@ namespace Application.Features.Categories.Queries
             CancellationToken cancellationToken
         )
         {
-            var assetsResponse = await _unitOfWork.AssetRepository.GetCreatedAssetsAsync(request.userId, request.PageNumber, request.PageSize);
+            var assetsResponse = await _unitOfWork.AssetRepository.GetCreatedAssetsAsync(request.Address, request.PageNumber, request.PageSize);
             if (assetsResponse.IsError) return assetsResponse.Errors;
 
             var response = new PaginatedResponse<AssetListDto>

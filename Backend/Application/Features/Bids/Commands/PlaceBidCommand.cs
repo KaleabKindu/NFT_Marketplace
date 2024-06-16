@@ -69,7 +69,7 @@ namespace Application.Features.Auctions.Commands
             {
                 UserId = asset.OwnerId,
                 Title = "Bid Placed",
-                Content = $"New bid of amount {newBid.Amount} on {asset.Name}"
+                Content = $"{bidder.Profile.UserName} placed a bid of {newBid.Amount} ETH on your {asset.Name} asset"
             };
 
             await _notificationService.SendNotification(notificationFoOwner);

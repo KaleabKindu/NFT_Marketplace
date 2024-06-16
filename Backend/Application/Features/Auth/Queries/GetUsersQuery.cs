@@ -12,6 +12,7 @@ namespace Application.Features.Auth.Queries
 {
     public class GetUsersQuery : PaginatedQuery, IRequest<ErrorOr<PaginatedResponse<UserListDto>>>
     {
+        public string Search { get; set; }
         public string CurrentAddress { get; set; }
     }
 
@@ -31,7 +32,7 @@ namespace Application.Features.Auth.Queries
             CancellationToken cancellationToken
         )
         {
-            var users = await _unitOfWork.UserRepository.GetAllUsersAsync(command.PageNumber, command.PageSize, command.CurrentAddress);
+            var users = await _unitOfWork.UserRepository.GetAllUsersAsync(command.Search, command.PageNumber, command.PageSize, command.CurrentAddress);
 
             List<UserListDto> dtos = _mapper.Map<List<UserListDto>>(users.Value);
             foreach (var dto in dtos)

@@ -114,7 +114,7 @@ namespace Application.Features.Assets.Command
                 Content = $"{user.UserName} has created a new asset {asset.Name}",
             };
 
-            _notificationService.SendNotificationsForMultipleUsers(followers.Select(x => x.Id).ToList(), notificationDto);
+            await _notificationService.SendNotificationsForMultipleUsers(followers.Select(x => x.Id).ToList(), notificationDto);
 
             response.Message = "Asset Created Successfully";
             response.Value = asset.Id;

@@ -80,7 +80,7 @@ namespace Application.Features.Auctions.Commands
             var notificationForSeller = new CreateNotificationDto
             {
                 Title = "Auction Closed",
-                Content = $"Your Auction on {asset.Name} is closed, {user.Address} has won the auction.",
+                Content = $"Your Auction on {asset.Name} is closed, {user.UserName} has won the auction.",
                 UserId = oldOwnerId
             };
 
@@ -94,7 +94,7 @@ namespace Application.Features.Auctions.Commands
                 var notificationForCreator = new CreateNotificationDto
                 {
                     Title = "Recieved Royalty",
-                    Content = $"You have received {royalty} ETH as royalty for the sale of {asset.Name}.",
+                    Content = $"You have received {royalty} ETH as royalty for the sale of {asset.Name} asset.",
                     UserId = asset.CreatorId
                 };
 
