@@ -17,13 +17,5 @@ namespace API.Controllers
         {
             return HandleResult(await Mediator.Send(new GetBidsQuery() { PageNumber = pageNumber, PageSize = pageSize, AssetId = assetId }));
         }
-
-
-        [HttpGet("{Id}")]
-        [Authorize(Roles = "Admin, Trader")]
-        public async Task<IActionResult> GetBid(int Id)
-        {
-            return HandleResult(await Mediator.Send(new GetBidByIdQuery { Id = Id }));
-        }
     }
 }

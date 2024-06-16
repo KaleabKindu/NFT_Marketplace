@@ -25,6 +25,7 @@ public class AuctionManagementService: IAuctionManagementService
 
     public async Task<bool> CloseAuction(string Address, long AuctionId)
     {
+        _logger.LogInformation($"Closing Auction...");
         try
         {
             var closeAuctionFunction = _contract.GetFunction("endAuction");
@@ -46,7 +47,7 @@ public class AuctionManagementService: IAuctionManagementService
     public string Schedule(string Address, long AuctionId, long AuctionEnd){
         _logger.LogInformation("********************** Scheduling close auction job...");
         long unixTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-        return BackgroundJob.Schedule(() => CloseAuction(Address, AuctionId), TimeSpan.FromSeconds(AuctionEnd - unixTime + 5));
+        return BackgroundJob.Schedule(() => CloseAuction(Address, AuctionId), TimeSpan.FromSeconds(AuctionEnd - unixTime));
     }
 
     public void CancelAuction(string JobId){
