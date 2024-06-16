@@ -28,9 +28,7 @@ public class AuctionManagementService: IAuctionManagementService
         IConfiguration configuration
     ){
         _logger = logger;
-        var account = new Account(configuration["SmartContract:PrivateKey"]);
-        _web3 = new Web3(account, configuration["SmartContract:RpcUrl"]);
-        _web3.TransactionManager.UseLegacyAsDefault = true;
+        _web3 = new Web3(configuration["SmartContract:RpcUrl"]);
         _contractAddress = configuration["SmartContract:Address"];
     }
 
