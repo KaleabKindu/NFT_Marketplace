@@ -33,7 +33,7 @@ namespace Application.Features.Assets.Commands
         )
         {
 
-            var asset = await _unitOfWork.AssetRepository.GetAssetByTokenId(command._event.TokenId);
+            var asset = await _unitOfWork.AssetRepository.GetAssetByTokenId((long)command._event.TokenId);
 
 
             if (asset == null)

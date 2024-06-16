@@ -36,7 +36,7 @@ namespace Application.Features.Auctions.Commands
         {
             var evenData = command._event;
 
-            var asset = await _unitOfWork.AssetRepository.GetAssetByTokenId(evenData.TokenId);
+            var asset = await _unitOfWork.AssetRepository.GetAssetByTokenId((long)evenData.TokenId);
             if (asset == null) return ErrorFactory.NotFound("Asset", "Asset Not Found");
 
             asset.Price = (double)evenData.Price;

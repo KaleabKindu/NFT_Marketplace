@@ -36,7 +36,7 @@ namespace Application.Features.Auctions.Commands
         {
             var eventData = command._event;
 
-            var asset = await _unitOfWork.AssetRepository.GetAssetByTokenId(eventData.TokenId);
+            var asset = await _unitOfWork.AssetRepository.GetAssetByTokenId((long)eventData.TokenId);
             if (asset == null) return ErrorFactory.NotFound("Asset", "Asset Not Found");
 
             var newOwner = await _unitOfWork.UserRepository.GetUserByAddress(eventData.NewOwner);
