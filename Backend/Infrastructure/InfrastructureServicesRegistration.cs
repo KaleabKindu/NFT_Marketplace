@@ -103,7 +103,7 @@ namespace Infrastructure
                         var queues = new List<string>{
                     $"{typeof(AuctionCreatedEventDto)}", $"{typeof(BidPlacedEventDto)}", $"{typeof(AuctionEndedEventDto)}",
                     $"{typeof(AssetSoldEventDto)}", $"{typeof(ResellAssetEventDto)}", $"{typeof(TransferAssetEventDto)}",
-                    $"{typeof(DeleteAssetEventDto)}"
+                    $"{typeof(DeleteAssetEventDto)},{typeof(AuctionCancelledEventDto)}"
                         };
                         return new RabbitMqService(connection, queues);
                     });
