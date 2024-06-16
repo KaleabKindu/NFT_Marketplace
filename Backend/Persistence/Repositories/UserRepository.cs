@@ -47,13 +47,15 @@ namespace Persistence.Repositories
                 Profile = new UserProfile() { UserName = address.Substring(2, 5) }
             };
 
-            var result = await _userManager.CreateAsync(user);
-            var authorizationResult = await _userManager.AddToRoleAsync(user, "Trader");
+            user = (await _dbContext.Users.AddAsync(user)).Entity;
 
-            if (!result.Succeeded || !authorizationResult.Succeeded)
-            {
-                throw new DbAccessException($"Unable to save user to database:{result.Errors.ToArray()[0]}");
-            }
+            if (await _dbContext.SaveChangesAsync() == 0)
+                throw new DbAccessException($"Unable to save user to database");
+
+            await _userManager.AddToRoleAsync(user, "Trader");
+
+            if (await _dbContext.SaveChangesAsync() == 0)
+                throw new DbAccessException($"Unable to add role to user in database");
 
             return user;
         }

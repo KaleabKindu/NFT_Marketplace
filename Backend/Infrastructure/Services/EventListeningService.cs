@@ -145,7 +145,7 @@ namespace Application.Contracts.Services
                     DispatchEventsToQueue(cancelAuctionEvents.Select(evnt => evnt.Event).ToArray());
                 }
 
-                await Task.Delay(10000, stoppingToken); // Add a delay to avoid excessive API calls
+                await Task.Delay(1000, stoppingToken); // Add a delay to avoid excessive API calls
             }
         }
 
