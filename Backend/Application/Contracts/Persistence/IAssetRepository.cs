@@ -21,7 +21,7 @@ namespace Application.Contracts.Presistence
 
         void DeleteAsset(Asset asset);
 
-        Task<Asset> GetAssetByTokenId(BigInteger tokenId);
+        Task<Asset> GetAssetByTokenId(long tokenId);
         Task<PaginatedResponse<Asset>> SemanticBasedAssetSearch(string query, int pageNumber = 1, int pageSize = 10);
 
         Task<ErrorOr<Tuple<int, List<AssetListDto>>>> GetOwnedAssetsAsync(string ownerId, int pageNumber, int pageSize);

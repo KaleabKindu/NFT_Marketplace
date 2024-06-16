@@ -279,7 +279,7 @@ namespace Persistence.Repositories
         }
 
 
-        public async Task<Asset> GetAssetByTokenId(BigInteger tokenId)
+        public async Task<Asset> GetAssetByTokenId(long tokenId)
         {
             return await _context.Assets
                 .Include(x => x.Owner)

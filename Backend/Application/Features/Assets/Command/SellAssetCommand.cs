@@ -35,7 +35,7 @@ namespace Application.Features.Auctions.Commands
             CancellationToken cancellationToken
         )
         {
-            var asset = await _unitOfWork.AssetRepository.GetAssetByTokenId(command._event.TokenId);
+            var asset = await _unitOfWork.AssetRepository.GetAssetByTokenId((long)command._event.TokenId);
 
             if (asset == null) return ErrorFactory.NotFound("Asset", "Asset not found");
 
