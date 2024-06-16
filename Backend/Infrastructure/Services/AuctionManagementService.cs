@@ -1,17 +1,26 @@
 using Hangfire;
 using Nethereum.Web3;
+using System.Numerics;
 using Nethereum.Contracts;
 using Nethereum.Web3.Accounts;
 using Microsoft.Extensions.Logging;
 using Application.Contracts.Services;
 using Microsoft.Extensions.Configuration;
+using Nethereum.ABI.FunctionEncoding.Attributes;
 
 namespace Infrastructure.Services;
+
+[Function("endAuction")]
+public class EndAuctionFunction : FunctionMessage
+{
+    [Parameter("uint256", "_auctionId", 1)]
+    public BigInteger AuctionId { get; set; }
+}
 
 public class AuctionManagementService: IAuctionManagementService
 {
     private readonly ILogger<AuctionManagementService> _logger;
-    private readonly Contract _contract;
+    private readonly Web3 _web3;
 
     public AuctionManagementService(
         ILogger<AuctionManagementService> logger,
@@ -19,8 +28,7 @@ public class AuctionManagementService: IAuctionManagementService
     ){
         _logger = logger;
         var account = new Account(configuration["SmartContract:PrivateKey"]);
-        var web3 = new Web3(account, configuration["SmartContract:RpcUrl"]);
-        _contract = web3.Eth.GetContract(configuration["SmartContract:Abi"], configuration["SmartContract:Address"]);
+        _web3 = new Web3(account, configuration["SmartContract:RpcUrl"]);
     }
 
     public async Task<bool> CloseAuction(string Address, long AuctionId)
@@ -28,12 +36,16 @@ public class AuctionManagementService: IAuctionManagementService
         _logger.LogInformation($"Closing Auction...");
         try
         {
-            var closeAuctionFunction = _contract.GetFunction("endAuction");
-            var gas = await closeAuctionFunction.EstimateGasAsync(AuctionId);
+            var transactionHandler = _web3.Eth.GetContractTransactionHandler<EndAuctionFunction>();
+            var endAuctionFunction = new EndAuctionFunction()
+            {
+                AuctionId = AuctionId,
+                FromAddress = Address,
+                Gas = new BigInteger(300000), // Optionally set the gas limit
+            };
+            var result = await transactionHandler.SendRequestAndWaitForReceiptAsync(Address, endAuctionFunction);
             
-            var transactionHash = await closeAuctionFunction.SendTransactionAsync(Address, new Nethereum.Hex.HexTypes.HexBigInteger(gas), null, AuctionId);
-
-            _logger.LogInformation($"Transaction hash: {transactionHash}");
+            Console.WriteLine("Transaction successful: " + result.TransactionHash);
 
             return true;
         }
