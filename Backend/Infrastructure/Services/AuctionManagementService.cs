@@ -28,11 +28,13 @@ public class AuctionManagementService: IAuctionManagementService
         IConfiguration configuration
     ){
         _logger = logger;
-        _web3 = new Web3(configuration["SmartContract:RpcUrl"]);
+        var account = new Account(configuration["SmartContract:PrivateKey"]);
+        _web3 = new Web3(account, configuration["SmartContract:RpcUrl"]);
+        _web3.TransactionManager.UseLegacyAsDefault = true;
         _contractAddress = configuration["SmartContract:Address"];
     }
 
-    public async Task<bool> CloseAuction(string Address, long AuctionId)
+    public async Task<bool> CloseAuction(long AuctionId)
     {
         _logger.LogInformation($"Closing Auction...");
         try
@@ -40,12 +42,12 @@ public class AuctionManagementService: IAuctionManagementService
             var endAuctionFunction = new EndAuctionFunction()
             {
                 AuctionId = AuctionId,
-                FromAddress = Address,
+                FromAddress = _contractAddress,
             };
 
             var txHandler = _web3.Eth.GetContractTransactionHandler<EndAuctionFunction>();
             var signedTx = await txHandler.SignTransactionAsync(_contractAddress, endAuctionFunction);
-            var txReceipt = await _web3.Eth.Transactions.SendRawTransaction.SendRequestAsync(signedTx);
+            var txReceipt = await _web3.Eth.Transactions.SendRawTransaction.SendRequestAsync(signedTx);            
             
             Console.WriteLine("Transaction successful: " + txReceipt);
 
@@ -58,10 +60,10 @@ public class AuctionManagementService: IAuctionManagementService
         }
     }
 
-    public string Schedule(string Address, long AuctionId, long AuctionEnd){
+    public string Schedule(long AuctionId, long AuctionEnd){
         _logger.LogInformation("********************** Scheduling close auction job...");
         long unixTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-        return BackgroundJob.Schedule(() => CloseAuction(Address, AuctionId), TimeSpan.FromSeconds(AuctionEnd - unixTime));
+        return BackgroundJob.Schedule(() => CloseAuction(AuctionId), TimeSpan.FromSeconds(AuctionEnd - unixTime));
     }
 
     public void CancelAuction(string JobId){
