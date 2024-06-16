@@ -81,6 +81,7 @@ namespace Application.Features.Assets.Command
                     AuctionEnd = request.CreateAssetDto.Auction.AuctionEnd,
                     HighestBid = request.CreateAssetDto.Price,
                 };
+                auction.JobId = _auctionManager.Schedule(request.Address, auction.AuctionId, auction.AuctionEnd);
 
                 asset.Auction = auction;
                 asset.Status = AssetStatus.OnAuction;
@@ -104,11 +105,6 @@ namespace Application.Features.Assets.Command
 
             if (await _unitOfWork.SaveAsync() == 0)
                 throw new DbAccessException("Database Error: Unable To Save");
-
-            if (request.CreateAssetDto.Auction != null)
-            {
-                _auctionManager.Schedule(request.Address, asset.Auction.AuctionId, asset.Auction.AuctionEnd);
-            }
 
             var followers = await _unitOfWork.UserRepository.GetAllFollowersAsync(user.Address);
 

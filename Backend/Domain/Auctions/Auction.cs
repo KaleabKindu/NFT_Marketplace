@@ -13,6 +13,6 @@ namespace Domain.Auctions
         public AppUser HighestBidder { get; set; }
         public string HighestBidderId { get; set; }
         public long AuctionEnd  {get; set;}
-        
+        public string JobId { get; set; }        
     }
 }

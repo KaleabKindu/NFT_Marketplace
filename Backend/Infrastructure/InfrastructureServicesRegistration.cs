@@ -101,9 +101,9 @@ namespace Infrastructure
                     {
                         var connection = sp.GetRequiredService<IConnection>();
                         var queues = new List<string>{
-                    $"{typeof(AuctionCreatedEventDto)}", $"{typeof(BidPlacedEventDto)}", $"{typeof(AuctionEndedEventDto)}",
-                    $"{typeof(AssetSoldEventDto)}", $"{typeof(ResellAssetEventDto)}", $"{typeof(TransferAssetEventDto)}",
-                    $"{typeof(DeleteAssetEventDto)},{typeof(AuctionCancelledEventDto)}"
+                            $"{typeof(AuctionCreatedEventDto)}", $"{typeof(BidPlacedEventDto)}", $"{typeof(AuctionEndedEventDto)}",
+                            $"{typeof(AssetSoldEventDto)}", $"{typeof(ResellAssetEventDto)}", $"{typeof(TransferAssetEventDto)}",
+                            $"{typeof(DeleteAssetEventDto)}", $"{typeof(AuctionCancelledEventDto)}"
                         };
                         return new RabbitMqService(connection, queues);
                     });

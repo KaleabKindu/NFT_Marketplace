@@ -43,9 +43,13 @@ public class AuctionManagementService: IAuctionManagementService
         }
     }
 
-    public void Schedule(string Address, long AuctionId, long AuctionEnd){
+    public string Schedule(string Address, long AuctionId, long AuctionEnd){
         _logger.LogInformation("********************** Scheduling close auction job...");
         long unixTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-        BackgroundJob.Schedule(() => CloseAuction(Address, AuctionId), TimeSpan.FromSeconds(AuctionEnd - unixTime + 5));
+        return BackgroundJob.Schedule(() => CloseAuction(Address, AuctionId), TimeSpan.FromSeconds(AuctionEnd - unixTime + 5));
+    }
+
+    public void CancelAuction(long JobId){
+        BackgroundJob.Delete(JobId);
     }
 }

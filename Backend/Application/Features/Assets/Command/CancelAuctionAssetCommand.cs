@@ -16,11 +16,13 @@ namespace Application.Features.Assets.Command
 
     public class CancelAuctionAssetCommandHandler : IRequestHandler<CancelAuctionAssetCommand, ErrorOr<Unit>>
     {
+        private readonly IAuctionManagementService _auctionManager;
         private readonly IUnitOfWork _unitOfWork;
         private readonly INotificationService _notificationService;
 
-        public CancelAuctionAssetCommandHandler(IUnitOfWork unitOfwork, INotificationService notificationService)
+        public CancelAuctionAssetCommandHandler(IUnitOfWork unitOfwork, INotificationService notificationService, IAuctionManagementService auctionManager)
         {
+            _auctionManager = auctionManager;
             _unitOfWork = unitOfwork;
             _notificationService = notificationService;
         }
@@ -50,6 +52,7 @@ namespace Application.Features.Assets.Command
 
                 await _notificationService.SendNotification(notificationDto);
                 await _notificationService.NotifyRemoveAssetFromView(asset.Id);
+                _auctionManager.CancelAuction(asset.Auction.JobId);
             }
 
 
