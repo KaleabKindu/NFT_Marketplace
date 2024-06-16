@@ -30,6 +30,7 @@ public class AuctionManagementService: IAuctionManagementService
         _logger = logger;
         var account = new Account(configuration["SmartContract:PrivateKey"]);
         _web3 = new Web3(account, configuration["SmartContract:RpcUrl"]);
+        _web3.TransactionManager.UseLegacyAsDefault = true;
         _contractAddress = configuration["SmartContract:Address"];
     }
 
@@ -38,15 +39,17 @@ public class AuctionManagementService: IAuctionManagementService
         _logger.LogInformation($"Closing Auction...");
         try
         {
-            var transactionHandler = _web3.Eth.GetContractTransactionHandler<EndAuctionFunction>();
             var endAuctionFunction = new EndAuctionFunction()
             {
                 AuctionId = AuctionId,
                 FromAddress = Address,
             };
-            var result = await transactionHandler.SendRequestAndWaitForReceiptAsync(_contractAddress, endAuctionFunction);
+
+            var txHandler = _web3.Eth.GetContractTransactionHandler<EndAuctionFunction>();
+            var signedTx = await txHandler.SignTransactionAsync(_contractAddress, endAuctionFunction);
+            var txReceipt = await _web3.Eth.Transactions.SendRawTransaction.SendRequestAsync(signedTx);
             
-            Console.WriteLine("Transaction successful: " + result.TransactionHash);
+            Console.WriteLine("Transaction successful: " + txReceipt);
 
             return true;
         }
