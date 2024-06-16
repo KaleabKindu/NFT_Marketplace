@@ -13,7 +13,7 @@ using Application.UnitTest.Mocks;
 using Domain;
 using Application.Contracts.Persistance;
 
-namespace Application.UnitTest.Features.Auth.Queries
+namespace Application.UnitTest.FeaturesTests.Auth.Queries
 {
     public class GetUsersQueryHandlerTests
     {
