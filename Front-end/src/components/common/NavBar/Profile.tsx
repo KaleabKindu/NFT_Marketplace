@@ -56,7 +56,7 @@ const Profile = (props: Props) => {
           className="flex items-center gap-3 w-full px-3 py-3 cursor-pointer"
           onClick={() => router.push(`${Routes.USER}/${address}`)}
         >
-          <FaUserAlt size={25} />
+          <FaUserAlt size={25}  className="ml-3" />
           <div>Profile</div>
         </DropdownMenuItem>
         <DropdownMenuItem

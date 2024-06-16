@@ -41,6 +41,7 @@ import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
 import { RiAuctionLine } from "react-icons/ri";
+import { parseEther } from "viem";
 
 interface FormInput {
   price: string;
@@ -75,7 +76,7 @@ export const ResellAssetModal = ({ tokenId }: PlaceBidModalProps) => {
   });
   const handleClose = () => setShowModal(false);
   const onSubmit = (values: FormInput) => {
-    contractWrite("placeBid", values.price.toString(), [tokenId]);
+    contractWrite("resellProduct", values.price.toString(), [tokenId, parseEther(values.price, "wei"), values.auction, Math.round(values.auctionEnd / 1000)]);
   };
   useEffect(() => {
     if (writeSuccess) {
@@ -100,19 +101,9 @@ export const ResellAssetModal = ({ tokenId }: PlaceBidModalProps) => {
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Place Bid</DialogTitle>
+          <DialogTitle>Resell Asset</DialogTitle>
           <DialogDescription className="flex flex-col gap-5 pt-10">
             <Form {...form}>
-              <div className="flex items-center justify-between p-2 rounded-lg ">
-                <div className="flex gap-3 items-center">
-                  <MdWallet size={35} />
-                  <TypographyP className="font-bold" text="Balance" />
-                </div>
-                <TypographyP
-                  className="font-bold"
-                  text={`${parseFloat(balance?.formatted as string).toFixed(2) ?? "0"} ${balance?.symbol ?? "ETH"}`}
-                />
-              </div>
               <form
                 onSubmit={form.handleSubmit(onSubmit)}
                 className="flex flex-col gap-5"
@@ -128,7 +119,7 @@ export const ResellAssetModal = ({ tokenId }: PlaceBidModalProps) => {
                           <Button
                             type="button"
                             variant={!field.value ? "default" : "secondary"}
-                            className="flex-1 flex gap-3 item-center border rounded-md  h-auto w-[15rem]"
+                            className="flex-1 flex gap-3 item-center border rounded-md  h-auto"
                             onClick={() => field.onChange(false)}
                           >
                             <MdOutlineSell size={30} />
@@ -137,7 +128,7 @@ export const ResellAssetModal = ({ tokenId }: PlaceBidModalProps) => {
                           <Button
                             type="button"
                             variant={field.value ? "default" : "secondary"}
-                            className="flex-1 flex gap-3 item-center border rounded-md  h-auto w-[15rem]"
+                            className="flex-1 flex gap-3 item-center border rounded-md  h-auto"
                             onClick={() => field.onChange(true)}
                           >
                             <RiAuctionLine size={30} />
@@ -233,7 +224,7 @@ export const ResellAssetModal = ({ tokenId }: PlaceBidModalProps) => {
                   {isLoading ? (
                     <>
                       <Loader2 className="mr-2 h-6 w-6 animate-spin" />
-                      Bidding
+                      Waiting
                     </>
                   ) : (
                     "Resell"

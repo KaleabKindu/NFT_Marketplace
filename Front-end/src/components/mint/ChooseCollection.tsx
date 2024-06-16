@@ -12,20 +12,20 @@ import { useGetCollectionsQuery } from "@/store/api";
 import { useAccount } from "wagmi";
 
 type Props = {
-  onChange: (a: string) => void;
+  onChange: (a?: number) => void;
 };
 
 const ChooseCollection = ({ onChange }: Props) => {
   const { address } = useAccount();
-  const [selected, setSelected] = useState("");
+  const [selected, setSelected] = useState<number>();
   const [collections, setCollections] = useState<ICollection[]>([]);
   const { data } = useGetCollectionsQuery({
     creator: address,
   });
-  const handleClick = (id: string) => {
+  const handleClick = (id: number) => {
     if (id === selected) {
-      setSelected("");
-      onChange("");
+      setSelected(undefined);
+      onChange(undefined);
     } else {
       setSelected(id);
       onChange(id);
@@ -60,7 +60,7 @@ const ChooseCollection = ({ onChange }: Props) => {
 type CollectionProps = {
   collection: ICollection;
   selected: boolean;
-  onSelected: (a: string) => void;
+  onSelected: (a: number) => void;
 };
 
 const Collection = ({ collection, onSelected, selected }: CollectionProps) => {

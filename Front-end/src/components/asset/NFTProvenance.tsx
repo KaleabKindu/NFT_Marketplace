@@ -21,30 +21,32 @@ import Error from "../common/Error";
 import NoData from "../common/NoData";
 import { useGetProvenanceQuery } from "@/store/api";
 import { useInView } from "react-intersection-observer";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { IProvenance } from "@/types";
 import moment from "moment";
 import { Routes } from "@/routes";
 import { Avatar } from "../common/Avatar";
 import { TypographyP } from "../common/Typography";
 import { Loader2 } from "lucide-react";
+import { SocketContext } from "@/context/SocketContext";
 
 type Props = {
-  tokenId?: number;
+  id?: number;
 };
-const NFTProvenance = ({ tokenId }: Props) => {
+const NFTProvenance = ({ id }: Props) => {
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
   const [size, setSize] = useState(12);
   const [fetchingNextPage, setFetchingNextPage] = useState(false);
   const { data, isLoading, isFetching, isError, refetch } =
     useGetProvenanceQuery({
-      id: tokenId as number,
+      id: id as number,
       pageNumber: page,
       pageSize: size,
     });
   const [provenances, setProvenances] = useState<IProvenance[]>([]);
   const { ref, inView } = useInView({ threshold: 1 });
+  const { socketConnection } = useContext(SocketContext);
 
   useEffect(() => {
     if (data) {
@@ -58,6 +60,14 @@ const NFTProvenance = ({ tokenId }: Props) => {
       setFetchingNextPage(true);
     }
   }, [inView]);
+  useEffect(() => {
+    socketConnection?.on(`NotifyAssetProvenanceRefetch${id}`, () => {
+      refetch()
+    })
+    return () =>{
+      socketConnection?.off(`NotifyAssetProvenanceRefetch${id}`)
+    }
+  }, [socketConnection])
   return (
     <Accordion type="single" collapsible defaultValue="item-1">
       <AccordionItem value="item-1">

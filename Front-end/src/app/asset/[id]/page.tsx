@@ -6,6 +6,8 @@ import MoreFromCollection from "@/components/asset/MoreFromCollection";
 import MoreFromCreator from "@/components/asset/MoreFromCreator";
 import { useGetNFTQuery } from "@/store/api";
 import Error from "@/components/common/Error";
+import { SocketContext } from "@/context/SocketContext";
+import { useContext, useEffect } from "react";
 type Props = {
   params: { id: string };
 };
@@ -17,6 +19,15 @@ const NFTDetail = ({ params }: Props) => {
     isError,
     refetch,
   } = useGetNFTQuery(params.id as string);
+  const { socketConnection } = useContext(SocketContext);
+  useEffect(() => {
+    socketConnection?.on(`RefetchAsset${asset?.id}`, () => {
+      refetch()
+    })
+    return () =>{
+      socketConnection?.off(`RefetchAsset${asset?.id}`)
+    }
+  }, [socketConnection])
   return (
     <div className="flex flex-col gap-10 pt-10">
       {isError ? (
@@ -29,7 +40,7 @@ const NFTDetail = ({ params }: Props) => {
           <NFTDetailsRight asset={asset} isLoading={isLoading} />
         </div>
       )}
-      <NFTProvenance tokenId={asset?.tokenId as number} />
+      <NFTProvenance id={asset?.id as number} />
       {asset?.collection && <MoreFromCollection id={asset?.collection?.id} />}
       <MoreFromCreator address={asset?.creator?.address} />
     </div>

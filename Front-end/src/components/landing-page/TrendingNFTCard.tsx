@@ -1,19 +1,12 @@
 "use client";
-import Image from "next/image";
 import { Card } from "../ui/card";
-import {
-  TypographyH3,
-  TypographyH4,
-  TypographyP,
-  TypographySmall,
-} from "../common/Typography";
+import { TypographyP, TypographySmall } from "../common/Typography";
 import { Button } from "../ui/button";
 import { FaHeart } from "react-icons/fa";
 import { Badge } from "../ui/badge";
 import CountDown from "count-down-react";
-import { MouseEvent, useMemo, useState } from "react";
+import { MouseEvent, useEffect, useMemo, useState } from "react";
 import { Routes } from "@/routes";
-import Link from "next/link";
 import { NFT } from "@/types";
 import { categories } from "@/data";
 import { IconType } from "react-icons";
@@ -21,6 +14,7 @@ import CustomImage from "../common/CustomImage";
 import { useWeb3Modal } from "@web3modal/wagmi/react";
 import { useAppSelector } from "@/store/hooks";
 import { useRouter } from "next/navigation";
+import { useToggleNFTlikeMutation } from "@/store/api";
 
 type Props = {
   asset: NFT;
@@ -28,10 +22,11 @@ type Props = {
 
 const TrendingNFTCard = ({ asset }: Props) => {
   const [liked, setLiked] = useState(false);
-  const [likes, setLikes] = useState(22);
+  const [likes, setLikes] = useState(0);
   const { open } = useWeb3Modal();
   const router = useRouter();
   const session = useAppSelector((state) => state.auth.session);
+  const [toggleLike] = useToggleNFTlikeMutation();
   const onTick = ({
     hours,
     minutes,
@@ -49,7 +44,7 @@ const TrendingNFTCard = ({ asset }: Props) => {
       open();
       return;
     }
-    e.preventDefault();
+    toggleLike(asset?.id as number).unwrap();
     setLiked(!liked);
     if (liked) {
       setLikes(likes - 1);
@@ -57,6 +52,12 @@ const TrendingNFTCard = ({ asset }: Props) => {
       setLikes(likes + 1);
     }
   };
+  useEffect(() => {
+    if (asset) {
+      setLikes(asset.likes as number);
+      setLiked(asset.liked as boolean);
+    }
+  }, [asset]);
   const Icon = categories.find((cat) => cat.value === asset.category)
     ?.icon as IconType;
   const auctionEndDate = useMemo(() => {

@@ -19,7 +19,7 @@ import {
   useGetNounceMutation,
 } from "@/store/api";
 import { Address, INotification } from "@/types";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { useToast } from "@/components/ui/use-toast";
 import { ToastAction } from "@/components/ui/toast";
@@ -57,6 +57,7 @@ const NavBar = (props: Props) => {
   const { signMessageAsync } = useSignMessage();
   const { disconnect } = useDisconnect();
   const { open } = useWeb3Modal();
+  const audioRef = useRef<HTMLAudioElement>(null)
   const handleLogin = () => {
     if (isConnected) {
       signIn();
@@ -72,6 +73,7 @@ const NavBar = (props: Props) => {
         (notification: INotification) => {
           console.log("RecieveNotification:", notification);
           dispatch(addNotification(notification));
+          audioRef.current?.play()
         },
       );
 
@@ -120,6 +122,7 @@ const NavBar = (props: Props) => {
   };
   return (
     <div className="sticky z-50 w-full bg-background top-0">
+      <audio ref={audioRef} src="/notification-audio.wav" className="hidden"/>
       <Container className="flex items-center justify-between border-b">
         {/* Left Section */}
         <Logo />

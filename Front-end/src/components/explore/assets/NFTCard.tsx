@@ -30,8 +30,8 @@ type Props = {
 const NFTCard = ({ asset }: Props) => {
   const cardRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
-  const [liked, setLiked] = useState(asset?.liked as boolean);
-  const [likes, setLikes] = useState(asset?.likes as number);
+  const [liked, setLiked] = useState(false);
+  const [likes, setLikes] = useState(0);
   const [audioWidth, setAudioWidth] = useState(0);
   const [toggleLike] = useToggleNFTlikeMutation();
   const { open } = useWeb3Modal();
@@ -42,7 +42,7 @@ const NFTCard = ({ asset }: Props) => {
       open();
       return;
     }
-    toggleLike(asset?.id as string).unwrap();
+    toggleLike(asset?.id as number).unwrap();
     setLiked(!liked);
     if (liked) {
       setLikes(likes - 1);
@@ -50,6 +50,12 @@ const NFTCard = ({ asset }: Props) => {
       setLikes(likes + 1);
     }
   };
+  useEffect(() => {
+    if (asset) {
+      setLikes(asset.likes as number);
+      setLiked(asset.liked as boolean);
+    }
+  }, [asset]);
   useEffect(() => {
     if (cardRef.current) setAudioWidth(cardRef.current.offsetWidth as number);
   }, [cardRef]);

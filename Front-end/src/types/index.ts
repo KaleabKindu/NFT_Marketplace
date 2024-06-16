@@ -1,6 +1,6 @@
 // types definition
 export interface NFT {
-  id?: string;
+  id?: number;
   tokenId?: number;
   name: string;
   description: string;
@@ -55,7 +55,7 @@ export interface User {
   following?: boolean;
 }
 export interface ICollection {
-  id: string;
+  id: number;
   avatar: string;
   name: string;
   description: string;

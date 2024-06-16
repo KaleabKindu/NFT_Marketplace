@@ -25,16 +25,8 @@ import { useWeb3Modal } from "@web3modal/wagmi/react";
 type Props = {};
 
 const TopCreators = (props: Props) => {
-  const { data, isLoading, isError, refetch } = useGetTopCreatorsQuery({
-    page: 1,
-    size: 8,
-  });
-  const [creators, setCreators] = useState<User[]>([]);
-  useEffect(() => {
-    if (data) {
-      setCreators([...data.value]);
-    }
-  });
+  const { data:creators, isLoading, isError, refetch } = useGetTopCreatorsQuery();
+  
   return (
     <div className="flex flex-col gap-5">
       <TypographyH2 text="Top Creators" />
@@ -45,7 +37,7 @@ const TopCreators = (props: Props) => {
         ) : isError ? (
           <Error retry={refetch} />
         ) : creators && creators.length > 0 ? (
-          creators.map((user, index) => (
+          creators.slice(0,8).map((user, index) => (
             <Creator key={index} user={user} index={index} showRank={false} />
           ))
         ) : (
@@ -106,7 +98,7 @@ export const Creator = ({ index, user, showRank = true }: CreatorProps) => {
   };
   useEffect(() => {
     if (user) {
-      setFollowing(user?.following as boolean);
+      setFollowing(user.following as boolean);
     }
   }, [user]);
   return (
@@ -147,7 +139,7 @@ export const Creator = ({ index, user, showRank = true }: CreatorProps) => {
               <TypographyP className="text-primary/80" text="Sales: " />
               <TypographyP
                 className="font-semibold"
-                text={`${user.sales} ETH`}
+                text={`${parseFloat(user?.sales?.toString() as string).toFixed(2)} ETH`}
               />
             </div>
           </div>

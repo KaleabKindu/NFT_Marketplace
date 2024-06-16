@@ -45,28 +45,21 @@ export const howitworks = [
     image: "step-1.png",
     name: "Filter & Discover",
     description:
-      "Connect with wallet, discover, buy NFTs, sell your NFTs and earn money",
+      "Explore our marketplace, to discover different type of digital products ",
   },
   {
     index: 2,
     image: "step-2.png",
     name: "Connect Wallet",
     description:
-      "Connect with wallet, discover, buy NFTs, sell your NFTs and earn money",
+      "Connect to our marketplace with an ethereum wallet",
   },
   {
     index: 3,
     image: "step-3.png",
     name: "Start Trading",
     description:
-      "Connect with wallet, discover, buy NFTs, sell your NFTs and earn money",
-  },
-  {
-    index: 4,
-    image: "step-4.png",
-    name: "Earn Money",
-    description:
-      "Connect with wallet, discover, buy NFTs, sell your NFTs and earn money",
+      "Buy digital assets or sell your assets and earn money",
   },
 ];
 export enum CATEGORY {
