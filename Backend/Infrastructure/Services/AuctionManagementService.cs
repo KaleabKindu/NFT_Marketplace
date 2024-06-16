@@ -49,7 +49,7 @@ public class AuctionManagementService: IAuctionManagementService
         return BackgroundJob.Schedule(() => CloseAuction(Address, AuctionId), TimeSpan.FromSeconds(AuctionEnd - unixTime + 5));
     }
 
-    public void CancelAuction(long JobId){
+    public void CancelAuction(string JobId){
         BackgroundJob.Delete(JobId);
     }
 }
