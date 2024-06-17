@@ -79,7 +79,7 @@
       {
         "indexed": true,
         "internalType": "uint256",
-        "name": "auctionEnd",
+        "name": "auctionId",
         "type": "uint256"
       },
       {
@@ -262,6 +262,12 @@
         "indexed": false,
         "internalType": "uint256",
         "name": "price",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "auctionId",
         "type": "uint256"
       },
       {
