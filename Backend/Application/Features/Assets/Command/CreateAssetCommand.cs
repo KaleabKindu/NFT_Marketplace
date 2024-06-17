@@ -81,7 +81,7 @@ namespace Application.Features.Assets.Command
                     AuctionEnd = request.CreateAssetDto.Auction.AuctionEnd,
                     HighestBid = request.CreateAssetDto.Price,
                 };
-                auction.JobId = _auctionManager.Schedule(auction.AuctionId, auction.AuctionEnd);
+                auction.JobId = _auctionManager.Schedule(request.Address, auction.AuctionId, auction.AuctionEnd);
 
                 asset.Auction = auction;
                 asset.Status = AssetStatus.OnAuction;
@@ -111,7 +111,7 @@ namespace Application.Features.Assets.Command
             var notificationDto = new CreateNotificationDto
             {
                 Title = "New Asset",
-                Content = $"{user.UserName} has created a new asset {asset.Name}",
+                Content = $"{user.Profile.UserName} has created a new asset {asset.Name}",
             };
 
             await _notificationService.SendNotificationsForMultipleUsers(followers.Select(x => x.Id).ToList(), notificationDto);

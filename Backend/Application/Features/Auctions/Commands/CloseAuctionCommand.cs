@@ -7,6 +7,8 @@ using Application.Common.Errors;
 using Domain.Assets;
 using Application.Features.Notifications.Dtos;
 using Application.Contracts.Services;
+using Domain.Collections;
+
 
 namespace Application.Features.Auctions.Commands
 {
@@ -35,38 +37,45 @@ namespace Application.Features.Auctions.Commands
         )
         {
 
-            var auction = await _unitOfWork.AuctionRepository.GetByIdAsync((long)command._event.AuctionId);
+            var auction = await _unitOfWork.AuctionRepository.GetByAuctionId((long)command._event.AuctionId);
 
-            if (auction == null)
-                return ErrorFactory.NotFound("Auction", "Auction not found");
-
+            // if (auction == null)
+            //     return ErrorFactory.NotFound("Auction", "Auction not found");
+            _logger.LogInformation("*********************************** 1");
             var asset = await _unitOfWork.AssetRepository.GetAssetByTokenId(auction.TokenId);
 
-            if (asset == null)
-                return ErrorFactory.NotFound("Asset", "Asset not found");
+            // if (asset == null)
+            //     return ErrorFactory.NotFound("Asset", "Asset not found");
+            _logger.LogInformation("*********************************** 2");
+            
+            Collection collection = null;
+            if(asset.CollectionId != null){
+                collection = await _unitOfWork.CollectionRepository.GetByIdAsync((long)asset.CollectionId);
+            }
 
-            var collection = await _unitOfWork.CollectionRepository.GetByIdAsync((long)asset.CollectionId);
-
-            if (collection == null)
-                return ErrorFactory.NotFound("Collection", "Collection not found");
+            _logger.LogInformation("*********************************** 3");
 
             var user = await _unitOfWork.UserRepository.GetUserByAddress(command._event.Winner);
-            if (user == null)
-                return ErrorFactory.NotFound("User", "User not found");
-
+            // if (user == null)
+            //     return ErrorFactory.NotFound("User", "User not found");
+            _logger.LogInformation("*********************************** 4");
 
             var oldOwnerId = asset.OwnerId;
+            if(collection != null){
+                collection.LatestPrice = auction.HighestBid;
+                collection.Volume += auction.HighestBid;
+                _unitOfWork.CollectionRepository.UpdateAsync(collection);
+            }
 
-            collection.LatestPrice = auction.HighestBid;
+            _logger.LogInformation("*********************************** 5");
             asset.Status = AssetStatus.NotOnSale;
             asset.OwnerId = user.Id;
 
             // update  old owner  info
             await _unitOfWork.UserRepository.UpdateVolume(oldOwnerId, auction.HighestBid, 1);
 
-            _unitOfWork.CollectionRepository.UpdateAsync(collection);
             _unitOfWork.AssetRepository.UpdateAsync(asset);
-
+            _logger.LogInformation("*********************************** 6");
             if (await _unitOfWork.SaveAsync() == 0)
                 return ErrorFactory.InternalServerError("Auction", "Error closing auction");
 
@@ -80,7 +89,7 @@ namespace Application.Features.Auctions.Commands
             var notificationForSeller = new CreateNotificationDto
             {
                 Title = "Auction Closed",
-                Content = $"Your Auction on {asset.Name} is closed, {user.UserName} has won the auction.",
+                Content = $"Your Auction on {asset.Name} is closed, {user.Profile.UserName} has won the auction.",
                 UserId = oldOwnerId
             };
 

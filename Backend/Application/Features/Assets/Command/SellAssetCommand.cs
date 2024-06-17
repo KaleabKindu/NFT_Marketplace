@@ -92,7 +92,7 @@ namespace Application.Features.Auctions.Commands
             var notificationForSeller = new CreateNotificationDto
             {
                 Title = "Asset Sold",
-                Content = $"Your Asset {asset.Name} has been sold to {buyerUser.UserName} by {asset.Price} ETH.",
+                Content = $"Your Asset {asset.Name} has been sold to {buyerUser.Profile.UserName} by {asset.Price} ETH.",
                 UserId = oldOwnerId,
             };
 
