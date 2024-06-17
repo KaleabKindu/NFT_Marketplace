@@ -316,7 +316,7 @@ namespace Persistence.Repositories
                 .Where(asset => !asset.EmbeddingUpdated)
                 .ToListAsync();
 
-            var descriptions = requireNewEmbedding.Select(asset => asset.Description).ToList();
+            var descriptions = requireNewEmbedding.Select(asset => asset.Name).ToList();
             float[][] embeddings = Array.Empty<float[]>();
             descriptions.Insert(0, query);
             embeddings = await _semanticSearch.GetEmbeddingService().GetBatchEmbeddingAsync(descriptions);
