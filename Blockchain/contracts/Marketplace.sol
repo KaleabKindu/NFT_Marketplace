@@ -53,7 +53,7 @@ contract Marketplace is ERC721URIStorage, Ownable {
     event BidPlaced(uint256 indexed auctionId, address bidder, uint256 amount);
     event AuctionEnded(uint256 indexed auctionId, address winner);
     event AssetSold(uint256 indexed tokenId, address to);
-    event ResellAsset(uint256 indexed tokenId, bool auction, uint256 price, uint256 auctionEnd);
+    event ResellAsset(uint256 indexed tokenId, bool auction, uint256 price, uint256 auctionId, uint256 auctionEnd);
     event TransferAsset(uint256 indexed tokenId, address newOwner);
     event DeleteAsset(uint256 tokenid);
 
@@ -141,7 +141,7 @@ contract Marketplace is ERC721URIStorage, Ownable {
             idToAuction[idToProduct[tokenId].auctionId].floorPrice = price;
             idToAuction[idToProduct[tokenId].auctionId].auctionEnd = auctionEnd;
         }
-        emit ResellAsset(tokenId, auction, price, auctionEnd);
+        emit ResellAsset(tokenId, auction, price, idToProduct[tokenId].auctionId, auctionEnd);
     }
 
     function changePrice(uint256 tokenId, uint256 newPrice) public {
