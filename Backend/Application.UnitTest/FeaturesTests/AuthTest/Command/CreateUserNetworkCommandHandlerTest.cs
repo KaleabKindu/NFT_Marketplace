@@ -9,6 +9,7 @@ using System.Threading;
 using MediatR;
 using Application.Contracts.Persistance;
 using Application.Common.Exceptions;
+using Application.Contracts.Services;
 
 namespace Application.UnitTest.FeaturesTests.AuthTest.Command
 {
@@ -17,11 +18,13 @@ namespace Application.UnitTest.FeaturesTests.AuthTest.Command
         private readonly Mock<IUnitOfWork> _mockUnitOfWork;
         private readonly CreateUserNetworkCommandHandler _handler;
         private readonly CreateUserNetworkCommand _command;
+        private readonly Mock<INotificationService> _mockNotificationService;
 
         public CreateUserNetworkCommandHandlerTests()
         {
             _mockUnitOfWork = new Mock<IUnitOfWork>();
-            _handler = new CreateUserNetworkCommandHandler(_mockUnitOfWork.Object);
+            _mockNotificationService = new Mock<INotificationService>();
+            _handler = new CreateUserNetworkCommandHandler(_mockUnitOfWork.Object, _mockNotificationService.Object);
             _command = new CreateUserNetworkCommand
             {
                 Follower = "testFollower",
@@ -58,7 +61,7 @@ namespace Application.UnitTest.FeaturesTests.AuthTest.Command
 
             // Assert
             Assert.True(result.IsError);
-   
+
         }
 
         [Fact]

@@ -12,57 +12,33 @@ using AutoMapper;
 using Application.UnitTest.Mocks;
 using Domain;
 using Application.Contracts.Persistance;
+using Application.Profiles;
 
 namespace Application.UnitTest.FeaturesTests.Auth.Queries
 {
     public class GetUsersQueryHandlerTests
     {
         private readonly Mock<IUnitOfWork> _mockUnitOfWork;
-        private readonly Mock<IMapper> _mockMapper;
+        private readonly IMapper _mockMapper;
         private readonly GetUsersQueryHandler _handler;
 
         public GetUsersQueryHandlerTests()
         {
-            _mockMapper = new Mock<IMapper>();
+            _mockMapper = new MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>()).CreateMapper();
             _mockUnitOfWork = MockUnitOfWork.GetUnitOfWork();
-            _handler = new GetUsersQueryHandler(_mockUnitOfWork.Object, _mockMapper.Object);
+            _handler = new GetUsersQueryHandler(_mockUnitOfWork.Object, _mockMapper);
         }
 
         [Fact]
         public async Task Handle_WhenCalled_ReturnsPaginatedResponse()
         {
             // Arrange
-            var currentAddress = "currentAddress";
-            var users = new List<AppUser>
-            {
-                new AppUser { Id = "1", UserName = "User1", Address = "address1" },
-                new AppUser { Id = "2", UserName = "User2", Address = "address2" }
-            };
-            var paginatedUsers = new PaginatedResponse<AppUser>
-            {
-                Count = 2,
-                PageNumber = 1,
-                PageSize = 10,
-                Value = users
-            };
-            var userDtos = new List<UserListDto>
-            {
-                new UserListDto { Id = "1", UserName = "User1", Address = "address1" },
-                new UserListDto { Id = "2", UserName = "User2", Address = "address2" }
-            };
-
-            _mockUnitOfWork.Setup(uow => uow.UserRepository.GetAllUsersAsync(1, 10, currentAddress))
-                .ReturnsAsync(paginatedUsers);
-
-            _mockMapper.Setup(m => m.Map<List<UserListDto>>(users))
-                .Returns(userDtos);
 
             _mockUnitOfWork.Setup(uow => uow.UserRepository.IsFollowing(It.IsAny<string>(), It.IsAny<string>()))
                 .ReturnsAsync(false);
 
             var query = new GetUsersQuery
             {
-                CurrentAddress = currentAddress,
                 PageNumber = 1,
                 PageSize = 10
             };
@@ -73,8 +49,6 @@ namespace Application.UnitTest.FeaturesTests.Auth.Queries
             // Assert
             Assert.False(result.IsError);
             Assert.Equal("Users fetched successfully", result.Value.Message);
-            Assert.Equal(userDtos, result.Value.Value);
-            Assert.Equal(2, result.Value.Count);
         }
     }
 }

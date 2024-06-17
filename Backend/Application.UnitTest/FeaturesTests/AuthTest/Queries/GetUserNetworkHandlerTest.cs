@@ -55,8 +55,6 @@ namespace Application.UnitTest.FeaturesTests.Auth.Queries
             _mockUnitOfWork.Setup(uow => uow.UserRepository.GetFollowersAsync(userAddress, 1, 10))
                 .ReturnsAsync(paginatedUsers);
 
-            _mockMapper.Setup(m => m.Map<List<UserNetworkDto>>(users))
-                .Returns(userNetworkDtos);
 
             _mockUnitOfWork.Setup(uow => uow.UserRepository.IsFollowing(It.IsAny<string>(), It.IsAny<string>()))
                 .ReturnsAsync(false);

@@ -1,84 +1,57 @@
-// using Application.Common.Responses;
-// using Application.Contracts.Persistance;
-// using Application.Contracts.Services;
-// using Application.Features.Assets.Command;
-// using Application.Features.Assets.Dtos;
-// using Application.Profiles;
-// using Application.UnitTest.Mocks;
+using Application.Contracts.Persistance;
+using Application.Contracts.Services;
+using Application.Features.Assets.Command;
+using Application.Features.Assets.Dtos;
+using AutoMapper;
+using Domain;
+using ErrorOr;
+using Moq;
 
-// using AutoMapper;
-// using Domain.Assets;
-// using ErrorOr;
-// using Moq;
+namespace Application.Tests.Features.Assets.Command
+{
+    public class CreateAssetCommandHandlerTests
+    {
+        private readonly Mock<IMapper> _mockMapper;
+        private readonly Mock<IUnitOfWork> _mockUnitOfWork;
+        private readonly Mock<IAuctionManagementService> _mockAuctionManager;
+        private readonly Mock<INotificationService> _mockNotificationService;
 
-// using Shouldly;
+        public CreateAssetCommandHandlerTests()
+        {
+            _mockMapper = new Mock<IMapper>();
+            _mockUnitOfWork = new Mock<IUnitOfWork>();
+            _mockAuctionManager = new Mock<IAuctionManagementService>();
+            _mockNotificationService = new Mock<INotificationService>();
+        }
 
-// namespace ApplicationUnitTest.FeaturesTests.AssetTest.Command
-// {
-//     public class CreateAssetCommandHandlerTest
-//     {
-//         private readonly Mock<IUnitOfWork> _mockUnitOfWork;
-//         private readonly Mock<IAuctionManagementService> _mockAuctionManager;
-//         private readonly IMapper _mapper;
-//         private readonly CreateAssetCommandHandler _handler;
-//         private readonly CreateAssetDto _createAssetDto;
+        [Fact]
+        public async Task Handle_WhenUserNotFound_ReturnsNotFound()
+        {
+            // Arrange
+            var command = new CreateAssetCommand
+            {
+                CreateAssetDto = new CreateAssetDto(),
+                Address = "some-address"
+            };
 
-//         public CreateAssetCommandHandlerTest()
-//         {
-//             _mockUnitOfWork = MockUnitOfWork.GetUnitOfWork();
-//             _mockAuctionManager = MockUnitOfWork.GetAuctionManager();
-            
-//             var mapper = new MapperConfiguration(c =>
-//             {
-//                 c.AddProfile<MappingProfile>();
-//             });
+            _mockUnitOfWork.Setup(x => x.UserRepository.GetUserByAddress(It.IsAny<string>()))
+                .ReturnsAsync((AppUser)null);
 
-//             _mapper = mapper.CreateMapper();
+            var handler = new CreateAssetCommandHandler(
+                _mockMapper.Object,
+                _mockUnitOfWork.Object,
+                _mockAuctionManager.Object,
+                _mockNotificationService.Object);
 
-//             _handler = new CreateAssetCommandHandler(_mapper, _mockUnitOfWork.Object, _mockAuctionManager.Object);
+            // Act
+            var result = await handler.Handle(command, CancellationToken.None);
 
-//             _createAssetDto = new CreateAssetDto
-//             {
-//                 Name = "Digital Art Piece 1",
-//                 TokenId = 1234567890,
-//                 Description = "A unique piece of digital art.",
-//                 Image = "https://example.com/images/art-piece1.png",
-//                 Video = "https://example.com/videos/art-piece1.mp4",
-//                 Audio = "https://example.com/audio/art-piece1.mp3",
+            // Assert
+            Assert.True(result.IsError);
+            Assert.Equal(ErrorType.NotFound, result.FirstError.Type);
+        }
 
-//                 Category = AssetCategory.art,
-//                 Price = 250.0,
-//                 // Auction = new Auction { Id = 1, StartTime = DateTime.Now, EndTime = DateTime.Now.AddDays(7) },
-//                 // AuctionId = 1,
-//                 // Collection = new Collection { Id = 1, Name = "Digital Art Collection 1" },
-//                 // CollectionId = 1,
-//                 Royalty = 10.5f,
-//                 // Bids = new List<Bid>
-//                 // {
-//                 //     new Bid { Id = 1, Amount = 300.0, Bidder = new AppUser { Id = "bidder1", Name = "Alice" } },
-//                 //     new Bid { Id = 2, Amount = 350.0, Bidder = new AppUser { Id = "bidder2", Name = "Bob" } }
-//                 // },
-//                 TransactionHash = "0x123456789abcdef",
-//             };
-//         }
 
-//         [Fact]
-//         public async Task CreateValidAsset()
-//         {
-//             var assets = await _mockUnitOfWork.Object.AssetRepository.GetAllAsync();
-//             int assetsCount = assets.Count();
 
-//             var result = await _handler.Handle(
-//                 new CreateAssetCommand() { CreateAssetDto = _createAssetDto, Address = "address1" },
-//                 CancellationToken.None
-//             );
-
-//             result.ShouldBeOfType<ErrorOr<BaseResponse<long>>>();
-
-//             assets = await _mockUnitOfWork.Object.AssetRepository.GetAllAsync();
-
-//             assets.Count().ShouldBe(assetsCount + 1);
-//         }
-
-//     }
-// }
+    }
+}

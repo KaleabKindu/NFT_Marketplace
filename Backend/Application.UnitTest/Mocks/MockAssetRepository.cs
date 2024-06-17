@@ -104,6 +104,18 @@ namespace ApplicationUnitTest.Mocks
                 }
             };
 
+            mockRepo.Setup(r => r.GetByIdAsync(It.IsAny<long>())).ReturnsAsync((long id) =>
+            {
+                return assets.FirstOrDefault(a => a.Id == id);
+            });
+            mockRepo.Setup(r => r.UpdateAsync(It.IsAny<Asset>())).Callback((Asset asset) =>
+            {
+                var newAssets = assets.Where(a => a.Id != asset.Id).ToList();
+                newAssets.Add(asset);
+                assets = newAssets;
+            });
+
+
             mockRepo.Setup(b => b.GetAllAsync(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(() =>
             {
                 return assets;
