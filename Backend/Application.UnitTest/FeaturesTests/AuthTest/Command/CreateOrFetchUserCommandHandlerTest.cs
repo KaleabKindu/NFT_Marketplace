@@ -1,13 +1,8 @@
 using Xunit;
 using Moq;
 using Application.Features.Auth.Commands;
-using Application.Contracts.Persistence;
-using ErrorOr;
-using Application.Common.Responses;
 using Application.Features.Auth.Dtos;
 using AutoMapper;
-using System.Threading.Tasks;
-using System.Threading;
 using Application.Contracts.Persistance;
 using Domain;
 
