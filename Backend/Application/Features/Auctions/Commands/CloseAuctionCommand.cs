@@ -47,9 +47,10 @@ namespace Application.Features.Auctions.Commands
             // if (asset == null)
             //     return ErrorFactory.NotFound("Asset", "Asset not found");
             _logger.LogInformation("*********************************** 2");
-            
+
             Collection collection = null;
-            if(asset.CollectionId != null){
+            if (asset.CollectionId != null)
+            {
                 collection = await _unitOfWork.CollectionRepository.GetByIdAsync((long)asset.CollectionId);
             }
 
@@ -61,7 +62,8 @@ namespace Application.Features.Auctions.Commands
             _logger.LogInformation("*********************************** 4");
 
             var oldOwnerId = asset.OwnerId;
-            if(collection != null){
+            if (collection != null)
+            {
                 collection.LatestPrice = auction.HighestBid;
                 collection.Volume += auction.HighestBid;
                 _unitOfWork.CollectionRepository.UpdateAsync(collection);
@@ -93,12 +95,15 @@ namespace Application.Features.Auctions.Commands
                 UserId = oldOwnerId
             };
 
+            await _unitOfWork.SaveAsync();
+
             if (asset.Royalty != 0 && asset.CreatorId != oldOwnerId)
             {
                 var royalty = asset.Royalty / 100 * auction.HighestBid;
 
                 // update creator  info
                 await _unitOfWork.UserRepository.UpdateVolume(asset.CreatorId, royalty);
+                await _unitOfWork.SaveAsync();
 
                 var notificationForCreator = new CreateNotificationDto
                 {
@@ -109,6 +114,8 @@ namespace Application.Features.Auctions.Commands
 
                 await _notificationService.SendNotification(notificationForCreator);
             }
+
+
 
             await _notificationService.SendNotification(notificationForSeller);
             await _notificationService.SendNotification(notificationForBuyer);
