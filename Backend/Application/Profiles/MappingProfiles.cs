@@ -63,7 +63,8 @@ namespace Application.Profiles
 
             CreateMap<Bid, BidsListDto>()
                 .ForMember(dest => dest.From, opt => opt.MapFrom(src => src.Bidder))
-                .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.CreatedAt));
+                .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.CreatedAt))
+                .ForMember(dest => dest.Bid, opt => opt.MapFrom(src => src.Amount));
 
             CreateMap<CreateBidDto, Bid>();
             CreateMap<UpdateBidDto, Bid>()
