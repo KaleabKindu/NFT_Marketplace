@@ -141,7 +141,6 @@ contract Marketplace is ERC721URIStorage, Ownable {
             idToAuction[idToProduct[tokenId].auctionId].floorPrice = price;
             idToAuction[idToProduct[tokenId].auctionId].auctionEnd = auctionEnd;
         }
-        _productsSold.decrement();
         emit ResellAsset(tokenId, auction, price, auctionEnd);
     }
 
