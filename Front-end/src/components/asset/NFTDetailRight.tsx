@@ -161,7 +161,7 @@ const NFTDetailRight = ({ asset, isLoading }: Props) => {
               )}
             </div>
             <div className="flex flex-col gap-5 ">
-              {asset?.auction && (
+              {asset?.status === "OnAuction" && (
                 <div className="flex flex-col gap-5 border-b p-5">
                   <TypographyH2 text="Auction Ends in:" />
                   <TypographyH3

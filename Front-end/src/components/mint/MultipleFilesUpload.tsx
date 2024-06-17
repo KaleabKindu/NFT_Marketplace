@@ -19,8 +19,9 @@ const MultipleFilesUpload = ({ onChange }: Props) => {
     <div>
       <Dropzone
         onChange={updateFiles}
+        multiple={false}
         className="bg-secondary max-h-[200px] overflow-y-auto"
-        label="Click or Drag'n Drop Files"
+        label="Click or Drag'n Drop File"
         style={{ border: 0 }}
         header={false}
         footer={false}

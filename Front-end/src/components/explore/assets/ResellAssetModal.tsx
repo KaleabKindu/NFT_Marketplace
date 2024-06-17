@@ -27,10 +27,10 @@ import { Input } from "@/components/ui/input";
 import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { MdOutlineSell, MdWallet } from "react-icons/md";
-import { useAccount, useBalance } from "wagmi";
+import { MdOutlineSell } from "react-icons/md";
+import { useAccount } from "wagmi";
 import useContractWriteMutation from "@/hooks/useContractWriteMutation";
-import { useAppSelector } from "@/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { useWeb3Modal } from "@web3modal/wagmi/react";
 import {
   Popover,
@@ -42,6 +42,7 @@ import { format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
 import { RiAuctionLine } from "react-icons/ri";
 import { parseEther } from "viem";
+import { webApi } from "@/store/api";
 
 interface FormInput {
   price: string;
@@ -68,18 +69,24 @@ export const ResellAssetModal = ({ tokenId }: PlaceBidModalProps) => {
 
   const [showModal, setShowModal] = useState(false);
   const { address } = useAccount();
-  const { data: balance } = useBalance({ address: address });
   const { isLoading, writeSuccess, contractWrite } = useContractWriteMutation();
   const form = useForm<FormInput>({
     resolver: zodResolver(schema),
     defaultValues: initialState,
   });
+  const dispatch = useAppDispatch()
   const handleClose = () => setShowModal(false);
   const onSubmit = (values: FormInput) => {
     contractWrite("resellProduct", values.price.toString(), [tokenId, parseEther(values.price, "wei"), values.auction, Math.round(values.auctionEnd / 1000)]);
   };
   useEffect(() => {
     if (writeSuccess) {
+      dispatch(
+        webApi.util.invalidateTags([
+          "NFTs",
+          { id: tokenId, type: "NFTs" },
+        ]),
+      );
       handleClose();
     }
   }, [writeSuccess]);

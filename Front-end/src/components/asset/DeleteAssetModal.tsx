@@ -16,6 +16,8 @@ import useContractWriteMutation from "@/hooks/useContractWriteMutation";
 import { MdDelete } from "react-icons/md";
 import { useAppDispatch } from "@/store/hooks";
 import { webApi } from "@/store/api";
+import { useRouter } from "next/navigation";
+import { Routes } from "@/routes";
 
 type SaleModalProps = {
   tokenId: number;
@@ -24,6 +26,7 @@ export const DeleteAssetModal = ({ tokenId }: SaleModalProps) => {
   const [open, setOpen] = useState(false);
   const { address } = useAccount();
   const dispatch = useAppDispatch();
+  const router = useRouter()
   const { data: balance } = useBalance({ address: address });
   const { isLoading, writing, writeSuccess, contractWrite } =
     useContractWriteMutation();
@@ -37,6 +40,7 @@ export const DeleteAssetModal = ({ tokenId }: SaleModalProps) => {
         webApi.util.invalidateTags(["NFTs", { id: tokenId, type: "NFTs" }]),
       );
       handleClose();
+      router.push(Routes.NFTS)
     }
   }, [writeSuccess]);
   return (

@@ -102,7 +102,6 @@ contract Marketplace is ERC721URIStorage, Ownable {
     function getTokenUri(uint256 tokenId) public view returns (string memory) {
         require(_exists(tokenId), "ERC721Metadata: URI query for nonexistent token");
         console.log("Owner %s - Sender %s", ownerOf(tokenId), msg.sender);
-        require(ownerOf(tokenId) == msg.sender, "Only Owner of the NFT can see uri");
 
         string memory _tokenURI = tokenURI(tokenId);
         console.log("URI %s", _tokenURI);

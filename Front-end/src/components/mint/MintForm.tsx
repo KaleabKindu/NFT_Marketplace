@@ -334,12 +334,12 @@ const MintForm = (props: Props) => {
           name="files"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Files</FormLabel>
+              <FormLabel>Upload File</FormLabel>
               <FormControl>
                 <MultipleFilesUpload onChange={field.onChange} />
               </FormControl>
               <FormDescription>
-                Upload Files relevant to the Digital Product you want to mint as
+                Upload File relevant to the Digital Product you want to mint as
                 NFTs
               </FormDescription>
               <FormMessage />

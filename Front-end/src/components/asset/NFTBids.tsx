@@ -26,6 +26,7 @@ import { Avatar } from "../common/Avatar";
 import { TypographyP } from "../common/Typography";
 import { Loader2 } from "lucide-react";
 import { SocketContext } from "@/context/SocketContext";
+import useGetUsdPrice from "@/hooks/useGetUsdPrice";
 
 type Props = {
   id?: number;
@@ -93,26 +94,7 @@ export default function NFTBids({ id }: Props) {
               ) : bids.length > 0 ? (
                 <>
                   {bids.map((bid, index) => (
-                    <TableRow key={index}>
-                      <TableCell className="font-medium">{`${bid.bid} WETH`}</TableCell>
-                      <TableCell>{`$${parseInt(bid.bid) * 3000}`}</TableCell>
-                      <TableCell>
-                        <Link
-                          href={`${Routes.USER}/${bid.from.address}`}
-                          className="flex gap-2 items-center"
-                        >
-                          <Avatar
-                            src={bid.from.avatar}
-                            name={bid.from.userName}
-                          />
-                          <TypographyP
-                            className="whitespace-nowrap text-ellipsis overflow-hidden"
-                            text={bid.from.userName}
-                          />
-                        </Link>
-                      </TableCell>
-                      <TableCell>{moment(bid.date).format("ll")}</TableCell>
-                    </TableRow>
+                    <Bid key={index} bid={bid} />
                   ))}
                   {isFetching && fetchingNextPage && (
                     <TableRow>
@@ -136,4 +118,36 @@ export default function NFTBids({ id }: Props) {
       </AccordionItem>
     </Accordion>
   );
+}
+
+
+
+type BidProps = {
+  bid:IBid
+}
+
+const Bid = ({bid}: BidProps) => {
+  const usdPrice = useGetUsdPrice(bid.bid)
+  return (
+    <TableRow>
+      <TableCell className="font-medium">{`${bid.bid} WETH`}</TableCell>
+      <TableCell>{usdPrice}</TableCell>
+      <TableCell>
+        <Link
+          href={`${Routes.USER}/${bid.from.address}`}
+          className="flex gap-2 items-center"
+        >
+          <Avatar
+            src={bid.from.avatar}
+            name={bid.from.userName}
+          />
+          <TypographyP
+            className="whitespace-nowrap text-ellipsis overflow-hidden"
+            text={bid.from.userName}
+          />
+        </Link>
+      </TableCell>
+      <TableCell>{moment(bid.date).format("ll")}</TableCell>
+    </TableRow>
+  )
 }
