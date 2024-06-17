@@ -31,6 +31,7 @@ namespace Persistence.Repositories
                 .Take(limit)
                 .Include(x => x.Asset)
                 .Include(x => x.Bidder)
+                .ThenInclude(x => x.Profile)
                 .ToListAsync();
 
             return new Tuple<int, List<BidsListDto>>(count, _mapper.Map<List<BidsListDto>>(bidsList));
