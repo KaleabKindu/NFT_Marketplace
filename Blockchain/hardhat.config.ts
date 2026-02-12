@@ -18,6 +18,7 @@ const config: HardhatUserConfig = {
   networks:{
     hardhat:{
       chainId:1337,
+      blockGasLimit: 16777216,
     },
     sepolia: {
       chainId:11155111,
