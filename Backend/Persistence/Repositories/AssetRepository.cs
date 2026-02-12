@@ -172,7 +172,7 @@ namespace Persistence.Repositories
             .Include(asset => asset.Collection)
             .SingleOrDefaultAsync(asset => asset.Id == id);
 
-            if (asset == null)
+            if (asset == null || ((asset.Status == AssetStatus.NotOnSale) && userId != asset.OwnerId))
                 return ErrorFactory.NotFound("Asset", "Asset Not Found");
 
             var assetDto = _mapper.Map<AssetDetailDto>(asset);
