@@ -50,7 +50,7 @@ const DateTimePicker = React.forwardRef<
     >
       <div {...dialogProps} className="space-y-3">
         {!!state.hasTime && (
-          <TimeField value={state.timeValue} onChange={state.setTimeValue} />
+          <TimeField value={state.timeValue} onChange={(value) => { if (value) state.setTimeValue(value)}} />
         )}
         <Calendar {...calendarProps} />
       </div>
