@@ -8,6 +8,7 @@ using Application.Contracts.Persistance;
 using Application.Common.Errors;
 using Application.Contracts.Services;
 using Application.Features.Notifications.Dtos;
+using Nethereum.Web3;
 
 namespace Application.Features.Auctions.Commands
 {
@@ -32,7 +33,7 @@ namespace Application.Features.Auctions.Commands
 
         private static double WeiToEther(BigInteger wei)
         {
-            return ((long)wei) / 1e+18;
+            return (double)Web3.Convert.FromWei(wei);
         }
 
         public async Task<ErrorOr<bool>> Handle(
@@ -49,7 +50,7 @@ namespace Application.Features.Auctions.Commands
             {
                 BidderId = bidder.Id,
                 AssetId = asset.Id,
-                Amount = WeiToEther(command._event.Amount),
+                Amount = WeiToEther(command._event.Amount), 
                 TransactionHash = command._event.TransactionHash
             };
             await _unitOfWork.BidRepository.AddAsync(newBid);

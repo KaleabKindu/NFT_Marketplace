@@ -5,6 +5,7 @@ using Domain.Assets;
 using Application.Contracts.Services;
 using Application.Features.Auctions.Dtos;
 using Application.Features.Notifications.Dtos;
+using Nethereum.Web3;
 
 namespace Application.Features.Assets.Command
 {
@@ -42,11 +43,12 @@ namespace Application.Features.Assets.Command
                 _unitOfWork.AssetRepository.UpdateAsync(asset);
                 await _unitOfWork.SaveAsync();
 
+                var hightestBid = (double)Web3.Convert.FromWei(request._event.HighestBid);
 
                 var notificationDto = new CreateNotificationDto
                 {
                     Title = "Auction Cancelled",
-                    Content = $"Due to Auction cancel on {asset.Name} you are refunded {request._event.HighestBid} ETH",
+                    Content = $"Due to Auction cancel on {asset.Name} you are refunded {hightestBid} ETH",
                     UserId = higestBidder.Id
                 };
 
